@@ -1,0 +1,290 @@
+// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+
+package llamacloudprod_test
+
+import (
+	"context"
+	"errors"
+	"os"
+	"testing"
+
+	"github.com/stainless-sdks/llamacloud-prod-go"
+	"github.com/stainless-sdks/llamacloud-prod-go/internal/testutil"
+	"github.com/stainless-sdks/llamacloud-prod-go/option"
+)
+
+func TestBetaBatchNewWithOptionalParams(t *testing.T) {
+	t.Skip("Mock server tests are disabled")
+	baseURL := "http://localhost:4010"
+	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
+		baseURL = envURL
+	}
+	if !testutil.CheckTestServer(t, baseURL) {
+		return
+	}
+	client := llamacloudprod.NewClient(
+		option.WithBaseURL(baseURL),
+		option.WithAPIKey("My API Key"),
+	)
+	_, err := client.Beta.Batch.New(context.TODO(), llamacloudprod.BetaBatchNewParams{
+		JobConfig: llamacloudprod.BetaBatchNewParamsJobConfigUnion{
+			OfBatchParseJobRecordCreate: &llamacloudprod.BetaBatchNewParamsJobConfigBatchParseJobRecordCreate{
+				CorrelationID: llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+				JobName:       "parse_raw_file_job",
+				Parameters: llamacloudprod.BetaBatchNewParamsJobConfigBatchParseJobRecordCreateParameters{
+					AdaptiveLongTable:                 llamacloudprod.Bool(true),
+					AggressiveTableExtraction:         llamacloudprod.Bool(true),
+					AnnotateLinks:                     llamacloudprod.Bool(true),
+					AutoMode:                          llamacloudprod.Bool(true),
+					AutoModeConfigurationJson:         llamacloudprod.String("auto_mode_configuration_json"),
+					AutoModeTriggerOnImageInPage:      llamacloudprod.Bool(true),
+					AutoModeTriggerOnRegexpInPage:     llamacloudprod.String("auto_mode_trigger_on_regexp_in_page"),
+					AutoModeTriggerOnTableInPage:      llamacloudprod.Bool(true),
+					AutoModeTriggerOnTextInPage:       llamacloudprod.String("auto_mode_trigger_on_text_in_page"),
+					AzureOpenAIAPIVersion:             llamacloudprod.String("azure_openai_api_version"),
+					AzureOpenAIDeploymentName:         llamacloudprod.String("azure_openai_deployment_name"),
+					AzureOpenAIEndpoint:               llamacloudprod.String("azure_openai_endpoint"),
+					AzureOpenAIKey:                    llamacloudprod.String("azure_openai_key"),
+					BboxBottom:                        llamacloudprod.Float(0),
+					BboxLeft:                          llamacloudprod.Float(0),
+					BboxRight:                         llamacloudprod.Float(0),
+					BboxTop:                           llamacloudprod.Float(0),
+					BoundingBox:                       llamacloudprod.String("bounding_box"),
+					CompactMarkdownTable:              llamacloudprod.Bool(true),
+					ComplementalFormattingInstruction: llamacloudprod.String("complemental_formatting_instruction"),
+					ContentGuidelineInstruction:       llamacloudprod.String("content_guideline_instruction"),
+					ContinuousMode:                    llamacloudprod.Bool(true),
+					CustomMetadata: map[string]any{
+						"foo": "bar",
+					},
+					DisableImageExtraction:                   llamacloudprod.Bool(true),
+					DisableOcr:                               llamacloudprod.Bool(true),
+					DisableReconstruction:                    llamacloudprod.Bool(true),
+					DoNotCache:                               llamacloudprod.Bool(true),
+					DoNotUnrollColumns:                       llamacloudprod.Bool(true),
+					EnableCostOptimizer:                      llamacloudprod.Bool(true),
+					ExtractCharts:                            llamacloudprod.Bool(true),
+					ExtractLayout:                            llamacloudprod.Bool(true),
+					ExtractPrintedPageNumber:                 llamacloudprod.Bool(true),
+					FastMode:                                 llamacloudprod.Bool(true),
+					FormattingInstruction:                    llamacloudprod.String("formatting_instruction"),
+					Gpt4oAPIKey:                              llamacloudprod.String("gpt4o_api_key"),
+					Gpt4oMode:                                llamacloudprod.Bool(true),
+					GuessXlsxSheetName:                       llamacloudprod.Bool(true),
+					HideFooters:                              llamacloudprod.Bool(true),
+					HideHeaders:                              llamacloudprod.Bool(true),
+					HighResOcr:                               llamacloudprod.Bool(true),
+					HTMLMakeAllElementsVisible:               llamacloudprod.Bool(true),
+					HTMLRemoveFixedElements:                  llamacloudprod.Bool(true),
+					HTMLRemoveNavigationElements:             llamacloudprod.Bool(true),
+					HTTPProxy:                                llamacloudprod.String("http_proxy"),
+					IgnoreDocumentElementsForLayoutDetection: llamacloudprod.Bool(true),
+					ImagesToSave:                             []string{"screenshot"},
+					InlineImagesInMarkdown:                   llamacloudprod.Bool(true),
+					InputS3Path:                              llamacloudprod.String("input_s3_path"),
+					InputS3Region:                            llamacloudprod.String("input_s3_region"),
+					InputURL:                                 llamacloudprod.String("input_url"),
+					InternalIsScreenshotJob:                  llamacloudprod.Bool(true),
+					InvalidateCache:                          llamacloudprod.Bool(true),
+					IsFormattingInstruction:                  llamacloudprod.Bool(true),
+					JobTimeoutExtraTimePerPageInSeconds:      llamacloudprod.Float(0),
+					JobTimeoutInSeconds:                      llamacloudprod.Float(0),
+					KeepPageSeparatorWhenMergingTables:       llamacloudprod.Bool(true),
+					Lang:                                     llamacloudprod.String("lang"),
+					Languages:                                []llamacloudprod.ParsingLanguages{llamacloudprod.ParsingLanguagesAf},
+					LayoutAware:                              llamacloudprod.Bool(true),
+					LineLevelBoundingBox:                     llamacloudprod.Bool(true),
+					MarkdownTableMultilineHeaderSeparator:    llamacloudprod.String("markdown_table_multiline_header_separator"),
+					MaxPages:                                 llamacloudprod.Int(0),
+					MaxPagesEnforced:                         llamacloudprod.Int(0),
+					MergeTablesAcrossPagesInMarkdown:         llamacloudprod.Bool(true),
+					Model:                                    llamacloudprod.String("model"),
+					OutlinedTableExtraction:                  llamacloudprod.Bool(true),
+					OutputPdfOfDocument:                      llamacloudprod.Bool(true),
+					OutputS3PathPrefix:                       llamacloudprod.String("output_s3_path_prefix"),
+					OutputS3Region:                           llamacloudprod.String("output_s3_region"),
+					OutputTablesAsHTML:                       llamacloudprod.Bool(true),
+					OutputBucket:                             llamacloudprod.String("outputBucket"),
+					PageErrorTolerance:                       llamacloudprod.Float(0),
+					PageFooterPrefix:                         llamacloudprod.String("page_footer_prefix"),
+					PageFooterSuffix:                         llamacloudprod.String("page_footer_suffix"),
+					PageHeaderPrefix:                         llamacloudprod.String("page_header_prefix"),
+					PageHeaderSuffix:                         llamacloudprod.String("page_header_suffix"),
+					PagePrefix:                               llamacloudprod.String("page_prefix"),
+					PageSeparator:                            llamacloudprod.String("page_separator"),
+					PageSuffix:                               llamacloudprod.String("page_suffix"),
+					ParseMode:                                llamacloudprod.ParsingModeParsePageWithoutLlm,
+					ParsingInstruction:                       llamacloudprod.String("parsing_instruction"),
+					PipelineID:                               llamacloudprod.String("pipeline_id"),
+					PreciseBoundingBox:                       llamacloudprod.Bool(true),
+					PremiumMode:                              llamacloudprod.Bool(true),
+					PresentationOutOfBoundsContent:           llamacloudprod.Bool(true),
+					PresentationSkipEmbeddedData:             llamacloudprod.Bool(true),
+					PreserveLayoutAlignmentAcrossPages:       llamacloudprod.Bool(true),
+					PreserveVerySmallText:                    llamacloudprod.Bool(true),
+					Preset:                                   llamacloudprod.String("preset"),
+					Priority:                                 "low",
+					ProjectID:                                llamacloudprod.String("project_id"),
+					RemoveHiddenText:                         llamacloudprod.Bool(true),
+					ReplaceFailedPageMode:                    llamacloudprod.FailPageModeRawText,
+					ReplaceFailedPageWithErrorMessagePrefix:  llamacloudprod.String("replace_failed_page_with_error_message_prefix"),
+					ReplaceFailedPageWithErrorMessageSuffix:  llamacloudprod.String("replace_failed_page_with_error_message_suffix"),
+					ResourceInfo: map[string]any{
+						"foo": "bar",
+					},
+					SaveImages:                         llamacloudprod.Bool(true),
+					SkipDiagonalText:                   llamacloudprod.Bool(true),
+					SpecializedChartParsingAgentic:     llamacloudprod.Bool(true),
+					SpecializedChartParsingEfficient:   llamacloudprod.Bool(true),
+					SpecializedChartParsingPlus:        llamacloudprod.Bool(true),
+					SpecializedImageParsing:            llamacloudprod.Bool(true),
+					SpreadsheetExtractSubTables:        llamacloudprod.Bool(true),
+					SpreadsheetForceFormulaComputation: llamacloudprod.Bool(true),
+					SpreadsheetIncludeHiddenSheets:     llamacloudprod.Bool(true),
+					StrictModeBuggyFont:                llamacloudprod.Bool(true),
+					StrictModeImageExtraction:          llamacloudprod.Bool(true),
+					StrictModeImageOcr:                 llamacloudprod.Bool(true),
+					StrictModeReconstruction:           llamacloudprod.Bool(true),
+					StructuredOutput:                   llamacloudprod.Bool(true),
+					StructuredOutputJsonSchema:         llamacloudprod.String("structured_output_json_schema"),
+					StructuredOutputJsonSchemaName:     llamacloudprod.String("structured_output_json_schema_name"),
+					SystemPrompt:                       llamacloudprod.String("system_prompt"),
+					SystemPromptAppend:                 llamacloudprod.String("system_prompt_append"),
+					TakeScreenshot:                     llamacloudprod.Bool(true),
+					TargetPages:                        llamacloudprod.String("target_pages"),
+					Tier:                               llamacloudprod.String("tier"),
+					Type:                               "parse",
+					UseVendorMultimodalModel:           llamacloudprod.Bool(true),
+					UserPrompt:                         llamacloudprod.String("user_prompt"),
+					VendorMultimodalAPIKey:             llamacloudprod.String("vendor_multimodal_api_key"),
+					VendorMultimodalModelName:          llamacloudprod.String("vendor_multimodal_model_name"),
+					Version:                            llamacloudprod.String("version"),
+					WebhookConfigurations: []llamacloudprod.BetaBatchNewParamsJobConfigBatchParseJobRecordCreateParametersWebhookConfiguration{{
+						WebhookEvents: []string{"parse.success", "parse.error"},
+						WebhookHeaders: map[string]string{
+							"Authorization": "Bearer sk-...",
+						},
+						WebhookOutputFormat: llamacloudprod.String("json"),
+						WebhookURL:          llamacloudprod.String("https://example.com/webhooks/llamacloud"),
+					}},
+					WebhookURL: llamacloudprod.String("webhook_url"),
+				},
+				ParentJobExecutionID: llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+				Partitions: map[string]string{
+					"foo": "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+				},
+				ProjectID:  llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+				SessionID:  llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+				UserID:     llamacloudprod.String("user_id"),
+				WebhookURL: llamacloudprod.String("webhook_url"),
+			},
+		},
+		OrganizationID:         llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		ProjectID:              llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		ContinueAsNewThreshold: llamacloudprod.Int(0),
+		DirectoryID:            llamacloudprod.String("dir-aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"),
+		ItemIDs:                []string{"dfl-aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee", "dfl-11111111-2222-3333-4444-555555555555"},
+		PageSize:               llamacloudprod.Int(1),
+		TemporalNamespace:      llamacloudprod.String("temporal-namespace"),
+	})
+	if err != nil {
+		var apierr *llamacloudprod.Error
+		if errors.As(err, &apierr) {
+			t.Log(string(apierr.DumpRequest(true)))
+		}
+		t.Fatalf("err should be nil: %s", err.Error())
+	}
+}
+
+func TestBetaBatchListWithOptionalParams(t *testing.T) {
+	t.Skip("Mock server tests are disabled")
+	baseURL := "http://localhost:4010"
+	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
+		baseURL = envURL
+	}
+	if !testutil.CheckTestServer(t, baseURL) {
+		return
+	}
+	client := llamacloudprod.NewClient(
+		option.WithBaseURL(baseURL),
+		option.WithAPIKey("My API Key"),
+	)
+	_, err := client.Beta.Batch.List(context.TODO(), llamacloudprod.BetaBatchListParams{
+		DirectoryID:    llamacloudprod.String("directory_id"),
+		JobType:        llamacloudprod.BetaBatchListParamsJobTypeParse,
+		Limit:          llamacloudprod.Int(1),
+		Offset:         llamacloudprod.Int(0),
+		OrganizationID: llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		ProjectID:      llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		Status:         llamacloudprod.BetaBatchListParamsStatusPending,
+	})
+	if err != nil {
+		var apierr *llamacloudprod.Error
+		if errors.As(err, &apierr) {
+			t.Log(string(apierr.DumpRequest(true)))
+		}
+		t.Fatalf("err should be nil: %s", err.Error())
+	}
+}
+
+func TestBetaBatchCancelWithOptionalParams(t *testing.T) {
+	t.Skip("Mock server tests are disabled")
+	baseURL := "http://localhost:4010"
+	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
+		baseURL = envURL
+	}
+	if !testutil.CheckTestServer(t, baseURL) {
+		return
+	}
+	client := llamacloudprod.NewClient(
+		option.WithBaseURL(baseURL),
+		option.WithAPIKey("My API Key"),
+	)
+	_, err := client.Beta.Batch.Cancel(
+		context.TODO(),
+		"job_id",
+		llamacloudprod.BetaBatchCancelParams{
+			OrganizationID:    llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+			ProjectID:         llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+			Reason:            llamacloudprod.String("reason"),
+			TemporalNamespace: llamacloudprod.String("temporal-namespace"),
+		},
+	)
+	if err != nil {
+		var apierr *llamacloudprod.Error
+		if errors.As(err, &apierr) {
+			t.Log(string(apierr.DumpRequest(true)))
+		}
+		t.Fatalf("err should be nil: %s", err.Error())
+	}
+}
+
+func TestBetaBatchGetStatusWithOptionalParams(t *testing.T) {
+	t.Skip("Mock server tests are disabled")
+	baseURL := "http://localhost:4010"
+	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
+		baseURL = envURL
+	}
+	if !testutil.CheckTestServer(t, baseURL) {
+		return
+	}
+	client := llamacloudprod.NewClient(
+		option.WithBaseURL(baseURL),
+		option.WithAPIKey("My API Key"),
+	)
+	_, err := client.Beta.Batch.GetStatus(
+		context.TODO(),
+		"job_id",
+		llamacloudprod.BetaBatchGetStatusParams{
+			OrganizationID: llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+			ProjectID:      llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		},
+	)
+	if err != nil {
+		var apierr *llamacloudprod.Error
+		if errors.As(err, &apierr) {
+			t.Log(string(apierr.DumpRequest(true)))
+		}
+		t.Fatalf("err should be nil: %s", err.Error())
+	}
+}
