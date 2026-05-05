@@ -29,7 +29,7 @@ func TestParsingNewWithOptionalParams(t *testing.T) {
 	)
 	_, err := client.Parsing.New(context.TODO(), llamacloudprod.ParsingNewParams{
 		Tier:           llamacloudprod.ParsingNewParamsTierFast,
-		Version:        llamacloudprod.ParsingNewParamsVersion2025_12_11,
+		Version:        llamacloudprod.ParsingNewParamsVersionLatest,
 		OrganizationID: llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		ProjectID:      llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		AgenticOptions: llamacloudprod.ParsingNewParamsAgenticOptions{
@@ -64,6 +64,7 @@ func TestParsingNewWithOptionalParams(t *testing.T) {
 			},
 		},
 		OutputOptions: llamacloudprod.ParsingNewParamsOutputOptions{
+			AdditionalOutputs:        []string{"stripped_md", "concatenated_stripped_txt", "word_bbox"},
 			ExtractPrintedPageNumber: llamacloudprod.Bool(true),
 			ImagesToSave:             []string{"screenshot"},
 			Markdown: llamacloudprod.ParsingNewParamsOutputOptionsMarkdown{

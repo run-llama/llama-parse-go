@@ -1213,8 +1213,9 @@ type ParseV2ParametersResp struct {
 	//
 	// Any of "fast", "cost_effective", "agentic", "agentic_plus".
 	Tier ParseV2ParametersTier `json:"tier" api:"required"`
-	// Tier version. Use 'latest' for the current stable version, or specify a specific
-	// version (e.g., '1.0', '2.0') for reproducible results
+	// Tier version. Use 'latest' for the current stable version, or pin a dated
+	// version for reproducible results. See GET /api/v2/parse/versions for the
+	// per-tier list.
 	Version ParseV2ParametersVersion `json:"version" api:"required"`
 	// Options for AI-powered parsing tiers (cost_effective, agentic, agentic_plus).
 	//
@@ -1299,54 +1300,16 @@ const (
 	ParseV2ParametersTierAgenticPlus   ParseV2ParametersTier = "agentic_plus"
 )
 
-// Tier version. Use 'latest' for the current stable version, or specify a specific
-// version (e.g., '1.0', '2.0') for reproducible results
+// Tier version. Use 'latest' for the current stable version, or pin a dated
+// version for reproducible results. See GET /api/v2/parse/versions for the
+// per-tier list.
 type ParseV2ParametersVersion string
 
 const (
-	ParseV2ParametersVersion2025_12_11 ParseV2ParametersVersion = "2025-12-11"
-	ParseV2ParametersVersion2025_12_18 ParseV2ParametersVersion = "2025-12-18"
-	ParseV2ParametersVersion2025_12_31 ParseV2ParametersVersion = "2025-12-31"
-	ParseV2ParametersVersion2026_01_08 ParseV2ParametersVersion = "2026-01-08"
-	ParseV2ParametersVersion2026_01_09 ParseV2ParametersVersion = "2026-01-09"
-	ParseV2ParametersVersion2026_01_16 ParseV2ParametersVersion = "2026-01-16"
-	ParseV2ParametersVersion2026_01_21 ParseV2ParametersVersion = "2026-01-21"
-	ParseV2ParametersVersion2026_01_22 ParseV2ParametersVersion = "2026-01-22"
-	ParseV2ParametersVersion2026_01_24 ParseV2ParametersVersion = "2026-01-24"
-	ParseV2ParametersVersion2026_01_29 ParseV2ParametersVersion = "2026-01-29"
-	ParseV2ParametersVersion2026_01_30 ParseV2ParametersVersion = "2026-01-30"
-	ParseV2ParametersVersion2026_02_03 ParseV2ParametersVersion = "2026-02-03"
-	ParseV2ParametersVersion2026_02_18 ParseV2ParametersVersion = "2026-02-18"
-	ParseV2ParametersVersion2026_02_20 ParseV2ParametersVersion = "2026-02-20"
-	ParseV2ParametersVersion2026_02_24 ParseV2ParametersVersion = "2026-02-24"
-	ParseV2ParametersVersion2026_02_26 ParseV2ParametersVersion = "2026-02-26"
-	ParseV2ParametersVersion2026_03_02 ParseV2ParametersVersion = "2026-03-02"
-	ParseV2ParametersVersion2026_03_03 ParseV2ParametersVersion = "2026-03-03"
-	ParseV2ParametersVersion2026_03_04 ParseV2ParametersVersion = "2026-03-04"
-	ParseV2ParametersVersion2026_03_05 ParseV2ParametersVersion = "2026-03-05"
-	ParseV2ParametersVersion2026_03_09 ParseV2ParametersVersion = "2026-03-09"
-	ParseV2ParametersVersion2026_03_10 ParseV2ParametersVersion = "2026-03-10"
-	ParseV2ParametersVersion2026_03_11 ParseV2ParametersVersion = "2026-03-11"
-	ParseV2ParametersVersion2026_03_12 ParseV2ParametersVersion = "2026-03-12"
-	ParseV2ParametersVersion2026_03_17 ParseV2ParametersVersion = "2026-03-17"
-	ParseV2ParametersVersion2026_03_19 ParseV2ParametersVersion = "2026-03-19"
-	ParseV2ParametersVersion2026_03_20 ParseV2ParametersVersion = "2026-03-20"
-	ParseV2ParametersVersion2026_03_22 ParseV2ParametersVersion = "2026-03-22"
-	ParseV2ParametersVersion2026_03_23 ParseV2ParametersVersion = "2026-03-23"
-	ParseV2ParametersVersion2026_03_24 ParseV2ParametersVersion = "2026-03-24"
-	ParseV2ParametersVersion2026_03_25 ParseV2ParametersVersion = "2026-03-25"
-	ParseV2ParametersVersion2026_03_26 ParseV2ParametersVersion = "2026-03-26"
-	ParseV2ParametersVersion2026_03_27 ParseV2ParametersVersion = "2026-03-27"
-	ParseV2ParametersVersion2026_03_30 ParseV2ParametersVersion = "2026-03-30"
-	ParseV2ParametersVersion2026_03_31 ParseV2ParametersVersion = "2026-03-31"
-	ParseV2ParametersVersion2026_04_02 ParseV2ParametersVersion = "2026-04-02"
-	ParseV2ParametersVersion2026_04_06 ParseV2ParametersVersion = "2026-04-06"
-	ParseV2ParametersVersion2026_04_09 ParseV2ParametersVersion = "2026-04-09"
-	ParseV2ParametersVersion2026_04_14 ParseV2ParametersVersion = "2026-04-14"
-	ParseV2ParametersVersion2026_04_19 ParseV2ParametersVersion = "2026-04-19"
-	ParseV2ParametersVersion2026_04_22 ParseV2ParametersVersion = "2026-04-22"
-	ParseV2ParametersVersion2026_04_27 ParseV2ParametersVersion = "2026-04-27"
 	ParseV2ParametersVersionLatest     ParseV2ParametersVersion = "latest"
+	ParseV2ParametersVersion2026_05_04 ParseV2ParametersVersion = "2026-05-04"
+	ParseV2ParametersVersion2026_04_09 ParseV2ParametersVersion = "2026-04-09"
+	ParseV2ParametersVersion2025_12_11 ParseV2ParametersVersion = "2025-12-11"
 )
 
 // Options for AI-powered parsing tiers (cost_effective, agentic, agentic_plus).
@@ -1510,6 +1473,21 @@ func (r *ParseV2ParametersInputOptionsSpreadsheetResp) UnmarshalJSON(data []byte
 
 // Output formatting options for markdown, text, and extracted images
 type ParseV2ParametersOutputOptionsResp struct {
+	// Optional additional output artifacts to save alongside the primary parse output.
+	// Each value opts in to generating and persisting one extra file; the empty list
+	// (default) saves none. The three accepted values are: 'stripped_md' — per-page
+	// markdown stripped of formatting (links, bold/italic, images, HTML), saved as
+	// JSON for full-text-search indexing; fetch via
+	// `expand=stripped_markdown_content_metadata`. 'concatenated_stripped_txt' — all
+	// stripped pages concatenated into a single plain-text file with `\n\n---\n\n`
+	// between pages, useful for feeding the document into search or embedding
+	// pipelines as one blob; fetch via
+	// `expand=concatenated_stripped_markdown_content_metadata`. 'word_bbox' — raw
+	// word-level bounding boxes (one JSON object per word, with page number and
+	// x/y/w/h coordinates) saved as JSONL, useful for highlighting or grounding
+	// extracted answers back to the source document; fetch via
+	// `expand=raw_words_content_metadata`.
+	AdditionalOutputs []string `json:"additional_outputs"`
 	// Extract the printed page number as it appears in the document (e.g., 'Page 5 of
 	// 10', 'v', 'A-3'). Useful for referencing original page numbers
 	ExtractPrintedPageNumber bool `json:"extract_printed_page_number" api:"nullable"`
@@ -1528,6 +1506,7 @@ type ParseV2ParametersOutputOptionsResp struct {
 	TablesAsSpreadsheet ParseV2ParametersOutputOptionsTablesAsSpreadsheetResp `json:"tables_as_spreadsheet"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
+		AdditionalOutputs        respjson.Field
 		ExtractPrintedPageNumber respjson.Field
 		ImagesToSave             respjson.Field
 		Markdown                 respjson.Field
@@ -3052,8 +3031,9 @@ type ParseV2Parameters struct {
 	//
 	// Any of "fast", "cost_effective", "agentic", "agentic_plus".
 	Tier ParseV2ParametersTier `json:"tier,omitzero" api:"required"`
-	// Tier version. Use 'latest' for the current stable version, or specify a specific
-	// version (e.g., '1.0', '2.0') for reproducible results
+	// Tier version. Use 'latest' for the current stable version, or pin a dated
+	// version for reproducible results. See GET /api/v2/parse/versions for the
+	// per-tier list.
 	Version ParseV2ParametersVersion `json:"version,omitzero" api:"required"`
 	// Identifier for the client/application making the request. Used for analytics and
 	// debugging. Example: 'my-app-v2'
@@ -3240,6 +3220,21 @@ type ParseV2ParametersOutputOptions struct {
 	// Extract the printed page number as it appears in the document (e.g., 'Page 5 of
 	// 10', 'v', 'A-3'). Useful for referencing original page numbers
 	ExtractPrintedPageNumber param.Opt[bool] `json:"extract_printed_page_number,omitzero"`
+	// Optional additional output artifacts to save alongside the primary parse output.
+	// Each value opts in to generating and persisting one extra file; the empty list
+	// (default) saves none. The three accepted values are: 'stripped_md' — per-page
+	// markdown stripped of formatting (links, bold/italic, images, HTML), saved as
+	// JSON for full-text-search indexing; fetch via
+	// `expand=stripped_markdown_content_metadata`. 'concatenated_stripped_txt' — all
+	// stripped pages concatenated into a single plain-text file with `\n\n---\n\n`
+	// between pages, useful for feeding the document into search or embedding
+	// pipelines as one blob; fetch via
+	// `expand=concatenated_stripped_markdown_content_metadata`. 'word_bbox' — raw
+	// word-level bounding boxes (one JSON object per word, with page number and
+	// x/y/w/h coordinates) saved as JSONL, useful for highlighting or grounding
+	// extracted answers back to the source document; fetch via
+	// `expand=raw_words_content_metadata`.
+	AdditionalOutputs []string `json:"additional_outputs,omitzero"`
 	// Image categories to extract and save. Options: 'screenshot' (full page renders
 	// useful for visual QA), 'embedded' (images found within the document), 'layout'
 	// (cropped regions from layout detection like figures and diagrams). Empty list

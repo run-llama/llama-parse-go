@@ -64,8 +64,7 @@ type Project struct {
 	ID   string `json:"id" api:"required" format:"uuid"`
 	Name string `json:"name" api:"required"`
 	// The Organization ID the project is under.
-	OrganizationID     string `json:"organization_id" api:"required" format:"uuid"`
-	AdHocEvalDatasetID string `json:"ad_hoc_eval_dataset_id" api:"nullable" format:"uuid"`
+	OrganizationID string `json:"organization_id" api:"required" format:"uuid"`
 	// Creation datetime
 	CreatedAt time.Time `json:"created_at" api:"nullable" format:"date-time"`
 	// Whether this project is the default project for the user.
@@ -74,15 +73,14 @@ type Project struct {
 	UpdatedAt time.Time `json:"updated_at" api:"nullable" format:"date-time"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
-		ID                 respjson.Field
-		Name               respjson.Field
-		OrganizationID     respjson.Field
-		AdHocEvalDatasetID respjson.Field
-		CreatedAt          respjson.Field
-		IsDefault          respjson.Field
-		UpdatedAt          respjson.Field
-		ExtraFields        map[string]respjson.Field
-		raw                string
+		ID             respjson.Field
+		Name           respjson.Field
+		OrganizationID respjson.Field
+		CreatedAt      respjson.Field
+		IsDefault      respjson.Field
+		UpdatedAt      respjson.Field
+		ExtraFields    map[string]respjson.Field
+		raw            string
 	} `json:"-"`
 }
 

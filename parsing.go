@@ -1855,8 +1855,9 @@ type ParsingNewParams struct {
 	//
 	// Any of "fast", "cost_effective", "agentic", "agentic_plus".
 	Tier ParsingNewParamsTier `json:"tier,omitzero" api:"required"`
-	// Tier version. Use 'latest' for the current stable version, or specify a specific
-	// version (e.g., '1.0', '2.0') for reproducible results
+	// Tier version. Use 'latest' for the current stable version, or pin a dated
+	// version for reproducible results. See GET /api/v2/parse/versions for the
+	// per-tier list.
 	Version        ParsingNewParamsVersion `json:"version,omitzero" api:"required"`
 	OrganizationID param.Opt[string]       `query:"organization_id,omitzero" format:"uuid" json:"-"`
 	ProjectID      param.Opt[string]       `query:"project_id,omitzero" format:"uuid" json:"-"`
@@ -1933,54 +1934,16 @@ const (
 	ParsingNewParamsTierAgenticPlus   ParsingNewParamsTier = "agentic_plus"
 )
 
-// Tier version. Use 'latest' for the current stable version, or specify a specific
-// version (e.g., '1.0', '2.0') for reproducible results
+// Tier version. Use 'latest' for the current stable version, or pin a dated
+// version for reproducible results. See GET /api/v2/parse/versions for the
+// per-tier list.
 type ParsingNewParamsVersion string
 
 const (
-	ParsingNewParamsVersion2025_12_11 ParsingNewParamsVersion = "2025-12-11"
-	ParsingNewParamsVersion2025_12_18 ParsingNewParamsVersion = "2025-12-18"
-	ParsingNewParamsVersion2025_12_31 ParsingNewParamsVersion = "2025-12-31"
-	ParsingNewParamsVersion2026_01_08 ParsingNewParamsVersion = "2026-01-08"
-	ParsingNewParamsVersion2026_01_09 ParsingNewParamsVersion = "2026-01-09"
-	ParsingNewParamsVersion2026_01_16 ParsingNewParamsVersion = "2026-01-16"
-	ParsingNewParamsVersion2026_01_21 ParsingNewParamsVersion = "2026-01-21"
-	ParsingNewParamsVersion2026_01_22 ParsingNewParamsVersion = "2026-01-22"
-	ParsingNewParamsVersion2026_01_24 ParsingNewParamsVersion = "2026-01-24"
-	ParsingNewParamsVersion2026_01_29 ParsingNewParamsVersion = "2026-01-29"
-	ParsingNewParamsVersion2026_01_30 ParsingNewParamsVersion = "2026-01-30"
-	ParsingNewParamsVersion2026_02_03 ParsingNewParamsVersion = "2026-02-03"
-	ParsingNewParamsVersion2026_02_18 ParsingNewParamsVersion = "2026-02-18"
-	ParsingNewParamsVersion2026_02_20 ParsingNewParamsVersion = "2026-02-20"
-	ParsingNewParamsVersion2026_02_24 ParsingNewParamsVersion = "2026-02-24"
-	ParsingNewParamsVersion2026_02_26 ParsingNewParamsVersion = "2026-02-26"
-	ParsingNewParamsVersion2026_03_02 ParsingNewParamsVersion = "2026-03-02"
-	ParsingNewParamsVersion2026_03_03 ParsingNewParamsVersion = "2026-03-03"
-	ParsingNewParamsVersion2026_03_04 ParsingNewParamsVersion = "2026-03-04"
-	ParsingNewParamsVersion2026_03_05 ParsingNewParamsVersion = "2026-03-05"
-	ParsingNewParamsVersion2026_03_09 ParsingNewParamsVersion = "2026-03-09"
-	ParsingNewParamsVersion2026_03_10 ParsingNewParamsVersion = "2026-03-10"
-	ParsingNewParamsVersion2026_03_11 ParsingNewParamsVersion = "2026-03-11"
-	ParsingNewParamsVersion2026_03_12 ParsingNewParamsVersion = "2026-03-12"
-	ParsingNewParamsVersion2026_03_17 ParsingNewParamsVersion = "2026-03-17"
-	ParsingNewParamsVersion2026_03_19 ParsingNewParamsVersion = "2026-03-19"
-	ParsingNewParamsVersion2026_03_20 ParsingNewParamsVersion = "2026-03-20"
-	ParsingNewParamsVersion2026_03_22 ParsingNewParamsVersion = "2026-03-22"
-	ParsingNewParamsVersion2026_03_23 ParsingNewParamsVersion = "2026-03-23"
-	ParsingNewParamsVersion2026_03_24 ParsingNewParamsVersion = "2026-03-24"
-	ParsingNewParamsVersion2026_03_25 ParsingNewParamsVersion = "2026-03-25"
-	ParsingNewParamsVersion2026_03_26 ParsingNewParamsVersion = "2026-03-26"
-	ParsingNewParamsVersion2026_03_27 ParsingNewParamsVersion = "2026-03-27"
-	ParsingNewParamsVersion2026_03_30 ParsingNewParamsVersion = "2026-03-30"
-	ParsingNewParamsVersion2026_03_31 ParsingNewParamsVersion = "2026-03-31"
-	ParsingNewParamsVersion2026_04_02 ParsingNewParamsVersion = "2026-04-02"
-	ParsingNewParamsVersion2026_04_06 ParsingNewParamsVersion = "2026-04-06"
-	ParsingNewParamsVersion2026_04_09 ParsingNewParamsVersion = "2026-04-09"
-	ParsingNewParamsVersion2026_04_14 ParsingNewParamsVersion = "2026-04-14"
-	ParsingNewParamsVersion2026_04_19 ParsingNewParamsVersion = "2026-04-19"
-	ParsingNewParamsVersion2026_04_22 ParsingNewParamsVersion = "2026-04-22"
-	ParsingNewParamsVersion2026_04_27 ParsingNewParamsVersion = "2026-04-27"
 	ParsingNewParamsVersionLatest     ParsingNewParamsVersion = "latest"
+	ParsingNewParamsVersion2026_05_04 ParsingNewParamsVersion = "2026-05-04"
+	ParsingNewParamsVersion2026_04_09 ParsingNewParamsVersion = "2026-04-09"
+	ParsingNewParamsVersion2025_12_11 ParsingNewParamsVersion = "2025-12-11"
 )
 
 // Options for AI-powered parsing tiers (cost_effective, agentic, agentic_plus).
@@ -2118,6 +2081,21 @@ type ParsingNewParamsOutputOptions struct {
 	// Extract the printed page number as it appears in the document (e.g., 'Page 5 of
 	// 10', 'v', 'A-3'). Useful for referencing original page numbers
 	ExtractPrintedPageNumber param.Opt[bool] `json:"extract_printed_page_number,omitzero"`
+	// Optional additional output artifacts to save alongside the primary parse output.
+	// Each value opts in to generating and persisting one extra file; the empty list
+	// (default) saves none. The three accepted values are: 'stripped_md' — per-page
+	// markdown stripped of formatting (links, bold/italic, images, HTML), saved as
+	// JSON for full-text-search indexing; fetch via
+	// `expand=stripped_markdown_content_metadata`. 'concatenated_stripped_txt' — all
+	// stripped pages concatenated into a single plain-text file with `\n\n---\n\n`
+	// between pages, useful for feeding the document into search or embedding
+	// pipelines as one blob; fetch via
+	// `expand=concatenated_stripped_markdown_content_metadata`. 'word_bbox' — raw
+	// word-level bounding boxes (one JSON object per word, with page number and
+	// x/y/w/h coordinates) saved as JSONL, useful for highlighting or grounding
+	// extracted answers back to the source document; fetch via
+	// `expand=raw_words_content_metadata`.
+	AdditionalOutputs []string `json:"additional_outputs,omitzero"`
 	// Image categories to extract and save. Options: 'screenshot' (full page renders
 	// useful for visual QA), 'embedded' (images found within the document), 'layout'
 	// (cropped regions from layout detection like figures and diagrams). Empty list
