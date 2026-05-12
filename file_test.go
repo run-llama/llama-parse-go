@@ -58,6 +58,7 @@ func TestFileListWithOptionalParams(t *testing.T) {
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Files.List(context.TODO(), llamacloudprod.FileListParams{
+		Expand:         []string{"string", "string"},
 		ExternalFileID: llamacloudprod.String("external_file_id"),
 		FileIDs:        []string{"182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e", "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"},
 		FileName:       llamacloudprod.String("file_name"),

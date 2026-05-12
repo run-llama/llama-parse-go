@@ -1307,7 +1307,7 @@ type ParseV2ParametersVersion string
 
 const (
 	ParseV2ParametersVersionLatest     ParseV2ParametersVersion = "latest"
-	ParseV2ParametersVersion2026_05_04 ParseV2ParametersVersion = "2026-05-04"
+	ParseV2ParametersVersion2026_05_11 ParseV2ParametersVersion = "2026-05-11"
 	ParseV2ParametersVersion2026_04_09 ParseV2ParametersVersion = "2026-04-09"
 	ParseV2ParametersVersion2025_12_11 ParseV2ParametersVersion = "2025-12-11"
 )

@@ -30,7 +30,6 @@ func TestBetaDirectoryNewWithOptionalParams(t *testing.T) {
 		Name:           "x",
 		OrganizationID: llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		ProjectID:      llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		DataSourceID:   llamacloudprod.String("data_source_id"),
 		Description:    llamacloudprod.String("description"),
 	})
 	if err != nil {
@@ -88,7 +87,6 @@ func TestBetaDirectoryListWithOptionalParams(t *testing.T) {
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Beta.Directories.List(context.TODO(), llamacloudprod.BetaDirectoryListParams{
-		DataSourceID:   llamacloudprod.String("data_source_id"),
 		IncludeDeleted: llamacloudprod.Bool(true),
 		Name:           llamacloudprod.String("name"),
 		OrganizationID: llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),

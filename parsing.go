@@ -1941,7 +1941,7 @@ type ParsingNewParamsVersion string
 
 const (
 	ParsingNewParamsVersionLatest     ParsingNewParamsVersion = "latest"
-	ParsingNewParamsVersion2026_05_04 ParsingNewParamsVersion = "2026-05-04"
+	ParsingNewParamsVersion2026_05_11 ParsingNewParamsVersion = "2026-05-11"
 	ParsingNewParamsVersion2026_04_09 ParsingNewParamsVersion = "2026-04-09"
 	ParsingNewParamsVersion2025_12_11 ParsingNewParamsVersion = "2025-12-11"
 )

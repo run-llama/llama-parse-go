@@ -9,6 +9,7 @@ import (
 	"io"
 	"os"
 	"testing"
+	"time"
 
 	"github.com/stainless-sdks/llamacloud-prod-go"
 	"github.com/stainless-sdks/llamacloud-prod-go/internal/testutil"
@@ -73,6 +74,7 @@ func TestBetaDirectoryFileListWithOptionalParams(t *testing.T) {
 		llamacloudprod.BetaDirectoryFileListParams{
 			DisplayName:         llamacloudprod.String("display_name"),
 			DisplayNameContains: llamacloudprod.String("display_name_contains"),
+			Expand:              []string{"string", "string"},
 			FileID:              llamacloudprod.String("file_id"),
 			IncludeDeleted:      llamacloudprod.Bool(true),
 			OrganizationID:      llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
@@ -80,6 +82,8 @@ func TestBetaDirectoryFileListWithOptionalParams(t *testing.T) {
 			PageToken:           llamacloudprod.String("page_token"),
 			ProjectID:           llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 			UniqueID:            llamacloudprod.String("unique_id"),
+			UpdatedAtOnOrAfter:  llamacloudprod.Time(time.Now()),
+			UpdatedAtOnOrBefore: llamacloudprod.Time(time.Now()),
 		},
 	)
 	if err != nil {
@@ -178,6 +182,7 @@ func TestBetaDirectoryFileGetWithOptionalParams(t *testing.T) {
 		"directory_file_id",
 		llamacloudprod.BetaDirectoryFileGetParams{
 			DirectoryID:    "directory_id",
+			Expand:         []string{"string", "string"},
 			OrganizationID: llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 			ProjectID:      llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		},
@@ -213,6 +218,7 @@ func TestBetaDirectoryFileUploadWithOptionalParams(t *testing.T) {
 			ProjectID:      llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 			DisplayName:    llamacloudprod.String("display_name"),
 			ExternalFileID: llamacloudprod.String("external_file_id"),
+			Metadata:       llamacloudprod.String(`{"source": "web", "priority": 1}`),
 			UniqueID:       llamacloudprod.String("unique_id"),
 		},
 	)
