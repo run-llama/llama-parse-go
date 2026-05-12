@@ -42,9 +42,6 @@ func NewBetaDirectoryService(opts ...option.RequestOption) (r BetaDirectoryServi
 }
 
 // Create a new directory within the specified project.
-//
-// If data_source_id is provided, validates that the data source exists and belongs
-// to the same project.
 func (r *BetaDirectoryService) New(ctx context.Context, params BetaDirectoryNewParams, opts ...option.RequestOption) (res *BetaDirectoryNewResponse, err error) {
 	opts = slices.Concat(r.options, opts)
 	path := "api/v1/beta/directories"
@@ -122,8 +119,6 @@ type BetaDirectoryNewResponse struct {
 	ProjectID string `json:"project_id" api:"required"`
 	// Creation datetime
 	CreatedAt time.Time `json:"created_at" api:"nullable" format:"date-time"`
-	// Optional data source id the directory syncs from. Null if just manual uploads.
-	DataSourceID string `json:"data_source_id" api:"nullable"`
 	// Optional timestamp of when the directory was deleted. Null if not deleted.
 	DeletedAt time.Time `json:"deleted_at" api:"nullable" format:"date-time"`
 	// Optional description shown to users.
@@ -132,16 +127,15 @@ type BetaDirectoryNewResponse struct {
 	UpdatedAt time.Time `json:"updated_at" api:"nullable" format:"date-time"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
-		ID           respjson.Field
-		Name         respjson.Field
-		ProjectID    respjson.Field
-		CreatedAt    respjson.Field
-		DataSourceID respjson.Field
-		DeletedAt    respjson.Field
-		Description  respjson.Field
-		UpdatedAt    respjson.Field
-		ExtraFields  map[string]respjson.Field
-		raw          string
+		ID          respjson.Field
+		Name        respjson.Field
+		ProjectID   respjson.Field
+		CreatedAt   respjson.Field
+		DeletedAt   respjson.Field
+		Description respjson.Field
+		UpdatedAt   respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
 	} `json:"-"`
 }
 
@@ -161,8 +155,6 @@ type BetaDirectoryUpdateResponse struct {
 	ProjectID string `json:"project_id" api:"required"`
 	// Creation datetime
 	CreatedAt time.Time `json:"created_at" api:"nullable" format:"date-time"`
-	// Optional data source id the directory syncs from. Null if just manual uploads.
-	DataSourceID string `json:"data_source_id" api:"nullable"`
 	// Optional timestamp of when the directory was deleted. Null if not deleted.
 	DeletedAt time.Time `json:"deleted_at" api:"nullable" format:"date-time"`
 	// Optional description shown to users.
@@ -171,16 +163,15 @@ type BetaDirectoryUpdateResponse struct {
 	UpdatedAt time.Time `json:"updated_at" api:"nullable" format:"date-time"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
-		ID           respjson.Field
-		Name         respjson.Field
-		ProjectID    respjson.Field
-		CreatedAt    respjson.Field
-		DataSourceID respjson.Field
-		DeletedAt    respjson.Field
-		Description  respjson.Field
-		UpdatedAt    respjson.Field
-		ExtraFields  map[string]respjson.Field
-		raw          string
+		ID          respjson.Field
+		Name        respjson.Field
+		ProjectID   respjson.Field
+		CreatedAt   respjson.Field
+		DeletedAt   respjson.Field
+		Description respjson.Field
+		UpdatedAt   respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
 	} `json:"-"`
 }
 
@@ -200,8 +191,6 @@ type BetaDirectoryListResponse struct {
 	ProjectID string `json:"project_id" api:"required"`
 	// Creation datetime
 	CreatedAt time.Time `json:"created_at" api:"nullable" format:"date-time"`
-	// Optional data source id the directory syncs from. Null if just manual uploads.
-	DataSourceID string `json:"data_source_id" api:"nullable"`
 	// Optional timestamp of when the directory was deleted. Null if not deleted.
 	DeletedAt time.Time `json:"deleted_at" api:"nullable" format:"date-time"`
 	// Optional description shown to users.
@@ -210,16 +199,15 @@ type BetaDirectoryListResponse struct {
 	UpdatedAt time.Time `json:"updated_at" api:"nullable" format:"date-time"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
-		ID           respjson.Field
-		Name         respjson.Field
-		ProjectID    respjson.Field
-		CreatedAt    respjson.Field
-		DataSourceID respjson.Field
-		DeletedAt    respjson.Field
-		Description  respjson.Field
-		UpdatedAt    respjson.Field
-		ExtraFields  map[string]respjson.Field
-		raw          string
+		ID          respjson.Field
+		Name        respjson.Field
+		ProjectID   respjson.Field
+		CreatedAt   respjson.Field
+		DeletedAt   respjson.Field
+		Description respjson.Field
+		UpdatedAt   respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
 	} `json:"-"`
 }
 
@@ -239,8 +227,6 @@ type BetaDirectoryGetResponse struct {
 	ProjectID string `json:"project_id" api:"required"`
 	// Creation datetime
 	CreatedAt time.Time `json:"created_at" api:"nullable" format:"date-time"`
-	// Optional data source id the directory syncs from. Null if just manual uploads.
-	DataSourceID string `json:"data_source_id" api:"nullable"`
 	// Optional timestamp of when the directory was deleted. Null if not deleted.
 	DeletedAt time.Time `json:"deleted_at" api:"nullable" format:"date-time"`
 	// Optional description shown to users.
@@ -249,16 +235,15 @@ type BetaDirectoryGetResponse struct {
 	UpdatedAt time.Time `json:"updated_at" api:"nullable" format:"date-time"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
-		ID           respjson.Field
-		Name         respjson.Field
-		ProjectID    respjson.Field
-		CreatedAt    respjson.Field
-		DataSourceID respjson.Field
-		DeletedAt    respjson.Field
-		Description  respjson.Field
-		UpdatedAt    respjson.Field
-		ExtraFields  map[string]respjson.Field
-		raw          string
+		ID          respjson.Field
+		Name        respjson.Field
+		ProjectID   respjson.Field
+		CreatedAt   respjson.Field
+		DeletedAt   respjson.Field
+		Description respjson.Field
+		UpdatedAt   respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
 	} `json:"-"`
 }
 
@@ -273,8 +258,6 @@ type BetaDirectoryNewParams struct {
 	Name           string            `json:"name" api:"required"`
 	OrganizationID param.Opt[string] `query:"organization_id,omitzero" format:"uuid" json:"-"`
 	ProjectID      param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
-	// Optional data source id the directory syncs from.
-	DataSourceID param.Opt[string] `json:"data_source_id,omitzero"`
 	// Optional description shown to users.
 	Description param.Opt[string] `json:"description,omitzero"`
 	paramObj
@@ -324,7 +307,6 @@ func (r BetaDirectoryUpdateParams) URLQuery() (v url.Values, err error) {
 }
 
 type BetaDirectoryListParams struct {
-	DataSourceID   param.Opt[string] `query:"data_source_id,omitzero" json:"-"`
 	Name           param.Opt[string] `query:"name,omitzero" json:"-"`
 	OrganizationID param.Opt[string] `query:"organization_id,omitzero" format:"uuid" json:"-"`
 	PageSize       param.Opt[int64]  `query:"page_size,omitzero" json:"-"`

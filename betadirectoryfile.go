@@ -179,10 +179,10 @@ type BetaDirectoryFileUpdateResponse struct {
 	UniqueID string `json:"unique_id" api:"required"`
 	// Creation datetime
 	CreatedAt time.Time `json:"created_at" api:"nullable" format:"date-time"`
-	// Optional data source credential associated with the file.
-	DataSourceID string `json:"data_source_id" api:"nullable"`
 	// Soft delete marker when the file is removed upstream or by user action.
 	DeletedAt time.Time `json:"deleted_at" api:"nullable" format:"date-time"`
+	// Schema for a presigned URL.
+	DownloadURL PresignedURL `json:"download_url" api:"nullable"`
 	// File ID for the storage location.
 	FileID string `json:"file_id" api:"nullable"`
 	// Merged metadata from all sources. Higher-priority sources override lower.
@@ -191,19 +191,19 @@ type BetaDirectoryFileUpdateResponse struct {
 	UpdatedAt time.Time `json:"updated_at" api:"nullable" format:"date-time"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
-		ID           respjson.Field
-		DirectoryID  respjson.Field
-		DisplayName  respjson.Field
-		ProjectID    respjson.Field
-		UniqueID     respjson.Field
-		CreatedAt    respjson.Field
-		DataSourceID respjson.Field
-		DeletedAt    respjson.Field
-		FileID       respjson.Field
-		Metadata     respjson.Field
-		UpdatedAt    respjson.Field
-		ExtraFields  map[string]respjson.Field
-		raw          string
+		ID          respjson.Field
+		DirectoryID respjson.Field
+		DisplayName respjson.Field
+		ProjectID   respjson.Field
+		UniqueID    respjson.Field
+		CreatedAt   respjson.Field
+		DeletedAt   respjson.Field
+		DownloadURL respjson.Field
+		FileID      respjson.Field
+		Metadata    respjson.Field
+		UpdatedAt   respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
 	} `json:"-"`
 }
 
@@ -271,10 +271,10 @@ type BetaDirectoryFileListResponse struct {
 	UniqueID string `json:"unique_id" api:"required"`
 	// Creation datetime
 	CreatedAt time.Time `json:"created_at" api:"nullable" format:"date-time"`
-	// Optional data source credential associated with the file.
-	DataSourceID string `json:"data_source_id" api:"nullable"`
 	// Soft delete marker when the file is removed upstream or by user action.
 	DeletedAt time.Time `json:"deleted_at" api:"nullable" format:"date-time"`
+	// Schema for a presigned URL.
+	DownloadURL PresignedURL `json:"download_url" api:"nullable"`
 	// File ID for the storage location.
 	FileID string `json:"file_id" api:"nullable"`
 	// Merged metadata from all sources. Higher-priority sources override lower.
@@ -283,19 +283,19 @@ type BetaDirectoryFileListResponse struct {
 	UpdatedAt time.Time `json:"updated_at" api:"nullable" format:"date-time"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
-		ID           respjson.Field
-		DirectoryID  respjson.Field
-		DisplayName  respjson.Field
-		ProjectID    respjson.Field
-		UniqueID     respjson.Field
-		CreatedAt    respjson.Field
-		DataSourceID respjson.Field
-		DeletedAt    respjson.Field
-		FileID       respjson.Field
-		Metadata     respjson.Field
-		UpdatedAt    respjson.Field
-		ExtraFields  map[string]respjson.Field
-		raw          string
+		ID          respjson.Field
+		DirectoryID respjson.Field
+		DisplayName respjson.Field
+		ProjectID   respjson.Field
+		UniqueID    respjson.Field
+		CreatedAt   respjson.Field
+		DeletedAt   respjson.Field
+		DownloadURL respjson.Field
+		FileID      respjson.Field
+		Metadata    respjson.Field
+		UpdatedAt   respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
 	} `json:"-"`
 }
 
@@ -363,10 +363,10 @@ type BetaDirectoryFileAddResponse struct {
 	UniqueID string `json:"unique_id" api:"required"`
 	// Creation datetime
 	CreatedAt time.Time `json:"created_at" api:"nullable" format:"date-time"`
-	// Optional data source credential associated with the file.
-	DataSourceID string `json:"data_source_id" api:"nullable"`
 	// Soft delete marker when the file is removed upstream or by user action.
 	DeletedAt time.Time `json:"deleted_at" api:"nullable" format:"date-time"`
+	// Schema for a presigned URL.
+	DownloadURL PresignedURL `json:"download_url" api:"nullable"`
 	// File ID for the storage location.
 	FileID string `json:"file_id" api:"nullable"`
 	// Merged metadata from all sources. Higher-priority sources override lower.
@@ -375,19 +375,19 @@ type BetaDirectoryFileAddResponse struct {
 	UpdatedAt time.Time `json:"updated_at" api:"nullable" format:"date-time"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
-		ID           respjson.Field
-		DirectoryID  respjson.Field
-		DisplayName  respjson.Field
-		ProjectID    respjson.Field
-		UniqueID     respjson.Field
-		CreatedAt    respjson.Field
-		DataSourceID respjson.Field
-		DeletedAt    respjson.Field
-		FileID       respjson.Field
-		Metadata     respjson.Field
-		UpdatedAt    respjson.Field
-		ExtraFields  map[string]respjson.Field
-		raw          string
+		ID          respjson.Field
+		DirectoryID respjson.Field
+		DisplayName respjson.Field
+		ProjectID   respjson.Field
+		UniqueID    respjson.Field
+		CreatedAt   respjson.Field
+		DeletedAt   respjson.Field
+		DownloadURL respjson.Field
+		FileID      respjson.Field
+		Metadata    respjson.Field
+		UpdatedAt   respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
 	} `json:"-"`
 }
 
@@ -455,10 +455,10 @@ type BetaDirectoryFileGetResponse struct {
 	UniqueID string `json:"unique_id" api:"required"`
 	// Creation datetime
 	CreatedAt time.Time `json:"created_at" api:"nullable" format:"date-time"`
-	// Optional data source credential associated with the file.
-	DataSourceID string `json:"data_source_id" api:"nullable"`
 	// Soft delete marker when the file is removed upstream or by user action.
 	DeletedAt time.Time `json:"deleted_at" api:"nullable" format:"date-time"`
+	// Schema for a presigned URL.
+	DownloadURL PresignedURL `json:"download_url" api:"nullable"`
 	// File ID for the storage location.
 	FileID string `json:"file_id" api:"nullable"`
 	// Merged metadata from all sources. Higher-priority sources override lower.
@@ -467,19 +467,19 @@ type BetaDirectoryFileGetResponse struct {
 	UpdatedAt time.Time `json:"updated_at" api:"nullable" format:"date-time"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
-		ID           respjson.Field
-		DirectoryID  respjson.Field
-		DisplayName  respjson.Field
-		ProjectID    respjson.Field
-		UniqueID     respjson.Field
-		CreatedAt    respjson.Field
-		DataSourceID respjson.Field
-		DeletedAt    respjson.Field
-		FileID       respjson.Field
-		Metadata     respjson.Field
-		UpdatedAt    respjson.Field
-		ExtraFields  map[string]respjson.Field
-		raw          string
+		ID          respjson.Field
+		DirectoryID respjson.Field
+		DisplayName respjson.Field
+		ProjectID   respjson.Field
+		UniqueID    respjson.Field
+		CreatedAt   respjson.Field
+		DeletedAt   respjson.Field
+		DownloadURL respjson.Field
+		FileID      respjson.Field
+		Metadata    respjson.Field
+		UpdatedAt   respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
 	} `json:"-"`
 }
 
@@ -547,10 +547,10 @@ type BetaDirectoryFileUploadResponse struct {
 	UniqueID string `json:"unique_id" api:"required"`
 	// Creation datetime
 	CreatedAt time.Time `json:"created_at" api:"nullable" format:"date-time"`
-	// Optional data source credential associated with the file.
-	DataSourceID string `json:"data_source_id" api:"nullable"`
 	// Soft delete marker when the file is removed upstream or by user action.
 	DeletedAt time.Time `json:"deleted_at" api:"nullable" format:"date-time"`
+	// Schema for a presigned URL.
+	DownloadURL PresignedURL `json:"download_url" api:"nullable"`
 	// File ID for the storage location.
 	FileID string `json:"file_id" api:"nullable"`
 	// Merged metadata from all sources. Higher-priority sources override lower.
@@ -559,19 +559,19 @@ type BetaDirectoryFileUploadResponse struct {
 	UpdatedAt time.Time `json:"updated_at" api:"nullable" format:"date-time"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
-		ID           respjson.Field
-		DirectoryID  respjson.Field
-		DisplayName  respjson.Field
-		ProjectID    respjson.Field
-		UniqueID     respjson.Field
-		CreatedAt    respjson.Field
-		DataSourceID respjson.Field
-		DeletedAt    respjson.Field
-		FileID       respjson.Field
-		Metadata     respjson.Field
-		UpdatedAt    respjson.Field
-		ExtraFields  map[string]respjson.Field
-		raw          string
+		ID          respjson.Field
+		DirectoryID respjson.Field
+		DisplayName respjson.Field
+		ProjectID   respjson.Field
+		UniqueID    respjson.Field
+		CreatedAt   respjson.Field
+		DeletedAt   respjson.Field
+		DownloadURL respjson.Field
+		FileID      respjson.Field
+		Metadata    respjson.Field
+		UpdatedAt   respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
 	} `json:"-"`
 }
 
@@ -683,7 +683,13 @@ type BetaDirectoryFileListParams struct {
 	PageToken           param.Opt[string] `query:"page_token,omitzero" json:"-"`
 	ProjectID           param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
 	UniqueID            param.Opt[string] `query:"unique_id,omitzero" json:"-"`
-	IncludeDeleted      param.Opt[bool]   `query:"include_deleted,omitzero" json:"-"`
+	// Include items updated at or after this timestamp (inclusive)
+	UpdatedAtOnOrAfter param.Opt[time.Time] `query:"updated_at_on_or_after,omitzero" format:"date-time" json:"-"`
+	// Include items updated at or before this timestamp (inclusive)
+	UpdatedAtOnOrBefore param.Opt[time.Time] `query:"updated_at_on_or_before,omitzero" format:"date-time" json:"-"`
+	IncludeDeleted      param.Opt[bool]      `query:"include_deleted,omitzero" json:"-"`
+	// Fields to expand on each directory file.
+	Expand []string `query:"expand,omitzero" json:"-"`
 	paramObj
 }
 
@@ -765,6 +771,8 @@ type BetaDirectoryFileGetParams struct {
 	DirectoryID    string            `path:"directory_id" api:"required" json:"-"`
 	OrganizationID param.Opt[string] `query:"organization_id,omitzero" format:"uuid" json:"-"`
 	ProjectID      param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
+	// Fields to expand.
+	Expand []string `query:"expand,omitzero" json:"-"`
 	paramObj
 }
 
@@ -783,7 +791,9 @@ type BetaDirectoryFileUploadParams struct {
 	ProjectID      param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
 	DisplayName    param.Opt[string] `json:"display_name,omitzero"`
 	ExternalFileID param.Opt[string] `json:"external_file_id,omitzero"`
-	UniqueID       param.Opt[string] `json:"unique_id,omitzero"`
+	// User metadata as a JSON object string.
+	Metadata param.Opt[string] `json:"metadata,omitzero"`
+	UniqueID param.Opt[string] `json:"unique_id,omitzero"`
 	paramObj
 }
 

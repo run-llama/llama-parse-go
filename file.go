@@ -338,6 +338,8 @@ type FileNewResponse struct {
 	Name string `json:"name" api:"required"`
 	// Project this file belongs to
 	ProjectID string `json:"project_id" api:"required" format:"uuid"`
+	// Schema for a presigned URL.
+	DownloadURL PresignedURL `json:"download_url" api:"nullable"`
 	// When the file expires and may be automatically removed. Null means no
 	// expiration.
 	ExpiresAt time.Time `json:"expires_at" api:"nullable" format:"date-time"`
@@ -355,6 +357,7 @@ type FileNewResponse struct {
 		ID             respjson.Field
 		Name           respjson.Field
 		ProjectID      respjson.Field
+		DownloadURL    respjson.Field
 		ExpiresAt      respjson.Field
 		ExternalFileID respjson.Field
 		FileType       respjson.Field
@@ -379,6 +382,8 @@ type FileListResponse struct {
 	Name string `json:"name" api:"required"`
 	// Project this file belongs to
 	ProjectID string `json:"project_id" api:"required" format:"uuid"`
+	// Schema for a presigned URL.
+	DownloadURL PresignedURL `json:"download_url" api:"nullable"`
 	// When the file expires and may be automatically removed. Null means no
 	// expiration.
 	ExpiresAt time.Time `json:"expires_at" api:"nullable" format:"date-time"`
@@ -396,6 +401,7 @@ type FileListResponse struct {
 		ID             respjson.Field
 		Name           respjson.Field
 		ProjectID      respjson.Field
+		DownloadURL    respjson.Field
 		ExpiresAt      respjson.Field
 		ExternalFileID respjson.Field
 		FileType       respjson.Field
@@ -447,6 +453,8 @@ type FileQueryResponseItem struct {
 	Name string `json:"name" api:"required"`
 	// Project this file belongs to
 	ProjectID string `json:"project_id" api:"required" format:"uuid"`
+	// Schema for a presigned URL.
+	DownloadURL PresignedURL `json:"download_url" api:"nullable"`
 	// When the file expires and may be automatically removed. Null means no
 	// expiration.
 	ExpiresAt time.Time `json:"expires_at" api:"nullable" format:"date-time"`
@@ -464,6 +472,7 @@ type FileQueryResponseItem struct {
 		ID             respjson.Field
 		Name           respjson.Field
 		ProjectID      respjson.Field
+		DownloadURL    respjson.Field
 		ExpiresAt      respjson.Field
 		ExternalFileID respjson.Field
 		FileType       respjson.Field
@@ -535,6 +544,8 @@ type FileListParams struct {
 	// subsequent page.
 	PageToken param.Opt[string] `query:"page_token,omitzero" json:"-"`
 	ProjectID param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
+	// Fields to expand on each file.
+	Expand []string `query:"expand,omitzero" json:"-"`
 	// Filter by specific file IDs.
 	FileIDs []string `query:"file_ids,omitzero" format:"uuid" json:"-"`
 	paramObj
