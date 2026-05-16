@@ -214,12 +214,12 @@ func (r *BetaDirectoryFileUpdateResponse) UnmarshalJSON(data []byte) error {
 }
 
 // BetaDirectoryFileUpdateResponseMetadataUnion contains all possible properties
-// and values from [string], [float64], [bool].
+// and values from [string], [float64], [bool], [[]string].
 //
 // Use the methods beginning with 'As' to cast the union to one of its variants.
 //
 // If the underlying value is not a json object, one of the following properties
-// will be valid: OfString OfFloat OfBool]
+// will be valid: OfString OfFloat OfBool OfStringArray]
 type BetaDirectoryFileUpdateResponseMetadataUnion struct {
 	// This field will be present if the value is a [string] instead of an object.
 	OfString string `json:",inline"`
@@ -227,11 +227,14 @@ type BetaDirectoryFileUpdateResponseMetadataUnion struct {
 	OfFloat float64 `json:",inline"`
 	// This field will be present if the value is a [bool] instead of an object.
 	OfBool bool `json:",inline"`
-	JSON   struct {
-		OfString respjson.Field
-		OfFloat  respjson.Field
-		OfBool   respjson.Field
-		raw      string
+	// This field will be present if the value is a [[]string] instead of an object.
+	OfStringArray []string `json:",inline"`
+	JSON          struct {
+		OfString      respjson.Field
+		OfFloat       respjson.Field
+		OfBool        respjson.Field
+		OfStringArray respjson.Field
+		raw           string
 	} `json:"-"`
 }
 
@@ -246,6 +249,11 @@ func (u BetaDirectoryFileUpdateResponseMetadataUnion) AsFloat() (v float64) {
 }
 
 func (u BetaDirectoryFileUpdateResponseMetadataUnion) AsBool() (v bool) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u BetaDirectoryFileUpdateResponseMetadataUnion) AsStringArray() (v []string) {
 	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
 	return
 }
@@ -306,12 +314,12 @@ func (r *BetaDirectoryFileListResponse) UnmarshalJSON(data []byte) error {
 }
 
 // BetaDirectoryFileListResponseMetadataUnion contains all possible properties and
-// values from [string], [float64], [bool].
+// values from [string], [float64], [bool], [[]string].
 //
 // Use the methods beginning with 'As' to cast the union to one of its variants.
 //
 // If the underlying value is not a json object, one of the following properties
-// will be valid: OfString OfFloat OfBool]
+// will be valid: OfString OfFloat OfBool OfStringArray]
 type BetaDirectoryFileListResponseMetadataUnion struct {
 	// This field will be present if the value is a [string] instead of an object.
 	OfString string `json:",inline"`
@@ -319,11 +327,14 @@ type BetaDirectoryFileListResponseMetadataUnion struct {
 	OfFloat float64 `json:",inline"`
 	// This field will be present if the value is a [bool] instead of an object.
 	OfBool bool `json:",inline"`
-	JSON   struct {
-		OfString respjson.Field
-		OfFloat  respjson.Field
-		OfBool   respjson.Field
-		raw      string
+	// This field will be present if the value is a [[]string] instead of an object.
+	OfStringArray []string `json:",inline"`
+	JSON          struct {
+		OfString      respjson.Field
+		OfFloat       respjson.Field
+		OfBool        respjson.Field
+		OfStringArray respjson.Field
+		raw           string
 	} `json:"-"`
 }
 
@@ -338,6 +349,11 @@ func (u BetaDirectoryFileListResponseMetadataUnion) AsFloat() (v float64) {
 }
 
 func (u BetaDirectoryFileListResponseMetadataUnion) AsBool() (v bool) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u BetaDirectoryFileListResponseMetadataUnion) AsStringArray() (v []string) {
 	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
 	return
 }
@@ -398,12 +414,12 @@ func (r *BetaDirectoryFileAddResponse) UnmarshalJSON(data []byte) error {
 }
 
 // BetaDirectoryFileAddResponseMetadataUnion contains all possible properties and
-// values from [string], [float64], [bool].
+// values from [string], [float64], [bool], [[]string].
 //
 // Use the methods beginning with 'As' to cast the union to one of its variants.
 //
 // If the underlying value is not a json object, one of the following properties
-// will be valid: OfString OfFloat OfBool]
+// will be valid: OfString OfFloat OfBool OfStringArray]
 type BetaDirectoryFileAddResponseMetadataUnion struct {
 	// This field will be present if the value is a [string] instead of an object.
 	OfString string `json:",inline"`
@@ -411,11 +427,14 @@ type BetaDirectoryFileAddResponseMetadataUnion struct {
 	OfFloat float64 `json:",inline"`
 	// This field will be present if the value is a [bool] instead of an object.
 	OfBool bool `json:",inline"`
-	JSON   struct {
-		OfString respjson.Field
-		OfFloat  respjson.Field
-		OfBool   respjson.Field
-		raw      string
+	// This field will be present if the value is a [[]string] instead of an object.
+	OfStringArray []string `json:",inline"`
+	JSON          struct {
+		OfString      respjson.Field
+		OfFloat       respjson.Field
+		OfBool        respjson.Field
+		OfStringArray respjson.Field
+		raw           string
 	} `json:"-"`
 }
 
@@ -430,6 +449,11 @@ func (u BetaDirectoryFileAddResponseMetadataUnion) AsFloat() (v float64) {
 }
 
 func (u BetaDirectoryFileAddResponseMetadataUnion) AsBool() (v bool) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u BetaDirectoryFileAddResponseMetadataUnion) AsStringArray() (v []string) {
 	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
 	return
 }
@@ -490,12 +514,12 @@ func (r *BetaDirectoryFileGetResponse) UnmarshalJSON(data []byte) error {
 }
 
 // BetaDirectoryFileGetResponseMetadataUnion contains all possible properties and
-// values from [string], [float64], [bool].
+// values from [string], [float64], [bool], [[]string].
 //
 // Use the methods beginning with 'As' to cast the union to one of its variants.
 //
 // If the underlying value is not a json object, one of the following properties
-// will be valid: OfString OfFloat OfBool]
+// will be valid: OfString OfFloat OfBool OfStringArray]
 type BetaDirectoryFileGetResponseMetadataUnion struct {
 	// This field will be present if the value is a [string] instead of an object.
 	OfString string `json:",inline"`
@@ -503,11 +527,14 @@ type BetaDirectoryFileGetResponseMetadataUnion struct {
 	OfFloat float64 `json:",inline"`
 	// This field will be present if the value is a [bool] instead of an object.
 	OfBool bool `json:",inline"`
-	JSON   struct {
-		OfString respjson.Field
-		OfFloat  respjson.Field
-		OfBool   respjson.Field
-		raw      string
+	// This field will be present if the value is a [[]string] instead of an object.
+	OfStringArray []string `json:",inline"`
+	JSON          struct {
+		OfString      respjson.Field
+		OfFloat       respjson.Field
+		OfBool        respjson.Field
+		OfStringArray respjson.Field
+		raw           string
 	} `json:"-"`
 }
 
@@ -522,6 +549,11 @@ func (u BetaDirectoryFileGetResponseMetadataUnion) AsFloat() (v float64) {
 }
 
 func (u BetaDirectoryFileGetResponseMetadataUnion) AsBool() (v bool) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u BetaDirectoryFileGetResponseMetadataUnion) AsStringArray() (v []string) {
 	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
 	return
 }
@@ -582,12 +614,12 @@ func (r *BetaDirectoryFileUploadResponse) UnmarshalJSON(data []byte) error {
 }
 
 // BetaDirectoryFileUploadResponseMetadataUnion contains all possible properties
-// and values from [string], [float64], [bool].
+// and values from [string], [float64], [bool], [[]string].
 //
 // Use the methods beginning with 'As' to cast the union to one of its variants.
 //
 // If the underlying value is not a json object, one of the following properties
-// will be valid: OfString OfFloat OfBool]
+// will be valid: OfString OfFloat OfBool OfStringArray]
 type BetaDirectoryFileUploadResponseMetadataUnion struct {
 	// This field will be present if the value is a [string] instead of an object.
 	OfString string `json:",inline"`
@@ -595,11 +627,14 @@ type BetaDirectoryFileUploadResponseMetadataUnion struct {
 	OfFloat float64 `json:",inline"`
 	// This field will be present if the value is a [bool] instead of an object.
 	OfBool bool `json:",inline"`
-	JSON   struct {
-		OfString respjson.Field
-		OfFloat  respjson.Field
-		OfBool   respjson.Field
-		raw      string
+	// This field will be present if the value is a [[]string] instead of an object.
+	OfStringArray []string `json:",inline"`
+	JSON          struct {
+		OfString      respjson.Field
+		OfFloat       respjson.Field
+		OfBool        respjson.Field
+		OfStringArray respjson.Field
+		raw           string
 	} `json:"-"`
 }
 
@@ -614,6 +649,11 @@ func (u BetaDirectoryFileUploadResponseMetadataUnion) AsFloat() (v float64) {
 }
 
 func (u BetaDirectoryFileUploadResponseMetadataUnion) AsBool() (v bool) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u BetaDirectoryFileUploadResponseMetadataUnion) AsStringArray() (v []string) {
 	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
 	return
 }
@@ -661,14 +701,15 @@ func (r BetaDirectoryFileUpdateParams) URLQuery() (v url.Values, err error) {
 //
 // Use [param.IsOmitted] to confirm if a field is set.
 type BetaDirectoryFileUpdateParamsMetadataUnion struct {
-	OfString param.Opt[string]  `json:",omitzero,inline"`
-	OfFloat  param.Opt[float64] `json:",omitzero,inline"`
-	OfBool   param.Opt[bool]    `json:",omitzero,inline"`
+	OfString      param.Opt[string]  `json:",omitzero,inline"`
+	OfFloat       param.Opt[float64] `json:",omitzero,inline"`
+	OfBool        param.Opt[bool]    `json:",omitzero,inline"`
+	OfStringArray []string           `json:",omitzero,inline"`
 	paramUnion
 }
 
 func (u BetaDirectoryFileUpdateParamsMetadataUnion) MarshalJSON() ([]byte, error) {
-	return param.MarshalUnion(u, u.OfString, u.OfFloat, u.OfBool)
+	return param.MarshalUnion(u, u.OfString, u.OfFloat, u.OfBool, u.OfStringArray)
 }
 func (u *BetaDirectoryFileUpdateParamsMetadataUnion) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, u)
@@ -754,14 +795,15 @@ func (r BetaDirectoryFileAddParams) URLQuery() (v url.Values, err error) {
 //
 // Use [param.IsOmitted] to confirm if a field is set.
 type BetaDirectoryFileAddParamsMetadataUnion struct {
-	OfString param.Opt[string]  `json:",omitzero,inline"`
-	OfFloat  param.Opt[float64] `json:",omitzero,inline"`
-	OfBool   param.Opt[bool]    `json:",omitzero,inline"`
+	OfString      param.Opt[string]  `json:",omitzero,inline"`
+	OfFloat       param.Opt[float64] `json:",omitzero,inline"`
+	OfBool        param.Opt[bool]    `json:",omitzero,inline"`
+	OfStringArray []string           `json:",omitzero,inline"`
 	paramUnion
 }
 
 func (u BetaDirectoryFileAddParamsMetadataUnion) MarshalJSON() ([]byte, error) {
-	return param.MarshalUnion(u, u.OfString, u.OfFloat, u.OfBool)
+	return param.MarshalUnion(u, u.OfString, u.OfFloat, u.OfBool, u.OfStringArray)
 }
 func (u *BetaDirectoryFileAddParamsMetadataUnion) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, u)
