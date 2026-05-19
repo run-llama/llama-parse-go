@@ -15,6 +15,8 @@ import (
 type BetaService struct {
 	options     []option.RequestOption
 	Indexes     BetaIndexService
+	Retrieval   BetaRetrievalService
+	Chat        BetaChatService
 	AgentData   BetaAgentDataService
 	Sheets      BetaSheetService
 	Directories BetaDirectoryService
@@ -29,6 +31,8 @@ func NewBetaService(opts ...option.RequestOption) (r BetaService) {
 	r = BetaService{}
 	r.options = opts
 	r.Indexes = NewBetaIndexService(opts...)
+	r.Retrieval = NewBetaRetrievalService(opts...)
+	r.Chat = NewBetaChatService(opts...)
 	r.AgentData = NewBetaAgentDataService(opts...)
 	r.Sheets = NewBetaSheetService(opts...)
 	r.Directories = NewBetaDirectoryService(opts...)
