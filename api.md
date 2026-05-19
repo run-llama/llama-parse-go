@@ -432,6 +432,21 @@ Methods:
 
 # Beta
 
+## Indexes
+
+Response Types:
+
+- <a href="https://pkg.go.dev/github.com/stainless-sdks/llamacloud-prod-go">llamacloudprod</a>.<a href="https://pkg.go.dev/github.com/stainless-sdks/llamacloud-prod-go#BetaIndexNewResponse">BetaIndexNewResponse</a>
+- <a href="https://pkg.go.dev/github.com/stainless-sdks/llamacloud-prod-go">llamacloudprod</a>.<a href="https://pkg.go.dev/github.com/stainless-sdks/llamacloud-prod-go#BetaIndexGetResponse">BetaIndexGetResponse</a>
+- <a href="https://pkg.go.dev/github.com/stainless-sdks/llamacloud-prod-go">llamacloudprod</a>.<a href="https://pkg.go.dev/github.com/stainless-sdks/llamacloud-prod-go#BetaIndexSyncResponse">BetaIndexSyncResponse</a>
+
+Methods:
+
+- <code title="post /api/v1/indexes">client.Beta.Indexes.<a href="https://pkg.go.dev/github.com/stainless-sdks/llamacloud-prod-go#BetaIndexService.New">New</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, params <a href="https://pkg.go.dev/github.com/stainless-sdks/llamacloud-prod-go">llamacloudprod</a>.<a href="https://pkg.go.dev/github.com/stainless-sdks/llamacloud-prod-go#BetaIndexNewParams">BetaIndexNewParams</a>) (\*<a href="https://pkg.go.dev/github.com/stainless-sdks/llamacloud-prod-go">llamacloudprod</a>.<a href="https://pkg.go.dev/github.com/stainless-sdks/llamacloud-prod-go#BetaIndexNewResponse">BetaIndexNewResponse</a>, <a href="https://pkg.go.dev/builtin#error">error</a>)</code>
+- <code title="delete /api/v1/indexes/{index_id}">client.Beta.Indexes.<a href="https://pkg.go.dev/github.com/stainless-sdks/llamacloud-prod-go#BetaIndexService.Delete">Delete</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, indexID <a href="https://pkg.go.dev/builtin#string">string</a>, body <a href="https://pkg.go.dev/github.com/stainless-sdks/llamacloud-prod-go">llamacloudprod</a>.<a href="https://pkg.go.dev/github.com/stainless-sdks/llamacloud-prod-go#BetaIndexDeleteParams">BetaIndexDeleteParams</a>) <a href="https://pkg.go.dev/builtin#error">error</a></code>
+- <code title="get /api/v1/indexes/{index_id}">client.Beta.Indexes.<a href="https://pkg.go.dev/github.com/stainless-sdks/llamacloud-prod-go#BetaIndexService.Get">Get</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, indexID <a href="https://pkg.go.dev/builtin#string">string</a>, query <a href="https://pkg.go.dev/github.com/stainless-sdks/llamacloud-prod-go">llamacloudprod</a>.<a href="https://pkg.go.dev/github.com/stainless-sdks/llamacloud-prod-go#BetaIndexGetParams">BetaIndexGetParams</a>) (\*<a href="https://pkg.go.dev/github.com/stainless-sdks/llamacloud-prod-go">llamacloudprod</a>.<a href="https://pkg.go.dev/github.com/stainless-sdks/llamacloud-prod-go#BetaIndexGetResponse">BetaIndexGetResponse</a>, <a href="https://pkg.go.dev/builtin#error">error</a>)</code>
+- <code title="post /api/v1/indexes/{index_id}/sync">client.Beta.Indexes.<a href="https://pkg.go.dev/github.com/stainless-sdks/llamacloud-prod-go#BetaIndexService.Sync">Sync</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, indexID <a href="https://pkg.go.dev/builtin#string">string</a>, body <a href="https://pkg.go.dev/github.com/stainless-sdks/llamacloud-prod-go">llamacloudprod</a>.<a href="https://pkg.go.dev/github.com/stainless-sdks/llamacloud-prod-go#BetaIndexSyncParams">BetaIndexSyncParams</a>) (\*<a href="https://pkg.go.dev/github.com/stainless-sdks/llamacloud-prod-go">llamacloudprod</a>.<a href="https://pkg.go.dev/github.com/stainless-sdks/llamacloud-prod-go#BetaIndexSyncResponse">BetaIndexSyncResponse</a>, <a href="https://pkg.go.dev/builtin#error">error</a>)</code>
+
 ## AgentData
 
 Response Types:
