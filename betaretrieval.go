@@ -13,6 +13,7 @@ import (
 	"github.com/stainless-sdks/llamacloud-prod-go/internal/apiquery"
 	"github.com/stainless-sdks/llamacloud-prod-go/internal/requestconfig"
 	"github.com/stainless-sdks/llamacloud-prod-go/option"
+	"github.com/stainless-sdks/llamacloud-prod-go/packages/pagination"
 	"github.com/stainless-sdks/llamacloud-prod-go/packages/param"
 	"github.com/stainless-sdks/llamacloud-prod-go/packages/respjson"
 )
@@ -45,12 +46,50 @@ func (r *BetaRetrievalService) Get(ctx context.Context, params BetaRetrievalGetP
 	return res, err
 }
 
-// Grep within a file's parsed content using a regex pattern.
-func (r *BetaRetrievalService) Grep(ctx context.Context, params BetaRetrievalGrepParams, opts ...option.RequestOption) (res *BetaRetrievalGrepResponse, err error) {
+// Search for files by name.
+func (r *BetaRetrievalService) Find(ctx context.Context, params BetaRetrievalFindParams, opts ...option.RequestOption) (res *pagination.PaginatedCursorPost[BetaRetrievalFindResponse], err error) {
+	var raw *http.Response
 	opts = slices.Concat(r.options, opts)
+	opts = append([]option.RequestOption{option.WithResponseInto(&raw)}, opts...)
+	path := "api/v1/retrieval/files/find"
+	cfg, err := requestconfig.NewRequestConfig(ctx, http.MethodPost, path, params, &res, opts...)
+	if err != nil {
+		return nil, err
+	}
+	err = cfg.Execute()
+	if err != nil {
+		return nil, err
+	}
+	res.SetPageConfig(cfg, raw)
+	return res, nil
+}
+
+// Search for files by name.
+func (r *BetaRetrievalService) FindAutoPaging(ctx context.Context, params BetaRetrievalFindParams, opts ...option.RequestOption) *pagination.PaginatedCursorPostAutoPager[BetaRetrievalFindResponse] {
+	return pagination.NewPaginatedCursorPostAutoPager(r.Find(ctx, params, opts...))
+}
+
+// Grep within a file's parsed content using a regex pattern.
+func (r *BetaRetrievalService) Grep(ctx context.Context, params BetaRetrievalGrepParams, opts ...option.RequestOption) (res *pagination.PaginatedCursorPost[BetaRetrievalGrepResponse], err error) {
+	var raw *http.Response
+	opts = slices.Concat(r.options, opts)
+	opts = append([]option.RequestOption{option.WithResponseInto(&raw)}, opts...)
 	path := "api/v1/retrieval/files/grep"
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, params, &res, opts...)
-	return res, err
+	cfg, err := requestconfig.NewRequestConfig(ctx, http.MethodPost, path, params, &res, opts...)
+	if err != nil {
+		return nil, err
+	}
+	err = cfg.Execute()
+	if err != nil {
+		return nil, err
+	}
+	res.SetPageConfig(cfg, raw)
+	return res, nil
+}
+
+// Grep within a file's parsed content using a regex pattern.
+func (r *BetaRetrievalService) GrepAutoPaging(ctx context.Context, params BetaRetrievalGrepParams, opts ...option.RequestOption) *pagination.PaginatedCursorPostAutoPager[BetaRetrievalGrepResponse] {
+	return pagination.NewPaginatedCursorPostAutoPager(r.Grep(ctx, params, opts...))
 }
 
 // Read the parsed text content of a specific file.
@@ -225,35 +264,29 @@ func (r *BetaRetrievalGetResponseResultStaticFieldsAttachment) UnmarshalJSON(dat
 	return apijson.UnmarshalRoot(data, r)
 }
 
-// Paginated grep results for a file.
-type BetaRetrievalGrepResponse struct {
-	// The list of items.
-	Items []BetaRetrievalGrepResponseItem `json:"items" api:"required"`
-	// A token, which can be sent as page_token to retrieve the next page. If this
-	// field is omitted, there are no subsequent pages.
-	NextPageToken string `json:"next_page_token" api:"nullable"`
-	// The total number of items available. This is only populated when specifically
-	// requested. The value may be an estimate and can be used for display purposes
-	// only.
-	TotalSize int64 `json:"total_size" api:"nullable"`
+// A file returned by find.
+type BetaRetrievalFindResponse struct {
+	// ID of the file.
+	FileID string `json:"file_id" api:"required"`
+	// Display name of the file.
+	FileName string `json:"file_name" api:"required"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
-		Items         respjson.Field
-		NextPageToken respjson.Field
-		TotalSize     respjson.Field
-		ExtraFields   map[string]respjson.Field
-		raw           string
+		FileID      respjson.Field
+		FileName    respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
 	} `json:"-"`
 }
 
 // Returns the unmodified JSON received from the API
-func (r BetaRetrievalGrepResponse) RawJSON() string { return r.JSON.raw }
-func (r *BetaRetrievalGrepResponse) UnmarshalJSON(data []byte) error {
+func (r BetaRetrievalFindResponse) RawJSON() string { return r.JSON.raw }
+func (r *BetaRetrievalFindResponse) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
 // A single grep match within a file.
-type BetaRetrievalGrepResponseItem struct {
+type BetaRetrievalGrepResponse struct {
 	// Matched text content.
 	Content string `json:"content" api:"required"`
 	// End character offset of the match.
@@ -271,8 +304,8 @@ type BetaRetrievalGrepResponseItem struct {
 }
 
 // Returns the unmodified JSON received from the API
-func (r BetaRetrievalGrepResponseItem) RawJSON() string { return r.JSON.raw }
-func (r *BetaRetrievalGrepResponseItem) UnmarshalJSON(data []byte) error {
+func (r BetaRetrievalGrepResponse) RawJSON() string { return r.JSON.raw }
+func (r *BetaRetrievalGrepResponse) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
@@ -514,6 +547,42 @@ func (u BetaRetrievalGetParamsStaticFiltersParsedDirectoryFileIDValueUnion) Mars
 }
 func (u *BetaRetrievalGetParamsStaticFiltersParsedDirectoryFileIDValueUnion) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, u)
+}
+
+type BetaRetrievalFindParams struct {
+	// ID of the index to search within.
+	IndexID        string            `json:"index_id" api:"required"`
+	OrganizationID param.Opt[string] `query:"organization_id,omitzero" format:"uuid" json:"-"`
+	ProjectID      param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
+	// Exact file name to match.
+	FileName param.Opt[string] `json:"file_name,omitzero"`
+	// Substring match on file name (case-insensitive).
+	FileNameContains param.Opt[string] `json:"file_name_contains,omitzero"`
+	// The maximum number of items to return. The service may return fewer than this
+	// value. If unspecified, a default page size will be used. The maximum value is
+	// typically 1000; values above this will be coerced to the maximum.
+	PageSize param.Opt[int64] `json:"page_size,omitzero"`
+	// A page token, received from a previous list call. Provide this to retrieve the
+	// subsequent page.
+	PageToken param.Opt[string] `json:"page_token,omitzero"`
+	paramObj
+}
+
+func (r BetaRetrievalFindParams) MarshalJSON() (data []byte, err error) {
+	type shadow BetaRetrievalFindParams
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *BetaRetrievalFindParams) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// URLQuery serializes [BetaRetrievalFindParams]'s query parameters as
+// `url.Values`.
+func (r BetaRetrievalFindParams) URLQuery() (v url.Values, err error) {
+	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
+		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
+		NestedFormat: apiquery.NestedQueryFormatBrackets,
+	})
 }
 
 type BetaRetrievalGrepParams struct {
