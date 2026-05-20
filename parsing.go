@@ -2278,7 +2278,7 @@ func (r *ParsingNewParamsProcessingControlJobFailureConditions) UnmarshalJSON(da
 
 // Timeout settings for job execution. Increase for large or complex documents
 type ParsingNewParamsProcessingControlTimeouts struct {
-	// Base timeout for the job in seconds (max 1800 = 30 minutes). This is the minimum
+	// Base timeout for the job in seconds (max 7200 = 2 hours). This is the minimum
 	// time allowed regardless of document size
 	BaseInSeconds param.Opt[int64] `json:"base_in_seconds,omitzero"`
 	// Additional timeout per page in seconds (max 300 = 5 minutes). Total timeout =
