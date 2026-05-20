@@ -61,14 +61,6 @@ func (r *BetaRetrievalService) Read(ctx context.Context, params BetaRetrievalRea
 	return res, err
 }
 
-// Search for files by name.
-func (r *BetaRetrievalService) Search(ctx context.Context, params BetaRetrievalSearchParams, opts ...option.RequestOption) (res *BetaRetrievalSearchResponse, err error) {
-	opts = slices.Concat(r.options, opts)
-	path := "api/v1/retrieval/files/search"
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, params, &res, opts...)
-	return res, err
-}
-
 // Response containing retrieval results.
 type BetaRetrievalGetResponse struct {
 	// Ordered list of retrieved chunks.
@@ -233,15 +225,24 @@ func (r *BetaRetrievalGetResponseResultStaticFieldsAttachment) UnmarshalJSON(dat
 	return apijson.UnmarshalRoot(data, r)
 }
 
-// Grep results for a file.
+// Paginated grep results for a file.
 type BetaRetrievalGrepResponse struct {
-	// Regex matches found in the file.
-	Matches []BetaRetrievalGrepResponseMatch `json:"matches" api:"required"`
+	// The list of items.
+	Items []BetaRetrievalGrepResponseItem `json:"items" api:"required"`
+	// A token, which can be sent as page_token to retrieve the next page. If this
+	// field is omitted, there are no subsequent pages.
+	NextPageToken string `json:"next_page_token" api:"nullable"`
+	// The total number of items available. This is only populated when specifically
+	// requested. The value may be an estimate and can be used for display purposes
+	// only.
+	TotalSize int64 `json:"total_size" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
-		Matches     respjson.Field
-		ExtraFields map[string]respjson.Field
-		raw         string
+		Items         respjson.Field
+		NextPageToken respjson.Field
+		TotalSize     respjson.Field
+		ExtraFields   map[string]respjson.Field
+		raw           string
 	} `json:"-"`
 }
 
@@ -252,7 +253,7 @@ func (r *BetaRetrievalGrepResponse) UnmarshalJSON(data []byte) error {
 }
 
 // A single grep match within a file.
-type BetaRetrievalGrepResponseMatch struct {
+type BetaRetrievalGrepResponseItem struct {
 	// Matched text content.
 	Content string `json:"content" api:"required"`
 	// End character offset of the match.
@@ -270,8 +271,8 @@ type BetaRetrievalGrepResponseMatch struct {
 }
 
 // Returns the unmodified JSON received from the API
-func (r BetaRetrievalGrepResponseMatch) RawJSON() string { return r.JSON.raw }
-func (r *BetaRetrievalGrepResponseMatch) UnmarshalJSON(data []byte) error {
+func (r BetaRetrievalGrepResponseItem) RawJSON() string { return r.JSON.raw }
+func (r *BetaRetrievalGrepResponseItem) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
@@ -290,45 +291,6 @@ type BetaRetrievalReadResponse struct {
 // Returns the unmodified JSON received from the API
 func (r BetaRetrievalReadResponse) RawJSON() string { return r.JSON.raw }
 func (r *BetaRetrievalReadResponse) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-// File search results.
-type BetaRetrievalSearchResponse struct {
-	// Matching files with names.
-	Files []BetaRetrievalSearchResponseFile `json:"files" api:"required"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		Files       respjson.Field
-		ExtraFields map[string]respjson.Field
-		raw         string
-	} `json:"-"`
-}
-
-// Returns the unmodified JSON received from the API
-func (r BetaRetrievalSearchResponse) RawJSON() string { return r.JSON.raw }
-func (r *BetaRetrievalSearchResponse) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-// A file returned by search.
-type BetaRetrievalSearchResponseFile struct {
-	// ID of the file.
-	FileID string `json:"file_id" api:"required"`
-	// Display name of the file.
-	FileName string `json:"file_name" api:"required"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		FileID      respjson.Field
-		FileName    respjson.Field
-		ExtraFields map[string]respjson.Field
-		raw         string
-	} `json:"-"`
-}
-
-// Returns the unmodified JSON received from the API
-func (r BetaRetrievalSearchResponseFile) RawJSON() string { return r.JSON.raw }
-func (r *BetaRetrievalSearchResponseFile) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
@@ -566,8 +528,13 @@ type BetaRetrievalGrepParams struct {
 	// Number of characters of context to include before and after the matched pattern
 	// in the content field of the response
 	ContextChars param.Opt[int64] `json:"context_chars,omitzero"`
-	// Maximum number of matches to return.
-	Limit param.Opt[int64] `json:"limit,omitzero"`
+	// The maximum number of items to return. The service may return fewer than this
+	// value. If unspecified, a default page size will be used. The maximum value is
+	// typically 1000; values above this will be coerced to the maximum.
+	PageSize param.Opt[int64] `json:"page_size,omitzero"`
+	// A page token, received from a previous list call. Provide this to retrieve the
+	// subsequent page.
+	PageToken param.Opt[string] `json:"page_token,omitzero"`
 	paramObj
 }
 
@@ -613,37 +580,6 @@ func (r *BetaRetrievalReadParams) UnmarshalJSON(data []byte) error {
 // URLQuery serializes [BetaRetrievalReadParams]'s query parameters as
 // `url.Values`.
 func (r BetaRetrievalReadParams) URLQuery() (v url.Values, err error) {
-	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
-		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
-		NestedFormat: apiquery.NestedQueryFormatBrackets,
-	})
-}
-
-type BetaRetrievalSearchParams struct {
-	// ID of the index to search within.
-	IndexID        string            `json:"index_id" api:"required"`
-	OrganizationID param.Opt[string] `query:"organization_id,omitzero" format:"uuid" json:"-"`
-	ProjectID      param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
-	// Exact file name to match.
-	FileName param.Opt[string] `json:"file_name,omitzero"`
-	// Substring match on file name (case-insensitive).
-	FileNameContains param.Opt[string] `json:"file_name_contains,omitzero"`
-	// Maximum number of files to return.
-	Limit param.Opt[int64] `json:"limit,omitzero"`
-	paramObj
-}
-
-func (r BetaRetrievalSearchParams) MarshalJSON() (data []byte, err error) {
-	type shadow BetaRetrievalSearchParams
-	return param.MarshalObject(r, (*shadow)(&r))
-}
-func (r *BetaRetrievalSearchParams) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-// URLQuery serializes [BetaRetrievalSearchParams]'s query parameters as
-// `url.Values`.
-func (r BetaRetrievalSearchParams) URLQuery() (v url.Values, err error) {
 	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
 		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
 		NestedFormat: apiquery.NestedQueryFormatBrackets,
