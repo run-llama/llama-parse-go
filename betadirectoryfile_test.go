@@ -33,17 +33,17 @@ func TestBetaDirectoryFileUpdateWithOptionalParams(t *testing.T) {
 		context.TODO(),
 		"directory_file_id",
 		llamacloudprod.BetaDirectoryFileUpdateParams{
-			PathDirectoryID: "directory_id",
-			OrganizationID:  llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-			ProjectID:       llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-			BodyDirectoryID: llamacloudprod.String("directory_id"),
-			DisplayName:     llamacloudprod.String("display_name"),
+			DirectoryID:    "directory_id",
+			OrganizationID: llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+			ProjectID:      llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+			DisplayName:    llamacloudprod.String("display_name"),
 			Metadata: map[string]*llamacloudprod.BetaDirectoryFileUpdateParamsMetadataUnion{
 				"foo": {
 					OfString: llamacloudprod.String("string"),
 				},
 			},
-			UniqueID: llamacloudprod.String("x"),
+			TargetDirectoryID: llamacloudprod.String("target_directory_id"),
+			UniqueID:          llamacloudprod.String("x"),
 		},
 	)
 	if err != nil {

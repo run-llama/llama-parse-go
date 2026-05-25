@@ -83,8 +83,8 @@ func (r *PipelineDataSourceService) GetStatus(ctx context.Context, dataSourceID 
 	return res, err
 }
 
-// Run ingestion for the pipeline data source by incrementally updating the
-// data-sink with upstream changes from data-source.
+// Run incremental ingestion: pull upstream changes from the data source into the
+// data sink.
 func (r *PipelineDataSourceService) Sync(ctx context.Context, dataSourceID string, params PipelineDataSourceSyncParams, opts ...option.RequestOption) (res *Pipeline, err error) {
 	opts = slices.Concat(r.options, opts)
 	if params.PipelineID == "" {

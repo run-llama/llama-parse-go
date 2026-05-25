@@ -7,6 +7,7 @@ import (
 	"errors"
 	"os"
 	"testing"
+	"time"
 
 	"github.com/stainless-sdks/llamacloud-prod-go"
 	"github.com/stainless-sdks/llamacloud-prod-go/internal/testutil"
@@ -31,6 +32,11 @@ func TestBetaDirectoryNewWithOptionalParams(t *testing.T) {
 		OrganizationID: llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		ProjectID:      llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		Description:    llamacloudprod.String("description"),
+		ExpiresAt:      llamacloudprod.Time(time.Now()),
+		SystemMetadata: map[string]any{
+			"foo": "bar",
+		},
+		Type: llamacloudprod.BetaDirectoryNewParamsTypeUser,
 	})
 	if err != nil {
 		var apierr *llamacloudprod.Error

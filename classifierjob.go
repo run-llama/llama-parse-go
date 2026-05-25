@@ -40,8 +40,7 @@ func NewClassifierJobService(opts ...option.RequestOption) (r ClassifierJobServi
 	return
 }
 
-// Create a classify job. Experimental: This endpoint is not yet ready for
-// production use and is subject to change at any time.
+// Create a classify job. Experimental: not production-ready and subject to change.
 //
 // Deprecated: Please use `client.classify.create()`
 func (r *ClassifierJobService) New(ctx context.Context, params ClassifierJobNewParams, opts ...option.RequestOption) (res *ClassifyJob, err error) {
@@ -51,8 +50,7 @@ func (r *ClassifierJobService) New(ctx context.Context, params ClassifierJobNewP
 	return res, err
 }
 
-// List classify jobs. Experimental: This endpoint is not yet ready for production
-// use and is subject to change at any time.
+// List classify jobs. Experimental: not production-ready and subject to change.
 //
 // Deprecated: Please use `client.classify.list()`
 func (r *ClassifierJobService) List(ctx context.Context, query ClassifierJobListParams, opts ...option.RequestOption) (res *pagination.PaginatedCursor[ClassifyJob], err error) {
@@ -72,16 +70,14 @@ func (r *ClassifierJobService) List(ctx context.Context, query ClassifierJobList
 	return res, nil
 }
 
-// List classify jobs. Experimental: This endpoint is not yet ready for production
-// use and is subject to change at any time.
+// List classify jobs. Experimental: not production-ready and subject to change.
 //
 // Deprecated: Please use `client.classify.list()`
 func (r *ClassifierJobService) ListAutoPaging(ctx context.Context, query ClassifierJobListParams, opts ...option.RequestOption) *pagination.PaginatedCursorAutoPager[ClassifyJob] {
 	return pagination.NewPaginatedCursorAutoPager(r.List(ctx, query, opts...))
 }
 
-// Get a classify job. Experimental: This endpoint is not yet ready for production
-// use and is subject to change at any time.
+// Get a classify job. Experimental: not production-ready and subject to change.
 //
 // Deprecated: Please use `client.classify.get()`
 func (r *ClassifierJobService) Get(ctx context.Context, classifyJobID string, query ClassifierJobGetParams, opts ...option.RequestOption) (res *ClassifyJob, err error) {
@@ -95,8 +91,8 @@ func (r *ClassifierJobService) Get(ctx context.Context, classifyJobID string, qu
 	return res, err
 }
 
-// Get the results of a classify job. Experimental: This endpoint is not yet ready
-// for production use and is subject to change at any time.
+// Get the results of a classify job. Experimental: not production-ready and
+// subject to change.
 //
 // Deprecated: Please use `client.classify.get()`
 func (r *ClassifierJobService) GetResults(ctx context.Context, classifyJobID string, query ClassifierJobGetResultsParams, opts ...option.RequestOption) (res *ClassifierJobGetResultsResponse, err error) {

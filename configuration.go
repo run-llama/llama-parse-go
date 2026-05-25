@@ -42,10 +42,8 @@ func NewConfigurationService(opts ...option.RequestOption) (r ConfigurationServi
 	return
 }
 
-// Create or update a product configuration.
-//
-// If a configuration with the same name already exists for this product type and
-// project, it will be updated (upsert semantics).
+// Upsert a product configuration; updates if one with the same name + product
+// type + project exists, otherwise creates.
 func (r *ConfigurationService) New(ctx context.Context, params ConfigurationNewParams, opts ...option.RequestOption) (res *ConfigurationResponse, err error) {
 	opts = slices.Concat(r.options, opts)
 	path := "api/v1/beta/configurations"
@@ -1307,8 +1305,7 @@ type ParseV2ParametersVersion string
 
 const (
 	ParseV2ParametersVersionLatest     ParseV2ParametersVersion = "latest"
-	ParseV2ParametersVersion2026_05_13 ParseV2ParametersVersion = "2026-05-13"
-	ParseV2ParametersVersion2026_05_11 ParseV2ParametersVersion = "2026-05-11"
+	ParseV2ParametersVersion2026_05_21 ParseV2ParametersVersion = "2026-05-21"
 	ParseV2ParametersVersion2026_04_09 ParseV2ParametersVersion = "2026-04-09"
 	ParseV2ParametersVersion2025_12_11 ParseV2ParametersVersion = "2025-12-11"
 )

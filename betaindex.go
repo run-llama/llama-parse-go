@@ -195,10 +195,21 @@ type BetaIndexNewParams struct {
 	ProjectID         param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
 	// Optional description of the index.
 	Description param.Opt[string] `json:"description,omitzero"`
+	// Optional display name for the index. If omitted, the index is named after the
+	// source directory.
+	Name param.Opt[string] `json:"name,omitzero"`
+	// How often to re-run the sync. One of: manual, daily, on_source_change. Defaults
+	// to manual.
+	SyncFrequency param.Opt[string] `json:"sync_frequency,omitzero"`
 	// Product configurations for syncing. Omit to use a default parse configuration.
 	// Include an explicit entry per product type (e.g. parse, extract) to override the
 	// default.
 	Products []BetaIndexNewParamsProduct `json:"products,omitzero"`
+	// Attachment kinds to store alongside parsed output. Each entry must be one of:
+	// screenshots, items. For example, ['screenshots'] renders and stores per-page
+	// screenshots; ['items'] stores structured items with bounding boxes. Omit or pass
+	// an empty list to skip attachments.
+	StoreAttachments []string `json:"store_attachments,omitzero"`
 	paramObj
 }
 
@@ -218,16 +229,18 @@ func (r BetaIndexNewParams) URLQuery() (v url.Values, err error) {
 	})
 }
 
-// A product configuration to include in a sync.
+// A product configuration to include in an index's sync.
+//
+// Structurally mirrors `directory_sync.SyncProductEntryRequest` but is a distinct
+// class so the Index API surface stays SDK-gen-isolated from directory-sync
+// internals. Translation between the two happens in `index/api_utils.py`.
 //
 // The properties ProductConfigID, ProductType are required.
 type BetaIndexNewParamsProduct struct {
 	// ID of the product configuration.
 	ProductConfigID string `json:"product_config_id" api:"required"`
-	// Product type: parse or extract.
-	//
-	// Any of "parse", "extract".
-	ProductType string `json:"product_type,omitzero" api:"required"`
+	// Product type. One of: parse, extract.
+	ProductType string `json:"product_type" api:"required"`
 	paramObj
 }
 
@@ -237,12 +250,6 @@ func (r BetaIndexNewParamsProduct) MarshalJSON() (data []byte, err error) {
 }
 func (r *BetaIndexNewParamsProduct) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
-}
-
-func init() {
-	apijson.RegisterFieldValidator[BetaIndexNewParamsProduct](
-		"product_type", "parse", "extract",
-	)
 }
 
 type BetaIndexDeleteParams struct {
