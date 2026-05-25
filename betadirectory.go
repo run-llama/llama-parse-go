@@ -123,19 +123,30 @@ type BetaDirectoryNewResponse struct {
 	DeletedAt time.Time `json:"deleted_at" api:"nullable" format:"date-time"`
 	// Optional description shown to users.
 	Description string `json:"description" api:"nullable"`
+	// When this directory expires and is eligible for cleanup.
+	ExpiresAt time.Time `json:"expires_at" api:"nullable" format:"date-time"`
+	// Reserved system-managed metadata.
+	SystemMetadata map[string]any `json:"system_metadata" api:"nullable"`
+	// Directory type: 'user', 'index', 'ephemeral', or 'system_ephemeral'.
+	//
+	// Any of "user", "index", "ephemeral", "system_ephemeral".
+	Type BetaDirectoryNewResponseType `json:"type" api:"nullable"`
 	// Update datetime
 	UpdatedAt time.Time `json:"updated_at" api:"nullable" format:"date-time"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
-		ID          respjson.Field
-		Name        respjson.Field
-		ProjectID   respjson.Field
-		CreatedAt   respjson.Field
-		DeletedAt   respjson.Field
-		Description respjson.Field
-		UpdatedAt   respjson.Field
-		ExtraFields map[string]respjson.Field
-		raw         string
+		ID             respjson.Field
+		Name           respjson.Field
+		ProjectID      respjson.Field
+		CreatedAt      respjson.Field
+		DeletedAt      respjson.Field
+		Description    respjson.Field
+		ExpiresAt      respjson.Field
+		SystemMetadata respjson.Field
+		Type           respjson.Field
+		UpdatedAt      respjson.Field
+		ExtraFields    map[string]respjson.Field
+		raw            string
 	} `json:"-"`
 }
 
@@ -144,6 +155,16 @@ func (r BetaDirectoryNewResponse) RawJSON() string { return r.JSON.raw }
 func (r *BetaDirectoryNewResponse) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
+
+// Directory type: 'user', 'index', 'ephemeral', or 'system_ephemeral'.
+type BetaDirectoryNewResponseType string
+
+const (
+	BetaDirectoryNewResponseTypeUser            BetaDirectoryNewResponseType = "user"
+	BetaDirectoryNewResponseTypeIndex           BetaDirectoryNewResponseType = "index"
+	BetaDirectoryNewResponseTypeEphemeral       BetaDirectoryNewResponseType = "ephemeral"
+	BetaDirectoryNewResponseTypeSystemEphemeral BetaDirectoryNewResponseType = "system_ephemeral"
+)
 
 // API response schema for a directory.
 type BetaDirectoryUpdateResponse struct {
@@ -159,19 +180,30 @@ type BetaDirectoryUpdateResponse struct {
 	DeletedAt time.Time `json:"deleted_at" api:"nullable" format:"date-time"`
 	// Optional description shown to users.
 	Description string `json:"description" api:"nullable"`
+	// When this directory expires and is eligible for cleanup.
+	ExpiresAt time.Time `json:"expires_at" api:"nullable" format:"date-time"`
+	// Reserved system-managed metadata.
+	SystemMetadata map[string]any `json:"system_metadata" api:"nullable"`
+	// Directory type: 'user', 'index', 'ephemeral', or 'system_ephemeral'.
+	//
+	// Any of "user", "index", "ephemeral", "system_ephemeral".
+	Type BetaDirectoryUpdateResponseType `json:"type" api:"nullable"`
 	// Update datetime
 	UpdatedAt time.Time `json:"updated_at" api:"nullable" format:"date-time"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
-		ID          respjson.Field
-		Name        respjson.Field
-		ProjectID   respjson.Field
-		CreatedAt   respjson.Field
-		DeletedAt   respjson.Field
-		Description respjson.Field
-		UpdatedAt   respjson.Field
-		ExtraFields map[string]respjson.Field
-		raw         string
+		ID             respjson.Field
+		Name           respjson.Field
+		ProjectID      respjson.Field
+		CreatedAt      respjson.Field
+		DeletedAt      respjson.Field
+		Description    respjson.Field
+		ExpiresAt      respjson.Field
+		SystemMetadata respjson.Field
+		Type           respjson.Field
+		UpdatedAt      respjson.Field
+		ExtraFields    map[string]respjson.Field
+		raw            string
 	} `json:"-"`
 }
 
@@ -180,6 +212,16 @@ func (r BetaDirectoryUpdateResponse) RawJSON() string { return r.JSON.raw }
 func (r *BetaDirectoryUpdateResponse) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
+
+// Directory type: 'user', 'index', 'ephemeral', or 'system_ephemeral'.
+type BetaDirectoryUpdateResponseType string
+
+const (
+	BetaDirectoryUpdateResponseTypeUser            BetaDirectoryUpdateResponseType = "user"
+	BetaDirectoryUpdateResponseTypeIndex           BetaDirectoryUpdateResponseType = "index"
+	BetaDirectoryUpdateResponseTypeEphemeral       BetaDirectoryUpdateResponseType = "ephemeral"
+	BetaDirectoryUpdateResponseTypeSystemEphemeral BetaDirectoryUpdateResponseType = "system_ephemeral"
+)
 
 // API response schema for a directory.
 type BetaDirectoryListResponse struct {
@@ -195,19 +237,30 @@ type BetaDirectoryListResponse struct {
 	DeletedAt time.Time `json:"deleted_at" api:"nullable" format:"date-time"`
 	// Optional description shown to users.
 	Description string `json:"description" api:"nullable"`
+	// When this directory expires and is eligible for cleanup.
+	ExpiresAt time.Time `json:"expires_at" api:"nullable" format:"date-time"`
+	// Reserved system-managed metadata.
+	SystemMetadata map[string]any `json:"system_metadata" api:"nullable"`
+	// Directory type: 'user', 'index', 'ephemeral', or 'system_ephemeral'.
+	//
+	// Any of "user", "index", "ephemeral", "system_ephemeral".
+	Type BetaDirectoryListResponseType `json:"type" api:"nullable"`
 	// Update datetime
 	UpdatedAt time.Time `json:"updated_at" api:"nullable" format:"date-time"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
-		ID          respjson.Field
-		Name        respjson.Field
-		ProjectID   respjson.Field
-		CreatedAt   respjson.Field
-		DeletedAt   respjson.Field
-		Description respjson.Field
-		UpdatedAt   respjson.Field
-		ExtraFields map[string]respjson.Field
-		raw         string
+		ID             respjson.Field
+		Name           respjson.Field
+		ProjectID      respjson.Field
+		CreatedAt      respjson.Field
+		DeletedAt      respjson.Field
+		Description    respjson.Field
+		ExpiresAt      respjson.Field
+		SystemMetadata respjson.Field
+		Type           respjson.Field
+		UpdatedAt      respjson.Field
+		ExtraFields    map[string]respjson.Field
+		raw            string
 	} `json:"-"`
 }
 
@@ -216,6 +269,16 @@ func (r BetaDirectoryListResponse) RawJSON() string { return r.JSON.raw }
 func (r *BetaDirectoryListResponse) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
+
+// Directory type: 'user', 'index', 'ephemeral', or 'system_ephemeral'.
+type BetaDirectoryListResponseType string
+
+const (
+	BetaDirectoryListResponseTypeUser            BetaDirectoryListResponseType = "user"
+	BetaDirectoryListResponseTypeIndex           BetaDirectoryListResponseType = "index"
+	BetaDirectoryListResponseTypeEphemeral       BetaDirectoryListResponseType = "ephemeral"
+	BetaDirectoryListResponseTypeSystemEphemeral BetaDirectoryListResponseType = "system_ephemeral"
+)
 
 // API response schema for a directory.
 type BetaDirectoryGetResponse struct {
@@ -231,19 +294,30 @@ type BetaDirectoryGetResponse struct {
 	DeletedAt time.Time `json:"deleted_at" api:"nullable" format:"date-time"`
 	// Optional description shown to users.
 	Description string `json:"description" api:"nullable"`
+	// When this directory expires and is eligible for cleanup.
+	ExpiresAt time.Time `json:"expires_at" api:"nullable" format:"date-time"`
+	// Reserved system-managed metadata.
+	SystemMetadata map[string]any `json:"system_metadata" api:"nullable"`
+	// Directory type: 'user', 'index', 'ephemeral', or 'system_ephemeral'.
+	//
+	// Any of "user", "index", "ephemeral", "system_ephemeral".
+	Type BetaDirectoryGetResponseType `json:"type" api:"nullable"`
 	// Update datetime
 	UpdatedAt time.Time `json:"updated_at" api:"nullable" format:"date-time"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
-		ID          respjson.Field
-		Name        respjson.Field
-		ProjectID   respjson.Field
-		CreatedAt   respjson.Field
-		DeletedAt   respjson.Field
-		Description respjson.Field
-		UpdatedAt   respjson.Field
-		ExtraFields map[string]respjson.Field
-		raw         string
+		ID             respjson.Field
+		Name           respjson.Field
+		ProjectID      respjson.Field
+		CreatedAt      respjson.Field
+		DeletedAt      respjson.Field
+		Description    respjson.Field
+		ExpiresAt      respjson.Field
+		SystemMetadata respjson.Field
+		Type           respjson.Field
+		UpdatedAt      respjson.Field
+		ExtraFields    map[string]respjson.Field
+		raw            string
 	} `json:"-"`
 }
 
@@ -253,6 +327,16 @@ func (r *BetaDirectoryGetResponse) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
+// Directory type: 'user', 'index', 'ephemeral', or 'system_ephemeral'.
+type BetaDirectoryGetResponseType string
+
+const (
+	BetaDirectoryGetResponseTypeUser            BetaDirectoryGetResponseType = "user"
+	BetaDirectoryGetResponseTypeIndex           BetaDirectoryGetResponseType = "index"
+	BetaDirectoryGetResponseTypeEphemeral       BetaDirectoryGetResponseType = "ephemeral"
+	BetaDirectoryGetResponseTypeSystemEphemeral BetaDirectoryGetResponseType = "system_ephemeral"
+)
+
 type BetaDirectoryNewParams struct {
 	// Human-readable name for the directory.
 	Name           string            `json:"name" api:"required"`
@@ -260,6 +344,14 @@ type BetaDirectoryNewParams struct {
 	ProjectID      param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
 	// Optional description shown to users.
 	Description param.Opt[string] `json:"description,omitzero"`
+	// When this directory expires. Required for ephemeral directories.
+	ExpiresAt param.Opt[time.Time] `json:"expires_at,omitzero" format:"date-time"`
+	// Reserved system-managed metadata.
+	SystemMetadata map[string]any `json:"system_metadata,omitzero"`
+	// Directory type. Use 'ephemeral' for batch processing with automatic cleanup.
+	//
+	// Any of "user", "ephemeral".
+	Type BetaDirectoryNewParamsType `json:"type,omitzero"`
 	paramObj
 }
 
@@ -278,6 +370,14 @@ func (r BetaDirectoryNewParams) URLQuery() (v url.Values, err error) {
 		NestedFormat: apiquery.NestedQueryFormatBrackets,
 	})
 }
+
+// Directory type. Use 'ephemeral' for batch processing with automatic cleanup.
+type BetaDirectoryNewParamsType string
+
+const (
+	BetaDirectoryNewParamsTypeUser      BetaDirectoryNewParamsType = "user"
+	BetaDirectoryNewParamsTypeEphemeral BetaDirectoryNewParamsType = "ephemeral"
+)
 
 type BetaDirectoryUpdateParams struct {
 	OrganizationID param.Opt[string] `query:"organization_id,omitzero" format:"uuid" json:"-"`
@@ -313,7 +413,7 @@ type BetaDirectoryListParams struct {
 	PageToken      param.Opt[string] `query:"page_token,omitzero" json:"-"`
 	ProjectID      param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
 	IncludeDeleted param.Opt[bool]   `query:"include_deleted,omitzero" json:"-"`
-	// Any of "user", "index".
+	// Any of "user", "index", "ephemeral".
 	Type BetaDirectoryListParamsType `query:"type,omitzero" json:"-"`
 	paramObj
 }
@@ -330,8 +430,9 @@ func (r BetaDirectoryListParams) URLQuery() (v url.Values, err error) {
 type BetaDirectoryListParamsType string
 
 const (
-	BetaDirectoryListParamsTypeUser  BetaDirectoryListParamsType = "user"
-	BetaDirectoryListParamsTypeIndex BetaDirectoryListParamsType = "index"
+	BetaDirectoryListParamsTypeUser      BetaDirectoryListParamsType = "user"
+	BetaDirectoryListParamsTypeIndex     BetaDirectoryListParamsType = "index"
+	BetaDirectoryListParamsTypeEphemeral BetaDirectoryListParamsType = "ephemeral"
 )
 
 type BetaDirectoryDeleteParams struct {

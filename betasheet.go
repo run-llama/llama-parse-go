@@ -40,8 +40,8 @@ func NewBetaSheetService(opts ...option.RequestOption) (r BetaSheetService) {
 	return
 }
 
-// Create a spreadsheet parsing job. Experimental: This endpoint is not yet ready
-// for production use and is subject to change at any time.
+// Create a spreadsheet parsing job. Experimental: not production-ready and subject
+// to change.
 func (r *BetaSheetService) New(ctx context.Context, params BetaSheetNewParams, opts ...option.RequestOption) (res *SheetsJob, err error) {
 	opts = slices.Concat(r.options, opts)
 	path := "api/v1/beta/sheets/jobs"
@@ -49,8 +49,8 @@ func (r *BetaSheetService) New(ctx context.Context, params BetaSheetNewParams, o
 	return res, err
 }
 
-// List spreadsheet parsing jobs. Experimental: This endpoint is not yet ready for
-// production use and is subject to change at any time.
+// List spreadsheet parsing jobs. Experimental: not production-ready and subject to
+// change.
 func (r *BetaSheetService) List(ctx context.Context, query BetaSheetListParams, opts ...option.RequestOption) (res *pagination.PaginatedCursor[SheetsJob], err error) {
 	var raw *http.Response
 	opts = slices.Concat(r.options, opts)
@@ -68,15 +68,14 @@ func (r *BetaSheetService) List(ctx context.Context, query BetaSheetListParams, 
 	return res, nil
 }
 
-// List spreadsheet parsing jobs. Experimental: This endpoint is not yet ready for
-// production use and is subject to change at any time.
+// List spreadsheet parsing jobs. Experimental: not production-ready and subject to
+// change.
 func (r *BetaSheetService) ListAutoPaging(ctx context.Context, query BetaSheetListParams, opts ...option.RequestOption) *pagination.PaginatedCursorAutoPager[SheetsJob] {
 	return pagination.NewPaginatedCursorAutoPager(r.List(ctx, query, opts...))
 }
 
-// Delete a spreadsheet parsing job and its associated data. Experimental: This
-// endpoint is not yet ready for production use and is subject to change at any
-// time.
+// Delete a spreadsheet parsing job and its associated data. Experimental: not
+// production-ready and subject to change.
 func (r *BetaSheetService) DeleteJob(ctx context.Context, spreadsheetJobID string, body BetaSheetDeleteJobParams, opts ...option.RequestOption) (res *BetaSheetDeleteJobResponse, err error) {
 	opts = slices.Concat(r.options, opts)
 	if spreadsheetJobID == "" {
@@ -88,14 +87,9 @@ func (r *BetaSheetService) DeleteJob(ctx context.Context, spreadsheetJobID strin
 	return res, err
 }
 
-// Get a spreadsheet parsing job.
-//
-// When include_results=True (default), the response will include extracted regions
-// and results if the job is complete, eliminating the need for a separate /results
-// call.
-//
-// Experimental: This endpoint is not yet ready for production use and is subject
-// to change at any time.
+// Get a spreadsheet parsing job. When `include_results=True` (default), embeds
+// extracted regions and results if complete, skipping the separate `/results`
+// call. Experimental: not production-ready and subject to change.
 func (r *BetaSheetService) Get(ctx context.Context, spreadsheetJobID string, query BetaSheetGetParams, opts ...option.RequestOption) (res *SheetsJob, err error) {
 	opts = slices.Concat(r.options, opts)
 	if spreadsheetJobID == "" {
@@ -108,8 +102,7 @@ func (r *BetaSheetService) Get(ctx context.Context, spreadsheetJobID string, que
 }
 
 // Generate a presigned URL to download a specific extracted region. Experimental:
-// This endpoint is not yet ready for production use and is subject to change at
-// any time.
+// not production-ready and subject to change.
 func (r *BetaSheetService) GetResultTable(ctx context.Context, regionType BetaSheetGetResultTableParamsRegionType, params BetaSheetGetResultTableParams, opts ...option.RequestOption) (res *PresignedURL, err error) {
 	opts = slices.Concat(r.options, opts)
 	if params.SpreadsheetJobID == "" {

@@ -108,18 +108,6 @@ func (r *BetaChatService) GetSummary(ctx context.Context, sessionID string, quer
 	return res, err
 }
 
-// Generate a title for a session from its first user message.
-func (r *BetaChatService) SetTitle(ctx context.Context, sessionID string, params BetaChatSetTitleParams, opts ...option.RequestOption) (res *BetaChatSetTitleResponse, err error) {
-	opts = slices.Concat(r.options, opts)
-	if sessionID == "" {
-		err = errors.New("missing required session_id parameter")
-		return nil, err
-	}
-	path := fmt.Sprintf("api/v1/chat/%s/title", url.PathEscape(sessionID))
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, params, &res, opts...)
-	return res, err
-}
-
 // Stream agent events for a chat turn as Server-Sent Events.
 func (r *BetaChatService) Stream(ctx context.Context, sessionID string, params BetaChatStreamParams, opts ...option.RequestOption) (res *BetaChatStreamResponse, err error) {
 	opts = slices.Concat(r.options, opts)
@@ -729,67 +717,6 @@ func (r *BetaChatGetSummaryResponseJobMetadata) UnmarshalJSON(data []byte) error
 	return apijson.UnmarshalRoot(data, r)
 }
 
-// Summary of a chat session, including its title and last run metadata.
-type BetaChatSetTitleResponse struct {
-	// ISO-format timestamp showing when the session was last updated.
-	LastUpdatedAt string `json:"last_updated_at" api:"required"`
-	// Unique session identifier.
-	SessionID string `json:"session_id" api:"required"`
-	// Auto-generated title derived from the first user message.
-	GeneratedTitle string `json:"generated_title" api:"nullable"`
-	// Indexes this session is bound to. Null on unbound sessions.
-	IndexIDs []string `json:"index_ids" api:"nullable"`
-	// Token usage and status from the most recent run. Null if the session has not
-	// been run yet.
-	JobMetadata BetaChatSetTitleResponseJobMetadata `json:"job_metadata" api:"nullable"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		LastUpdatedAt  respjson.Field
-		SessionID      respjson.Field
-		GeneratedTitle respjson.Field
-		IndexIDs       respjson.Field
-		JobMetadata    respjson.Field
-		ExtraFields    map[string]respjson.Field
-		raw            string
-	} `json:"-"`
-}
-
-// Returns the unmodified JSON received from the API
-func (r BetaChatSetTitleResponse) RawJSON() string { return r.JSON.raw }
-func (r *BetaChatSetTitleResponse) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-// Token usage and status from the most recent run. Null if the session has not
-// been run yet.
-type BetaChatSetTitleResponseJobMetadata struct {
-	DurationMs        float64  `json:"duration_ms"`
-	Error             string   `json:"error" api:"nullable"`
-	ExportConfigIDs   []string `json:"export_config_ids" api:"nullable"`
-	IsError           bool     `json:"is_error"`
-	TotalInputTokens  int64    `json:"total_input_tokens" api:"nullable"`
-	TotalOutputTokens int64    `json:"total_output_tokens" api:"nullable"`
-	Turns             int64    `json:"turns"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		DurationMs        respjson.Field
-		Error             respjson.Field
-		ExportConfigIDs   respjson.Field
-		IsError           respjson.Field
-		TotalInputTokens  respjson.Field
-		TotalOutputTokens respjson.Field
-		Turns             respjson.Field
-		ExtraFields       map[string]respjson.Field
-		raw               string
-	} `json:"-"`
-}
-
-// Returns the unmodified JSON received from the API
-func (r BetaChatSetTitleResponseJobMetadata) RawJSON() string { return r.JSON.raw }
-func (r *BetaChatSetTitleResponseJobMetadata) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
 type BetaChatStreamResponse = any
 
 type BetaChatNewParams struct {
@@ -871,30 +798,6 @@ type BetaChatGetSummaryParams struct {
 // URLQuery serializes [BetaChatGetSummaryParams]'s query parameters as
 // `url.Values`.
 func (r BetaChatGetSummaryParams) URLQuery() (v url.Values, err error) {
-	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
-		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
-		NestedFormat: apiquery.NestedQueryFormatBrackets,
-	})
-}
-
-type BetaChatSetTitleParams struct {
-	// First user message of the session, used to infer a short title.
-	FirstMessage   string            `json:"first_message" api:"required"`
-	OrganizationID param.Opt[string] `query:"organization_id,omitzero" format:"uuid" json:"-"`
-	ProjectID      param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
-	paramObj
-}
-
-func (r BetaChatSetTitleParams) MarshalJSON() (data []byte, err error) {
-	type shadow BetaChatSetTitleParams
-	return param.MarshalObject(r, (*shadow)(&r))
-}
-func (r *BetaChatSetTitleParams) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-// URLQuery serializes [BetaChatSetTitleParams]'s query parameters as `url.Values`.
-func (r BetaChatSetTitleParams) URLQuery() (v url.Values, err error) {
 	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
 		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
 		NestedFormat: apiquery.NestedQueryFormatBrackets,

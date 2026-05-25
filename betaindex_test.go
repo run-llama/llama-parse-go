@@ -31,10 +31,13 @@ func TestBetaIndexNewWithOptionalParams(t *testing.T) {
 		OrganizationID:    llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		ProjectID:         llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		Description:       llamacloudprod.String("description"),
+		Name:              llamacloudprod.String("name"),
 		Products: []llamacloudprod.BetaIndexNewParamsProduct{{
 			ProductConfigID: "cfg-abc123",
 			ProductType:     "parse",
 		}},
+		StoreAttachments: []string{"screenshots"},
+		SyncFrequency:    llamacloudprod.String("manual"),
 	})
 	if err != nil {
 		var apierr *llamacloudprod.Error

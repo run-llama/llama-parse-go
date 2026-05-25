@@ -44,16 +44,12 @@ func NewBetaDirectoryFileService(opts ...option.RequestOption) (r BetaDirectoryF
 	return
 }
 
-// Update file metadata within the specified directory.
-//
-// Supports moving files to a different directory by setting directory_id.
-//
-// Note: This endpoint uses directory_file_id (the internal ID). If you're trying
-// to update a file by its unique_id, use the list endpoint with a filter to find
-// the directory_file_id first.
+// Update directory-file metadata by `directory_file_id`; set `directory_id` to
+// move the file to a different directory. To resolve from `unique_id`, list with a
+// filter first.
 func (r *BetaDirectoryFileService) Update(ctx context.Context, directoryFileID string, params BetaDirectoryFileUpdateParams, opts ...option.RequestOption) (res *BetaDirectoryFileUpdateResponse, err error) {
 	opts = slices.Concat(r.options, opts)
-	if params.PathDirectoryID == "" {
+	if params.DirectoryID == "" {
 		err = errors.New("missing required directory_id parameter")
 		return nil, err
 	}
@@ -61,7 +57,7 @@ func (r *BetaDirectoryFileService) Update(ctx context.Context, directoryFileID s
 		err = errors.New("missing required directory_file_id parameter")
 		return nil, err
 	}
-	path := fmt.Sprintf("api/v1/beta/directories/%s/files/%s", url.PathEscape(params.PathDirectoryID), url.PathEscape(directoryFileID))
+	path := fmt.Sprintf("api/v1/beta/directories/%s/files/%s", url.PathEscape(params.DirectoryID), url.PathEscape(directoryFileID))
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPatch, path, params, &res, opts...)
 	return res, err
 }
@@ -95,11 +91,8 @@ func (r *BetaDirectoryFileService) ListAutoPaging(ctx context.Context, directory
 	return pagination.NewPaginatedCursorAutoPager(r.List(ctx, directoryID, query, opts...))
 }
 
-// Delete a file from the specified directory.
-//
-// Note: This endpoint uses directory_file_id (the internal ID). If you're trying
-// to delete a file by its unique_id, use the list endpoint with a filter to find
-// the directory_file_id first.
+// Delete a directory file by `directory_file_id`; to resolve from `unique_id`,
+// list with a filter first.
 func (r *BetaDirectoryFileService) Delete(ctx context.Context, directoryFileID string, params BetaDirectoryFileDeleteParams, opts ...option.RequestOption) (err error) {
 	opts = slices.Concat(r.options, opts)
 	opts = append([]option.RequestOption{option.WithHeader("Accept", "*/*")}, opts...)
@@ -116,10 +109,8 @@ func (r *BetaDirectoryFileService) Delete(ctx context.Context, directoryFileID s
 	return err
 }
 
-// Create a new file within the specified directory.
-//
-// The directory must exist and belong to the project passed in. The file_id must
-// be provided and exist in the project.
+// Create a new file within the specified directory; the directory must exist in
+// the project and `file_id` must reference an existing file.
 func (r *BetaDirectoryFileService) Add(ctx context.Context, directoryID string, params BetaDirectoryFileAddParams, opts ...option.RequestOption) (res *BetaDirectoryFileAddResponse, err error) {
 	opts = slices.Concat(r.options, opts)
 	if directoryID == "" {
@@ -131,9 +122,8 @@ func (r *BetaDirectoryFileService) Add(ctx context.Context, directoryID string, 
 	return res, err
 }
 
-// Get a file by its directory_file_id within the specified directory. If you're
-// trying to get a file by its unique_id, use the list endpoint with a filter
-// instead.
+// Get a directory file by `directory_file_id`; to look up by `unique_id`, use the
+// list endpoint with a filter.
 func (r *BetaDirectoryFileService) Get(ctx context.Context, directoryFileID string, params BetaDirectoryFileGetParams, opts ...option.RequestOption) (res *BetaDirectoryFileGetResponse, err error) {
 	opts = slices.Concat(r.options, opts)
 	if params.DirectoryID == "" {
@@ -149,11 +139,8 @@ func (r *BetaDirectoryFileService) Get(ctx context.Context, directoryFileID stri
 	return res, err
 }
 
-// Upload a file directly to a directory.
-//
-// Uploads a file and creates a directory file entry in a single operation. If
-// unique_id or display_name are not provided, they will be derived from the file
-// metadata.
+// Upload a file and create its directory entry in one call; `unique_id` /
+// `display_name` default to values derived from file metadata.
 func (r *BetaDirectoryFileService) Upload(ctx context.Context, directoryID string, params BetaDirectoryFileUploadParams, opts ...option.RequestOption) (res *BetaDirectoryFileUploadResponse, err error) {
 	opts = slices.Concat(r.options, opts)
 	if directoryID == "" {
@@ -666,13 +653,13 @@ func (r *BetaDirectoryFileUploadResponseMetadataUnion) UnmarshalJSON(data []byte
 }
 
 type BetaDirectoryFileUpdateParams struct {
-	PathDirectoryID string            `path:"directory_id" api:"required" json:"-"`
-	OrganizationID  param.Opt[string] `query:"organization_id,omitzero" format:"uuid" json:"-"`
-	ProjectID       param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
-	// Move file to a different directory.
-	BodyDirectoryID param.Opt[string] `json:"directory_id,omitzero"`
+	DirectoryID    string            `path:"directory_id" api:"required" json:"-"`
+	OrganizationID param.Opt[string] `query:"organization_id,omitzero" format:"uuid" json:"-"`
+	ProjectID      param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
 	// Updated display name.
 	DisplayName param.Opt[string] `json:"display_name,omitzero"`
+	// Move file to a different directory.
+	TargetDirectoryID param.Opt[string] `json:"target_directory_id,omitzero"`
 	// Updated unique identifier.
 	UniqueID param.Opt[string] `json:"unique_id,omitzero"`
 	// User-defined metadata key-value pairs. Replaces the user metadata layer.

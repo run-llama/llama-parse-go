@@ -112,14 +112,7 @@ func (r *FileService) Get(ctx context.Context, fileID string, query FileGetParam
 	return res, err
 }
 
-// Query files with flexible filtering and pagination.
-//
-// **Deprecated**: Use GET /files instead for listing files with query parameters.
-//
-// Args: request: The query request with filters and pagination project: Validated
-// project from dependency
-//
-// Returns: Paginated response with files
+// Query files with filtering and pagination. Deprecated: use `GET /files`.
 //
 // Deprecated: Use the GET /files endpoint instead
 func (r *FileService) Query(ctx context.Context, params FileQueryParams, opts ...option.RequestOption) (res *FileQueryResponse, err error) {
