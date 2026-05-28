@@ -15,6 +15,7 @@ import (
 	"github.com/stainless-sdks/llamacloud-prod-go/internal/apiquery"
 	"github.com/stainless-sdks/llamacloud-prod-go/internal/requestconfig"
 	"github.com/stainless-sdks/llamacloud-prod-go/option"
+	"github.com/stainless-sdks/llamacloud-prod-go/packages/pagination"
 	"github.com/stainless-sdks/llamacloud-prod-go/packages/param"
 	"github.com/stainless-sdks/llamacloud-prod-go/packages/respjson"
 )
@@ -44,6 +45,29 @@ func (r *BetaIndexService) New(ctx context.Context, params BetaIndexNewParams, o
 	path := "api/v1/indexes"
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, params, &res, opts...)
 	return res, err
+}
+
+// List indexes for the current project.
+func (r *BetaIndexService) List(ctx context.Context, query BetaIndexListParams, opts ...option.RequestOption) (res *pagination.PaginatedCursor[BetaIndexListResponse], err error) {
+	var raw *http.Response
+	opts = slices.Concat(r.options, opts)
+	opts = append([]option.RequestOption{option.WithResponseInto(&raw)}, opts...)
+	path := "api/v1/indexes"
+	cfg, err := requestconfig.NewRequestConfig(ctx, http.MethodGet, path, query, &res, opts...)
+	if err != nil {
+		return nil, err
+	}
+	err = cfg.Execute()
+	if err != nil {
+		return nil, err
+	}
+	res.SetPageConfig(cfg, raw)
+	return res, nil
+}
+
+// List indexes for the current project.
+func (r *BetaIndexService) ListAutoPaging(ctx context.Context, query BetaIndexListParams, opts ...option.RequestOption) *pagination.PaginatedCursorAutoPager[BetaIndexListResponse] {
+	return pagination.NewPaginatedCursorAutoPager(r.List(ctx, query, opts...))
 }
 
 // Delete an index.
@@ -132,6 +156,57 @@ type BetaIndexNewResponse struct {
 // Returns the unmodified JSON received from the API
 func (r BetaIndexNewResponse) RawJSON() string { return r.JSON.raw }
 func (r *BetaIndexNewResponse) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// A searchable index over a directory of documents.
+type BetaIndexListResponse struct {
+	// Unique identifier
+	ID string `json:"id" api:"required"`
+	// ID of the export configuration.
+	ExportConfigID string `json:"export_config_id" api:"required"`
+	// Index name.
+	Name string `json:"name" api:"required"`
+	// Project this index belongs to.
+	ProjectID string `json:"project_id" api:"required"`
+	// ID of the source directory.
+	SourceDirectoryID string `json:"source_directory_id" api:"required"`
+	// ID of the sync configuration.
+	SyncConfigID string `json:"sync_config_id" api:"required"`
+	// Creation datetime
+	CreatedAt time.Time `json:"created_at" api:"nullable" format:"date-time"`
+	// Index description.
+	Description string `json:"description" api:"nullable"`
+	// Last export time.
+	LastExportedAt time.Time `json:"last_exported_at" api:"nullable" format:"date-time"`
+	// Last sync time.
+	LastSyncedAt time.Time `json:"last_synced_at" api:"nullable" format:"date-time"`
+	// Build state and diagnostic info.
+	Metadata map[string]any `json:"metadata"`
+	// Update datetime
+	UpdatedAt time.Time `json:"updated_at" api:"nullable" format:"date-time"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		ID                respjson.Field
+		ExportConfigID    respjson.Field
+		Name              respjson.Field
+		ProjectID         respjson.Field
+		SourceDirectoryID respjson.Field
+		SyncConfigID      respjson.Field
+		CreatedAt         respjson.Field
+		Description       respjson.Field
+		LastExportedAt    respjson.Field
+		LastSyncedAt      respjson.Field
+		Metadata          respjson.Field
+		UpdatedAt         respjson.Field
+		ExtraFields       map[string]respjson.Field
+		raw               string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r BetaIndexListResponse) RawJSON() string { return r.JSON.raw }
+func (r *BetaIndexListResponse) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
@@ -267,6 +342,23 @@ const (
 	BetaIndexNewParamsVectorTargetDefault  BetaIndexNewParamsVectorTarget = "DEFAULT"
 	BetaIndexNewParamsVectorTargetDisabled BetaIndexNewParamsVectorTarget = "DISABLED"
 )
+
+type BetaIndexListParams struct {
+	OrganizationID    param.Opt[string] `query:"organization_id,omitzero" format:"uuid" json:"-"`
+	PageSize          param.Opt[int64]  `query:"page_size,omitzero" json:"-"`
+	PageToken         param.Opt[string] `query:"page_token,omitzero" json:"-"`
+	ProjectID         param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
+	SourceDirectoryID param.Opt[string] `query:"source_directory_id,omitzero" json:"-"`
+	paramObj
+}
+
+// URLQuery serializes [BetaIndexListParams]'s query parameters as `url.Values`.
+func (r BetaIndexListParams) URLQuery() (v url.Values, err error) {
+	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
+		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
+		NestedFormat: apiquery.NestedQueryFormatBrackets,
+	})
+}
 
 type BetaIndexDeleteParams struct {
 	OrganizationID param.Opt[string] `query:"organization_id,omitzero" format:"uuid" json:"-"`
