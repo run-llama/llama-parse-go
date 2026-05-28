@@ -30,7 +30,7 @@ func TestBatchNewWithOptionalParams(t *testing.T) {
 	_, err := client.Batches.New(context.TODO(), llamacloudprod.BatchNewParams{
 		Config: llamacloudprod.BatchNewParamsConfig{
 			Job: llamacloudprod.BatchNewParamsConfigJob{
-				ConfigurationID: "cfg-aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+				ConfigurationID: "cfg-PARSE_AGENTIC",
 				Type:            llamacloudprod.BatchNewParamsConfigJobTypeParseV2,
 			},
 		},

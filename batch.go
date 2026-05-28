@@ -87,16 +87,16 @@ func (r *BatchService) Get(ctx context.Context, batchID string, query BatchGetPa
 // Example: { "id": "bat-aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee", "project_id":
 // "prj-aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee", "source_directory_id":
 // "dir-aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee", "config": { "job": { "type":
-// "parse_v2", "configuration_id": "cfg-aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee" } },
-// "status": "COMPLETED", "results": [ { "source_directory_file_id":
+// "parse_v2", "configuration_id": "cfg-PARSE_AGENTIC" } }, "status": "COMPLETED",
+// "results": [ { "source_directory_file_id":
 // "dfl-aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee", "job_reference": { "type":
 // "parse_v2", "id": "pjb-aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee" }, "error_message":
 // null } ] }
 //
 // Batch-level `FAILED` means the orchestration failed and cannot provide a
 // reliable per-file result set. `results` is only populated when explicitly
-// requested with `expand=results` and may be `null` while a batch is still running
-// or before result mappings are available.
+// requested with `expand=results` and may be `null` while a batch is still
+// running.
 type BatchNewResponse struct {
 	// Unique identifier
 	ID string `json:"id" api:"required"`
@@ -113,7 +113,7 @@ type BatchNewResponse struct {
 	// Creation datetime
 	CreatedAt time.Time `json:"created_at" api:"nullable" format:"date-time"`
 	// Expanded per-file result mappings. Null unless requested with expand=results, or
-	// until result mappings are available.
+	// while the batch is still running.
 	Results []BatchNewResponseResult `json:"results" api:"nullable"`
 	// Update datetime
 	UpdatedAt time.Time `json:"updated_at" api:"nullable" format:"date-time"`
@@ -158,7 +158,7 @@ func (r *BatchNewResponseConfig) UnmarshalJSON(data []byte) error {
 
 // Job to create for each file in the source directory.
 type BatchNewResponseConfigJob struct {
-	// Saved product configuration ID matching the job type.
+	// Product configuration ID or built-in preset ID matching the job type.
 	ConfigurationID string `json:"configuration_id" api:"required"`
 	// Product job type to run for each source directory file.
 	//
@@ -276,16 +276,16 @@ const (
 // Example: { "id": "bat-aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee", "project_id":
 // "prj-aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee", "source_directory_id":
 // "dir-aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee", "config": { "job": { "type":
-// "parse_v2", "configuration_id": "cfg-aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee" } },
-// "status": "COMPLETED", "results": [ { "source_directory_file_id":
+// "parse_v2", "configuration_id": "cfg-PARSE_AGENTIC" } }, "status": "COMPLETED",
+// "results": [ { "source_directory_file_id":
 // "dfl-aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee", "job_reference": { "type":
 // "parse_v2", "id": "pjb-aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee" }, "error_message":
 // null } ] }
 //
 // Batch-level `FAILED` means the orchestration failed and cannot provide a
 // reliable per-file result set. `results` is only populated when explicitly
-// requested with `expand=results` and may be `null` while a batch is still running
-// or before result mappings are available.
+// requested with `expand=results` and may be `null` while a batch is still
+// running.
 type BatchListResponse struct {
 	// Unique identifier
 	ID string `json:"id" api:"required"`
@@ -302,7 +302,7 @@ type BatchListResponse struct {
 	// Creation datetime
 	CreatedAt time.Time `json:"created_at" api:"nullable" format:"date-time"`
 	// Expanded per-file result mappings. Null unless requested with expand=results, or
-	// until result mappings are available.
+	// while the batch is still running.
 	Results []BatchListResponseResult `json:"results" api:"nullable"`
 	// Update datetime
 	UpdatedAt time.Time `json:"updated_at" api:"nullable" format:"date-time"`
@@ -347,7 +347,7 @@ func (r *BatchListResponseConfig) UnmarshalJSON(data []byte) error {
 
 // Job to create for each file in the source directory.
 type BatchListResponseConfigJob struct {
-	// Saved product configuration ID matching the job type.
+	// Product configuration ID or built-in preset ID matching the job type.
 	ConfigurationID string `json:"configuration_id" api:"required"`
 	// Product job type to run for each source directory file.
 	//
@@ -465,16 +465,16 @@ const (
 // Example: { "id": "bat-aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee", "project_id":
 // "prj-aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee", "source_directory_id":
 // "dir-aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee", "config": { "job": { "type":
-// "parse_v2", "configuration_id": "cfg-aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee" } },
-// "status": "COMPLETED", "results": [ { "source_directory_file_id":
+// "parse_v2", "configuration_id": "cfg-PARSE_AGENTIC" } }, "status": "COMPLETED",
+// "results": [ { "source_directory_file_id":
 // "dfl-aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee", "job_reference": { "type":
 // "parse_v2", "id": "pjb-aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee" }, "error_message":
 // null } ] }
 //
 // Batch-level `FAILED` means the orchestration failed and cannot provide a
 // reliable per-file result set. `results` is only populated when explicitly
-// requested with `expand=results` and may be `null` while a batch is still running
-// or before result mappings are available.
+// requested with `expand=results` and may be `null` while a batch is still
+// running.
 type BatchGetResponse struct {
 	// Unique identifier
 	ID string `json:"id" api:"required"`
@@ -491,7 +491,7 @@ type BatchGetResponse struct {
 	// Creation datetime
 	CreatedAt time.Time `json:"created_at" api:"nullable" format:"date-time"`
 	// Expanded per-file result mappings. Null unless requested with expand=results, or
-	// until result mappings are available.
+	// while the batch is still running.
 	Results []BatchGetResponseResult `json:"results" api:"nullable"`
 	// Update datetime
 	UpdatedAt time.Time `json:"updated_at" api:"nullable" format:"date-time"`
@@ -536,7 +536,7 @@ func (r *BatchGetResponseConfig) UnmarshalJSON(data []byte) error {
 
 // Job to create for each file in the source directory.
 type BatchGetResponseConfigJob struct {
-	// Saved product configuration ID matching the job type.
+	// Product configuration ID or built-in preset ID matching the job type.
 	ConfigurationID string `json:"configuration_id" api:"required"`
 	// Product job type to run for each source directory file.
 	//
@@ -696,7 +696,7 @@ func (r *BatchNewParamsConfig) UnmarshalJSON(data []byte) error {
 //
 // The properties ConfigurationID, Type are required.
 type BatchNewParamsConfigJob struct {
-	// Saved product configuration ID matching the job type.
+	// Product configuration ID or built-in preset ID matching the job type.
 	ConfigurationID string `json:"configuration_id" api:"required"`
 	// Product job type to run for each source directory file.
 	//
