@@ -22,6 +22,7 @@ type Client struct {
 	Parsing        ParsingService
 	Extract        ExtractService
 	Classifier     ClassifierService
+	Batches        BatchService
 	Classify       ClassifyService
 	Configurations ConfigurationService
 	Projects       ProjectService
@@ -66,6 +67,7 @@ func NewClient(opts ...option.RequestOption) (r Client) {
 	r.Parsing = NewParsingService(opts...)
 	r.Extract = NewExtractService(opts...)
 	r.Classifier = NewClassifierService(opts...)
+	r.Batches = NewBatchService(opts...)
 	r.Classify = NewClassifyService(opts...)
 	r.Configurations = NewConfigurationService(opts...)
 	r.Projects = NewProjectService(opts...)
