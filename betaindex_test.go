@@ -38,6 +38,7 @@ func TestBetaIndexNewWithOptionalParams(t *testing.T) {
 		}},
 		StoreAttachments: []string{"screenshots"},
 		SyncFrequency:    llamacloudprod.String("manual"),
+		VectorTarget:     llamacloudprod.BetaIndexNewParamsVectorTargetDefault,
 	})
 	if err != nil {
 		var apierr *llamacloudprod.Error

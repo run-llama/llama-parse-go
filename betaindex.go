@@ -210,6 +210,12 @@ type BetaIndexNewParams struct {
 	// screenshots; ['items'] stores structured items with bounding boxes. Omit or pass
 	// an empty list to skip attachments.
 	StoreAttachments []string `json:"store_attachments,omitzero"`
+	// Vector export destination for the index. 'DEFAULT' exports to the managed vector
+	// DB destination resolved from configuration. 'DISABLED' skips vector export — the
+	// export destination falls back to 'Download'.
+	//
+	// Any of "DEFAULT", "DISABLED".
+	VectorTarget BetaIndexNewParamsVectorTarget `json:"vector_target,omitzero"`
 	paramObj
 }
 
@@ -251,6 +257,16 @@ func (r BetaIndexNewParamsProduct) MarshalJSON() (data []byte, err error) {
 func (r *BetaIndexNewParamsProduct) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
+
+// Vector export destination for the index. 'DEFAULT' exports to the managed vector
+// DB destination resolved from configuration. 'DISABLED' skips vector export — the
+// export destination falls back to 'Download'.
+type BetaIndexNewParamsVectorTarget string
+
+const (
+	BetaIndexNewParamsVectorTargetDefault  BetaIndexNewParamsVectorTarget = "DEFAULT"
+	BetaIndexNewParamsVectorTargetDisabled BetaIndexNewParamsVectorTarget = "DISABLED"
+)
 
 type BetaIndexDeleteParams struct {
 	OrganizationID param.Opt[string] `query:"organization_id,omitzero" format:"uuid" json:"-"`

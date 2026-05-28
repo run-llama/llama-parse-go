@@ -129,6 +129,8 @@ type BBox struct {
 	EndIndex int64 `json:"end_index" api:"nullable"`
 	// Label for the bounding box
 	Label string `json:"label" api:"nullable"`
+	// Optional visual text rotation angle in degrees. Omitted when unrotated.
+	R float64 `json:"r" api:"nullable"`
 	// Start index in the text
 	StartIndex int64 `json:"start_index" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
@@ -140,6 +142,7 @@ type BBox struct {
 		Confidence  respjson.Field
 		EndIndex    respjson.Field
 		Label       respjson.Field
+		R           respjson.Field
 		StartIndex  respjson.Field
 		ExtraFields map[string]respjson.Field
 		raw         string
