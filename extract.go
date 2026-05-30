@@ -151,8 +151,8 @@ type ExtractConfiguration struct {
 	CiteSources bool `json:"cite_sources"`
 	// Include confidence scores in results
 	ConfidenceScores bool `json:"confidence_scores"`
-	// Extract algorithm version. Use 'latest' for the default pipeline or a date
-	// string (e.g. '2026-01-08') to pin to a specific release.
+	// Use 'latest' for the default pipeline or a date string (YYYY-MM-DD format) to
+	// pin to a specific release.
 	ExtractVersion string `json:"extract_version"`
 	// Granularity of extraction: per_doc returns one object per document, per_page
 	// returns one object per page, per_table_row returns one object per table row
@@ -312,8 +312,8 @@ type ExtractConfigurationParam struct {
 	CiteSources param.Opt[bool] `json:"cite_sources,omitzero"`
 	// Include confidence scores in results
 	ConfidenceScores param.Opt[bool] `json:"confidence_scores,omitzero"`
-	// Extract algorithm version. Use 'latest' for the default pipeline or a date
-	// string (e.g. '2026-01-08') to pin to a specific release.
+	// Use 'latest' for the default pipeline or a date string (YYYY-MM-DD format) to
+	// pin to a specific release.
 	ExtractVersion param.Opt[string] `json:"extract_version,omitzero"`
 	// Granularity of extraction: per_doc returns one object per document, per_page
 	// returns one object per page, per_table_row returns one object per table row

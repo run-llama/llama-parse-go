@@ -985,8 +985,8 @@ type ExtractV2ParametersResp struct {
 	CiteSources bool `json:"cite_sources"`
 	// Include confidence scores in results
 	ConfidenceScores bool `json:"confidence_scores"`
-	// Extract algorithm version. Use 'latest' for the default pipeline or a date
-	// string (e.g. '2026-01-08') to pin to a specific release.
+	// Use 'latest' for the default pipeline or a date string (YYYY-MM-DD format) to
+	// pin to a specific release.
 	ExtractVersion string `json:"extract_version"`
 	// Granularity of extraction: per_doc returns one object per document, per_page
 	// returns one object per page, per_table_row returns one object per table row
@@ -1147,8 +1147,8 @@ type ExtractV2Parameters struct {
 	CiteSources param.Opt[bool] `json:"cite_sources,omitzero"`
 	// Include confidence scores in results
 	ConfidenceScores param.Opt[bool] `json:"confidence_scores,omitzero"`
-	// Extract algorithm version. Use 'latest' for the default pipeline or a date
-	// string (e.g. '2026-01-08') to pin to a specific release.
+	// Use 'latest' for the default pipeline or a date string (YYYY-MM-DD format) to
+	// pin to a specific release.
 	ExtractVersion param.Opt[string] `json:"extract_version,omitzero"`
 	// Granularity of extraction: per_doc returns one object per document, per_page
 	// returns one object per page, per_table_row returns one object per table row
@@ -1211,9 +1211,17 @@ type ParseV2ParametersResp struct {
 	//
 	// Any of "fast", "cost_effective", "agentic", "agentic_plus".
 	Tier ParseV2ParametersTier `json:"tier" api:"required"`
-	// Tier version. Use 'latest' for the current stable version, or pin a dated
-	// version for reproducible results. See GET /api/v2/parse/versions for the
-	// per-tier list.
+	// Version for the selected tier. Use `latest`, or pin one of that tier's dated
+	// versions.
+	//
+	// Current `latest` by tier:
+	//
+	// - `fast`: `2025-12-11`
+	// - `cost_effective`: `2026-05-28`
+	// - `agentic`: `2026-05-26`
+	// - `agentic_plus`: `2026-05-26`
+	//
+	// Full list: `GET /api/v2/parse/versions`.
 	Version ParseV2ParametersVersion `json:"version" api:"required"`
 	// Options for AI-powered parsing tiers (cost_effective, agentic, agentic_plus).
 	//
@@ -1298,15 +1306,23 @@ const (
 	ParseV2ParametersTierAgenticPlus   ParseV2ParametersTier = "agentic_plus"
 )
 
-// Tier version. Use 'latest' for the current stable version, or pin a dated
-// version for reproducible results. See GET /api/v2/parse/versions for the
-// per-tier list.
+// Version for the selected tier. Use `latest`, or pin one of that tier's dated
+// versions.
+//
+// Current `latest` by tier:
+//
+// - `fast`: `2025-12-11`
+// - `cost_effective`: `2026-05-28`
+// - `agentic`: `2026-05-26`
+// - `agentic_plus`: `2026-05-26`
+//
+// Full list: `GET /api/v2/parse/versions`.
 type ParseV2ParametersVersion string
 
 const (
 	ParseV2ParametersVersionLatest     ParseV2ParametersVersion = "latest"
-	ParseV2ParametersVersion2026_05_21 ParseV2ParametersVersion = "2026-05-21"
-	ParseV2ParametersVersion2026_04_09 ParseV2ParametersVersion = "2026-04-09"
+	ParseV2ParametersVersion2026_05_28 ParseV2ParametersVersion = "2026-05-28"
+	ParseV2ParametersVersion2026_05_26 ParseV2ParametersVersion = "2026-05-26"
 	ParseV2ParametersVersion2025_12_11 ParseV2ParametersVersion = "2025-12-11"
 )
 
@@ -1946,7 +1962,17 @@ type ParseV2ParametersProcessingOptionsAutoModeConfigurationParsingConfResp stru
 	//
 	// Any of "fast", "cost_effective", "agentic", "agentic_plus".
 	Tier string `json:"tier" api:"nullable"`
-	// Tier version when overriding tier. Required when tier is specified
+	// Version for the override tier. Required when `tier` is set. Use `latest`, or pin
+	// one of that tier's dated versions.
+	//
+	// Current `latest` by tier:
+	//
+	// - `fast`: `2025-12-11`
+	// - `cost_effective`: `2026-05-28`
+	// - `agentic`: `2026-05-26`
+	// - `agentic_plus`: `2026-05-26`
+	//
+	// Full list: `GET /api/v2/parse/versions`.
 	Version string `json:"version" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
@@ -3029,9 +3055,17 @@ type ParseV2Parameters struct {
 	//
 	// Any of "fast", "cost_effective", "agentic", "agentic_plus".
 	Tier ParseV2ParametersTier `json:"tier,omitzero" api:"required"`
-	// Tier version. Use 'latest' for the current stable version, or pin a dated
-	// version for reproducible results. See GET /api/v2/parse/versions for the
-	// per-tier list.
+	// Version for the selected tier. Use `latest`, or pin one of that tier's dated
+	// versions.
+	//
+	// Current `latest` by tier:
+	//
+	// - `fast`: `2025-12-11`
+	// - `cost_effective`: `2026-05-28`
+	// - `agentic`: `2026-05-26`
+	// - `agentic_plus`: `2026-05-26`
+	//
+	// Full list: `GET /api/v2/parse/versions`.
 	Version ParseV2ParametersVersion `json:"version,omitzero" api:"required"`
 	// Identifier for the client/application making the request. Used for analytics and
 	// debugging. Example: 'my-app-v2'
@@ -3600,7 +3634,17 @@ type ParseV2ParametersProcessingOptionsAutoModeConfigurationParsingConf struct {
 	//
 	// Any of "fast", "cost_effective", "agentic", "agentic_plus".
 	Tier string `json:"tier,omitzero"`
-	// Tier version when overriding tier. Required when tier is specified
+	// Version for the override tier. Required when `tier` is set. Use `latest`, or pin
+	// one of that tier's dated versions.
+	//
+	// Current `latest` by tier:
+	//
+	// - `fast`: `2025-12-11`
+	// - `cost_effective`: `2026-05-28`
+	// - `agentic`: `2026-05-26`
+	// - `agentic_plus`: `2026-05-26`
+	//
+	// Full list: `GET /api/v2/parse/versions`.
 	Version string `json:"version,omitzero"`
 	paramObj
 }
