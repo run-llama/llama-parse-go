@@ -1858,9 +1858,17 @@ type ParsingNewParams struct {
 	//
 	// Any of "fast", "cost_effective", "agentic", "agentic_plus".
 	Tier ParsingNewParamsTier `json:"tier,omitzero" api:"required"`
-	// Tier version. Use 'latest' for the current stable version, or pin a dated
-	// version for reproducible results. See GET /api/v2/parse/versions for the
-	// per-tier list.
+	// Version for the selected tier. Use `latest`, or pin one of that tier's dated
+	// versions.
+	//
+	// Current `latest` by tier:
+	//
+	// - `fast`: `2025-12-11`
+	// - `cost_effective`: `2026-05-28`
+	// - `agentic`: `2026-05-26`
+	// - `agentic_plus`: `2026-05-26`
+	//
+	// Full list: `GET /api/v2/parse/versions`.
 	Version        ParsingNewParamsVersion `json:"version,omitzero" api:"required"`
 	OrganizationID param.Opt[string]       `query:"organization_id,omitzero" format:"uuid" json:"-"`
 	ProjectID      param.Opt[string]       `query:"project_id,omitzero" format:"uuid" json:"-"`
@@ -1937,15 +1945,23 @@ const (
 	ParsingNewParamsTierAgenticPlus   ParsingNewParamsTier = "agentic_plus"
 )
 
-// Tier version. Use 'latest' for the current stable version, or pin a dated
-// version for reproducible results. See GET /api/v2/parse/versions for the
-// per-tier list.
+// Version for the selected tier. Use `latest`, or pin one of that tier's dated
+// versions.
+//
+// Current `latest` by tier:
+//
+// - `fast`: `2025-12-11`
+// - `cost_effective`: `2026-05-28`
+// - `agentic`: `2026-05-26`
+// - `agentic_plus`: `2026-05-26`
+//
+// Full list: `GET /api/v2/parse/versions`.
 type ParsingNewParamsVersion string
 
 const (
 	ParsingNewParamsVersionLatest     ParsingNewParamsVersion = "latest"
-	ParsingNewParamsVersion2026_05_21 ParsingNewParamsVersion = "2026-05-21"
-	ParsingNewParamsVersion2026_04_09 ParsingNewParamsVersion = "2026-04-09"
+	ParsingNewParamsVersion2026_05_28 ParsingNewParamsVersion = "2026-05-28"
+	ParsingNewParamsVersion2026_05_26 ParsingNewParamsVersion = "2026-05-26"
 	ParsingNewParamsVersion2025_12_11 ParsingNewParamsVersion = "2025-12-11"
 )
 
@@ -2466,7 +2482,17 @@ type ParsingNewParamsProcessingOptionsAutoModeConfigurationParsingConf struct {
 	//
 	// Any of "fast", "cost_effective", "agentic", "agentic_plus".
 	Tier string `json:"tier,omitzero"`
-	// Tier version when overriding tier. Required when tier is specified
+	// Version for the override tier. Required when `tier` is set. Use `latest`, or pin
+	// one of that tier's dated versions.
+	//
+	// Current `latest` by tier:
+	//
+	// - `fast`: `2025-12-11`
+	// - `cost_effective`: `2026-05-28`
+	// - `agentic`: `2026-05-26`
+	// - `agentic_plus`: `2026-05-26`
+	//
+	// Full list: `GET /api/v2/parse/versions`.
 	Version string `json:"version,omitzero"`
 	paramObj
 }
