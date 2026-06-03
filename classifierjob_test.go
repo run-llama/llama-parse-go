@@ -45,7 +45,8 @@ func TestClassifierJobNewWithOptionalParams(t *testing.T) {
 			WebhookHeaders: map[string]any{
 				"foo": "bar",
 			},
-			WebhookURL: llamacloudprod.String("https:"),
+			WebhookOutputFormat: "json",
+			WebhookURL:          llamacloudprod.String("https:"),
 		}},
 	})
 	if err != nil {

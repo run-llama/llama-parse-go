@@ -3023,15 +3023,21 @@ type ParseV2ParametersWebhookConfigurationResp struct {
 	// Custom HTTP headers to include in webhook requests. Use for authentication
 	// tokens or custom routing. Example: {'Authorization': 'Bearer xyz'}
 	WebhookHeaders map[string]any `json:"webhook_headers" api:"nullable"`
+	// Format of the webhook payload body. 'string' (default) sends the payload as a
+	// JSON-encoded string; 'json' sends it as a JSON object.
+	//
+	// Any of "string", "json".
+	WebhookOutputFormat string `json:"webhook_output_format" api:"nullable"`
 	// HTTPS URL to receive webhook POST requests. Must be publicly accessible
 	WebhookURL string `json:"webhook_url" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
-		WebhookEvents  respjson.Field
-		WebhookHeaders respjson.Field
-		WebhookURL     respjson.Field
-		ExtraFields    map[string]respjson.Field
-		raw            string
+		WebhookEvents       respjson.Field
+		WebhookHeaders      respjson.Field
+		WebhookOutputFormat respjson.Field
+		WebhookURL          respjson.Field
+		ExtraFields         map[string]respjson.Field
+		raw                 string
 	} `json:"-"`
 }
 
@@ -4166,6 +4172,11 @@ type ParseV2ParametersWebhookConfiguration struct {
 	// Custom HTTP headers to include in webhook requests. Use for authentication
 	// tokens or custom routing. Example: {'Authorization': 'Bearer xyz'}
 	WebhookHeaders map[string]any `json:"webhook_headers,omitzero"`
+	// Format of the webhook payload body. 'string' (default) sends the payload as a
+	// JSON-encoded string; 'json' sends it as a JSON object.
+	//
+	// Any of "string", "json".
+	WebhookOutputFormat string `json:"webhook_output_format,omitzero"`
 	paramObj
 }
 
@@ -4175,6 +4186,12 @@ func (r ParseV2ParametersWebhookConfiguration) MarshalJSON() (data []byte, err e
 }
 func (r *ParseV2ParametersWebhookConfiguration) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
+}
+
+func init() {
+	apijson.RegisterFieldValidator[ParseV2ParametersWebhookConfiguration](
+		"webhook_output_format", "string", "json",
+	)
 }
 
 // Typed parameters for a _split v1_ product configuration.

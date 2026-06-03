@@ -490,6 +490,11 @@ type ClassifierJobNewParamsWebhookConfiguration struct {
 	// Custom HTTP headers to include in webhook requests. Use for authentication
 	// tokens or custom routing. Example: {'Authorization': 'Bearer xyz'}
 	WebhookHeaders map[string]any `json:"webhook_headers,omitzero"`
+	// Format of the webhook payload body. 'string' (default) sends the payload as a
+	// JSON-encoded string; 'json' sends it as a JSON object.
+	//
+	// Any of "string", "json".
+	WebhookOutputFormat string `json:"webhook_output_format,omitzero"`
 	paramObj
 }
 
@@ -499,6 +504,12 @@ func (r ClassifierJobNewParamsWebhookConfiguration) MarshalJSON() (data []byte, 
 }
 func (r *ClassifierJobNewParamsWebhookConfiguration) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
+}
+
+func init() {
+	apijson.RegisterFieldValidator[ClassifierJobNewParamsWebhookConfiguration](
+		"webhook_output_format", "string", "json",
+	)
 }
 
 type ClassifierJobListParams struct {
