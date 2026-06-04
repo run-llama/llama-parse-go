@@ -484,8 +484,9 @@ type ClassifierJobNewParamsWebhookConfiguration struct {
 	// HTTPS URL to receive webhook POST requests. Must be publicly accessible
 	WebhookURL param.Opt[string] `json:"webhook_url,omitzero"`
 	// Events that trigger this webhook. Options: 'parse.success' (job completed),
-	// 'parse.failure' (job failed), 'parse.partial' (some pages failed). If not
-	// specified, webhook fires for all events
+	// 'parse.error' (job failed), 'parse.partial_success' (some pages failed),
+	// 'parse.pending', 'parse.running', 'parse.cancelled'. If not specified, webhook
+	// fires for all events
 	WebhookEvents []string `json:"webhook_events,omitzero"`
 	// Custom HTTP headers to include in webhook requests. Use for authentication
 	// tokens or custom routing. Example: {'Authorization': 'Bearer xyz'}

@@ -234,7 +234,7 @@ func TestParsingNewWithOptionalParams(t *testing.T) {
 		},
 		SourceURL: llamacloudprod.String("https:"),
 		WebhookConfigurations: []llamacloudprod.ParsingNewParamsWebhookConfiguration{{
-			WebhookEvents: []string{"string"},
+			WebhookEvents: []string{"parse.success", "parse.error"},
 			WebhookHeaders: map[string]any{
 				"foo": "bar",
 			},

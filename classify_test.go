@@ -46,6 +46,14 @@ func TestClassifyNewWithOptionalParams(t *testing.T) {
 			FileInput:       llamacloudprod.String("dfl-aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"),
 			ParseJobID:      llamacloudprod.String("pjb-aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"),
 			TransactionID:   llamacloudprod.String("tx-unique-idempotency-key"),
+			WebhookConfigurations: []llamacloudprod.ClassifyCreateRequestWebhookConfigurationParam{{
+				WebhookEvents: []string{"parse.success", "parse.error"},
+				WebhookHeaders: map[string]string{
+					"Authorization": "Bearer sk-...",
+				},
+				WebhookOutputFormat: llamacloudprod.String("json"),
+				WebhookURL:          llamacloudprod.String("https://example.com/webhooks/llamacloud"),
+			}},
 		},
 		OrganizationID: llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		ProjectID:      llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),

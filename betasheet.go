@@ -40,8 +40,13 @@ func NewBetaSheetService(opts ...option.RequestOption) (r BetaSheetService) {
 	return
 }
 
-// Create a spreadsheet parsing job. Experimental: not production-ready and subject
-// to change.
+// Create a spreadsheet parsing job.
+//
+// Provide **exactly one** of `configuration` (an inline parsing configuration) or
+// `configuration_id` (a saved configuration preset). Optionally include
+// `webhook_configurations` to receive `sheets.*` status notifications.
+//
+// Experimental: not production-ready and subject to change.
 func (r *BetaSheetService) New(ctx context.Context, params BetaSheetNewParams, opts ...option.RequestOption) (res *SheetsJob, err error) {
 	opts = slices.Concat(r.options, opts)
 	path := "api/v1/beta/sheets/jobs"
@@ -118,12 +123,13 @@ func (r *BetaSheetService) GetResultTable(ctx context.Context, regionType BetaSh
 	return res, err
 }
 
-// A spreadsheet parsing job
+// A spreadsheet parsing job.
 type SheetsJob struct {
 	// The ID of the job
 	ID string `json:"id" api:"required"`
-	// Configuration for the parsing job
-	Config SheetsParsingConfig `json:"config" api:"required"`
+	// Configuration applied to the parsing job (inline or resolved from a saved
+	// preset).
+	Configuration SheetsParsingConfig `json:"configuration" api:"required"`
 	// When the job was created
 	CreatedAt string `json:"created_at" api:"required"`
 	// The ID of the input file
@@ -133,17 +139,28 @@ type SheetsJob struct {
 	// The status of the parsing job
 	//
 	// Any of "PENDING", "SUCCESS", "ERROR", "PARTIAL_SUCCESS", "CANCELLED".
-	Status StatusEnum `json:"status" api:"required"`
+	Status SheetsJobStatus `json:"status" api:"required"`
 	// When the job was last updated
 	UpdatedAt string `json:"updated_at" api:"required"`
 	// The ID of the user
 	UserID string `json:"user_id" api:"required"`
+	// Configuration for spreadsheet parsing and region extraction
+	//
+	// Deprecated: deprecated
+	Config SheetsParsingConfig `json:"config" api:"nullable"`
+	// The saved product configuration ID used at create time, if any.
+	ConfigurationID string `json:"configuration_id" api:"nullable"`
 	// Any errors encountered
 	Errors []string `json:"errors"`
 	// Schema for a file.
 	//
 	// Deprecated: deprecated
 	File File `json:"file" api:"nullable"`
+	// Per-status entry timestamps. Returned only when requested via
+	// `?expand=metadata_state_transitions`.
+	MetadataStateTransitions map[string]any `json:"metadata_state_transitions" api:"nullable"`
+	// Job-time parameters such as webhook configurations.
+	Parameters SheetsJobParameters `json:"parameters"`
 	// All extracted regions (populated when job is complete)
 	Regions []SheetsJobRegion `json:"regions"`
 	// Whether the job completed successfully
@@ -152,27 +169,96 @@ type SheetsJob struct {
 	WorksheetMetadata []SheetsJobWorksheetMetadata `json:"worksheet_metadata"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
-		ID                respjson.Field
-		Config            respjson.Field
-		CreatedAt         respjson.Field
-		FileID            respjson.Field
-		ProjectID         respjson.Field
-		Status            respjson.Field
-		UpdatedAt         respjson.Field
-		UserID            respjson.Field
-		Errors            respjson.Field
-		File              respjson.Field
-		Regions           respjson.Field
-		Success           respjson.Field
-		WorksheetMetadata respjson.Field
-		ExtraFields       map[string]respjson.Field
-		raw               string
+		ID                       respjson.Field
+		Configuration            respjson.Field
+		CreatedAt                respjson.Field
+		FileID                   respjson.Field
+		ProjectID                respjson.Field
+		Status                   respjson.Field
+		UpdatedAt                respjson.Field
+		UserID                   respjson.Field
+		Config                   respjson.Field
+		ConfigurationID          respjson.Field
+		Errors                   respjson.Field
+		File                     respjson.Field
+		MetadataStateTransitions respjson.Field
+		Parameters               respjson.Field
+		Regions                  respjson.Field
+		Success                  respjson.Field
+		WorksheetMetadata        respjson.Field
+		ExtraFields              map[string]respjson.Field
+		raw                      string
 	} `json:"-"`
 }
 
 // Returns the unmodified JSON received from the API
 func (r SheetsJob) RawJSON() string { return r.JSON.raw }
 func (r *SheetsJob) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// The status of the parsing job
+type SheetsJobStatus string
+
+const (
+	SheetsJobStatusPending        SheetsJobStatus = "PENDING"
+	SheetsJobStatusSuccess        SheetsJobStatus = "SUCCESS"
+	SheetsJobStatusError          SheetsJobStatus = "ERROR"
+	SheetsJobStatusPartialSuccess SheetsJobStatus = "PARTIAL_SUCCESS"
+	SheetsJobStatusCancelled      SheetsJobStatus = "CANCELLED"
+)
+
+// Job-time parameters such as webhook configurations.
+type SheetsJobParameters struct {
+	// Webhook configurations for job status notifications.
+	WebhookConfigurations []SheetsJobParametersWebhookConfiguration `json:"webhook_configurations" api:"nullable"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		WebhookConfigurations respjson.Field
+		ExtraFields           map[string]respjson.Field
+		raw                   string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r SheetsJobParameters) RawJSON() string { return r.JSON.raw }
+func (r *SheetsJobParameters) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Configuration for a single outbound webhook endpoint.
+type SheetsJobParametersWebhookConfiguration struct {
+	// Events to subscribe to (e.g. 'parse.success', 'extract.error'). If null, all
+	// events are delivered.
+	//
+	// Any of "extract.pending", "extract.success", "extract.error",
+	// "extract.partial_success", "extract.cancelled", "parse.pending",
+	// "parse.running", "parse.success", "parse.error", "parse.partial_success",
+	// "parse.cancelled", "classify.pending", "classify.running", "classify.success",
+	// "classify.error", "classify.partial_success", "classify.cancelled",
+	// "sheets.pending", "sheets.success", "sheets.error", "sheets.partial_success",
+	// "sheets.cancelled", "unmapped_event".
+	WebhookEvents []string `json:"webhook_events" api:"nullable"`
+	// Custom HTTP headers sent with each webhook request (e.g. auth tokens)
+	WebhookHeaders map[string]string `json:"webhook_headers" api:"nullable"`
+	// Response format sent to the webhook: 'string' (default) or 'json'
+	WebhookOutputFormat string `json:"webhook_output_format" api:"nullable"`
+	// URL to receive webhook POST notifications
+	WebhookURL string `json:"webhook_url" api:"nullable"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		WebhookEvents       respjson.Field
+		WebhookHeaders      respjson.Field
+		WebhookOutputFormat respjson.Field
+		WebhookURL          respjson.Field
+		ExtraFields         map[string]respjson.Field
+		raw                 string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r SheetsJobParametersWebhookConfiguration) RawJSON() string { return r.JSON.raw }
+func (r *SheetsJobParametersWebhookConfiguration) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
@@ -347,8 +433,14 @@ type BetaSheetNewParams struct {
 	FileID         string            `json:"file_id" api:"required" format:"uuid"`
 	OrganizationID param.Opt[string] `query:"organization_id,omitzero" format:"uuid" json:"-"`
 	ProjectID      param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
-	// Configuration for the parsing job
+	// Saved configuration ID
+	ConfigurationID param.Opt[string] `json:"configuration_id,omitzero"`
+	// Outbound webhook endpoints to notify on job status changes
+	WebhookConfigurations []BetaSheetNewParamsWebhookConfiguration `json:"webhook_configurations,omitzero"`
+	// Configuration for spreadsheet parsing and region extraction
 	Config SheetsParsingConfigParam `json:"config,omitzero"`
+	// Configuration for spreadsheet parsing and region extraction
+	Configuration SheetsParsingConfigParam `json:"configuration,omitzero"`
 	paramObj
 }
 
@@ -368,7 +460,39 @@ func (r BetaSheetNewParams) URLQuery() (v url.Values, err error) {
 	})
 }
 
+// Configuration for a single outbound webhook endpoint.
+type BetaSheetNewParamsWebhookConfiguration struct {
+	// Response format sent to the webhook: 'string' (default) or 'json'
+	WebhookOutputFormat param.Opt[string] `json:"webhook_output_format,omitzero"`
+	// URL to receive webhook POST notifications
+	WebhookURL param.Opt[string] `json:"webhook_url,omitzero"`
+	// Events to subscribe to (e.g. 'parse.success', 'extract.error'). If null, all
+	// events are delivered.
+	//
+	// Any of "extract.pending", "extract.success", "extract.error",
+	// "extract.partial_success", "extract.cancelled", "parse.pending",
+	// "parse.running", "parse.success", "parse.error", "parse.partial_success",
+	// "parse.cancelled", "classify.pending", "classify.running", "classify.success",
+	// "classify.error", "classify.partial_success", "classify.cancelled",
+	// "sheets.pending", "sheets.success", "sheets.error", "sheets.partial_success",
+	// "sheets.cancelled", "unmapped_event".
+	WebhookEvents []string `json:"webhook_events,omitzero"`
+	// Custom HTTP headers sent with each webhook request (e.g. auth tokens)
+	WebhookHeaders map[string]string `json:"webhook_headers,omitzero"`
+	paramObj
+}
+
+func (r BetaSheetNewParamsWebhookConfiguration) MarshalJSON() (data []byte, err error) {
+	type shadow BetaSheetNewParamsWebhookConfiguration
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *BetaSheetNewParamsWebhookConfiguration) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
 type BetaSheetListParams struct {
+	// Filter by saved configuration ID
+	ConfigurationID param.Opt[string] `query:"configuration_id,omitzero" json:"-"`
 	// Include items created at or after this timestamp (inclusive)
 	CreatedAtOnOrAfter param.Opt[time.Time] `query:"created_at_on_or_after,omitzero" format:"date-time" json:"-"`
 	// Include items created at or before this timestamp (inclusive)
@@ -383,7 +507,7 @@ type BetaSheetListParams struct {
 	// Filter by job status
 	//
 	// Any of "PENDING", "SUCCESS", "ERROR", "PARTIAL_SUCCESS", "CANCELLED".
-	Status StatusEnum `query:"status,omitzero" json:"-"`
+	Status BetaSheetListParamsStatus `query:"status,omitzero" json:"-"`
 	paramObj
 }
 
@@ -394,6 +518,17 @@ func (r BetaSheetListParams) URLQuery() (v url.Values, err error) {
 		NestedFormat: apiquery.NestedQueryFormatBrackets,
 	})
 }
+
+// Filter by job status
+type BetaSheetListParamsStatus string
+
+const (
+	BetaSheetListParamsStatusPending        BetaSheetListParamsStatus = "PENDING"
+	BetaSheetListParamsStatusSuccess        BetaSheetListParamsStatus = "SUCCESS"
+	BetaSheetListParamsStatusError          BetaSheetListParamsStatus = "ERROR"
+	BetaSheetListParamsStatusPartialSuccess BetaSheetListParamsStatus = "PARTIAL_SUCCESS"
+	BetaSheetListParamsStatusCancelled      BetaSheetListParamsStatus = "CANCELLED"
+)
 
 type BetaSheetDeleteJobParams struct {
 	OrganizationID param.Opt[string] `query:"organization_id,omitzero" format:"uuid" json:"-"`
@@ -414,6 +549,9 @@ type BetaSheetGetParams struct {
 	OrganizationID param.Opt[string] `query:"organization_id,omitzero" format:"uuid" json:"-"`
 	ProjectID      param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
 	IncludeResults param.Opt[bool]   `query:"include_results,omitzero" json:"-"`
+	// Optional fields to populate on the response. Valid values:
+	// metadata_state_transitions.
+	Expand []string `query:"expand,omitzero" json:"-"`
 	paramObj
 }
 

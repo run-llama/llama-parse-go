@@ -1346,7 +1346,7 @@ type CloudSharepointDataSource struct {
 	// The path of the Sharepoint folder to read from.
 	FolderPath string `json:"folder_path" api:"nullable"`
 	// Whether to get permissions for the sharepoint site.
-	GetPermissions bool `json:"get_permissions" api:"nullable"`
+	GetPermissions bool `json:"get_permissions"`
 	// List of regex patterns for file paths to include. Full paths (including
 	// filename) must match at least one pattern to be included. Example: ['/reports/',
 	// '/docs/.*\.pdf$', '^Report.*\.pdf$']
@@ -1410,13 +1410,13 @@ type CloudSharepointDataSourceParam struct {
 	FolderID param.Opt[string] `json:"folder_id,omitzero"`
 	// The path of the Sharepoint folder to read from.
 	FolderPath param.Opt[string] `json:"folder_path,omitzero"`
-	// Whether to get permissions for the sharepoint site.
-	GetPermissions param.Opt[bool] `json:"get_permissions,omitzero"`
 	// The ID of the SharePoint site to download from.
 	SiteID param.Opt[string] `json:"site_id,omitzero"`
 	// The name of the SharePoint site to download from.
 	SiteName  param.Opt[string] `json:"site_name,omitzero"`
 	ClassName param.Opt[string] `json:"class_name,omitzero"`
+	// Whether to get permissions for the sharepoint site.
+	GetPermissions param.Opt[bool] `json:"get_permissions,omitzero"`
 	// List of regex patterns for file paths to exclude. Files whose paths (including
 	// filename) match any pattern will be excluded. Example: ['/temp/', '/backup/',
 	// '\.git/', '\.tmp$', '^~']

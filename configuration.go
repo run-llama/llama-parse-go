@@ -322,8 +322,6 @@ type ConfigurationCreateParametersUnion struct {
 	// This field is from variant [ExtractV2ParametersResp].
 	ConfidenceScores bool `json:"confidence_scores"`
 	// This field is from variant [ExtractV2ParametersResp].
-	ExtractVersion string `json:"extract_version"`
-	// This field is from variant [ExtractV2ParametersResp].
 	ExtractionTarget ExtractV2ParametersExtractionTarget `json:"extraction_target"`
 	// This field is from variant [ExtractV2ParametersResp].
 	MaxPages int64 `json:"max_pages"`
@@ -336,14 +334,13 @@ type ConfigurationCreateParametersUnion struct {
 	// This field is from variant [ExtractV2ParametersResp].
 	TargetPages string `json:"target_pages"`
 	Tier        string `json:"tier"`
+	Version     string `json:"version"`
 	// This field is from variant [ClassifyV2ParametersResp].
 	Rules []ClassifyV2ParametersRuleResp `json:"rules"`
 	// This field is from variant [ClassifyV2ParametersResp].
 	Mode ClassifyV2ParametersMode `json:"mode"`
 	// This field is from variant [ClassifyV2ParametersResp].
 	ParsingConfiguration ClassifyV2ParametersParsingConfigurationResp `json:"parsing_configuration"`
-	// This field is from variant [ParseV2ParametersResp].
-	Version ParseV2ParametersVersion `json:"version"`
 	// This field is from variant [ParseV2ParametersResp].
 	AgenticOptions ParseV2ParametersAgenticOptionsResp `json:"agentic_options"`
 	// This field is from variant [ParseV2ParametersResp].
@@ -389,7 +386,6 @@ type ConfigurationCreateParametersUnion struct {
 		DataSchema                 respjson.Field
 		CiteSources                respjson.Field
 		ConfidenceScores           respjson.Field
-		ExtractVersion             respjson.Field
 		ExtractionTarget           respjson.Field
 		MaxPages                   respjson.Field
 		ParseConfigID              respjson.Field
@@ -397,10 +393,10 @@ type ConfigurationCreateParametersUnion struct {
 		SystemPrompt               respjson.Field
 		TargetPages                respjson.Field
 		Tier                       respjson.Field
+		Version                    respjson.Field
 		Rules                      respjson.Field
 		Mode                       respjson.Field
 		ParsingConfiguration       respjson.Field
-		Version                    respjson.Field
 		AgenticOptions             respjson.Field
 		ClientName                 respjson.Field
 		CropBox                    respjson.Field
@@ -727,8 +723,6 @@ type ConfigurationResponseParametersUnion struct {
 	// This field is from variant [ExtractV2ParametersResp].
 	ConfidenceScores bool `json:"confidence_scores"`
 	// This field is from variant [ExtractV2ParametersResp].
-	ExtractVersion string `json:"extract_version"`
-	// This field is from variant [ExtractV2ParametersResp].
 	ExtractionTarget ExtractV2ParametersExtractionTarget `json:"extraction_target"`
 	// This field is from variant [ExtractV2ParametersResp].
 	MaxPages int64 `json:"max_pages"`
@@ -741,14 +735,13 @@ type ConfigurationResponseParametersUnion struct {
 	// This field is from variant [ExtractV2ParametersResp].
 	TargetPages string `json:"target_pages"`
 	Tier        string `json:"tier"`
+	Version     string `json:"version"`
 	// This field is from variant [ClassifyV2ParametersResp].
 	Rules []ClassifyV2ParametersRuleResp `json:"rules"`
 	// This field is from variant [ClassifyV2ParametersResp].
 	Mode ClassifyV2ParametersMode `json:"mode"`
 	// This field is from variant [ClassifyV2ParametersResp].
 	ParsingConfiguration ClassifyV2ParametersParsingConfigurationResp `json:"parsing_configuration"`
-	// This field is from variant [ParseV2ParametersResp].
-	Version ParseV2ParametersVersion `json:"version"`
 	// This field is from variant [ParseV2ParametersResp].
 	AgenticOptions ParseV2ParametersAgenticOptionsResp `json:"agentic_options"`
 	// This field is from variant [ParseV2ParametersResp].
@@ -794,7 +787,6 @@ type ConfigurationResponseParametersUnion struct {
 		DataSchema                 respjson.Field
 		CiteSources                respjson.Field
 		ConfidenceScores           respjson.Field
-		ExtractVersion             respjson.Field
 		ExtractionTarget           respjson.Field
 		MaxPages                   respjson.Field
 		ParseConfigID              respjson.Field
@@ -802,10 +794,10 @@ type ConfigurationResponseParametersUnion struct {
 		SystemPrompt               respjson.Field
 		TargetPages                respjson.Field
 		Tier                       respjson.Field
+		Version                    respjson.Field
 		Rules                      respjson.Field
 		Mode                       respjson.Field
 		ParsingConfiguration       respjson.Field
-		Version                    respjson.Field
 		AgenticOptions             respjson.Field
 		ClientName                 respjson.Field
 		CropBox                    respjson.Field
@@ -985,9 +977,6 @@ type ExtractV2ParametersResp struct {
 	CiteSources bool `json:"cite_sources"`
 	// Include confidence scores in results
 	ConfidenceScores bool `json:"confidence_scores"`
-	// Use 'latest' for the default pipeline or a date string (YYYY-MM-DD format) to
-	// pin to a specific release.
-	ExtractVersion string `json:"extract_version"`
 	// Granularity of extraction: per_doc returns one object per document, per_page
 	// returns one object per page, per_table_row returns one object per table row
 	//
@@ -1010,13 +999,15 @@ type ExtractV2ParametersResp struct {
 	//
 	// Any of "cost_effective", "agentic".
 	Tier ExtractV2ParametersTier `json:"tier"`
+	// Use 'latest' for the latest release for the selected tier or a date string
+	// (YYYY-MM-DD format) to pin to the nearest release at or before that date.
+	Version string `json:"version"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		DataSchema       respjson.Field
 		ProductType      respjson.Field
 		CiteSources      respjson.Field
 		ConfidenceScores respjson.Field
-		ExtractVersion   respjson.Field
 		ExtractionTarget respjson.Field
 		MaxPages         respjson.Field
 		ParseConfigID    respjson.Field
@@ -1024,6 +1015,7 @@ type ExtractV2ParametersResp struct {
 		SystemPrompt     respjson.Field
 		TargetPages      respjson.Field
 		Tier             respjson.Field
+		Version          respjson.Field
 		ExtraFields      map[string]respjson.Field
 		raw              string
 	} `json:"-"`
@@ -1147,9 +1139,9 @@ type ExtractV2Parameters struct {
 	CiteSources param.Opt[bool] `json:"cite_sources,omitzero"`
 	// Include confidence scores in results
 	ConfidenceScores param.Opt[bool] `json:"confidence_scores,omitzero"`
-	// Use 'latest' for the default pipeline or a date string (YYYY-MM-DD format) to
-	// pin to a specific release.
-	ExtractVersion param.Opt[string] `json:"extract_version,omitzero"`
+	// Use 'latest' for the latest release for the selected tier or a date string
+	// (YYYY-MM-DD format) to pin to the nearest release at or before that date.
+	Version param.Opt[string] `json:"version,omitzero"`
 	// Granularity of extraction: per_doc returns one object per document, per_page
 	// returns one object per page, per_table_row returns one object per table row
 	//
@@ -1218,8 +1210,8 @@ type ParseV2ParametersResp struct {
 	//
 	// - `fast`: `2025-12-11`
 	// - `cost_effective`: `2026-05-28`
-	// - `agentic`: `2026-05-21`
-	// - `agentic_plus`: `2026-05-21`
+	// - `agentic`: `2026-06-01`
+	// - `agentic_plus`: `2026-06-01`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
 	Version ParseV2ParametersVersion `json:"version" api:"required"`
@@ -1313,16 +1305,16 @@ const (
 //
 // - `fast`: `2025-12-11`
 // - `cost_effective`: `2026-05-28`
-// - `agentic`: `2026-05-21`
-// - `agentic_plus`: `2026-05-21`
+// - `agentic`: `2026-06-01`
+// - `agentic_plus`: `2026-06-01`
 //
 // Full list: `GET /api/v2/parse/versions`.
 type ParseV2ParametersVersion string
 
 const (
 	ParseV2ParametersVersionLatest     ParseV2ParametersVersion = "latest"
+	ParseV2ParametersVersion2026_06_01 ParseV2ParametersVersion = "2026-06-01"
 	ParseV2ParametersVersion2026_05_28 ParseV2ParametersVersion = "2026-05-28"
-	ParseV2ParametersVersion2026_05_21 ParseV2ParametersVersion = "2026-05-21"
 	ParseV2ParametersVersion2025_12_11 ParseV2ParametersVersion = "2025-12-11"
 )
 
@@ -1969,8 +1961,8 @@ type ParseV2ParametersProcessingOptionsAutoModeConfigurationParsingConfResp stru
 	//
 	// - `fast`: `2025-12-11`
 	// - `cost_effective`: `2026-05-28`
-	// - `agentic`: `2026-05-21`
-	// - `agentic_plus`: `2026-05-21`
+	// - `agentic`: `2026-06-01`
+	// - `agentic_plus`: `2026-06-01`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
 	Version string `json:"version" api:"nullable"`
@@ -3017,8 +3009,9 @@ func (r *ParseV2ParametersProcessingOptionsOcrParametersResp) UnmarshalJSON(data
 // multiple webhook configurations to send to different endpoints.
 type ParseV2ParametersWebhookConfigurationResp struct {
 	// Events that trigger this webhook. Options: 'parse.success' (job completed),
-	// 'parse.failure' (job failed), 'parse.partial' (some pages failed). If not
-	// specified, webhook fires for all events
+	// 'parse.error' (job failed), 'parse.partial_success' (some pages failed),
+	// 'parse.pending', 'parse.running', 'parse.cancelled'. If not specified, webhook
+	// fires for all events
 	WebhookEvents []string `json:"webhook_events" api:"nullable"`
 	// Custom HTTP headers to include in webhook requests. Use for authentication
 	// tokens or custom routing. Example: {'Authorization': 'Bearer xyz'}
@@ -3068,8 +3061,8 @@ type ParseV2Parameters struct {
 	//
 	// - `fast`: `2025-12-11`
 	// - `cost_effective`: `2026-05-28`
-	// - `agentic`: `2026-05-21`
-	// - `agentic_plus`: `2026-05-21`
+	// - `agentic`: `2026-06-01`
+	// - `agentic_plus`: `2026-06-01`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
 	Version ParseV2ParametersVersion `json:"version,omitzero" api:"required"`
@@ -3647,8 +3640,8 @@ type ParseV2ParametersProcessingOptionsAutoModeConfigurationParsingConf struct {
 	//
 	// - `fast`: `2025-12-11`
 	// - `cost_effective`: `2026-05-28`
-	// - `agentic`: `2026-05-21`
-	// - `agentic_plus`: `2026-05-21`
+	// - `agentic`: `2026-06-01`
+	// - `agentic_plus`: `2026-06-01`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
 	Version string `json:"version,omitzero"`
@@ -4166,8 +4159,9 @@ type ParseV2ParametersWebhookConfiguration struct {
 	// HTTPS URL to receive webhook POST requests. Must be publicly accessible
 	WebhookURL param.Opt[string] `json:"webhook_url,omitzero"`
 	// Events that trigger this webhook. Options: 'parse.success' (job completed),
-	// 'parse.failure' (job failed), 'parse.partial' (some pages failed). If not
-	// specified, webhook fires for all events
+	// 'parse.error' (job failed), 'parse.partial_success' (some pages failed),
+	// 'parse.pending', 'parse.running', 'parse.cancelled'. If not specified, webhook
+	// fires for all events
 	WebhookEvents []string `json:"webhook_events,omitzero"`
 	// Custom HTTP headers to include in webhook requests. Use for authentication
 	// tokens or custom routing. Example: {'Authorization': 'Bearer xyz'}
