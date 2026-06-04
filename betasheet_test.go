@@ -41,6 +41,25 @@ func TestBetaSheetNewWithOptionalParams(t *testing.T) {
 			TableMergeSensitivity:      llamacloudprod.SheetsParsingConfigTableMergeSensitivityStrong,
 			UseExperimentalProcessing:  llamacloudprod.Bool(true),
 		},
+		Configuration: llamacloudprod.SheetsParsingConfigParam{
+			ExtractionRange:            llamacloudprod.String("extraction_range"),
+			FlattenHierarchicalTables:  llamacloudprod.Bool(true),
+			GenerateAdditionalMetadata: llamacloudprod.Bool(true),
+			IncludeHiddenCells:         llamacloudprod.Bool(true),
+			SheetNames:                 []string{"string"},
+			Specialization:             llamacloudprod.String("specialization"),
+			TableMergeSensitivity:      llamacloudprod.SheetsParsingConfigTableMergeSensitivityStrong,
+			UseExperimentalProcessing:  llamacloudprod.Bool(true),
+		},
+		ConfigurationID: llamacloudprod.String("cfg-11111111-2222-3333-4444-555555555555"),
+		WebhookConfigurations: []llamacloudprod.BetaSheetNewParamsWebhookConfiguration{{
+			WebhookEvents: []string{"parse.success", "parse.error"},
+			WebhookHeaders: map[string]string{
+				"Authorization": "Bearer sk-...",
+			},
+			WebhookOutputFormat: llamacloudprod.String("json"),
+			WebhookURL:          llamacloudprod.String("https://example.com/webhooks/llamacloud"),
+		}},
 	})
 	if err != nil {
 		var apierr *llamacloudprod.Error
@@ -65,6 +84,7 @@ func TestBetaSheetListWithOptionalParams(t *testing.T) {
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Beta.Sheets.List(context.TODO(), llamacloudprod.BetaSheetListParams{
+		ConfigurationID:     llamacloudprod.String("configuration_id"),
 		CreatedAtOnOrAfter:  llamacloudprod.Time(time.Now()),
 		CreatedAtOnOrBefore: llamacloudprod.Time(time.Now()),
 		IncludeResults:      llamacloudprod.Bool(true),
@@ -73,7 +93,7 @@ func TestBetaSheetListWithOptionalParams(t *testing.T) {
 		PageSize:            llamacloudprod.Int(0),
 		PageToken:           llamacloudprod.String("page_token"),
 		ProjectID:           llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		Status:              llamacloudprod.StatusEnumPending,
+		Status:              llamacloudprod.BetaSheetListParamsStatusPending,
 	})
 	if err != nil {
 		var apierr *llamacloudprod.Error
@@ -131,6 +151,7 @@ func TestBetaSheetGetWithOptionalParams(t *testing.T) {
 		context.TODO(),
 		"spreadsheet_job_id",
 		llamacloudprod.BetaSheetGetParams{
+			Expand:         []string{"string"},
 			IncludeResults: llamacloudprod.Bool(true),
 			OrganizationID: llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 			ProjectID:      llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),

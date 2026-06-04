@@ -684,8 +684,10 @@ type BetaBatchJobItemGetProcessingResultsResponseProcessingResultJobConfigBatchP
 	// Any of "extract.pending", "extract.success", "extract.error",
 	// "extract.partial_success", "extract.cancelled", "parse.pending",
 	// "parse.running", "parse.success", "parse.error", "parse.partial_success",
-	// "parse.cancelled", "classify.pending", "classify.success", "classify.error",
-	// "classify.partial_success", "classify.cancelled", "unmapped_event".
+	// "parse.cancelled", "classify.pending", "classify.running", "classify.success",
+	// "classify.error", "classify.partial_success", "classify.cancelled",
+	// "sheets.pending", "sheets.success", "sheets.error", "sheets.partial_success",
+	// "sheets.cancelled", "unmapped_event".
 	WebhookEvents []string `json:"webhook_events" api:"nullable"`
 	// Custom HTTP headers sent with each webhook request (e.g. auth tokens)
 	WebhookHeaders map[string]string `json:"webhook_headers" api:"nullable"`

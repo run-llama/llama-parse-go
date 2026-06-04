@@ -270,6 +270,8 @@ type ClassifyCreateRequestParam struct {
 	ParseJobID param.Opt[string] `json:"parse_job_id,omitzero"`
 	// Idempotency key scoped to the project
 	TransactionID param.Opt[string] `json:"transaction_id,omitzero"`
+	// Outbound webhook endpoints to notify on job status changes
+	WebhookConfigurations []ClassifyCreateRequestWebhookConfigurationParam `json:"webhook_configurations,omitzero"`
 	// Configuration for a classify job.
 	Configuration ClassifyConfigurationParam `json:"configuration,omitzero"`
 	paramObj
@@ -280,6 +282,36 @@ func (r ClassifyCreateRequestParam) MarshalJSON() (data []byte, err error) {
 	return param.MarshalObject(r, (*shadow)(&r))
 }
 func (r *ClassifyCreateRequestParam) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Configuration for a single outbound webhook endpoint.
+type ClassifyCreateRequestWebhookConfigurationParam struct {
+	// Response format sent to the webhook: 'string' (default) or 'json'
+	WebhookOutputFormat param.Opt[string] `json:"webhook_output_format,omitzero"`
+	// URL to receive webhook POST notifications
+	WebhookURL param.Opt[string] `json:"webhook_url,omitzero"`
+	// Events to subscribe to (e.g. 'parse.success', 'extract.error'). If null, all
+	// events are delivered.
+	//
+	// Any of "extract.pending", "extract.success", "extract.error",
+	// "extract.partial_success", "extract.cancelled", "parse.pending",
+	// "parse.running", "parse.success", "parse.error", "parse.partial_success",
+	// "parse.cancelled", "classify.pending", "classify.running", "classify.success",
+	// "classify.error", "classify.partial_success", "classify.cancelled",
+	// "sheets.pending", "sheets.success", "sheets.error", "sheets.partial_success",
+	// "sheets.cancelled", "unmapped_event".
+	WebhookEvents []string `json:"webhook_events,omitzero"`
+	// Custom HTTP headers sent with each webhook request (e.g. auth tokens)
+	WebhookHeaders map[string]string `json:"webhook_headers,omitzero"`
+	paramObj
+}
+
+func (r ClassifyCreateRequestWebhookConfigurationParam) MarshalJSON() (data []byte, err error) {
+	type shadow ClassifyCreateRequestWebhookConfigurationParam
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *ClassifyCreateRequestWebhookConfigurationParam) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 

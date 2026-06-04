@@ -1865,8 +1865,8 @@ type ParsingNewParams struct {
 	//
 	// - `fast`: `2025-12-11`
 	// - `cost_effective`: `2026-05-28`
-	// - `agentic`: `2026-05-21`
-	// - `agentic_plus`: `2026-05-21`
+	// - `agentic`: `2026-06-01`
+	// - `agentic_plus`: `2026-06-01`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
 	Version        ParsingNewParamsVersion `json:"version,omitzero" api:"required"`
@@ -1952,16 +1952,16 @@ const (
 //
 // - `fast`: `2025-12-11`
 // - `cost_effective`: `2026-05-28`
-// - `agentic`: `2026-05-21`
-// - `agentic_plus`: `2026-05-21`
+// - `agentic`: `2026-06-01`
+// - `agentic_plus`: `2026-06-01`
 //
 // Full list: `GET /api/v2/parse/versions`.
 type ParsingNewParamsVersion string
 
 const (
 	ParsingNewParamsVersionLatest     ParsingNewParamsVersion = "latest"
+	ParsingNewParamsVersion2026_06_01 ParsingNewParamsVersion = "2026-06-01"
 	ParsingNewParamsVersion2026_05_28 ParsingNewParamsVersion = "2026-05-28"
-	ParsingNewParamsVersion2026_05_21 ParsingNewParamsVersion = "2026-05-21"
 	ParsingNewParamsVersion2025_12_11 ParsingNewParamsVersion = "2025-12-11"
 )
 
@@ -2489,8 +2489,8 @@ type ParsingNewParamsProcessingOptionsAutoModeConfigurationParsingConf struct {
 	//
 	// - `fast`: `2025-12-11`
 	// - `cost_effective`: `2026-05-28`
-	// - `agentic`: `2026-05-21`
-	// - `agentic_plus`: `2026-05-21`
+	// - `agentic`: `2026-06-01`
+	// - `agentic_plus`: `2026-06-01`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
 	Version string `json:"version,omitzero"`
@@ -3008,8 +3008,9 @@ type ParsingNewParamsWebhookConfiguration struct {
 	// HTTPS URL to receive webhook POST requests. Must be publicly accessible
 	WebhookURL param.Opt[string] `json:"webhook_url,omitzero"`
 	// Events that trigger this webhook. Options: 'parse.success' (job completed),
-	// 'parse.failure' (job failed), 'parse.partial' (some pages failed). If not
-	// specified, webhook fires for all events
+	// 'parse.error' (job failed), 'parse.partial_success' (some pages failed),
+	// 'parse.pending', 'parse.running', 'parse.cancelled'. If not specified, webhook
+	// fires for all events
 	WebhookEvents []string `json:"webhook_events,omitzero"`
 	// Custom HTTP headers to include in webhook requests. Use for authentication
 	// tokens or custom routing. Example: {'Authorization': 'Bearer xyz'}

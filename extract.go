@@ -151,9 +151,6 @@ type ExtractConfiguration struct {
 	CiteSources bool `json:"cite_sources"`
 	// Include confidence scores in results
 	ConfidenceScores bool `json:"confidence_scores"`
-	// Use 'latest' for the default pipeline or a date string (YYYY-MM-DD format) to
-	// pin to a specific release.
-	ExtractVersion string `json:"extract_version"`
 	// Granularity of extraction: per_doc returns one object per document, per_page
 	// returns one object per page, per_table_row returns one object per table row
 	//
@@ -176,12 +173,14 @@ type ExtractConfiguration struct {
 	//
 	// Any of "cost_effective", "agentic".
 	Tier ExtractConfigurationTier `json:"tier"`
+	// Use 'latest' for the latest release for the selected tier or a date string
+	// (YYYY-MM-DD format) to pin to the nearest release at or before that date.
+	Version string `json:"version"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		DataSchema       respjson.Field
 		CiteSources      respjson.Field
 		ConfidenceScores respjson.Field
-		ExtractVersion   respjson.Field
 		ExtractionTarget respjson.Field
 		MaxPages         respjson.Field
 		ParseConfigID    respjson.Field
@@ -189,6 +188,7 @@ type ExtractConfiguration struct {
 		SystemPrompt     respjson.Field
 		TargetPages      respjson.Field
 		Tier             respjson.Field
+		Version          respjson.Field
 		ExtraFields      map[string]respjson.Field
 		raw              string
 	} `json:"-"`
@@ -312,9 +312,9 @@ type ExtractConfigurationParam struct {
 	CiteSources param.Opt[bool] `json:"cite_sources,omitzero"`
 	// Include confidence scores in results
 	ConfidenceScores param.Opt[bool] `json:"confidence_scores,omitzero"`
-	// Use 'latest' for the default pipeline or a date string (YYYY-MM-DD format) to
-	// pin to a specific release.
-	ExtractVersion param.Opt[string] `json:"extract_version,omitzero"`
+	// Use 'latest' for the latest release for the selected tier or a date string
+	// (YYYY-MM-DD format) to pin to the nearest release at or before that date.
+	Version param.Opt[string] `json:"version,omitzero"`
 	// Granularity of extraction: per_doc returns one object per document, per_page
 	// returns one object per page, per_table_row returns one object per table row
 	//
@@ -686,8 +686,10 @@ type ExtractV2JobCreateWebhookConfigurationParam struct {
 	// Any of "extract.pending", "extract.success", "extract.error",
 	// "extract.partial_success", "extract.cancelled", "parse.pending",
 	// "parse.running", "parse.success", "parse.error", "parse.partial_success",
-	// "parse.cancelled", "classify.pending", "classify.success", "classify.error",
-	// "classify.partial_success", "classify.cancelled", "unmapped_event".
+	// "parse.cancelled", "classify.pending", "classify.running", "classify.success",
+	// "classify.error", "classify.partial_success", "classify.cancelled",
+	// "sheets.pending", "sheets.success", "sheets.error", "sheets.partial_success",
+	// "sheets.cancelled", "unmapped_event".
 	WebhookEvents []string `json:"webhook_events,omitzero"`
 	// Custom HTTP headers sent with each webhook request (e.g. auth tokens)
 	WebhookHeaders map[string]string `json:"webhook_headers,omitzero"`

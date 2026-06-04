@@ -41,7 +41,7 @@ func TestClassifierJobNewWithOptionalParams(t *testing.T) {
 			TargetPages: []int64{0},
 		},
 		WebhookConfigurations: []llamacloudprod.ClassifierJobNewParamsWebhookConfiguration{{
-			WebhookEvents: []string{"string"},
+			WebhookEvents: []string{"parse.success", "parse.error"},
 			WebhookHeaders: map[string]any{
 				"foo": "bar",
 			},

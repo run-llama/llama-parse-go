@@ -47,7 +47,6 @@ func TestExtractNewWithOptionalParams(t *testing.T) {
 				},
 				CiteSources:      llamacloudprod.Bool(true),
 				ConfidenceScores: llamacloudprod.Bool(true),
-				ExtractVersion:   llamacloudprod.String("latest"),
 				ExtractionTarget: llamacloudprod.ExtractConfigurationExtractionTargetPerDoc,
 				MaxPages:         llamacloudprod.Int(10),
 				ParseConfigID:    llamacloudprod.String("cfg-11111111-2222-3333-4444-555555555555"),
@@ -55,6 +54,7 @@ func TestExtractNewWithOptionalParams(t *testing.T) {
 				SystemPrompt:     llamacloudprod.String("Extract all monetary values in USD. If a currency is not specified, assume USD."),
 				TargetPages:      llamacloudprod.String("1,3,5-7"),
 				Tier:             llamacloudprod.ExtractConfigurationTierCostEffective,
+				Version:          llamacloudprod.String("latest"),
 			},
 			ConfigurationID: llamacloudprod.String("cfg-11111111-2222-3333-4444-555555555555"),
 			WebhookConfigurations: []llamacloudprod.ExtractV2JobCreateWebhookConfigurationParam{{
