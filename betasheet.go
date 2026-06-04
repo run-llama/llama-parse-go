@@ -42,9 +42,10 @@ func NewBetaSheetService(opts ...option.RequestOption) (r BetaSheetService) {
 
 // Create a spreadsheet parsing job.
 //
-// Provide **exactly one** of `configuration` (an inline parsing configuration) or
-// `configuration_id` (a saved configuration preset). Optionally include
-// `webhook_configurations` to receive `sheets.*` status notifications.
+// Provide at most one of `configuration` (an inline parsing configuration) or
+// `configuration_id` (a saved configuration preset). If neither is provided, a
+// default configuration is used. Optionally include `webhook_configurations` to
+// receive `sheets.*` status notifications.
 //
 // Experimental: not production-ready and subject to change.
 func (r *BetaSheetService) New(ctx context.Context, params BetaSheetNewParams, opts ...option.RequestOption) (res *SheetsJob, err error) {
