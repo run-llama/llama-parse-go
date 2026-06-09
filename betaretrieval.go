@@ -123,7 +123,7 @@ type BetaRetrievalGetResponseResult struct {
 	// Text content of the retrieved chunk.
 	Content string `json:"content" api:"required"`
 	// User-defined metadata associated with the chunk.
-	Metadata map[string]*BetaRetrievalGetResponseResultMetadataUnion `json:"metadata" api:"nullable"`
+	Metadata map[string]BetaRetrievalGetResponseResultMetadataUnion `json:"metadata" api:"nullable"`
 	// Relevance score from the reranker, if reranking was applied.
 	RerankScore float64 `json:"rerank_score" api:"nullable"`
 	// Hybrid search relevance score.
@@ -149,15 +149,17 @@ func (r *BetaRetrievalGetResponseResult) UnmarshalJSON(data []byte) error {
 }
 
 // BetaRetrievalGetResponseResultMetadataUnion contains all possible properties and
-// values from [string], [float64], [bool], [[]string].
+// values from [string], [int64], [float64], [bool], [[]string].
 //
 // Use the methods beginning with 'As' to cast the union to one of its variants.
 //
 // If the underlying value is not a json object, one of the following properties
-// will be valid: OfString OfFloat OfBool OfStringArray]
+// will be valid: OfString OfInt OfFloat OfBool OfStringArray]
 type BetaRetrievalGetResponseResultMetadataUnion struct {
 	// This field will be present if the value is a [string] instead of an object.
 	OfString string `json:",inline"`
+	// This field will be present if the value is a [int64] instead of an object.
+	OfInt int64 `json:",inline"`
 	// This field will be present if the value is a [float64] instead of an object.
 	OfFloat float64 `json:",inline"`
 	// This field will be present if the value is a [bool] instead of an object.
@@ -166,6 +168,7 @@ type BetaRetrievalGetResponseResultMetadataUnion struct {
 	OfStringArray []string `json:",inline"`
 	JSON          struct {
 		OfString      respjson.Field
+		OfInt         respjson.Field
 		OfFloat       respjson.Field
 		OfBool        respjson.Field
 		OfStringArray respjson.Field
@@ -174,6 +177,11 @@ type BetaRetrievalGetResponseResultMetadataUnion struct {
 }
 
 func (u BetaRetrievalGetResponseResultMetadataUnion) AsString() (v string) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u BetaRetrievalGetResponseResultMetadataUnion) AsInt() (v int64) {
 	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
 	return
 }

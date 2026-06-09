@@ -173,7 +173,7 @@ type BetaDirectoryFileUpdateResponse struct {
 	// File ID for the storage location.
 	FileID string `json:"file_id" api:"nullable"`
 	// Merged metadata from all sources. Higher-priority sources override lower.
-	Metadata map[string]*BetaDirectoryFileUpdateResponseMetadataUnion `json:"metadata"`
+	Metadata map[string]BetaDirectoryFileUpdateResponseMetadataUnion `json:"metadata"`
 	// Update datetime
 	UpdatedAt time.Time `json:"updated_at" api:"nullable" format:"date-time"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
@@ -201,15 +201,17 @@ func (r *BetaDirectoryFileUpdateResponse) UnmarshalJSON(data []byte) error {
 }
 
 // BetaDirectoryFileUpdateResponseMetadataUnion contains all possible properties
-// and values from [string], [float64], [bool], [[]string].
+// and values from [string], [int64], [float64], [bool], [[]string].
 //
 // Use the methods beginning with 'As' to cast the union to one of its variants.
 //
 // If the underlying value is not a json object, one of the following properties
-// will be valid: OfString OfFloat OfBool OfStringArray]
+// will be valid: OfString OfInt OfFloat OfBool OfStringArray]
 type BetaDirectoryFileUpdateResponseMetadataUnion struct {
 	// This field will be present if the value is a [string] instead of an object.
 	OfString string `json:",inline"`
+	// This field will be present if the value is a [int64] instead of an object.
+	OfInt int64 `json:",inline"`
 	// This field will be present if the value is a [float64] instead of an object.
 	OfFloat float64 `json:",inline"`
 	// This field will be present if the value is a [bool] instead of an object.
@@ -218,6 +220,7 @@ type BetaDirectoryFileUpdateResponseMetadataUnion struct {
 	OfStringArray []string `json:",inline"`
 	JSON          struct {
 		OfString      respjson.Field
+		OfInt         respjson.Field
 		OfFloat       respjson.Field
 		OfBool        respjson.Field
 		OfStringArray respjson.Field
@@ -226,6 +229,11 @@ type BetaDirectoryFileUpdateResponseMetadataUnion struct {
 }
 
 func (u BetaDirectoryFileUpdateResponseMetadataUnion) AsString() (v string) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u BetaDirectoryFileUpdateResponseMetadataUnion) AsInt() (v int64) {
 	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
 	return
 }
@@ -273,7 +281,7 @@ type BetaDirectoryFileListResponse struct {
 	// File ID for the storage location.
 	FileID string `json:"file_id" api:"nullable"`
 	// Merged metadata from all sources. Higher-priority sources override lower.
-	Metadata map[string]*BetaDirectoryFileListResponseMetadataUnion `json:"metadata"`
+	Metadata map[string]BetaDirectoryFileListResponseMetadataUnion `json:"metadata"`
 	// Update datetime
 	UpdatedAt time.Time `json:"updated_at" api:"nullable" format:"date-time"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
@@ -301,15 +309,17 @@ func (r *BetaDirectoryFileListResponse) UnmarshalJSON(data []byte) error {
 }
 
 // BetaDirectoryFileListResponseMetadataUnion contains all possible properties and
-// values from [string], [float64], [bool], [[]string].
+// values from [string], [int64], [float64], [bool], [[]string].
 //
 // Use the methods beginning with 'As' to cast the union to one of its variants.
 //
 // If the underlying value is not a json object, one of the following properties
-// will be valid: OfString OfFloat OfBool OfStringArray]
+// will be valid: OfString OfInt OfFloat OfBool OfStringArray]
 type BetaDirectoryFileListResponseMetadataUnion struct {
 	// This field will be present if the value is a [string] instead of an object.
 	OfString string `json:",inline"`
+	// This field will be present if the value is a [int64] instead of an object.
+	OfInt int64 `json:",inline"`
 	// This field will be present if the value is a [float64] instead of an object.
 	OfFloat float64 `json:",inline"`
 	// This field will be present if the value is a [bool] instead of an object.
@@ -318,6 +328,7 @@ type BetaDirectoryFileListResponseMetadataUnion struct {
 	OfStringArray []string `json:",inline"`
 	JSON          struct {
 		OfString      respjson.Field
+		OfInt         respjson.Field
 		OfFloat       respjson.Field
 		OfBool        respjson.Field
 		OfStringArray respjson.Field
@@ -326,6 +337,11 @@ type BetaDirectoryFileListResponseMetadataUnion struct {
 }
 
 func (u BetaDirectoryFileListResponseMetadataUnion) AsString() (v string) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u BetaDirectoryFileListResponseMetadataUnion) AsInt() (v int64) {
 	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
 	return
 }
@@ -373,7 +389,7 @@ type BetaDirectoryFileAddResponse struct {
 	// File ID for the storage location.
 	FileID string `json:"file_id" api:"nullable"`
 	// Merged metadata from all sources. Higher-priority sources override lower.
-	Metadata map[string]*BetaDirectoryFileAddResponseMetadataUnion `json:"metadata"`
+	Metadata map[string]BetaDirectoryFileAddResponseMetadataUnion `json:"metadata"`
 	// Update datetime
 	UpdatedAt time.Time `json:"updated_at" api:"nullable" format:"date-time"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
@@ -401,15 +417,17 @@ func (r *BetaDirectoryFileAddResponse) UnmarshalJSON(data []byte) error {
 }
 
 // BetaDirectoryFileAddResponseMetadataUnion contains all possible properties and
-// values from [string], [float64], [bool], [[]string].
+// values from [string], [int64], [float64], [bool], [[]string].
 //
 // Use the methods beginning with 'As' to cast the union to one of its variants.
 //
 // If the underlying value is not a json object, one of the following properties
-// will be valid: OfString OfFloat OfBool OfStringArray]
+// will be valid: OfString OfInt OfFloat OfBool OfStringArray]
 type BetaDirectoryFileAddResponseMetadataUnion struct {
 	// This field will be present if the value is a [string] instead of an object.
 	OfString string `json:",inline"`
+	// This field will be present if the value is a [int64] instead of an object.
+	OfInt int64 `json:",inline"`
 	// This field will be present if the value is a [float64] instead of an object.
 	OfFloat float64 `json:",inline"`
 	// This field will be present if the value is a [bool] instead of an object.
@@ -418,6 +436,7 @@ type BetaDirectoryFileAddResponseMetadataUnion struct {
 	OfStringArray []string `json:",inline"`
 	JSON          struct {
 		OfString      respjson.Field
+		OfInt         respjson.Field
 		OfFloat       respjson.Field
 		OfBool        respjson.Field
 		OfStringArray respjson.Field
@@ -426,6 +445,11 @@ type BetaDirectoryFileAddResponseMetadataUnion struct {
 }
 
 func (u BetaDirectoryFileAddResponseMetadataUnion) AsString() (v string) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u BetaDirectoryFileAddResponseMetadataUnion) AsInt() (v int64) {
 	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
 	return
 }
@@ -473,7 +497,7 @@ type BetaDirectoryFileGetResponse struct {
 	// File ID for the storage location.
 	FileID string `json:"file_id" api:"nullable"`
 	// Merged metadata from all sources. Higher-priority sources override lower.
-	Metadata map[string]*BetaDirectoryFileGetResponseMetadataUnion `json:"metadata"`
+	Metadata map[string]BetaDirectoryFileGetResponseMetadataUnion `json:"metadata"`
 	// Update datetime
 	UpdatedAt time.Time `json:"updated_at" api:"nullable" format:"date-time"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
@@ -501,15 +525,17 @@ func (r *BetaDirectoryFileGetResponse) UnmarshalJSON(data []byte) error {
 }
 
 // BetaDirectoryFileGetResponseMetadataUnion contains all possible properties and
-// values from [string], [float64], [bool], [[]string].
+// values from [string], [int64], [float64], [bool], [[]string].
 //
 // Use the methods beginning with 'As' to cast the union to one of its variants.
 //
 // If the underlying value is not a json object, one of the following properties
-// will be valid: OfString OfFloat OfBool OfStringArray]
+// will be valid: OfString OfInt OfFloat OfBool OfStringArray]
 type BetaDirectoryFileGetResponseMetadataUnion struct {
 	// This field will be present if the value is a [string] instead of an object.
 	OfString string `json:",inline"`
+	// This field will be present if the value is a [int64] instead of an object.
+	OfInt int64 `json:",inline"`
 	// This field will be present if the value is a [float64] instead of an object.
 	OfFloat float64 `json:",inline"`
 	// This field will be present if the value is a [bool] instead of an object.
@@ -518,6 +544,7 @@ type BetaDirectoryFileGetResponseMetadataUnion struct {
 	OfStringArray []string `json:",inline"`
 	JSON          struct {
 		OfString      respjson.Field
+		OfInt         respjson.Field
 		OfFloat       respjson.Field
 		OfBool        respjson.Field
 		OfStringArray respjson.Field
@@ -526,6 +553,11 @@ type BetaDirectoryFileGetResponseMetadataUnion struct {
 }
 
 func (u BetaDirectoryFileGetResponseMetadataUnion) AsString() (v string) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u BetaDirectoryFileGetResponseMetadataUnion) AsInt() (v int64) {
 	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
 	return
 }
@@ -573,7 +605,7 @@ type BetaDirectoryFileUploadResponse struct {
 	// File ID for the storage location.
 	FileID string `json:"file_id" api:"nullable"`
 	// Merged metadata from all sources. Higher-priority sources override lower.
-	Metadata map[string]*BetaDirectoryFileUploadResponseMetadataUnion `json:"metadata"`
+	Metadata map[string]BetaDirectoryFileUploadResponseMetadataUnion `json:"metadata"`
 	// Update datetime
 	UpdatedAt time.Time `json:"updated_at" api:"nullable" format:"date-time"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
@@ -601,15 +633,17 @@ func (r *BetaDirectoryFileUploadResponse) UnmarshalJSON(data []byte) error {
 }
 
 // BetaDirectoryFileUploadResponseMetadataUnion contains all possible properties
-// and values from [string], [float64], [bool], [[]string].
+// and values from [string], [int64], [float64], [bool], [[]string].
 //
 // Use the methods beginning with 'As' to cast the union to one of its variants.
 //
 // If the underlying value is not a json object, one of the following properties
-// will be valid: OfString OfFloat OfBool OfStringArray]
+// will be valid: OfString OfInt OfFloat OfBool OfStringArray]
 type BetaDirectoryFileUploadResponseMetadataUnion struct {
 	// This field will be present if the value is a [string] instead of an object.
 	OfString string `json:",inline"`
+	// This field will be present if the value is a [int64] instead of an object.
+	OfInt int64 `json:",inline"`
 	// This field will be present if the value is a [float64] instead of an object.
 	OfFloat float64 `json:",inline"`
 	// This field will be present if the value is a [bool] instead of an object.
@@ -618,6 +652,7 @@ type BetaDirectoryFileUploadResponseMetadataUnion struct {
 	OfStringArray []string `json:",inline"`
 	JSON          struct {
 		OfString      respjson.Field
+		OfInt         respjson.Field
 		OfFloat       respjson.Field
 		OfBool        respjson.Field
 		OfStringArray respjson.Field
@@ -626,6 +661,11 @@ type BetaDirectoryFileUploadResponseMetadataUnion struct {
 }
 
 func (u BetaDirectoryFileUploadResponseMetadataUnion) AsString() (v string) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u BetaDirectoryFileUploadResponseMetadataUnion) AsInt() (v int64) {
 	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
 	return
 }
@@ -663,7 +703,7 @@ type BetaDirectoryFileUpdateParams struct {
 	// Updated unique identifier.
 	UniqueID param.Opt[string] `json:"unique_id,omitzero"`
 	// User-defined metadata key-value pairs. Replaces the user metadata layer.
-	Metadata map[string]*BetaDirectoryFileUpdateParamsMetadataUnion `json:"metadata,omitzero"`
+	Metadata map[string]BetaDirectoryFileUpdateParamsMetadataUnion `json:"metadata,omitzero"`
 	paramObj
 }
 
@@ -689,6 +729,7 @@ func (r BetaDirectoryFileUpdateParams) URLQuery() (v url.Values, err error) {
 // Use [param.IsOmitted] to confirm if a field is set.
 type BetaDirectoryFileUpdateParamsMetadataUnion struct {
 	OfString      param.Opt[string]  `json:",omitzero,inline"`
+	OfInt         param.Opt[int64]   `json:",omitzero,inline"`
 	OfFloat       param.Opt[float64] `json:",omitzero,inline"`
 	OfBool        param.Opt[bool]    `json:",omitzero,inline"`
 	OfStringArray []string           `json:",omitzero,inline"`
@@ -696,7 +737,11 @@ type BetaDirectoryFileUpdateParamsMetadataUnion struct {
 }
 
 func (u BetaDirectoryFileUpdateParamsMetadataUnion) MarshalJSON() ([]byte, error) {
-	return param.MarshalUnion(u, u.OfString, u.OfFloat, u.OfBool, u.OfStringArray)
+	return param.MarshalUnion(u, u.OfString,
+		u.OfInt,
+		u.OfFloat,
+		u.OfBool,
+		u.OfStringArray)
 }
 func (u *BetaDirectoryFileUpdateParamsMetadataUnion) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, u)
@@ -757,7 +802,7 @@ type BetaDirectoryFileAddParams struct {
 	// file's external_file_id or name.
 	UniqueID param.Opt[string] `json:"unique_id,omitzero"`
 	// User-defined metadata key-value pairs to associate with the file.
-	Metadata map[string]*BetaDirectoryFileAddParamsMetadataUnion `json:"metadata,omitzero"`
+	Metadata map[string]BetaDirectoryFileAddParamsMetadataUnion `json:"metadata,omitzero"`
 	paramObj
 }
 
@@ -783,6 +828,7 @@ func (r BetaDirectoryFileAddParams) URLQuery() (v url.Values, err error) {
 // Use [param.IsOmitted] to confirm if a field is set.
 type BetaDirectoryFileAddParamsMetadataUnion struct {
 	OfString      param.Opt[string]  `json:",omitzero,inline"`
+	OfInt         param.Opt[int64]   `json:",omitzero,inline"`
 	OfFloat       param.Opt[float64] `json:",omitzero,inline"`
 	OfBool        param.Opt[bool]    `json:",omitzero,inline"`
 	OfStringArray []string           `json:",omitzero,inline"`
@@ -790,7 +836,11 @@ type BetaDirectoryFileAddParamsMetadataUnion struct {
 }
 
 func (u BetaDirectoryFileAddParamsMetadataUnion) MarshalJSON() ([]byte, error) {
-	return param.MarshalUnion(u, u.OfString, u.OfFloat, u.OfBool, u.OfStringArray)
+	return param.MarshalUnion(u, u.OfString,
+		u.OfInt,
+		u.OfFloat,
+		u.OfBool,
+		u.OfStringArray)
 }
 func (u *BetaDirectoryFileAddParamsMetadataUnion) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, u)

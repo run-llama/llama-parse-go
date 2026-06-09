@@ -37,7 +37,7 @@ func TestBetaDirectoryFileUpdateWithOptionalParams(t *testing.T) {
 			OrganizationID: llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 			ProjectID:      llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 			DisplayName:    llamacloudprod.String("display_name"),
-			Metadata: map[string]*llamacloudprod.BetaDirectoryFileUpdateParamsMetadataUnion{
+			Metadata: map[string]llamacloudprod.BetaDirectoryFileUpdateParamsMetadataUnion{
 				"foo": {
 					OfString: llamacloudprod.String("string"),
 				},
@@ -147,7 +147,7 @@ func TestBetaDirectoryFileAddWithOptionalParams(t *testing.T) {
 			OrganizationID: llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 			ProjectID:      llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 			DisplayName:    llamacloudprod.String("display_name"),
-			Metadata: map[string]*llamacloudprod.BetaDirectoryFileAddParamsMetadataUnion{
+			Metadata: map[string]llamacloudprod.BetaDirectoryFileAddParamsMetadataUnion{
 				"foo": {
 					OfString: llamacloudprod.String("string"),
 				},

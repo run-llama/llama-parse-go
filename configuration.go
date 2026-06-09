@@ -1209,9 +1209,9 @@ type ParseV2ParametersResp struct {
 	// Current `latest` by tier:
 	//
 	// - `fast`: `2025-12-11`
-	// - `cost_effective`: `2026-05-28`
-	// - `agentic`: `2026-06-01`
-	// - `agentic_plus`: `2026-06-01`
+	// - `cost_effective`: `2026-06-05`
+	// - `agentic`: `2026-06-04`
+	// - `agentic_plus`: `2026-06-04`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
 	Version ParseV2ParametersVersion `json:"version" api:"required"`
@@ -1304,17 +1304,17 @@ const (
 // Current `latest` by tier:
 //
 // - `fast`: `2025-12-11`
-// - `cost_effective`: `2026-05-28`
-// - `agentic`: `2026-06-01`
-// - `agentic_plus`: `2026-06-01`
+// - `cost_effective`: `2026-06-05`
+// - `agentic`: `2026-06-04`
+// - `agentic_plus`: `2026-06-04`
 //
 // Full list: `GET /api/v2/parse/versions`.
 type ParseV2ParametersVersion string
 
 const (
 	ParseV2ParametersVersionLatest     ParseV2ParametersVersion = "latest"
-	ParseV2ParametersVersion2026_06_01 ParseV2ParametersVersion = "2026-06-01"
-	ParseV2ParametersVersion2026_05_28 ParseV2ParametersVersion = "2026-05-28"
+	ParseV2ParametersVersion2026_06_05 ParseV2ParametersVersion = "2026-06-05"
+	ParseV2ParametersVersion2026_06_04 ParseV2ParametersVersion = "2026-06-04"
 	ParseV2ParametersVersion2025_12_11 ParseV2ParametersVersion = "2025-12-11"
 )
 
@@ -1497,6 +1497,18 @@ type ParseV2ParametersOutputOptionsResp struct {
 	// Extract the printed page number as it appears in the document (e.g., 'Page 5 of
 	// 10', 'v', 'A-3'). Useful for referencing original page numbers
 	ExtractPrintedPageNumber bool `json:"extract_printed_page_number" api:"nullable"`
+	// Bounding-box granularity levels to compute for the parse. 'word' computes one
+	// bounding box per detected word; 'line' computes one per text line; 'cell'
+	// computes one per table cell. Multiple levels can be requested. Empty list
+	// (default) disables granular bboxes — only item-level layout boxes are returned
+	// on the result. When set, the computed boxes are not inlined on the result items;
+	// they are written to a separate `grounded_items` sidecar (JSONL, one row per
+	// page) and exposed as `result_content_metadata.grounded_items` (a presigned
+	// download URL) on the parse result. Each row matches the `GroundedJsonItem`
+	// shape.
+	//
+	// Any of "cell", "line", "word".
+	GranularBboxes []string `json:"granular_bboxes"`
 	// Image categories to extract and save. Options: 'screenshot' (full page renders
 	// useful for visual QA), 'embedded' (images found within the document), 'layout'
 	// (cropped regions from layout detection like figures and diagrams). Empty list
@@ -1514,6 +1526,7 @@ type ParseV2ParametersOutputOptionsResp struct {
 	JSON struct {
 		AdditionalOutputs        respjson.Field
 		ExtractPrintedPageNumber respjson.Field
+		GranularBboxes           respjson.Field
 		ImagesToSave             respjson.Field
 		Markdown                 respjson.Field
 		SpatialText              respjson.Field
@@ -1960,9 +1973,9 @@ type ParseV2ParametersProcessingOptionsAutoModeConfigurationParsingConfResp stru
 	// Current `latest` by tier:
 	//
 	// - `fast`: `2025-12-11`
-	// - `cost_effective`: `2026-05-28`
-	// - `agentic`: `2026-06-01`
-	// - `agentic_plus`: `2026-06-01`
+	// - `cost_effective`: `2026-06-05`
+	// - `agentic`: `2026-06-04`
+	// - `agentic_plus`: `2026-06-04`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
 	Version string `json:"version" api:"nullable"`
@@ -3060,9 +3073,9 @@ type ParseV2Parameters struct {
 	// Current `latest` by tier:
 	//
 	// - `fast`: `2025-12-11`
-	// - `cost_effective`: `2026-05-28`
-	// - `agentic`: `2026-06-01`
-	// - `agentic_plus`: `2026-06-01`
+	// - `cost_effective`: `2026-06-05`
+	// - `agentic`: `2026-06-04`
+	// - `agentic_plus`: `2026-06-04`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
 	Version ParseV2ParametersVersion `json:"version,omitzero" api:"required"`
@@ -3266,6 +3279,18 @@ type ParseV2ParametersOutputOptions struct {
 	// extracted answers back to the source document; fetch via
 	// `expand=raw_words_content_metadata`.
 	AdditionalOutputs []string `json:"additional_outputs,omitzero"`
+	// Bounding-box granularity levels to compute for the parse. 'word' computes one
+	// bounding box per detected word; 'line' computes one per text line; 'cell'
+	// computes one per table cell. Multiple levels can be requested. Empty list
+	// (default) disables granular bboxes — only item-level layout boxes are returned
+	// on the result. When set, the computed boxes are not inlined on the result items;
+	// they are written to a separate `grounded_items` sidecar (JSONL, one row per
+	// page) and exposed as `result_content_metadata.grounded_items` (a presigned
+	// download URL) on the parse result. Each row matches the `GroundedJsonItem`
+	// shape.
+	//
+	// Any of "cell", "line", "word".
+	GranularBboxes []string `json:"granular_bboxes,omitzero"`
 	// Image categories to extract and save. Options: 'screenshot' (full page renders
 	// useful for visual QA), 'embedded' (images found within the document), 'layout'
 	// (cropped regions from layout detection like figures and diagrams). Empty list
@@ -3639,9 +3664,9 @@ type ParseV2ParametersProcessingOptionsAutoModeConfigurationParsingConf struct {
 	// Current `latest` by tier:
 	//
 	// - `fast`: `2025-12-11`
-	// - `cost_effective`: `2026-05-28`
-	// - `agentic`: `2026-06-01`
-	// - `agentic_plus`: `2026-06-01`
+	// - `cost_effective`: `2026-06-05`
+	// - `agentic`: `2026-06-04`
+	// - `agentic_plus`: `2026-06-04`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
 	Version string `json:"version,omitzero"`
