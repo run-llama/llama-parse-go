@@ -66,6 +66,7 @@ func TestParsingNewWithOptionalParams(t *testing.T) {
 		OutputOptions: llamacloudprod.ParsingNewParamsOutputOptions{
 			AdditionalOutputs:        []string{"stripped_md", "concatenated_stripped_txt", "word_bbox"},
 			ExtractPrintedPageNumber: llamacloudprod.Bool(true),
+			GranularBboxes:           []string{"word", "line", "cell"},
 			ImagesToSave:             []string{"screenshot"},
 			Markdown: llamacloudprod.ParsingNewParamsOutputOptionsMarkdown{
 				AnnotateLinks: llamacloudprod.Bool(true),
