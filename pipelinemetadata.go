@@ -12,9 +12,9 @@ import (
 	"net/http"
 	"slices"
 
-	"github.com/stainless-sdks/llamacloud-prod-go/internal/apiform"
-	"github.com/stainless-sdks/llamacloud-prod-go/internal/requestconfig"
-	"github.com/stainless-sdks/llamacloud-prod-go/option"
+	"github.com/run-llama/llama-parse-go/internal/apiform"
+	"github.com/run-llama/llama-parse-go/internal/requestconfig"
+	"github.com/run-llama/llama-parse-go/option"
 )
 
 // PipelineMetadataService contains methods and other services that help with

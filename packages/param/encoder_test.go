@@ -7,8 +7,8 @@ import (
 	"testing"
 	"time"
 
-	shimjson "github.com/stainless-sdks/llamacloud-prod-go/internal/encoding/json"
-	"github.com/stainless-sdks/llamacloud-prod-go/packages/param"
+	shimjson "github.com/run-llama/llama-parse-go/internal/encoding/json"
+	"github.com/run-llama/llama-parse-go/packages/param"
 )
 
 type Struct struct {

@@ -1,7 +1,7 @@
 package apiquery
 
 import (
-	"github.com/stainless-sdks/llamacloud-prod-go/packages/param"
+	"github.com/run-llama/llama-parse-go/packages/param"
 	"net/url"
 	"testing"
 	"time"

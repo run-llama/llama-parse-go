@@ -2,7 +2,7 @@ package apijson
 
 import (
 	"errors"
-	"github.com/stainless-sdks/llamacloud-prod-go/packages/param"
+	"github.com/run-llama/llama-parse-go/packages/param"
 	"reflect"
 
 	"github.com/tidwall/gjson"

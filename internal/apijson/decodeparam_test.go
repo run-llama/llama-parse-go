@@ -3,8 +3,8 @@ package apijson_test
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/stainless-sdks/llamacloud-prod-go/internal/apijson"
-	"github.com/stainless-sdks/llamacloud-prod-go/packages/param"
+	"github.com/run-llama/llama-parse-go/internal/apijson"
+	"github.com/run-llama/llama-parse-go/packages/param"
 	"reflect"
 	"testing"
 )

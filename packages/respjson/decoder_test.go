@@ -3,8 +3,8 @@ package respjson_test
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/stainless-sdks/llamacloud-prod-go/internal/apijson"
-	rj "github.com/stainless-sdks/llamacloud-prod-go/packages/respjson"
+	"github.com/run-llama/llama-parse-go/internal/apijson"
+	rj "github.com/run-llama/llama-parse-go/packages/respjson"
 	"reflect"
 	"testing"
 )
