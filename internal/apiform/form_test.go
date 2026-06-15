@@ -2,7 +2,7 @@ package apiform
 
 import (
 	"bytes"
-	"github.com/stainless-sdks/llamacloud-prod-go/packages/param"
+	"github.com/run-llama/llama-parse-go/packages/param"
 	"io"
 	"mime/multipart"
 	"strings"

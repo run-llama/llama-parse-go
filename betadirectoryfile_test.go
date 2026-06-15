@@ -11,9 +11,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/stainless-sdks/llamacloud-prod-go"
-	"github.com/stainless-sdks/llamacloud-prod-go/internal/testutil"
-	"github.com/stainless-sdks/llamacloud-prod-go/option"
+	"github.com/run-llama/llama-parse-go"
+	"github.com/run-llama/llama-parse-go/internal/testutil"
+	"github.com/run-llama/llama-parse-go/option"
 )
 
 func TestBetaDirectoryFileUpdateWithOptionalParams(t *testing.T) {

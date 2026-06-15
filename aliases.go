@@ -3,9 +3,9 @@
 package llamacloudprod
 
 import (
-	"github.com/stainless-sdks/llamacloud-prod-go/internal/apierror"
-	"github.com/stainless-sdks/llamacloud-prod-go/packages/param"
-	"github.com/stainless-sdks/llamacloud-prod-go/shared"
+	"github.com/run-llama/llama-parse-go/internal/apierror"
+	"github.com/run-llama/llama-parse-go/packages/param"
+	"github.com/run-llama/llama-parse-go/shared"
 )
 
 // aliased to make [param.APIUnion] private when embedding

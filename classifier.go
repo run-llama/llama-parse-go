@@ -3,7 +3,7 @@
 package llamacloudprod
 
 import (
-	"github.com/stainless-sdks/llamacloud-prod-go/option"
+	"github.com/run-llama/llama-parse-go/option"
 )
 
 // ClassifierService contains methods and other services that help with interacting

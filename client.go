@@ -9,8 +9,8 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/stainless-sdks/llamacloud-prod-go/internal/requestconfig"
-	"github.com/stainless-sdks/llamacloud-prod-go/option"
+	"github.com/run-llama/llama-parse-go/internal/requestconfig"
+	"github.com/run-llama/llama-parse-go/option"
 )
 
 // Client creates a struct with services and top level methods that help with
