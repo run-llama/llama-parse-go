@@ -2328,7 +2328,7 @@ func (r *MetadataFiltersFilterMetadataFilter) UnmarshalJSON(data []byte) error {
 // Use the methods beginning with 'As' to cast the union to one of its variants.
 //
 // If the underlying value is not a json object, one of the following properties
-// will be valid: OfFloat OfString OfStringArray OfFloatArray OfIntArray]
+// will be valid: OfFloat OfString OfStringArray OfNumberArray OfIntegerArray]
 type MetadataFiltersFilterMetadataFilterValueUnion struct {
 	// This field will be present if the value is a [float64] instead of an object.
 	OfFloat float64 `json:",inline"`
@@ -2337,16 +2337,16 @@ type MetadataFiltersFilterMetadataFilterValueUnion struct {
 	// This field will be present if the value is a [[]string] instead of an object.
 	OfStringArray []string `json:",inline"`
 	// This field will be present if the value is a [[]float64] instead of an object.
-	OfFloatArray []float64 `json:",inline"`
+	OfNumberArray []float64 `json:",inline"`
 	// This field will be present if the value is a [[]int64] instead of an object.
-	OfIntArray []int64 `json:",inline"`
-	JSON       struct {
-		OfFloat       respjson.Field
-		OfString      respjson.Field
-		OfStringArray respjson.Field
-		OfFloatArray  respjson.Field
-		OfIntArray    respjson.Field
-		raw           string
+	OfIntegerArray []int64 `json:",inline"`
+	JSON           struct {
+		OfFloat        respjson.Field
+		OfString       respjson.Field
+		OfStringArray  respjson.Field
+		OfNumberArray  respjson.Field
+		OfIntegerArray respjson.Field
+		raw            string
 	} `json:"-"`
 }
 
@@ -2365,12 +2365,12 @@ func (u MetadataFiltersFilterMetadataFilterValueUnion) AsStringArray() (v []stri
 	return
 }
 
-func (u MetadataFiltersFilterMetadataFilterValueUnion) AsFloatArray() (v []float64) {
+func (u MetadataFiltersFilterMetadataFilterValueUnion) AsNumberArray() (v []float64) {
 	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
 	return
 }
 
-func (u MetadataFiltersFilterMetadataFilterValueUnion) AsIntArray() (v []int64) {
+func (u MetadataFiltersFilterMetadataFilterValueUnion) AsIntegerArray() (v []int64) {
 	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
 	return
 }
@@ -2464,11 +2464,11 @@ func init() {
 //
 // Use [param.IsOmitted] to confirm if a field is set.
 type MetadataFiltersFilterMetadataFilterValueUnionParam struct {
-	OfFloat       param.Opt[float64] `json:",omitzero,inline"`
-	OfString      param.Opt[string]  `json:",omitzero,inline"`
-	OfStringArray []string           `json:",omitzero,inline"`
-	OfFloatArray  []float64          `json:",omitzero,inline"`
-	OfIntArray    []int64            `json:",omitzero,inline"`
+	OfFloat        param.Opt[float64] `json:",omitzero,inline"`
+	OfString       param.Opt[string]  `json:",omitzero,inline"`
+	OfStringArray  []string           `json:",omitzero,inline"`
+	OfNumberArray  []float64          `json:",omitzero,inline"`
+	OfIntegerArray []int64            `json:",omitzero,inline"`
 	paramUnion
 }
 
@@ -2476,8 +2476,8 @@ func (u MetadataFiltersFilterMetadataFilterValueUnionParam) MarshalJSON() ([]byt
 	return param.MarshalUnion(u, u.OfFloat,
 		u.OfString,
 		u.OfStringArray,
-		u.OfFloatArray,
-		u.OfIntArray)
+		u.OfNumberArray,
+		u.OfIntegerArray)
 }
 func (u *MetadataFiltersFilterMetadataFilterValueUnionParam) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, u)
