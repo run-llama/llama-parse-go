@@ -3,7 +3,7 @@
 package constant
 
 import (
-	shimjson "github.com/stainless-sdks/llamacloud-prod-go/internal/encoding/json"
+	shimjson "github.com/run-llama/llama-parse-go/internal/encoding/json"
 )
 
 type Constant[T any] interface {
