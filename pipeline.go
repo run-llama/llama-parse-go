@@ -64,22 +64,6 @@ func (r *PipelineService) New(ctx context.Context, params PipelineNewParams, opt
 	return res, err
 }
 
-// Run a retrieval query against a managed pipeline.
-//
-// Searches the pipeline's vector store using the provided query and retrieval
-// parameters. Supports dense, sparse, and hybrid search modes with configurable
-// top-k and reranking.
-func (r *PipelineService) Get(ctx context.Context, pipelineID string, params PipelineGetParams, opts ...option.RequestOption) (res *PipelineGetResponse, err error) {
-	opts = slices.Concat(r.options, opts)
-	if pipelineID == "" {
-		err = errors.New("missing required pipeline_id parameter")
-		return nil, err
-	}
-	path := fmt.Sprintf("api/v1/pipelines/%s/retrieve", pipelineID)
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, params, &res, opts...)
-	return res, err
-}
-
 // Update an existing pipeline's configuration.
 func (r *PipelineService) Update(ctx context.Context, pipelineID string, body PipelineUpdateParams, opts ...option.RequestOption) (res *Pipeline, err error) {
 	opts = slices.Concat(r.options, opts)
@@ -140,6 +124,22 @@ func (r *PipelineService) GetStatus(ctx context.Context, pipelineID string, quer
 	}
 	path := fmt.Sprintf("api/v1/pipelines/%s/status", pipelineID)
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, query, &res, opts...)
+	return res, err
+}
+
+// Run a retrieval query against a managed pipeline.
+//
+// Searches the pipeline's vector store using the provided query and retrieval
+// parameters. Supports dense, sparse, and hybrid search modes with configurable
+// top-k and reranking.
+func (r *PipelineService) RunSearch(ctx context.Context, pipelineID string, params PipelineRunSearchParams, opts ...option.RequestOption) (res *PipelineRunSearchResponse, err error) {
+	opts = slices.Concat(r.options, opts)
+	if pipelineID == "" {
+		err = errors.New("missing required pipeline_id parameter")
+		return nil, err
+	}
+	path := fmt.Sprintf("api/v1/pipelines/%s/retrieve", pipelineID)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, params, &res, opts...)
 	return res, err
 }
 
@@ -4081,12 +4081,12 @@ func (r *VertexTextEmbeddingParam) UnmarshalJSON(data []byte) error {
 }
 
 // Schema for the result of an retrieval execution.
-type PipelineGetResponse struct {
+type PipelineRunSearchResponse struct {
 	// The ID of the pipeline that the query was retrieved against.
 	PipelineID string `json:"pipeline_id" api:"required" format:"uuid"`
 	// The nodes retrieved by the pipeline for the given query.
-	RetrievalNodes []PipelineGetResponseRetrievalNode `json:"retrieval_nodes" api:"required"`
-	ClassName      string                             `json:"class_name"`
+	RetrievalNodes []PipelineRunSearchResponseRetrievalNode `json:"retrieval_nodes" api:"required"`
+	ClassName      string                                   `json:"class_name"`
 	// The image nodes retrieved by the pipeline for the given query. Deprecated - will
 	// soon be replaced with 'page_screenshot_nodes'.
 	//
@@ -4116,14 +4116,14 @@ type PipelineGetResponse struct {
 }
 
 // Returns the unmodified JSON received from the API
-func (r PipelineGetResponse) RawJSON() string { return r.JSON.raw }
-func (r *PipelineGetResponse) UnmarshalJSON(data []byte) error {
+func (r PipelineRunSearchResponse) RawJSON() string { return r.JSON.raw }
+func (r *PipelineRunSearchResponse) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
 // Same as NodeWithScore but type for node is a TextNode instead of BaseNode.
 // FastAPI doesn't accept abstract classes like BaseNode.
-type PipelineGetResponseRetrievalNode struct {
+type PipelineRunSearchResponseRetrievalNode struct {
 	// Provided for backward compatibility.
 	Node      TextNode `json:"node" api:"required"`
 	ClassName string   `json:"class_name"`
@@ -4139,8 +4139,8 @@ type PipelineGetResponseRetrievalNode struct {
 }
 
 // Returns the unmodified JSON received from the API
-func (r PipelineGetResponseRetrievalNode) RawJSON() string { return r.JSON.raw }
-func (r *PipelineGetResponseRetrievalNode) UnmarshalJSON(data []byte) error {
+func (r PipelineRunSearchResponseRetrievalNode) RawJSON() string { return r.JSON.raw }
+func (r *PipelineRunSearchResponseRetrievalNode) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
@@ -4165,85 +4165,6 @@ func (r PipelineNewParams) URLQuery() (v url.Values, err error) {
 		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
 		NestedFormat: apiquery.NestedQueryFormatBrackets,
 	})
-}
-
-type PipelineGetParams struct {
-	// The query to retrieve against.
-	Query          string            `json:"query" api:"required"`
-	OrganizationID param.Opt[string] `query:"organization_id,omitzero" format:"uuid" json:"-"`
-	ProjectID      param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
-	// Alpha value for hybrid retrieval to determine the weights between dense and
-	// sparse retrieval. 0 is sparse retrieval and 1 is dense retrieval.
-	Alpha param.Opt[float64] `json:"alpha,omitzero"`
-	// Minimum similarity score wrt query for retrieval
-	DenseSimilarityCutoff param.Opt[float64] `json:"dense_similarity_cutoff,omitzero"`
-	// Number of nodes for dense retrieval.
-	DenseSimilarityTopK param.Opt[int64] `json:"dense_similarity_top_k,omitzero"`
-	// Enable reranking for retrieval
-	EnableReranking param.Opt[bool] `json:"enable_reranking,omitzero"`
-	// Number of files to retrieve (only for retrieval mode files_via_metadata and
-	// files_via_content).
-	FilesTopK param.Opt[int64] `json:"files_top_k,omitzero"`
-	// Number of reranked nodes for returning.
-	RerankTopN param.Opt[int64] `json:"rerank_top_n,omitzero"`
-	// Number of nodes for sparse retrieval.
-	SparseSimilarityTopK param.Opt[int64]  `json:"sparse_similarity_top_k,omitzero"`
-	ClassName            param.Opt[string] `json:"class_name,omitzero"`
-	// Whether to retrieve image nodes.
-	RetrieveImageNodes param.Opt[bool] `json:"retrieve_image_nodes,omitzero"`
-	// Whether to retrieve page figure nodes.
-	RetrievePageFigureNodes param.Opt[bool] `json:"retrieve_page_figure_nodes,omitzero"`
-	// Whether to retrieve page screenshot nodes.
-	RetrievePageScreenshotNodes param.Opt[bool] `json:"retrieve_page_screenshot_nodes,omitzero"`
-	// JSON Schema that will be used to infer search_filters. Omit or leave as null to
-	// skip inference.
-	SearchFiltersInferenceSchema map[string]*PipelineGetParamsSearchFiltersInferenceSchemaUnion `json:"search_filters_inference_schema,omitzero"`
-	// The retrieval mode for the query.
-	//
-	// Any of "chunks", "files_via_metadata", "files_via_content", "auto_routed".
-	RetrievalMode RetrievalMode `json:"retrieval_mode,omitzero"`
-	// Metadata filters for vector stores.
-	SearchFilters MetadataFiltersParam `json:"search_filters,omitzero"`
-	paramObj
-}
-
-func (r PipelineGetParams) MarshalJSON() (data []byte, err error) {
-	type shadow PipelineGetParams
-	return param.MarshalObject(r, (*shadow)(&r))
-}
-func (r *PipelineGetParams) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-// URLQuery serializes [PipelineGetParams]'s query parameters as `url.Values`.
-func (r PipelineGetParams) URLQuery() (v url.Values, err error) {
-	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
-		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
-		NestedFormat: apiquery.NestedQueryFormatBrackets,
-	})
-}
-
-// Only one field can be non-zero.
-//
-// Use [param.IsOmitted] to confirm if a field is set.
-type PipelineGetParamsSearchFiltersInferenceSchemaUnion struct {
-	OfAnyMap   map[string]any     `json:",omitzero,inline"`
-	OfAnyArray []any              `json:",omitzero,inline"`
-	OfString   param.Opt[string]  `json:",omitzero,inline"`
-	OfFloat    param.Opt[float64] `json:",omitzero,inline"`
-	OfBool     param.Opt[bool]    `json:",omitzero,inline"`
-	paramUnion
-}
-
-func (u PipelineGetParamsSearchFiltersInferenceSchemaUnion) MarshalJSON() ([]byte, error) {
-	return param.MarshalUnion(u, u.OfAnyMap,
-		u.OfAnyArray,
-		u.OfString,
-		u.OfFloat,
-		u.OfBool)
-}
-func (u *PipelineGetParamsSearchFiltersInferenceSchemaUnion) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, u)
 }
 
 type PipelineUpdateParams struct {
@@ -4375,6 +4296,86 @@ func (r PipelineGetStatusParams) URLQuery() (v url.Values, err error) {
 		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
 		NestedFormat: apiquery.NestedQueryFormatBrackets,
 	})
+}
+
+type PipelineRunSearchParams struct {
+	// The query to retrieve against.
+	Query          string            `json:"query" api:"required"`
+	OrganizationID param.Opt[string] `query:"organization_id,omitzero" format:"uuid" json:"-"`
+	ProjectID      param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
+	// Alpha value for hybrid retrieval to determine the weights between dense and
+	// sparse retrieval. 0 is sparse retrieval and 1 is dense retrieval.
+	Alpha param.Opt[float64] `json:"alpha,omitzero"`
+	// Minimum similarity score wrt query for retrieval
+	DenseSimilarityCutoff param.Opt[float64] `json:"dense_similarity_cutoff,omitzero"`
+	// Number of nodes for dense retrieval.
+	DenseSimilarityTopK param.Opt[int64] `json:"dense_similarity_top_k,omitzero"`
+	// Enable reranking for retrieval
+	EnableReranking param.Opt[bool] `json:"enable_reranking,omitzero"`
+	// Number of files to retrieve (only for retrieval mode files_via_metadata and
+	// files_via_content).
+	FilesTopK param.Opt[int64] `json:"files_top_k,omitzero"`
+	// Number of reranked nodes for returning.
+	RerankTopN param.Opt[int64] `json:"rerank_top_n,omitzero"`
+	// Number of nodes for sparse retrieval.
+	SparseSimilarityTopK param.Opt[int64]  `json:"sparse_similarity_top_k,omitzero"`
+	ClassName            param.Opt[string] `json:"class_name,omitzero"`
+	// Whether to retrieve image nodes.
+	RetrieveImageNodes param.Opt[bool] `json:"retrieve_image_nodes,omitzero"`
+	// Whether to retrieve page figure nodes.
+	RetrievePageFigureNodes param.Opt[bool] `json:"retrieve_page_figure_nodes,omitzero"`
+	// Whether to retrieve page screenshot nodes.
+	RetrievePageScreenshotNodes param.Opt[bool] `json:"retrieve_page_screenshot_nodes,omitzero"`
+	// JSON Schema that will be used to infer search_filters. Omit or leave as null to
+	// skip inference.
+	SearchFiltersInferenceSchema map[string]*PipelineRunSearchParamsSearchFiltersInferenceSchemaUnion `json:"search_filters_inference_schema,omitzero"`
+	// The retrieval mode for the query.
+	//
+	// Any of "chunks", "files_via_metadata", "files_via_content", "auto_routed".
+	RetrievalMode RetrievalMode `json:"retrieval_mode,omitzero"`
+	// Metadata filters for vector stores.
+	SearchFilters MetadataFiltersParam `json:"search_filters,omitzero"`
+	paramObj
+}
+
+func (r PipelineRunSearchParams) MarshalJSON() (data []byte, err error) {
+	type shadow PipelineRunSearchParams
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *PipelineRunSearchParams) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// URLQuery serializes [PipelineRunSearchParams]'s query parameters as
+// `url.Values`.
+func (r PipelineRunSearchParams) URLQuery() (v url.Values, err error) {
+	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
+		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
+		NestedFormat: apiquery.NestedQueryFormatBrackets,
+	})
+}
+
+// Only one field can be non-zero.
+//
+// Use [param.IsOmitted] to confirm if a field is set.
+type PipelineRunSearchParamsSearchFiltersInferenceSchemaUnion struct {
+	OfAnyMap   map[string]any     `json:",omitzero,inline"`
+	OfAnyArray []any              `json:",omitzero,inline"`
+	OfString   param.Opt[string]  `json:",omitzero,inline"`
+	OfFloat    param.Opt[float64] `json:",omitzero,inline"`
+	OfBool     param.Opt[bool]    `json:",omitzero,inline"`
+	paramUnion
+}
+
+func (u PipelineRunSearchParamsSearchFiltersInferenceSchemaUnion) MarshalJSON() ([]byte, error) {
+	return param.MarshalUnion(u, u.OfAnyMap,
+		u.OfAnyArray,
+		u.OfString,
+		u.OfFloat,
+		u.OfBool)
+}
+func (u *PipelineRunSearchParamsSearchFiltersInferenceSchemaUnion) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, u)
 }
 
 type PipelineUpsertParams struct {
