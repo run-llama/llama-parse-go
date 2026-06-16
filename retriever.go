@@ -28,8 +28,8 @@ import (
 // automatically. You should not instantiate this service directly, and instead use
 // the [NewRetrieverService] method instead.
 type RetrieverService struct {
-	options []option.RequestOption
-	Query   RetrieverQueryService
+	options   []option.RequestOption
+	Retriever RetrieverRetrieverService
 }
 
 // NewRetrieverService generates a new service that applies the given options to
@@ -38,7 +38,7 @@ type RetrieverService struct {
 func NewRetrieverService(opts ...option.RequestOption) (r RetrieverService) {
 	r = RetrieverService{}
 	r.options = opts
-	r.Query = NewRetrieverQueryService(opts...)
+	r.Retriever = NewRetrieverRetrieverService(opts...)
 	return
 }
 

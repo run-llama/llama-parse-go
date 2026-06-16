@@ -13,7 +13,7 @@ import (
 	"github.com/run-llama/llama-parse-go/option"
 )
 
-func TestRetrieverQuerySearchWithOptionalParams(t *testing.T) {
+func TestRetrieverRetrieverSearchWithOptionalParams(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
@@ -26,10 +26,10 @@ func TestRetrieverQuerySearchWithOptionalParams(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Retrievers.Query.Search(
+	_, err := client.Retrievers.Retriever.Search(
 		context.TODO(),
 		"182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-		llamacloudprod.RetrieverQuerySearchParams{
+		llamacloudprod.RetrieverRetrieverSearchParams{
 			Query:          "x",
 			OrganizationID: llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 			ProjectID:      llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),

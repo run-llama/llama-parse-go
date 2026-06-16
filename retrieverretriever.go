@@ -17,27 +17,27 @@ import (
 	"github.com/run-llama/llama-parse-go/packages/param"
 )
 
-// RetrieverQueryService contains methods and other services that help with
+// RetrieverRetrieverService contains methods and other services that help with
 // interacting with the llama-cloud API.
 //
 // Note, unlike clients, this service does not read variables from the environment
 // automatically. You should not instantiate this service directly, and instead use
-// the [NewRetrieverQueryService] method instead.
-type RetrieverQueryService struct {
+// the [NewRetrieverRetrieverService] method instead.
+type RetrieverRetrieverService struct {
 	options []option.RequestOption
 }
 
-// NewRetrieverQueryService generates a new service that applies the given options
-// to each request. These options are applied after the parent client's options (if
-// there is one), and before any request-specific options.
-func NewRetrieverQueryService(opts ...option.RequestOption) (r RetrieverQueryService) {
-	r = RetrieverQueryService{}
+// NewRetrieverRetrieverService generates a new service that applies the given
+// options to each request. These options are applied after the parent client's
+// options (if there is one), and before any request-specific options.
+func NewRetrieverRetrieverService(opts ...option.RequestOption) (r RetrieverRetrieverService) {
+	r = RetrieverRetrieverService{}
 	r.options = opts
 	return
 }
 
 // Retrieve data using a Retriever.
-func (r *RetrieverQueryService) Search(ctx context.Context, retrieverID string, params RetrieverQuerySearchParams, opts ...option.RequestOption) (res *CompositeRetrievalResult, err error) {
+func (r *RetrieverRetrieverService) Search(ctx context.Context, retrieverID string, params RetrieverRetrieverSearchParams, opts ...option.RequestOption) (res *CompositeRetrievalResult, err error) {
 	opts = slices.Concat(r.options, opts)
 	if retrieverID == "" {
 		err = errors.New("missing required retriever_id parameter")
@@ -48,7 +48,7 @@ func (r *RetrieverQueryService) Search(ctx context.Context, retrieverID string, 
 	return res, err
 }
 
-type RetrieverQuerySearchParams struct {
+type RetrieverRetrieverSearchParams struct {
 	// The query to retrieve against.
 	Query          string            `json:"query" api:"required"`
 	OrganizationID param.Opt[string] `query:"organization_id,omitzero" format:"uuid" json:"-"`
@@ -65,17 +65,17 @@ type RetrieverQuerySearchParams struct {
 	paramObj
 }
 
-func (r RetrieverQuerySearchParams) MarshalJSON() (data []byte, err error) {
-	type shadow RetrieverQuerySearchParams
+func (r RetrieverRetrieverSearchParams) MarshalJSON() (data []byte, err error) {
+	type shadow RetrieverRetrieverSearchParams
 	return param.MarshalObject(r, (*shadow)(&r))
 }
-func (r *RetrieverQuerySearchParams) UnmarshalJSON(data []byte) error {
+func (r *RetrieverRetrieverSearchParams) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-// URLQuery serializes [RetrieverQuerySearchParams]'s query parameters as
+// URLQuery serializes [RetrieverRetrieverSearchParams]'s query parameters as
 // `url.Values`.
-func (r RetrieverQuerySearchParams) URLQuery() (v url.Values, err error) {
+func (r RetrieverRetrieverSearchParams) URLQuery() (v url.Values, err error) {
 	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
 		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
 		NestedFormat: apiquery.NestedQueryFormatBrackets,
