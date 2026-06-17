@@ -12,13 +12,13 @@ import (
 	"slices"
 	"time"
 
-	"github.com/stainless-sdks/llamacloud-prod-go/internal/apijson"
-	"github.com/stainless-sdks/llamacloud-prod-go/internal/apiquery"
-	"github.com/stainless-sdks/llamacloud-prod-go/internal/requestconfig"
-	"github.com/stainless-sdks/llamacloud-prod-go/option"
-	"github.com/stainless-sdks/llamacloud-prod-go/packages/param"
-	"github.com/stainless-sdks/llamacloud-prod-go/packages/respjson"
-	"github.com/stainless-sdks/llamacloud-prod-go/shared"
+	"github.com/run-llama/llama-parse-go/internal/apijson"
+	"github.com/run-llama/llama-parse-go/internal/apiquery"
+	"github.com/run-llama/llama-parse-go/internal/requestconfig"
+	"github.com/run-llama/llama-parse-go/option"
+	"github.com/run-llama/llama-parse-go/packages/param"
+	"github.com/run-llama/llama-parse-go/packages/respjson"
+	"github.com/run-llama/llama-parse-go/shared"
 )
 
 // DataSourceService contains methods and other services that help with interacting

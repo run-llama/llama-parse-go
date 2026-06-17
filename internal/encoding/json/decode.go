@@ -14,7 +14,7 @@ import (
 	"encoding"
 	"encoding/base64"
 	"fmt"
-	"github.com/stainless-sdks/llamacloud-prod-go/internal/encoding/json/shims"
+	"github.com/run-llama/llama-parse-go/internal/encoding/json/shims"
 	"reflect"
 	"strconv"
 	"strings"

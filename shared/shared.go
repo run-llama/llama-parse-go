@@ -5,9 +5,9 @@ package shared
 import (
 	"encoding/json"
 
-	"github.com/stainless-sdks/llamacloud-prod-go/internal/apijson"
-	"github.com/stainless-sdks/llamacloud-prod-go/packages/param"
-	"github.com/stainless-sdks/llamacloud-prod-go/packages/respjson"
+	"github.com/run-llama/llama-parse-go/internal/apijson"
+	"github.com/run-llama/llama-parse-go/packages/param"
+	"github.com/run-llama/llama-parse-go/packages/respjson"
 )
 
 // aliased to make [param.APIUnion] private when embedding

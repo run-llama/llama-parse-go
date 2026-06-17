@@ -10,9 +10,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/stainless-sdks/llamacloud-prod-go"
-	"github.com/stainless-sdks/llamacloud-prod-go/internal"
-	"github.com/stainless-sdks/llamacloud-prod-go/option"
+	"github.com/run-llama/llama-parse-go"
+	"github.com/run-llama/llama-parse-go/internal"
+	"github.com/run-llama/llama-parse-go/option"
 )
 
 type closureTransport struct {
