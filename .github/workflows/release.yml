@@ -1,0 +1,110 @@
+name: Release
+# Publishing a Go module = pushing a git tag to this public repo; proxy.golang.org
+# fetches from the repo on first `go get`. There is NO registry upload step
+# (unlike a TS/npm publish workflow) — pushing the tag IS the publish.
+#
+# This workflow's real work is:
+#   1. mirror the latest generated SDK from the staging repo into this prod repo
+#   2. gate on `go build` / `go vet`
+#   3. tag + push the immutable version tag (the actual "publish")
+#
+# It does nothing until you run it manually:
+#   Actions tab -> Release -> Run workflow -> version (e.g. v0.1.0)
+#
+# Prerequisite before the first run: add a repo/org secret RELEASE_TOKEN
+# (PAT or GitHub App token) with READ access to the private staging repo
+# run-llama/llamacloud-prod-go. The built-in GITHUB_TOKEN can push to THIS repo
+# but cannot read a different private repo.
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version tag to publish, e.g. v0.1.0 (semver, leading v)'
+        required: true
+
+permissions:
+  contents: write   # push the release commit + tag to this repo
+
+jobs:
+  release:
+    name: release
+    runs-on: ubuntu-latest
+    if: github.repository == 'run-llama/llama-parse-go'
+    steps:
+      - name: Validate version input
+        run: |
+          if [[ ! "${{ inputs.version }}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+([-.+].*)?$ ]]; then
+            echo "::error::version must be semver with a leading v, e.g. v0.1.0"; exit 1
+          fi
+
+      - name: Check out production repo
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 0          # full history + tags so we can push a tag
+
+      - name: Fail if tag already exists (tags are immutable on the proxy)
+        run: |
+          git fetch --tags --force
+          if git rev-parse -q --verify "refs/tags/${{ inputs.version }}" >/dev/null; then
+            echo "::error::tag ${{ inputs.version }} exists — bump to a new version"; exit 1
+          fi
+
+      - name: Check out staging SDK (source of truth)
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          repository: run-llama/llamacloud-prod-go
+          ref: main
+          token: ${{ secrets.RELEASE_TOKEN }}
+          path: .staging
+
+      - name: Mirror staging content into production tree
+        # --delete so files removed upstream are removed here too; keep our own
+        # .git and this release workflow.
+        run: |
+          rsync -a --delete \
+            --exclude='.git/' \
+            --exclude='.github/workflows/release.yml' \
+            .staging/ ./
+          rm -rf .staging
+
+      - name: Set up Go
+        uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff # v5.6.0
+        with:
+          go-version-file: ./go.mod
+
+      - name: Build gate
+        # Staging CI already runs the full prism-backed test suite before content
+        # reaches staging main, so this is a fast compile/vet sanity check. Swap to
+        # `./scripts/bootstrap && ./scripts/test` if you want the mock tests here too.
+        run: |
+          go mod tidy
+          go build ./...
+          go vet ./...
+
+      - name: Commit release
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No content changes; tagging current HEAD."
+          else
+            git commit -m "Release ${{ inputs.version }}"
+            git push origin HEAD
+          fi
+
+      - name: Tag & push (this is the publish)
+        run: |
+          git tag "${{ inputs.version }}"
+          git push origin "${{ inputs.version }}"
+
+      - name: Verify via module proxy (best-effort)
+        continue-on-error: true
+        env:
+          GOPROXY: proxy.golang.org
+        run: |
+          for i in 1 2 3 4 5; do
+            if go list -m "github.com/run-llama/llama-parse-go@${{ inputs.version }}"; then exit 0; fi
+            echo "proxy not warm yet, retrying in 15s..."; sleep 15
+          done
+          echo "::warning::proxy not serving ${{ inputs.version }} yet — it indexes on first fetch; check pkg.go.dev shortly"
