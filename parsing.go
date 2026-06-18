@@ -1855,8 +1855,6 @@ type ParsingNewParams struct {
 	// Parsing tier: 'fast' (rule-based, cheapest), 'cost_effective' (balanced),
 	// 'agentic' (AI-powered with custom prompts), or 'agentic_plus' (premium AI with
 	// highest accuracy)
-	//
-	// Any of "fast", "cost_effective", "agentic", "agentic_plus".
 	Tier ParsingNewParamsTier `json:"tier,omitzero" api:"required"`
 	// Version for the selected tier. Use `latest`, or pin one of that tier's dated
 	// versions.
@@ -1864,9 +1862,9 @@ type ParsingNewParams struct {
 	// Current `latest` by tier:
 	//
 	// - `fast`: `2025-12-11`
-	// - `cost_effective`: `2026-06-05`
-	// - `agentic`: `2026-06-04`
-	// - `agentic_plus`: `2026-06-04`
+	// - `cost_effective`: `2026-06-17`
+	// - `agentic`: `2026-06-11`
+	// - `agentic_plus`: `2026-06-11`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
 	Version        ParsingNewParamsVersion `json:"version,omitzero" api:"required"`
@@ -1875,6 +1873,9 @@ type ParsingNewParams struct {
 	// Identifier for the client/application making the request. Used for analytics and
 	// debugging. Example: 'my-app-v2'
 	ClientName param.Opt[string] `json:"client_name,omitzero"`
+	// ID of a saved parse configuration. When set, `tier` and `version` default to the
+	// saved configuration's values — omit them or pass `'configured'`.
+	ConfigurationID param.Opt[string] `json:"configuration_id,omitzero"`
 	// Bypass result caching and force re-parsing. Use when document content may have
 	// changed or you need fresh results
 	DisableCache param.Opt[bool] `json:"disable_cache,omitzero"`
@@ -1951,17 +1952,17 @@ const (
 // Current `latest` by tier:
 //
 // - `fast`: `2025-12-11`
-// - `cost_effective`: `2026-06-05`
-// - `agentic`: `2026-06-04`
-// - `agentic_plus`: `2026-06-04`
+// - `cost_effective`: `2026-06-17`
+// - `agentic`: `2026-06-11`
+// - `agentic_plus`: `2026-06-11`
 //
 // Full list: `GET /api/v2/parse/versions`.
 type ParsingNewParamsVersion string
 
 const (
 	ParsingNewParamsVersionLatest     ParsingNewParamsVersion = "latest"
-	ParsingNewParamsVersion2026_06_05 ParsingNewParamsVersion = "2026-06-05"
-	ParsingNewParamsVersion2026_06_04 ParsingNewParamsVersion = "2026-06-04"
+	ParsingNewParamsVersion2026_06_17 ParsingNewParamsVersion = "2026-06-17"
+	ParsingNewParamsVersion2026_06_11 ParsingNewParamsVersion = "2026-06-11"
 	ParsingNewParamsVersion2025_12_11 ParsingNewParamsVersion = "2025-12-11"
 )
 
@@ -2016,6 +2017,8 @@ func (r *ParsingNewParamsCropBox) UnmarshalJSON(data []byte) error {
 type ParsingNewParamsInputOptions struct {
 	// HTML/web page parsing options (applies to .html, .htm files)
 	HTML ParsingNewParamsInputOptionsHTML `json:"html,omitzero"`
+	// Image parsing options (applies to .jpg, .jpeg, .png, .webp files)
+	Image ParsingNewParamsInputOptionsImage `json:"image,omitzero"`
 	// PDF-specific parsing options (applies to .pdf files)
 	Pdf any `json:"pdf,omitzero"`
 	// Presentation parsing options (applies to .pptx, .ppt, .odp, .key files)
@@ -2051,6 +2054,25 @@ func (r ParsingNewParamsInputOptionsHTML) MarshalJSON() (data []byte, err error)
 	return param.MarshalObject(r, (*shadow)(&r))
 }
 func (r *ParsingNewParamsInputOptionsHTML) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Image parsing options (applies to .jpg, .jpeg, .png, .webp files)
+type ParsingNewParamsInputOptionsImage struct {
+	// Detect documents photographed with a camera (e.g. phone scans of receipts or
+	// forms), then crop, perspective-correct, and flatten uneven lighting and shadows
+	// before parsing. Supports JPEG, PNG, WebP, and HEIC/HEIF inputs. Improves results
+	// when the document is tilted or surrounded by background. Images that already
+	// look like clean scans are left untouched
+	CameraPhotoCorrection param.Opt[bool] `json:"camera_photo_correction,omitzero"`
+	paramObj
+}
+
+func (r ParsingNewParamsInputOptionsImage) MarshalJSON() (data []byte, err error) {
+	type shadow ParsingNewParamsInputOptionsImage
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *ParsingNewParamsInputOptionsImage) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
@@ -2500,9 +2522,9 @@ type ParsingNewParamsProcessingOptionsAutoModeConfigurationParsingConf struct {
 	// Current `latest` by tier:
 	//
 	// - `fast`: `2025-12-11`
-	// - `cost_effective`: `2026-06-05`
-	// - `agentic`: `2026-06-04`
-	// - `agentic_plus`: `2026-06-04`
+	// - `cost_effective`: `2026-06-17`
+	// - `agentic`: `2026-06-11`
+	// - `agentic_plus`: `2026-06-11`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
 	Version string `json:"version,omitzero"`

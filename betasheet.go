@@ -47,7 +47,7 @@ func NewBetaSheetService(opts ...option.RequestOption) (r BetaSheetService) {
 // default configuration is used. Optionally include `webhook_configurations` to
 // receive `sheets.*` status notifications.
 //
-// Experimental: not production-ready and subject to change.
+// Deprecated: deprecated
 func (r *BetaSheetService) New(ctx context.Context, params BetaSheetNewParams, opts ...option.RequestOption) (res *SheetsJob, err error) {
 	opts = slices.Concat(r.options, opts)
 	path := "api/v1/beta/sheets/jobs"
@@ -55,8 +55,9 @@ func (r *BetaSheetService) New(ctx context.Context, params BetaSheetNewParams, o
 	return res, err
 }
 
-// List spreadsheet parsing jobs. Experimental: not production-ready and subject to
-// change.
+// List spreadsheet parsing jobs.
+//
+// Deprecated: deprecated
 func (r *BetaSheetService) List(ctx context.Context, query BetaSheetListParams, opts ...option.RequestOption) (res *pagination.PaginatedCursor[SheetsJob], err error) {
 	var raw *http.Response
 	opts = slices.Concat(r.options, opts)
@@ -74,14 +75,16 @@ func (r *BetaSheetService) List(ctx context.Context, query BetaSheetListParams, 
 	return res, nil
 }
 
-// List spreadsheet parsing jobs. Experimental: not production-ready and subject to
-// change.
+// List spreadsheet parsing jobs.
+//
+// Deprecated: deprecated
 func (r *BetaSheetService) ListAutoPaging(ctx context.Context, query BetaSheetListParams, opts ...option.RequestOption) *pagination.PaginatedCursorAutoPager[SheetsJob] {
 	return pagination.NewPaginatedCursorAutoPager(r.List(ctx, query, opts...))
 }
 
-// Delete a spreadsheet parsing job and its associated data. Experimental: not
-// production-ready and subject to change.
+// Delete a spreadsheet parsing job and its associated data.
+//
+// Deprecated: deprecated
 func (r *BetaSheetService) DeleteJob(ctx context.Context, spreadsheetJobID string, body BetaSheetDeleteJobParams, opts ...option.RequestOption) (res *BetaSheetDeleteJobResponse, err error) {
 	opts = slices.Concat(r.options, opts)
 	if spreadsheetJobID == "" {
@@ -95,7 +98,9 @@ func (r *BetaSheetService) DeleteJob(ctx context.Context, spreadsheetJobID strin
 
 // Get a spreadsheet parsing job. When `include_results=True` (default), embeds
 // extracted regions and results if complete, skipping the separate `/results`
-// call. Experimental: not production-ready and subject to change.
+// call.
+//
+// Deprecated: deprecated
 func (r *BetaSheetService) Get(ctx context.Context, spreadsheetJobID string, query BetaSheetGetParams, opts ...option.RequestOption) (res *SheetsJob, err error) {
 	opts = slices.Concat(r.options, opts)
 	if spreadsheetJobID == "" {
@@ -107,8 +112,9 @@ func (r *BetaSheetService) Get(ctx context.Context, spreadsheetJobID string, que
 	return res, err
 }
 
-// Generate a presigned URL to download a specific extracted region. Experimental:
-// not production-ready and subject to change.
+// Generate a presigned URL to download a specific extracted region.
+//
+// Deprecated: deprecated
 func (r *BetaSheetService) GetResultTable(ctx context.Context, regionType BetaSheetGetResultTableParamsRegionType, params BetaSheetGetResultTableParams, opts ...option.RequestOption) (res *PresignedURL, err error) {
 	opts = slices.Concat(r.options, opts)
 	if params.SpreadsheetJobID == "" {
@@ -238,7 +244,8 @@ type SheetsJobParametersWebhookConfiguration struct {
 	// "parse.cancelled", "classify.pending", "classify.running", "classify.success",
 	// "classify.error", "classify.partial_success", "classify.cancelled",
 	// "sheets.pending", "sheets.success", "sheets.error", "sheets.partial_success",
-	// "sheets.cancelled", "unmapped_event".
+	// "sheets.cancelled", "split.pending", "split.processing", "split.success",
+	// "split.error", "split.cancelled", "unmapped_event".
 	WebhookEvents []string `json:"webhook_events" api:"nullable"`
 	// Custom HTTP headers sent with each webhook request (e.g. auth tokens)
 	WebhookHeaders map[string]string `json:"webhook_headers" api:"nullable"`
@@ -476,7 +483,8 @@ type BetaSheetNewParamsWebhookConfiguration struct {
 	// "parse.cancelled", "classify.pending", "classify.running", "classify.success",
 	// "classify.error", "classify.partial_success", "classify.cancelled",
 	// "sheets.pending", "sheets.success", "sheets.error", "sheets.partial_success",
-	// "sheets.cancelled", "unmapped_event".
+	// "sheets.cancelled", "split.pending", "split.processing", "split.success",
+	// "split.error", "split.cancelled", "unmapped_event".
 	WebhookEvents []string `json:"webhook_events,omitzero"`
 	// Custom HTTP headers sent with each webhook request (e.g. auth tokens)
 	WebhookHeaders map[string]string `json:"webhook_headers,omitzero"`

@@ -268,7 +268,8 @@ type ClassifyCreateRequestParam struct {
 	//
 	// Deprecated: deprecated
 	ParseJobID param.Opt[string] `json:"parse_job_id,omitzero"`
-	// Idempotency key scoped to the project
+	// Idempotency key scoped to the project. Reusing a key returns the original job;
+	// the new request body is ignored.
 	TransactionID param.Opt[string] `json:"transaction_id,omitzero"`
 	// Outbound webhook endpoints to notify on job status changes
 	WebhookConfigurations []ClassifyCreateRequestWebhookConfigurationParam `json:"webhook_configurations,omitzero"`
@@ -300,7 +301,8 @@ type ClassifyCreateRequestWebhookConfigurationParam struct {
 	// "parse.cancelled", "classify.pending", "classify.running", "classify.success",
 	// "classify.error", "classify.partial_success", "classify.cancelled",
 	// "sheets.pending", "sheets.success", "sheets.error", "sheets.partial_success",
-	// "sheets.cancelled", "unmapped_event".
+	// "sheets.cancelled", "split.pending", "split.processing", "split.success",
+	// "split.error", "split.cancelled", "unmapped_event".
 	WebhookEvents []string `json:"webhook_events,omitzero"`
 	// Custom HTTP headers sent with each webhook request (e.g. auth tokens)
 	WebhookHeaders map[string]string `json:"webhook_headers,omitzero"`

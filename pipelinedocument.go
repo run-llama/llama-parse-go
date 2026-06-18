@@ -41,6 +41,8 @@ func NewPipelineDocumentService(opts ...option.RequestOption) (r PipelineDocumen
 }
 
 // Batch create documents for a pipeline.
+//
+// Deprecated: deprecated
 func (r *PipelineDocumentService) New(ctx context.Context, pipelineID string, body PipelineDocumentNewParams, opts ...option.RequestOption) (res *[]CloudDocument, err error) {
 	opts = slices.Concat(r.options, opts)
 	if pipelineID == "" {
@@ -53,6 +55,8 @@ func (r *PipelineDocumentService) New(ctx context.Context, pipelineID string, bo
 }
 
 // Return a list of documents for a pipeline.
+//
+// Deprecated: deprecated
 func (r *PipelineDocumentService) List(ctx context.Context, pipelineID string, query PipelineDocumentListParams, opts ...option.RequestOption) (res *pagination.PaginatedCloudDocuments[CloudDocument], err error) {
 	var raw *http.Response
 	opts = slices.Concat(r.options, opts)
@@ -75,12 +79,16 @@ func (r *PipelineDocumentService) List(ctx context.Context, pipelineID string, q
 }
 
 // Return a list of documents for a pipeline.
+//
+// Deprecated: deprecated
 func (r *PipelineDocumentService) ListAutoPaging(ctx context.Context, pipelineID string, query PipelineDocumentListParams, opts ...option.RequestOption) *pagination.PaginatedCloudDocumentsAutoPager[CloudDocument] {
 	return pagination.NewPaginatedCloudDocumentsAutoPager(r.List(ctx, pipelineID, query, opts...))
 }
 
 // Delete a document from a pipeline; runs async (vectors first, then MongoDB
 // record).
+//
+// Deprecated: deprecated
 func (r *PipelineDocumentService) Delete(ctx context.Context, documentID string, body PipelineDocumentDeleteParams, opts ...option.RequestOption) (err error) {
 	opts = slices.Concat(r.options, opts)
 	opts = append([]option.RequestOption{option.WithHeader("Accept", "*/*")}, opts...)
@@ -98,6 +106,8 @@ func (r *PipelineDocumentService) Delete(ctx context.Context, documentID string,
 }
 
 // Return a single document for a pipeline.
+//
+// Deprecated: deprecated
 func (r *PipelineDocumentService) Get(ctx context.Context, documentID string, query PipelineDocumentGetParams, opts ...option.RequestOption) (res *CloudDocument, err error) {
 	opts = slices.Concat(r.options, opts)
 	if query.PipelineID == "" {
@@ -114,6 +124,8 @@ func (r *PipelineDocumentService) Get(ctx context.Context, documentID string, qu
 }
 
 // Return a list of chunks for a pipeline document.
+//
+// Deprecated: deprecated
 func (r *PipelineDocumentService) GetChunks(ctx context.Context, documentID string, query PipelineDocumentGetChunksParams, opts ...option.RequestOption) (res *[]TextNode, err error) {
 	opts = slices.Concat(r.options, opts)
 	if query.PipelineID == "" {
@@ -130,6 +142,8 @@ func (r *PipelineDocumentService) GetChunks(ctx context.Context, documentID stri
 }
 
 // Return a single document for a pipeline.
+//
+// Deprecated: deprecated
 func (r *PipelineDocumentService) GetStatus(ctx context.Context, documentID string, query PipelineDocumentGetStatusParams, opts ...option.RequestOption) (res *ManagedIngestionStatusResponse, err error) {
 	opts = slices.Concat(r.options, opts)
 	if query.PipelineID == "" {
@@ -146,6 +160,8 @@ func (r *PipelineDocumentService) GetStatus(ctx context.Context, documentID stri
 }
 
 // Sync a specific document for a pipeline.
+//
+// Deprecated: deprecated
 func (r *PipelineDocumentService) Sync(ctx context.Context, documentID string, body PipelineDocumentSyncParams, opts ...option.RequestOption) (res *PipelineDocumentSyncResponse, err error) {
 	opts = slices.Concat(r.options, opts)
 	if body.PipelineID == "" {
@@ -162,6 +178,8 @@ func (r *PipelineDocumentService) Sync(ctx context.Context, documentID string, b
 }
 
 // Batch create or update a document for a pipeline.
+//
+// Deprecated: deprecated
 func (r *PipelineDocumentService) Upsert(ctx context.Context, pipelineID string, body PipelineDocumentUpsertParams, opts ...option.RequestOption) (res *[]CloudDocument, err error) {
 	opts = slices.Concat(r.options, opts)
 	if pipelineID == "" {

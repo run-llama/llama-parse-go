@@ -40,6 +40,8 @@ func NewPipelineDataSourceService(opts ...option.RequestOption) (r PipelineDataS
 }
 
 // Update the configuration of a data source in a pipeline.
+//
+// Deprecated: deprecated
 func (r *PipelineDataSourceService) Update(ctx context.Context, dataSourceID string, params PipelineDataSourceUpdateParams, opts ...option.RequestOption) (res *PipelineDataSource, err error) {
 	opts = slices.Concat(r.options, opts)
 	if params.PipelineID == "" {
@@ -56,6 +58,8 @@ func (r *PipelineDataSourceService) Update(ctx context.Context, dataSourceID str
 }
 
 // Get data sources for a pipeline.
+//
+// Deprecated: deprecated
 func (r *PipelineDataSourceService) GetDataSources(ctx context.Context, pipelineID string, opts ...option.RequestOption) (res *[]PipelineDataSource, err error) {
 	opts = slices.Concat(r.options, opts)
 	if pipelineID == "" {
@@ -68,6 +72,8 @@ func (r *PipelineDataSourceService) GetDataSources(ctx context.Context, pipeline
 }
 
 // Get the status of a data source for a pipeline.
+//
+// Deprecated: deprecated
 func (r *PipelineDataSourceService) GetStatus(ctx context.Context, dataSourceID string, query PipelineDataSourceGetStatusParams, opts ...option.RequestOption) (res *ManagedIngestionStatusResponse, err error) {
 	opts = slices.Concat(r.options, opts)
 	if query.PipelineID == "" {
@@ -85,6 +91,8 @@ func (r *PipelineDataSourceService) GetStatus(ctx context.Context, dataSourceID 
 
 // Run incremental ingestion: pull upstream changes from the data source into the
 // data sink.
+//
+// Deprecated: deprecated
 func (r *PipelineDataSourceService) Sync(ctx context.Context, dataSourceID string, params PipelineDataSourceSyncParams, opts ...option.RequestOption) (res *Pipeline, err error) {
 	opts = slices.Concat(r.options, opts)
 	if params.PipelineID == "" {
@@ -101,6 +109,8 @@ func (r *PipelineDataSourceService) Sync(ctx context.Context, dataSourceID strin
 }
 
 // Add data sources to a pipeline.
+//
+// Deprecated: deprecated
 func (r *PipelineDataSourceService) UpdateDataSources(ctx context.Context, pipelineID string, body PipelineDataSourceUpdateDataSourcesParams, opts ...option.RequestOption) (res *[]PipelineDataSource, err error) {
 	opts = slices.Concat(r.options, opts)
 	if pipelineID == "" {
@@ -272,6 +282,8 @@ type PipelineDataSourceComponentUnion struct {
 	// This field is from variant [shared.CloudConfluenceDataSource].
 	SpaceKey string `json:"space_key"`
 	// This field is from variant [shared.CloudConfluenceDataSource].
+	SyncPermissions bool `json:"sync_permissions"`
+	// This field is from variant [shared.CloudConfluenceDataSource].
 	UserName string `json:"user_name"`
 	Query    string `json:"query"`
 	CloudID  string `json:"cloud_id"`
@@ -338,6 +350,7 @@ type PipelineDataSourceComponentUnion struct {
 		KeepMarkdownFormat                   respjson.Field
 		Label                                respjson.Field
 		SpaceKey                             respjson.Field
+		SyncPermissions                      respjson.Field
 		UserName                             respjson.Field
 		Query                                respjson.Field
 		CloudID                              respjson.Field
