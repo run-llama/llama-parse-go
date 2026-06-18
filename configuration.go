@@ -1000,7 +1000,9 @@ type ExtractV2ParametersResp struct {
 	// Any of "cost_effective", "agentic".
 	Tier ExtractV2ParametersTier `json:"tier"`
 	// Use 'latest' for the latest release for the selected tier or a date string
-	// (YYYY-MM-DD format) to pin to the nearest release at or before that date.
+	// (YYYY-MM-DD format) to pin to the nearest release at or before that date. Job
+	// responses always report the concrete resolved version the job runs, fixed at job
+	// creation; saved configurations keep the value as provided.
 	Version string `json:"version"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
@@ -1140,7 +1142,9 @@ type ExtractV2Parameters struct {
 	// Include confidence scores in results
 	ConfidenceScores param.Opt[bool] `json:"confidence_scores,omitzero"`
 	// Use 'latest' for the latest release for the selected tier or a date string
-	// (YYYY-MM-DD format) to pin to the nearest release at or before that date.
+	// (YYYY-MM-DD format) to pin to the nearest release at or before that date. Job
+	// responses always report the concrete resolved version the job runs, fixed at job
+	// creation; saved configurations keep the value as provided.
 	Version param.Opt[string] `json:"version,omitzero"`
 	// Granularity of extraction: per_doc returns one object per document, per_page
 	// returns one object per page, per_table_row returns one object per table row
@@ -1209,9 +1213,9 @@ type ParseV2ParametersResp struct {
 	// Current `latest` by tier:
 	//
 	// - `fast`: `2025-12-11`
-	// - `cost_effective`: `2026-06-05`
-	// - `agentic`: `2026-06-04`
-	// - `agentic_plus`: `2026-06-04`
+	// - `cost_effective`: `2026-06-11`
+	// - `agentic`: `2026-06-11`
+	// - `agentic_plus`: `2026-06-11`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
 	Version ParseV2ParametersVersion `json:"version" api:"required"`
@@ -1304,17 +1308,16 @@ const (
 // Current `latest` by tier:
 //
 // - `fast`: `2025-12-11`
-// - `cost_effective`: `2026-06-05`
-// - `agentic`: `2026-06-04`
-// - `agentic_plus`: `2026-06-04`
+// - `cost_effective`: `2026-06-11`
+// - `agentic`: `2026-06-11`
+// - `agentic_plus`: `2026-06-11`
 //
 // Full list: `GET /api/v2/parse/versions`.
 type ParseV2ParametersVersion string
 
 const (
 	ParseV2ParametersVersionLatest     ParseV2ParametersVersion = "latest"
-	ParseV2ParametersVersion2026_06_05 ParseV2ParametersVersion = "2026-06-05"
-	ParseV2ParametersVersion2026_06_04 ParseV2ParametersVersion = "2026-06-04"
+	ParseV2ParametersVersion2026_06_11 ParseV2ParametersVersion = "2026-06-11"
 	ParseV2ParametersVersion2025_12_11 ParseV2ParametersVersion = "2025-12-11"
 )
 
@@ -1378,6 +1381,8 @@ func (r *ParseV2ParametersCropBoxResp) UnmarshalJSON(data []byte) error {
 type ParseV2ParametersInputOptionsResp struct {
 	// HTML/web page parsing options (applies to .html, .htm files)
 	HTML ParseV2ParametersInputOptionsHTMLResp `json:"html"`
+	// Image parsing options (applies to .jpg, .jpeg, .png, .webp files)
+	Image ParseV2ParametersInputOptionsImageResp `json:"image"`
 	// PDF-specific parsing options (applies to .pdf files)
 	Pdf any `json:"pdf"`
 	// Presentation parsing options (applies to .pptx, .ppt, .odp, .key files)
@@ -1387,6 +1392,7 @@ type ParseV2ParametersInputOptionsResp struct {
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		HTML         respjson.Field
+		Image        respjson.Field
 		Pdf          respjson.Field
 		Presentation respjson.Field
 		Spreadsheet  respjson.Field
@@ -1424,6 +1430,28 @@ type ParseV2ParametersInputOptionsHTMLResp struct {
 // Returns the unmodified JSON received from the API
 func (r ParseV2ParametersInputOptionsHTMLResp) RawJSON() string { return r.JSON.raw }
 func (r *ParseV2ParametersInputOptionsHTMLResp) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Image parsing options (applies to .jpg, .jpeg, .png, .webp files)
+type ParseV2ParametersInputOptionsImageResp struct {
+	// Detect documents photographed with a camera (e.g. phone scans of receipts or
+	// forms), then crop, perspective-correct, and flatten uneven lighting and shadows
+	// before parsing. Supports JPEG, PNG, WebP, and HEIC/HEIF inputs. Improves results
+	// when the document is tilted or surrounded by background. Images that already
+	// look like clean scans are left untouched
+	CameraPhotoCorrection bool `json:"camera_photo_correction" api:"nullable"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		CameraPhotoCorrection respjson.Field
+		ExtraFields           map[string]respjson.Field
+		raw                   string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r ParseV2ParametersInputOptionsImageResp) RawJSON() string { return r.JSON.raw }
+func (r *ParseV2ParametersInputOptionsImageResp) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
@@ -1973,9 +2001,9 @@ type ParseV2ParametersProcessingOptionsAutoModeConfigurationParsingConfResp stru
 	// Current `latest` by tier:
 	//
 	// - `fast`: `2025-12-11`
-	// - `cost_effective`: `2026-06-05`
-	// - `agentic`: `2026-06-04`
-	// - `agentic_plus`: `2026-06-04`
+	// - `cost_effective`: `2026-06-11`
+	// - `agentic`: `2026-06-11`
+	// - `agentic_plus`: `2026-06-11`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
 	Version string `json:"version" api:"nullable"`
@@ -3073,9 +3101,9 @@ type ParseV2Parameters struct {
 	// Current `latest` by tier:
 	//
 	// - `fast`: `2025-12-11`
-	// - `cost_effective`: `2026-06-05`
-	// - `agentic`: `2026-06-04`
-	// - `agentic_plus`: `2026-06-04`
+	// - `cost_effective`: `2026-06-11`
+	// - `agentic`: `2026-06-11`
+	// - `agentic_plus`: `2026-06-11`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
 	Version ParseV2ParametersVersion `json:"version,omitzero" api:"required"`
@@ -3180,6 +3208,8 @@ func (r *ParseV2ParametersCropBox) UnmarshalJSON(data []byte) error {
 type ParseV2ParametersInputOptions struct {
 	// HTML/web page parsing options (applies to .html, .htm files)
 	HTML ParseV2ParametersInputOptionsHTML `json:"html,omitzero"`
+	// Image parsing options (applies to .jpg, .jpeg, .png, .webp files)
+	Image ParseV2ParametersInputOptionsImage `json:"image,omitzero"`
 	// PDF-specific parsing options (applies to .pdf files)
 	Pdf any `json:"pdf,omitzero"`
 	// Presentation parsing options (applies to .pptx, .ppt, .odp, .key files)
@@ -3215,6 +3245,25 @@ func (r ParseV2ParametersInputOptionsHTML) MarshalJSON() (data []byte, err error
 	return param.MarshalObject(r, (*shadow)(&r))
 }
 func (r *ParseV2ParametersInputOptionsHTML) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Image parsing options (applies to .jpg, .jpeg, .png, .webp files)
+type ParseV2ParametersInputOptionsImage struct {
+	// Detect documents photographed with a camera (e.g. phone scans of receipts or
+	// forms), then crop, perspective-correct, and flatten uneven lighting and shadows
+	// before parsing. Supports JPEG, PNG, WebP, and HEIC/HEIF inputs. Improves results
+	// when the document is tilted or surrounded by background. Images that already
+	// look like clean scans are left untouched
+	CameraPhotoCorrection param.Opt[bool] `json:"camera_photo_correction,omitzero"`
+	paramObj
+}
+
+func (r ParseV2ParametersInputOptionsImage) MarshalJSON() (data []byte, err error) {
+	type shadow ParseV2ParametersInputOptionsImage
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *ParseV2ParametersInputOptionsImage) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
@@ -3664,9 +3713,9 @@ type ParseV2ParametersProcessingOptionsAutoModeConfigurationParsingConf struct {
 	// Current `latest` by tier:
 	//
 	// - `fast`: `2025-12-11`
-	// - `cost_effective`: `2026-06-05`
-	// - `agentic`: `2026-06-04`
-	// - `agentic_plus`: `2026-06-04`
+	// - `cost_effective`: `2026-06-11`
+	// - `agentic`: `2026-06-11`
+	// - `agentic_plus`: `2026-06-11`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
 	Version string `json:"version,omitzero"`

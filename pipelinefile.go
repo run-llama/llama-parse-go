@@ -42,6 +42,8 @@ func NewPipelineFileService(opts ...option.RequestOption) (r PipelineFileService
 }
 
 // Add files to a pipeline.
+//
+// Deprecated: deprecated
 func (r *PipelineFileService) New(ctx context.Context, pipelineID string, body PipelineFileNewParams, opts ...option.RequestOption) (res *[]PipelineFile, err error) {
 	opts = slices.Concat(r.options, opts)
 	if pipelineID == "" {
@@ -54,6 +56,8 @@ func (r *PipelineFileService) New(ctx context.Context, pipelineID string, body P
 }
 
 // Update a file for a pipeline.
+//
+// Deprecated: deprecated
 func (r *PipelineFileService) Update(ctx context.Context, fileID string, params PipelineFileUpdateParams, opts ...option.RequestOption) (res *PipelineFile, err error) {
 	opts = slices.Concat(r.options, opts)
 	if params.PipelineID == "" {
@@ -101,6 +105,8 @@ func (r *PipelineFileService) ListAutoPaging(ctx context.Context, pipelineID str
 }
 
 // Delete a file from a pipeline.
+//
+// Deprecated: deprecated
 func (r *PipelineFileService) Delete(ctx context.Context, fileID string, body PipelineFileDeleteParams, opts ...option.RequestOption) (err error) {
 	opts = slices.Concat(r.options, opts)
 	opts = append([]option.RequestOption{option.WithHeader("Accept", "*/*")}, opts...)
@@ -118,6 +124,8 @@ func (r *PipelineFileService) Delete(ctx context.Context, fileID string, body Pi
 }
 
 // Get status of a file for a pipeline.
+//
+// Deprecated: deprecated
 func (r *PipelineFileService) GetStatus(ctx context.Context, fileID string, query PipelineFileGetStatusParams, opts ...option.RequestOption) (res *ManagedIngestionStatusResponse, err error) {
 	opts = slices.Concat(r.options, opts)
 	if query.PipelineID == "" {
@@ -134,6 +142,8 @@ func (r *PipelineFileService) GetStatus(ctx context.Context, fileID string, quer
 }
 
 // Get files for a pipeline.
+//
+// Deprecated: deprecated
 func (r *PipelineFileService) GetStatusCounts(ctx context.Context, pipelineID string, query PipelineFileGetStatusCountsParams, opts ...option.RequestOption) (res *PipelineFileGetStatusCountsResponse, err error) {
 	opts = slices.Concat(r.options, opts)
 	if pipelineID == "" {

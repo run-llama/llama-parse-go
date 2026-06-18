@@ -36,6 +36,8 @@ func NewPipelineSyncService(opts ...option.RequestOption) (r PipelineSyncService
 //
 // Processes new and updated documents from data sources and files, then updates
 // the index for retrieval.
+//
+// Deprecated: deprecated
 func (r *PipelineSyncService) New(ctx context.Context, pipelineID string, opts ...option.RequestOption) (res *Pipeline, err error) {
 	opts = slices.Concat(r.options, opts)
 	if pipelineID == "" {
@@ -48,6 +50,8 @@ func (r *PipelineSyncService) New(ctx context.Context, pipelineID string, opts .
 }
 
 // Cancel all running sync jobs for a pipeline.
+//
+// Deprecated: deprecated
 func (r *PipelineSyncService) Cancel(ctx context.Context, pipelineID string, opts ...option.RequestOption) (res *Pipeline, err error) {
 	opts = slices.Concat(r.options, opts)
 	if pipelineID == "" {
