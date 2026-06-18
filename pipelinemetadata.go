@@ -37,6 +37,8 @@ func NewPipelineMetadataService(opts ...option.RequestOption) (r PipelineMetadat
 }
 
 // Import metadata for a pipeline.
+//
+// Deprecated: deprecated
 func (r *PipelineMetadataService) New(ctx context.Context, pipelineID string, body PipelineMetadataNewParams, opts ...option.RequestOption) (res *PipelineMetadataNewResponse, err error) {
 	opts = slices.Concat(r.options, opts)
 	if pipelineID == "" {
@@ -49,6 +51,8 @@ func (r *PipelineMetadataService) New(ctx context.Context, pipelineID string, bo
 }
 
 // Delete metadata for all files in a pipeline.
+//
+// Deprecated: deprecated
 func (r *PipelineMetadataService) DeleteAll(ctx context.Context, pipelineID string, opts ...option.RequestOption) (err error) {
 	opts = slices.Concat(r.options, opts)
 	opts = append([]option.RequestOption{option.WithHeader("Accept", "*/*")}, opts...)

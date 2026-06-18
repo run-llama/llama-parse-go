@@ -231,6 +231,8 @@ type DataSourceComponentUnion struct {
 	// This field is from variant [shared.CloudConfluenceDataSource].
 	SpaceKey string `json:"space_key"`
 	// This field is from variant [shared.CloudConfluenceDataSource].
+	SyncPermissions bool `json:"sync_permissions"`
+	// This field is from variant [shared.CloudConfluenceDataSource].
 	UserName string `json:"user_name"`
 	Query    string `json:"query"`
 	CloudID  string `json:"cloud_id"`
@@ -297,6 +299,7 @@ type DataSourceComponentUnion struct {
 		KeepMarkdownFormat           respjson.Field
 		Label                        respjson.Field
 		SpaceKey                     respjson.Field
+		SyncPermissions              respjson.Field
 		UserName                     respjson.Field
 		Query                        respjson.Field
 		CloudID                      respjson.Field

@@ -403,6 +403,12 @@ type CloudConfluenceDataSource struct {
 	// The space key to read from.
 	SpaceKey              string `json:"space_key" api:"nullable"`
 	SupportsAccessControl bool   `json:"supports_access_control"`
+	// Whether to fetch space-level permissions (allowed users/groups) and attach them
+	// to document metadata for access control. Disable for Confluence Server/Data
+	// Center versions whose permission APIs are unavailable (e.g. the JSON-RPC API
+	// removed in Data Center 9.2.6+), which otherwise surface as 401 errors during
+	// sync.
+	SyncPermissions bool `json:"sync_permissions"`
 	// The username to use for authentication.
 	UserName string `json:"user_name" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
@@ -419,6 +425,7 @@ type CloudConfluenceDataSource struct {
 		PageIDs                 respjson.Field
 		SpaceKey                respjson.Field
 		SupportsAccessControl   respjson.Field
+		SyncPermissions         respjson.Field
 		UserName                respjson.Field
 		ExtraFields             map[string]respjson.Field
 		raw                     string
@@ -465,6 +472,12 @@ type CloudConfluenceDataSourceParam struct {
 	// Whether to keep the markdown format.
 	KeepMarkdownFormat    param.Opt[bool] `json:"keep_markdown_format,omitzero"`
 	SupportsAccessControl param.Opt[bool] `json:"supports_access_control,omitzero"`
+	// Whether to fetch space-level permissions (allowed users/groups) and attach them
+	// to document metadata for access control. Disable for Confluence Server/Data
+	// Center versions whose permission APIs are unavailable (e.g. the JSON-RPC API
+	// removed in Data Center 9.2.6+), which otherwise surface as 401 errors during
+	// sync.
+	SyncPermissions param.Opt[bool] `json:"sync_permissions,omitzero"`
 	// Configuration for handling failures during processing. Key-value object
 	// controlling failure handling behaviors.
 	//

@@ -35,7 +35,8 @@ func TestParsingNewWithOptionalParams(t *testing.T) {
 		AgenticOptions: llamacloudprod.ParsingNewParamsAgenticOptions{
 			CustomPrompt: llamacloudprod.String("custom_prompt"),
 		},
-		ClientName: llamacloudprod.String("client_name"),
+		ClientName:      llamacloudprod.String("client_name"),
+		ConfigurationID: llamacloudprod.String("configuration_id"),
 		CropBox: llamacloudprod.ParsingNewParamsCropBox{
 			Bottom: llamacloudprod.Float(0),
 			Left:   llamacloudprod.Float(0),
@@ -51,6 +52,9 @@ func TestParsingNewWithOptionalParams(t *testing.T) {
 				MakeAllElementsVisible:   llamacloudprod.Bool(true),
 				RemoveFixedElements:      llamacloudprod.Bool(true),
 				RemoveNavigationElements: llamacloudprod.Bool(true),
+			},
+			Image: llamacloudprod.ParsingNewParamsInputOptionsImage{
+				CameraPhotoCorrection: llamacloudprod.Bool(true),
 			},
 			Pdf: map[string]any{},
 			Presentation: llamacloudprod.ParsingNewParamsInputOptionsPresentation{
