@@ -395,7 +395,7 @@ func (u *BetaRetrievalGetParamsCustomFilterUnion) UnmarshalJSON(data []byte) err
 
 // The properties Operator, Value are required.
 type BetaRetrievalGetParamsCustomFilterFilterTypeUnionStrIntBoolFloat struct {
-	// Any of "eq", "ne", "gt", "lt", "gte", "lte", "in", "nin".
+	// Any of "eq", "gt", "gte", "in", "lt", "lte", "ne", "nin".
 	Operator string                                                                     `json:"operator,omitzero" api:"required"`
 	Value    BetaRetrievalGetParamsCustomFilterFilterTypeUnionStrIntBoolFloatValueUnion `json:"value,omitzero" api:"required"`
 	paramObj
@@ -411,7 +411,7 @@ func (r *BetaRetrievalGetParamsCustomFilterFilterTypeUnionStrIntBoolFloat) Unmar
 
 func init() {
 	apijson.RegisterFieldValidator[BetaRetrievalGetParamsCustomFilterFilterTypeUnionStrIntBoolFloat](
-		"operator", "eq", "ne", "gt", "lt", "gte", "lte", "in", "nin",
+		"operator", "eq", "gt", "gte", "in", "lt", "lte", "ne", "nin",
 	)
 }
 
@@ -452,7 +452,7 @@ func (u *BetaRetrievalGetParamsCustomFilterFilterTypeUnionStrIntBoolFloatValueAr
 
 // The properties Operator, Value are required.
 type BetaRetrievalGetParamsCustomFilterArrayItem struct {
-	// Any of "eq", "ne", "gt", "lt", "gte", "lte", "in", "nin".
+	// Any of "eq", "gt", "gte", "in", "lt", "lte", "ne", "nin".
 	Operator string                                                `json:"operator,omitzero" api:"required"`
 	Value    BetaRetrievalGetParamsCustomFilterArrayItemValueUnion `json:"value,omitzero" api:"required"`
 	paramObj
@@ -468,7 +468,7 @@ func (r *BetaRetrievalGetParamsCustomFilterArrayItem) UnmarshalJSON(data []byte)
 
 func init() {
 	apijson.RegisterFieldValidator[BetaRetrievalGetParamsCustomFilterArrayItem](
-		"operator", "eq", "ne", "gt", "lt", "gte", "lte", "in", "nin",
+		"operator", "eq", "gt", "gte", "in", "lt", "lte", "ne", "nin",
 	)
 }
 
@@ -521,7 +521,7 @@ func (r *BetaRetrievalGetParamsStaticFilters) UnmarshalJSON(data []byte) error {
 
 // The properties Operator, Value are required.
 type BetaRetrievalGetParamsStaticFiltersParsedDirectoryFileID struct {
-	// Any of "eq", "ne", "gt", "lt", "gte", "lte", "in", "nin".
+	// Any of "eq", "gt", "gte", "in", "lt", "lte", "ne", "nin".
 	Operator string                                                             `json:"operator,omitzero" api:"required"`
 	Value    BetaRetrievalGetParamsStaticFiltersParsedDirectoryFileIDValueUnion `json:"value,omitzero" api:"required"`
 	paramObj
@@ -537,7 +537,7 @@ func (r *BetaRetrievalGetParamsStaticFiltersParsedDirectoryFileID) UnmarshalJSON
 
 func init() {
 	apijson.RegisterFieldValidator[BetaRetrievalGetParamsStaticFiltersParsedDirectoryFileID](
-		"operator", "eq", "ne", "gt", "lt", "gte", "lte", "in", "nin",
+		"operator", "eq", "gt", "gte", "in", "lt", "lte", "ne", "nin",
 	)
 }
 

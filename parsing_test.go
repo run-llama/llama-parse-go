@@ -71,7 +71,7 @@ func TestParsingNewWithOptionalParams(t *testing.T) {
 			AdditionalOutputs:        []string{"stripped_md", "concatenated_stripped_txt", "word_bbox"},
 			ExtractPrintedPageNumber: llamacloudprod.Bool(true),
 			GranularBboxes:           []string{"word", "line", "cell"},
-			ImagesToSave:             []string{"screenshot"},
+			ImagesToSave:             []string{"embedded"},
 			Markdown: llamacloudprod.ParsingNewParamsOutputOptionsMarkdown{
 				AnnotateLinks: llamacloudprod.Bool(true),
 				InlineImages:  llamacloudprod.Bool(true),
@@ -139,7 +139,7 @@ func TestParsingNewWithOptionalParams(t *testing.T) {
 						PreserveLayoutAlignmentAcrossPages: llamacloudprod.Bool(true),
 						PreserveVerySmallText:              llamacloudprod.Bool(true),
 					},
-					SpecializedChartParsing: "agentic_plus",
+					SpecializedChartParsing: "agentic",
 					Tier:                    "agentic",
 					Version:                 "latest",
 				},
@@ -233,9 +233,9 @@ func TestParsingNewWithOptionalParams(t *testing.T) {
 				IgnoreTextInImage:  llamacloudprod.Bool(true),
 			},
 			OcrParameters: llamacloudprod.ParsingNewParamsProcessingOptionsOcrParameters{
-				Languages: []llamacloudprod.ParsingLanguages{llamacloudprod.ParsingLanguagesAf},
+				Languages: []llamacloudprod.ParsingLanguages{llamacloudprod.ParsingLanguagesAbq},
 			},
-			SpecializedChartParsing: "agentic_plus",
+			SpecializedChartParsing: "agentic",
 		},
 		SourceURL: llamacloudprod.String("https:"),
 		WebhookConfigurations: []llamacloudprod.ParsingNewParamsWebhookConfiguration{{
@@ -277,7 +277,7 @@ func TestParsingListWithOptionalParams(t *testing.T) {
 		PageSize:            llamacloudprod.Int(0),
 		PageToken:           llamacloudprod.String("page_token"),
 		ProjectID:           llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		Status:              llamacloudprod.ParsingListParamsStatusPending,
+		Status:              llamacloudprod.ParsingListParamsStatusCancelled,
 	})
 	if err != nil {
 		var apierr *llamacloudprod.Error

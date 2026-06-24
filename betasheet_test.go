@@ -93,7 +93,7 @@ func TestBetaSheetListWithOptionalParams(t *testing.T) {
 		PageSize:            llamacloudprod.Int(0),
 		PageToken:           llamacloudprod.String("page_token"),
 		ProjectID:           llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		Status:              llamacloudprod.BetaSheetListParamsStatusPending,
+		Status:              llamacloudprod.BetaSheetListParamsStatusCancelled,
 	})
 	if err != nil {
 		var apierr *llamacloudprod.Error
@@ -181,7 +181,7 @@ func TestBetaSheetGetResultTableWithOptionalParams(t *testing.T) {
 	)
 	_, err := client.Beta.Sheets.GetResultTable(
 		context.TODO(),
-		llamacloudprod.BetaSheetGetResultTableParamsRegionTypeTable,
+		llamacloudprod.BetaSheetGetResultTableParamsRegionTypeCellMetadata,
 		llamacloudprod.BetaSheetGetResultTableParams{
 			SpreadsheetJobID: "spreadsheet_job_id",
 			RegionID:         "region_id",

@@ -145,7 +145,7 @@ type SheetsJob struct {
 	ProjectID string `json:"project_id" api:"required" format:"uuid"`
 	// The status of the parsing job
 	//
-	// Any of "PENDING", "SUCCESS", "ERROR", "PARTIAL_SUCCESS", "CANCELLED".
+	// Any of "CANCELLED", "ERROR", "PARTIAL_SUCCESS", "PENDING", "SUCCESS".
 	Status SheetsJobStatus `json:"status" api:"required"`
 	// When the job was last updated
 	UpdatedAt string `json:"updated_at" api:"required"`
@@ -208,11 +208,11 @@ func (r *SheetsJob) UnmarshalJSON(data []byte) error {
 type SheetsJobStatus string
 
 const (
-	SheetsJobStatusPending        SheetsJobStatus = "PENDING"
-	SheetsJobStatusSuccess        SheetsJobStatus = "SUCCESS"
+	SheetsJobStatusCancelled      SheetsJobStatus = "CANCELLED"
 	SheetsJobStatusError          SheetsJobStatus = "ERROR"
 	SheetsJobStatusPartialSuccess SheetsJobStatus = "PARTIAL_SUCCESS"
-	SheetsJobStatusCancelled      SheetsJobStatus = "CANCELLED"
+	SheetsJobStatusPending        SheetsJobStatus = "PENDING"
+	SheetsJobStatusSuccess        SheetsJobStatus = "SUCCESS"
 )
 
 // Job-time parameters such as webhook configurations.
@@ -238,14 +238,14 @@ type SheetsJobParametersWebhookConfiguration struct {
 	// Events to subscribe to (e.g. 'parse.success', 'extract.error'). If null, all
 	// events are delivered.
 	//
-	// Any of "extract.pending", "extract.success", "extract.error",
-	// "extract.partial_success", "extract.cancelled", "parse.pending",
-	// "parse.running", "parse.success", "parse.error", "parse.partial_success",
-	// "parse.cancelled", "classify.pending", "classify.running", "classify.success",
-	// "classify.error", "classify.partial_success", "classify.cancelled",
-	// "sheets.pending", "sheets.success", "sheets.error", "sheets.partial_success",
-	// "sheets.cancelled", "split.pending", "split.processing", "split.success",
-	// "split.error", "split.cancelled", "unmapped_event".
+	// Any of "classify.cancelled", "classify.error", "classify.partial_success",
+	// "classify.pending", "classify.running", "classify.success", "extract.cancelled",
+	// "extract.error", "extract.partial_success", "extract.pending",
+	// "extract.success", "parse.cancelled", "parse.error", "parse.partial_success",
+	// "parse.pending", "parse.running", "parse.success", "sheets.cancelled",
+	// "sheets.error", "sheets.partial_success", "sheets.pending", "sheets.success",
+	// "split.cancelled", "split.error", "split.pending", "split.processing",
+	// "split.success", "unmapped_event".
 	WebhookEvents []string `json:"webhook_events" api:"nullable"`
 	// Custom HTTP headers sent with each webhook request (e.g. auth tokens)
 	WebhookHeaders map[string]string `json:"webhook_headers" api:"nullable"`
@@ -477,14 +477,14 @@ type BetaSheetNewParamsWebhookConfiguration struct {
 	// Events to subscribe to (e.g. 'parse.success', 'extract.error'). If null, all
 	// events are delivered.
 	//
-	// Any of "extract.pending", "extract.success", "extract.error",
-	// "extract.partial_success", "extract.cancelled", "parse.pending",
-	// "parse.running", "parse.success", "parse.error", "parse.partial_success",
-	// "parse.cancelled", "classify.pending", "classify.running", "classify.success",
-	// "classify.error", "classify.partial_success", "classify.cancelled",
-	// "sheets.pending", "sheets.success", "sheets.error", "sheets.partial_success",
-	// "sheets.cancelled", "split.pending", "split.processing", "split.success",
-	// "split.error", "split.cancelled", "unmapped_event".
+	// Any of "classify.cancelled", "classify.error", "classify.partial_success",
+	// "classify.pending", "classify.running", "classify.success", "extract.cancelled",
+	// "extract.error", "extract.partial_success", "extract.pending",
+	// "extract.success", "parse.cancelled", "parse.error", "parse.partial_success",
+	// "parse.pending", "parse.running", "parse.success", "sheets.cancelled",
+	// "sheets.error", "sheets.partial_success", "sheets.pending", "sheets.success",
+	// "split.cancelled", "split.error", "split.pending", "split.processing",
+	// "split.success", "unmapped_event".
 	WebhookEvents []string `json:"webhook_events,omitzero"`
 	// Custom HTTP headers sent with each webhook request (e.g. auth tokens)
 	WebhookHeaders map[string]string `json:"webhook_headers,omitzero"`
@@ -515,7 +515,7 @@ type BetaSheetListParams struct {
 	JobIDs []string `query:"job_ids,omitzero" json:"-"`
 	// Filter by job status
 	//
-	// Any of "PENDING", "SUCCESS", "ERROR", "PARTIAL_SUCCESS", "CANCELLED".
+	// Any of "CANCELLED", "ERROR", "PARTIAL_SUCCESS", "PENDING", "SUCCESS".
 	Status BetaSheetListParamsStatus `query:"status,omitzero" json:"-"`
 	paramObj
 }
@@ -532,11 +532,11 @@ func (r BetaSheetListParams) URLQuery() (v url.Values, err error) {
 type BetaSheetListParamsStatus string
 
 const (
-	BetaSheetListParamsStatusPending        BetaSheetListParamsStatus = "PENDING"
-	BetaSheetListParamsStatusSuccess        BetaSheetListParamsStatus = "SUCCESS"
+	BetaSheetListParamsStatusCancelled      BetaSheetListParamsStatus = "CANCELLED"
 	BetaSheetListParamsStatusError          BetaSheetListParamsStatus = "ERROR"
 	BetaSheetListParamsStatusPartialSuccess BetaSheetListParamsStatus = "PARTIAL_SUCCESS"
-	BetaSheetListParamsStatusCancelled      BetaSheetListParamsStatus = "CANCELLED"
+	BetaSheetListParamsStatusPending        BetaSheetListParamsStatus = "PENDING"
+	BetaSheetListParamsStatusSuccess        BetaSheetListParamsStatus = "SUCCESS"
 )
 
 type BetaSheetDeleteJobParams struct {
@@ -593,7 +593,7 @@ func (r BetaSheetGetResultTableParams) URLQuery() (v url.Values, err error) {
 type BetaSheetGetResultTableParamsRegionType string
 
 const (
-	BetaSheetGetResultTableParamsRegionTypeTable        BetaSheetGetResultTableParamsRegionType = "table"
-	BetaSheetGetResultTableParamsRegionTypeExtra        BetaSheetGetResultTableParamsRegionType = "extra"
 	BetaSheetGetResultTableParamsRegionTypeCellMetadata BetaSheetGetResultTableParamsRegionType = "cell_metadata"
+	BetaSheetGetResultTableParamsRegionTypeExtra        BetaSheetGetResultTableParamsRegionType = "extra"
+	BetaSheetGetResultTableParamsRegionTypeTable        BetaSheetGetResultTableParamsRegionType = "table"
 )

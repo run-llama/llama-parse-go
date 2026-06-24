@@ -129,7 +129,7 @@ type BetaDirectoryNewResponse struct {
 	SystemMetadata map[string]any `json:"system_metadata" api:"nullable"`
 	// Directory type: 'user', 'index', 'ephemeral', or 'system_ephemeral'.
 	//
-	// Any of "user", "index", "ephemeral", "system_ephemeral".
+	// Any of "ephemeral", "index", "system_ephemeral", "user".
 	Type BetaDirectoryNewResponseType `json:"type" api:"nullable"`
 	// Update datetime
 	UpdatedAt time.Time `json:"updated_at" api:"nullable" format:"date-time"`
@@ -160,10 +160,10 @@ func (r *BetaDirectoryNewResponse) UnmarshalJSON(data []byte) error {
 type BetaDirectoryNewResponseType string
 
 const (
-	BetaDirectoryNewResponseTypeUser            BetaDirectoryNewResponseType = "user"
-	BetaDirectoryNewResponseTypeIndex           BetaDirectoryNewResponseType = "index"
 	BetaDirectoryNewResponseTypeEphemeral       BetaDirectoryNewResponseType = "ephemeral"
+	BetaDirectoryNewResponseTypeIndex           BetaDirectoryNewResponseType = "index"
 	BetaDirectoryNewResponseTypeSystemEphemeral BetaDirectoryNewResponseType = "system_ephemeral"
+	BetaDirectoryNewResponseTypeUser            BetaDirectoryNewResponseType = "user"
 )
 
 // API response schema for a directory.
@@ -186,7 +186,7 @@ type BetaDirectoryUpdateResponse struct {
 	SystemMetadata map[string]any `json:"system_metadata" api:"nullable"`
 	// Directory type: 'user', 'index', 'ephemeral', or 'system_ephemeral'.
 	//
-	// Any of "user", "index", "ephemeral", "system_ephemeral".
+	// Any of "ephemeral", "index", "system_ephemeral", "user".
 	Type BetaDirectoryUpdateResponseType `json:"type" api:"nullable"`
 	// Update datetime
 	UpdatedAt time.Time `json:"updated_at" api:"nullable" format:"date-time"`
@@ -217,10 +217,10 @@ func (r *BetaDirectoryUpdateResponse) UnmarshalJSON(data []byte) error {
 type BetaDirectoryUpdateResponseType string
 
 const (
-	BetaDirectoryUpdateResponseTypeUser            BetaDirectoryUpdateResponseType = "user"
-	BetaDirectoryUpdateResponseTypeIndex           BetaDirectoryUpdateResponseType = "index"
 	BetaDirectoryUpdateResponseTypeEphemeral       BetaDirectoryUpdateResponseType = "ephemeral"
+	BetaDirectoryUpdateResponseTypeIndex           BetaDirectoryUpdateResponseType = "index"
 	BetaDirectoryUpdateResponseTypeSystemEphemeral BetaDirectoryUpdateResponseType = "system_ephemeral"
+	BetaDirectoryUpdateResponseTypeUser            BetaDirectoryUpdateResponseType = "user"
 )
 
 // API response schema for a directory.
@@ -243,7 +243,7 @@ type BetaDirectoryListResponse struct {
 	SystemMetadata map[string]any `json:"system_metadata" api:"nullable"`
 	// Directory type: 'user', 'index', 'ephemeral', or 'system_ephemeral'.
 	//
-	// Any of "user", "index", "ephemeral", "system_ephemeral".
+	// Any of "ephemeral", "index", "system_ephemeral", "user".
 	Type BetaDirectoryListResponseType `json:"type" api:"nullable"`
 	// Update datetime
 	UpdatedAt time.Time `json:"updated_at" api:"nullable" format:"date-time"`
@@ -274,10 +274,10 @@ func (r *BetaDirectoryListResponse) UnmarshalJSON(data []byte) error {
 type BetaDirectoryListResponseType string
 
 const (
-	BetaDirectoryListResponseTypeUser            BetaDirectoryListResponseType = "user"
-	BetaDirectoryListResponseTypeIndex           BetaDirectoryListResponseType = "index"
 	BetaDirectoryListResponseTypeEphemeral       BetaDirectoryListResponseType = "ephemeral"
+	BetaDirectoryListResponseTypeIndex           BetaDirectoryListResponseType = "index"
 	BetaDirectoryListResponseTypeSystemEphemeral BetaDirectoryListResponseType = "system_ephemeral"
+	BetaDirectoryListResponseTypeUser            BetaDirectoryListResponseType = "user"
 )
 
 // API response schema for a directory.
@@ -300,7 +300,7 @@ type BetaDirectoryGetResponse struct {
 	SystemMetadata map[string]any `json:"system_metadata" api:"nullable"`
 	// Directory type: 'user', 'index', 'ephemeral', or 'system_ephemeral'.
 	//
-	// Any of "user", "index", "ephemeral", "system_ephemeral".
+	// Any of "ephemeral", "index", "system_ephemeral", "user".
 	Type BetaDirectoryGetResponseType `json:"type" api:"nullable"`
 	// Update datetime
 	UpdatedAt time.Time `json:"updated_at" api:"nullable" format:"date-time"`
@@ -331,10 +331,10 @@ func (r *BetaDirectoryGetResponse) UnmarshalJSON(data []byte) error {
 type BetaDirectoryGetResponseType string
 
 const (
-	BetaDirectoryGetResponseTypeUser            BetaDirectoryGetResponseType = "user"
-	BetaDirectoryGetResponseTypeIndex           BetaDirectoryGetResponseType = "index"
 	BetaDirectoryGetResponseTypeEphemeral       BetaDirectoryGetResponseType = "ephemeral"
+	BetaDirectoryGetResponseTypeIndex           BetaDirectoryGetResponseType = "index"
 	BetaDirectoryGetResponseTypeSystemEphemeral BetaDirectoryGetResponseType = "system_ephemeral"
+	BetaDirectoryGetResponseTypeUser            BetaDirectoryGetResponseType = "user"
 )
 
 type BetaDirectoryNewParams struct {
@@ -350,7 +350,7 @@ type BetaDirectoryNewParams struct {
 	SystemMetadata map[string]any `json:"system_metadata,omitzero"`
 	// Directory type. Use 'ephemeral' for batch processing with automatic cleanup.
 	//
-	// Any of "user", "ephemeral".
+	// Any of "ephemeral", "user".
 	Type BetaDirectoryNewParamsType `json:"type,omitzero"`
 	paramObj
 }
@@ -375,8 +375,8 @@ func (r BetaDirectoryNewParams) URLQuery() (v url.Values, err error) {
 type BetaDirectoryNewParamsType string
 
 const (
-	BetaDirectoryNewParamsTypeUser      BetaDirectoryNewParamsType = "user"
 	BetaDirectoryNewParamsTypeEphemeral BetaDirectoryNewParamsType = "ephemeral"
+	BetaDirectoryNewParamsTypeUser      BetaDirectoryNewParamsType = "user"
 )
 
 type BetaDirectoryUpdateParams struct {
@@ -413,7 +413,7 @@ type BetaDirectoryListParams struct {
 	PageToken      param.Opt[string] `query:"page_token,omitzero" json:"-"`
 	ProjectID      param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
 	IncludeDeleted param.Opt[bool]   `query:"include_deleted,omitzero" json:"-"`
-	// Any of "user", "index", "ephemeral".
+	// Any of "ephemeral", "index", "user".
 	Type BetaDirectoryListParamsType `query:"type,omitzero" json:"-"`
 	paramObj
 }
@@ -430,9 +430,9 @@ func (r BetaDirectoryListParams) URLQuery() (v url.Values, err error) {
 type BetaDirectoryListParamsType string
 
 const (
-	BetaDirectoryListParamsTypeUser      BetaDirectoryListParamsType = "user"
-	BetaDirectoryListParamsTypeIndex     BetaDirectoryListParamsType = "index"
 	BetaDirectoryListParamsTypeEphemeral BetaDirectoryListParamsType = "ephemeral"
+	BetaDirectoryListParamsTypeIndex     BetaDirectoryListParamsType = "index"
+	BetaDirectoryListParamsTypeUser      BetaDirectoryListParamsType = "user"
 )
 
 type BetaDirectoryDeleteParams struct {

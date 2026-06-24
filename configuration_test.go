@@ -30,13 +30,16 @@ func TestConfigurationNewWithOptionalParams(t *testing.T) {
 		ConfigurationCreate: llamacloudprod.ConfigurationCreateParam{
 			Name: "x",
 			Parameters: llamacloudprod.ConfigurationCreateParametersUnionParam{
-				OfSplitV1: &llamacloudprod.SplitV1Parameters{
-					Categories: []llamacloudprod.SplitCategoryParam{{
-						Name:        "x",
-						Description: llamacloudprod.String("x"),
+				OfClassifyV2: &llamacloudprod.ClassifyV2Parameters{
+					Rules: []llamacloudprod.ClassifyV2ParametersRule{{
+						Description: "contains invoice number, line items, and total amount",
+						Type:        "invoice",
 					}},
-					SplittingStrategy: llamacloudprod.SplitV1ParametersSplittingStrategy{
-						AllowUncategorized: "include",
+					Mode: llamacloudprod.ClassifyV2ParametersModeFast,
+					ParsingConfiguration: llamacloudprod.ClassifyV2ParametersParsingConfiguration{
+						Lang:        llamacloudprod.String("en"),
+						MaxPages:    llamacloudprod.Int(10),
+						TargetPages: llamacloudprod.String("1,3,5-7"),
 					},
 				},
 			},
@@ -104,13 +107,16 @@ func TestConfigurationUpdateWithOptionalParams(t *testing.T) {
 			ProjectID:      llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 			Name:           llamacloudprod.String("x"),
 			Parameters: llamacloudprod.ConfigurationUpdateParamsParametersUnion{
-				OfSplitV1: &llamacloudprod.SplitV1Parameters{
-					Categories: []llamacloudprod.SplitCategoryParam{{
-						Name:        "x",
-						Description: llamacloudprod.String("x"),
+				OfClassifyV2: &llamacloudprod.ClassifyV2Parameters{
+					Rules: []llamacloudprod.ClassifyV2ParametersRule{{
+						Description: "contains invoice number, line items, and total amount",
+						Type:        "invoice",
 					}},
-					SplittingStrategy: llamacloudprod.SplitV1ParametersSplittingStrategy{
-						AllowUncategorized: "include",
+					Mode: llamacloudprod.ClassifyV2ParametersModeFast,
+					ParsingConfiguration: llamacloudprod.ClassifyV2ParametersParsingConfiguration{
+						Lang:        llamacloudprod.String("en"),
+						MaxPages:    llamacloudprod.Int(10),
+						TargetPages: llamacloudprod.String("1,3,5-7"),
 					},
 				},
 			},
@@ -144,7 +150,7 @@ func TestConfigurationListWithOptionalParams(t *testing.T) {
 		OrganizationID: llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		PageSize:       llamacloudprod.Int(0),
 		PageToken:      llamacloudprod.String("page_token"),
-		ProductType:    []string{"split_v1", "extract_v2"},
+		ProductType:    []string{"classify_v2", "extract_v2"},
 		ProjectID:      llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 	})
 	if err != nil {

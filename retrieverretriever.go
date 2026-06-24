@@ -58,7 +58,7 @@ type RetrieverRetrieverSearchParams struct {
 	RerankTopN param.Opt[int64] `json:"rerank_top_n,omitzero"`
 	// The mode of composite retrieval.
 	//
-	// Any of "routing", "full".
+	// Any of "full", "routing".
 	Mode CompositeRetrievalMode `json:"mode,omitzero"`
 	// The rerank configuration for composite retrieval.
 	RerankConfig ReRankConfigParam `json:"rerank_config,omitzero"`

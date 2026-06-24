@@ -424,7 +424,7 @@ type BetaSplitNewParamsConfigurationSplittingStrategy struct {
 	// be assigned to a defined category. 'omit': pages can be classified as
 	// 'uncategorized' but are excluded from results.
 	//
-	// Any of "include", "forbid", "omit".
+	// Any of "forbid", "include", "omit".
 	AllowUncategorized string `json:"allow_uncategorized,omitzero"`
 	paramObj
 }
@@ -439,7 +439,7 @@ func (r *BetaSplitNewParamsConfigurationSplittingStrategy) UnmarshalJSON(data []
 
 func init() {
 	apijson.RegisterFieldValidator[BetaSplitNewParamsConfigurationSplittingStrategy](
-		"allow_uncategorized", "include", "forbid", "omit",
+		"allow_uncategorized", "forbid", "include", "omit",
 	)
 }
 
@@ -456,7 +456,7 @@ type BetaSplitListParams struct {
 	JobIDs []string `query:"job_ids,omitzero" json:"-"`
 	// Filter by job status (pending, processing, completed, failed, cancelled)
 	//
-	// Any of "pending", "processing", "completed", "failed", "cancelled".
+	// Any of "cancelled", "completed", "failed", "pending", "processing".
 	Status BetaSplitListParamsStatus `query:"status,omitzero" json:"-"`
 	paramObj
 }
@@ -473,11 +473,11 @@ func (r BetaSplitListParams) URLQuery() (v url.Values, err error) {
 type BetaSplitListParamsStatus string
 
 const (
-	BetaSplitListParamsStatusPending    BetaSplitListParamsStatus = "pending"
-	BetaSplitListParamsStatusProcessing BetaSplitListParamsStatus = "processing"
+	BetaSplitListParamsStatusCancelled  BetaSplitListParamsStatus = "cancelled"
 	BetaSplitListParamsStatusCompleted  BetaSplitListParamsStatus = "completed"
 	BetaSplitListParamsStatusFailed     BetaSplitListParamsStatus = "failed"
-	BetaSplitListParamsStatusCancelled  BetaSplitListParamsStatus = "cancelled"
+	BetaSplitListParamsStatusPending    BetaSplitListParamsStatus = "pending"
+	BetaSplitListParamsStatusProcessing BetaSplitListParamsStatus = "processing"
 )
 
 type BetaSplitGetParams struct {

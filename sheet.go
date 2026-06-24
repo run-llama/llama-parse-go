@@ -159,14 +159,14 @@ type SheetNewParamsWebhookConfiguration struct {
 	// Events to subscribe to (e.g. 'parse.success', 'extract.error'). If null, all
 	// events are delivered.
 	//
-	// Any of "extract.pending", "extract.success", "extract.error",
-	// "extract.partial_success", "extract.cancelled", "parse.pending",
-	// "parse.running", "parse.success", "parse.error", "parse.partial_success",
-	// "parse.cancelled", "classify.pending", "classify.running", "classify.success",
-	// "classify.error", "classify.partial_success", "classify.cancelled",
-	// "sheets.pending", "sheets.success", "sheets.error", "sheets.partial_success",
-	// "sheets.cancelled", "split.pending", "split.processing", "split.success",
-	// "split.error", "split.cancelled", "unmapped_event".
+	// Any of "classify.cancelled", "classify.error", "classify.partial_success",
+	// "classify.pending", "classify.running", "classify.success", "extract.cancelled",
+	// "extract.error", "extract.partial_success", "extract.pending",
+	// "extract.success", "parse.cancelled", "parse.error", "parse.partial_success",
+	// "parse.pending", "parse.running", "parse.success", "sheets.cancelled",
+	// "sheets.error", "sheets.partial_success", "sheets.pending", "sheets.success",
+	// "split.cancelled", "split.error", "split.pending", "split.processing",
+	// "split.success", "unmapped_event".
 	WebhookEvents []string `json:"webhook_events,omitzero"`
 	// Custom HTTP headers sent with each webhook request (e.g. auth tokens)
 	WebhookHeaders map[string]string `json:"webhook_headers,omitzero"`
@@ -197,7 +197,7 @@ type SheetListParams struct {
 	JobIDs []string `query:"job_ids,omitzero" json:"-"`
 	// Filter by job status
 	//
-	// Any of "PENDING", "SUCCESS", "ERROR", "PARTIAL_SUCCESS", "CANCELLED".
+	// Any of "CANCELLED", "ERROR", "PARTIAL_SUCCESS", "PENDING", "SUCCESS".
 	Status SheetListParamsStatus `query:"status,omitzero" json:"-"`
 	paramObj
 }
@@ -214,11 +214,11 @@ func (r SheetListParams) URLQuery() (v url.Values, err error) {
 type SheetListParamsStatus string
 
 const (
-	SheetListParamsStatusPending        SheetListParamsStatus = "PENDING"
-	SheetListParamsStatusSuccess        SheetListParamsStatus = "SUCCESS"
+	SheetListParamsStatusCancelled      SheetListParamsStatus = "CANCELLED"
 	SheetListParamsStatusError          SheetListParamsStatus = "ERROR"
 	SheetListParamsStatusPartialSuccess SheetListParamsStatus = "PARTIAL_SUCCESS"
-	SheetListParamsStatusCancelled      SheetListParamsStatus = "CANCELLED"
+	SheetListParamsStatusPending        SheetListParamsStatus = "PENDING"
+	SheetListParamsStatusSuccess        SheetListParamsStatus = "SUCCESS"
 )
 
 type SheetDeleteJobParams struct {
@@ -274,7 +274,7 @@ func (r SheetGetResultTableParams) URLQuery() (v url.Values, err error) {
 type SheetGetResultTableParamsRegionType string
 
 const (
-	SheetGetResultTableParamsRegionTypeTable        SheetGetResultTableParamsRegionType = "table"
-	SheetGetResultTableParamsRegionTypeExtra        SheetGetResultTableParamsRegionType = "extra"
 	SheetGetResultTableParamsRegionTypeCellMetadata SheetGetResultTableParamsRegionType = "cell_metadata"
+	SheetGetResultTableParamsRegionTypeExtra        SheetGetResultTableParamsRegionType = "extra"
+	SheetGetResultTableParamsRegionTypeTable        SheetGetResultTableParamsRegionType = "table"
 )

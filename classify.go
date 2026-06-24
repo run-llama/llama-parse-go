@@ -295,14 +295,14 @@ type ClassifyCreateRequestWebhookConfigurationParam struct {
 	// Events to subscribe to (e.g. 'parse.success', 'extract.error'). If null, all
 	// events are delivered.
 	//
-	// Any of "extract.pending", "extract.success", "extract.error",
-	// "extract.partial_success", "extract.cancelled", "parse.pending",
-	// "parse.running", "parse.success", "parse.error", "parse.partial_success",
-	// "parse.cancelled", "classify.pending", "classify.running", "classify.success",
-	// "classify.error", "classify.partial_success", "classify.cancelled",
-	// "sheets.pending", "sheets.success", "sheets.error", "sheets.partial_success",
-	// "sheets.cancelled", "split.pending", "split.processing", "split.success",
-	// "split.error", "split.cancelled", "unmapped_event".
+	// Any of "classify.cancelled", "classify.error", "classify.partial_success",
+	// "classify.pending", "classify.running", "classify.success", "extract.cancelled",
+	// "extract.error", "extract.partial_success", "extract.pending",
+	// "extract.success", "parse.cancelled", "parse.error", "parse.partial_success",
+	// "parse.pending", "parse.running", "parse.success", "sheets.cancelled",
+	// "sheets.error", "sheets.partial_success", "sheets.pending", "sheets.success",
+	// "split.cancelled", "split.error", "split.pending", "split.processing",
+	// "split.success", "unmapped_event".
 	WebhookEvents []string `json:"webhook_events,omitzero"`
 	// Custom HTTP headers sent with each webhook request (e.g. auth tokens)
 	WebhookHeaders map[string]string `json:"webhook_headers,omitzero"`
@@ -349,7 +349,7 @@ type ClassifyNewResponse struct {
 	Configuration ClassifyConfiguration `json:"configuration" api:"required"`
 	// Whether the input was a file or parse job (FILE or PARSE_JOB)
 	//
-	// Any of "url", "file_id", "parse_job_id".
+	// Any of "file_id", "parse_job_id", "url".
 	DocumentInputType ClassifyNewResponseDocumentInputType `json:"document_input_type" api:"required"`
 	// ID of the input file or parse job
 	FileInput string `json:"file_input" api:"required"`
@@ -357,7 +357,7 @@ type ClassifyNewResponse struct {
 	ProjectID string `json:"project_id" api:"required"`
 	// Current job status: PENDING, RUNNING, COMPLETED, or FAILED
 	//
-	// Any of "PENDING", "RUNNING", "COMPLETED", "FAILED".
+	// Any of "COMPLETED", "FAILED", "PENDING", "RUNNING".
 	Status ClassifyNewResponseStatus `json:"status" api:"required"`
 	// User who created this job
 	UserID string `json:"user_id" api:"required"`
@@ -406,19 +406,19 @@ func (r *ClassifyNewResponse) UnmarshalJSON(data []byte) error {
 type ClassifyNewResponseDocumentInputType string
 
 const (
-	ClassifyNewResponseDocumentInputTypeURL        ClassifyNewResponseDocumentInputType = "url"
 	ClassifyNewResponseDocumentInputTypeFileID     ClassifyNewResponseDocumentInputType = "file_id"
 	ClassifyNewResponseDocumentInputTypeParseJobID ClassifyNewResponseDocumentInputType = "parse_job_id"
+	ClassifyNewResponseDocumentInputTypeURL        ClassifyNewResponseDocumentInputType = "url"
 )
 
 // Current job status: PENDING, RUNNING, COMPLETED, or FAILED
 type ClassifyNewResponseStatus string
 
 const (
-	ClassifyNewResponseStatusPending   ClassifyNewResponseStatus = "PENDING"
-	ClassifyNewResponseStatusRunning   ClassifyNewResponseStatus = "RUNNING"
 	ClassifyNewResponseStatusCompleted ClassifyNewResponseStatus = "COMPLETED"
 	ClassifyNewResponseStatusFailed    ClassifyNewResponseStatus = "FAILED"
+	ClassifyNewResponseStatusPending   ClassifyNewResponseStatus = "PENDING"
+	ClassifyNewResponseStatusRunning   ClassifyNewResponseStatus = "RUNNING"
 )
 
 // Response for a classify job.
@@ -429,7 +429,7 @@ type ClassifyListResponse struct {
 	Configuration ClassifyConfiguration `json:"configuration" api:"required"`
 	// Whether the input was a file or parse job (FILE or PARSE_JOB)
 	//
-	// Any of "url", "file_id", "parse_job_id".
+	// Any of "file_id", "parse_job_id", "url".
 	DocumentInputType ClassifyListResponseDocumentInputType `json:"document_input_type" api:"required"`
 	// ID of the input file or parse job
 	FileInput string `json:"file_input" api:"required"`
@@ -437,7 +437,7 @@ type ClassifyListResponse struct {
 	ProjectID string `json:"project_id" api:"required"`
 	// Current job status: PENDING, RUNNING, COMPLETED, or FAILED
 	//
-	// Any of "PENDING", "RUNNING", "COMPLETED", "FAILED".
+	// Any of "COMPLETED", "FAILED", "PENDING", "RUNNING".
 	Status ClassifyListResponseStatus `json:"status" api:"required"`
 	// User who created this job
 	UserID string `json:"user_id" api:"required"`
@@ -486,19 +486,19 @@ func (r *ClassifyListResponse) UnmarshalJSON(data []byte) error {
 type ClassifyListResponseDocumentInputType string
 
 const (
-	ClassifyListResponseDocumentInputTypeURL        ClassifyListResponseDocumentInputType = "url"
 	ClassifyListResponseDocumentInputTypeFileID     ClassifyListResponseDocumentInputType = "file_id"
 	ClassifyListResponseDocumentInputTypeParseJobID ClassifyListResponseDocumentInputType = "parse_job_id"
+	ClassifyListResponseDocumentInputTypeURL        ClassifyListResponseDocumentInputType = "url"
 )
 
 // Current job status: PENDING, RUNNING, COMPLETED, or FAILED
 type ClassifyListResponseStatus string
 
 const (
-	ClassifyListResponseStatusPending   ClassifyListResponseStatus = "PENDING"
-	ClassifyListResponseStatusRunning   ClassifyListResponseStatus = "RUNNING"
 	ClassifyListResponseStatusCompleted ClassifyListResponseStatus = "COMPLETED"
 	ClassifyListResponseStatusFailed    ClassifyListResponseStatus = "FAILED"
+	ClassifyListResponseStatusPending   ClassifyListResponseStatus = "PENDING"
+	ClassifyListResponseStatusRunning   ClassifyListResponseStatus = "RUNNING"
 )
 
 // Response for a classify job.
@@ -509,7 +509,7 @@ type ClassifyGetResponse struct {
 	Configuration ClassifyConfiguration `json:"configuration" api:"required"`
 	// Whether the input was a file or parse job (FILE or PARSE_JOB)
 	//
-	// Any of "url", "file_id", "parse_job_id".
+	// Any of "file_id", "parse_job_id", "url".
 	DocumentInputType ClassifyGetResponseDocumentInputType `json:"document_input_type" api:"required"`
 	// ID of the input file or parse job
 	FileInput string `json:"file_input" api:"required"`
@@ -517,7 +517,7 @@ type ClassifyGetResponse struct {
 	ProjectID string `json:"project_id" api:"required"`
 	// Current job status: PENDING, RUNNING, COMPLETED, or FAILED
 	//
-	// Any of "PENDING", "RUNNING", "COMPLETED", "FAILED".
+	// Any of "COMPLETED", "FAILED", "PENDING", "RUNNING".
 	Status ClassifyGetResponseStatus `json:"status" api:"required"`
 	// User who created this job
 	UserID string `json:"user_id" api:"required"`
@@ -566,19 +566,19 @@ func (r *ClassifyGetResponse) UnmarshalJSON(data []byte) error {
 type ClassifyGetResponseDocumentInputType string
 
 const (
-	ClassifyGetResponseDocumentInputTypeURL        ClassifyGetResponseDocumentInputType = "url"
 	ClassifyGetResponseDocumentInputTypeFileID     ClassifyGetResponseDocumentInputType = "file_id"
 	ClassifyGetResponseDocumentInputTypeParseJobID ClassifyGetResponseDocumentInputType = "parse_job_id"
+	ClassifyGetResponseDocumentInputTypeURL        ClassifyGetResponseDocumentInputType = "url"
 )
 
 // Current job status: PENDING, RUNNING, COMPLETED, or FAILED
 type ClassifyGetResponseStatus string
 
 const (
-	ClassifyGetResponseStatusPending   ClassifyGetResponseStatus = "PENDING"
-	ClassifyGetResponseStatusRunning   ClassifyGetResponseStatus = "RUNNING"
 	ClassifyGetResponseStatusCompleted ClassifyGetResponseStatus = "COMPLETED"
 	ClassifyGetResponseStatusFailed    ClassifyGetResponseStatus = "FAILED"
+	ClassifyGetResponseStatusPending   ClassifyGetResponseStatus = "PENDING"
+	ClassifyGetResponseStatusRunning   ClassifyGetResponseStatus = "RUNNING"
 )
 
 type ClassifyNewParams struct {
@@ -621,7 +621,7 @@ type ClassifyListParams struct {
 	JobIDs []string `query:"job_ids,omitzero" json:"-"`
 	// Filter by job status
 	//
-	// Any of "PENDING", "RUNNING", "COMPLETED", "FAILED".
+	// Any of "COMPLETED", "FAILED", "PENDING", "RUNNING".
 	Status ClassifyListParamsStatus `query:"status,omitzero" json:"-"`
 	paramObj
 }
@@ -638,10 +638,10 @@ func (r ClassifyListParams) URLQuery() (v url.Values, err error) {
 type ClassifyListParamsStatus string
 
 const (
-	ClassifyListParamsStatusPending   ClassifyListParamsStatus = "PENDING"
-	ClassifyListParamsStatusRunning   ClassifyListParamsStatus = "RUNNING"
 	ClassifyListParamsStatusCompleted ClassifyListParamsStatus = "COMPLETED"
 	ClassifyListParamsStatusFailed    ClassifyListParamsStatus = "FAILED"
+	ClassifyListParamsStatusPending   ClassifyListParamsStatus = "PENDING"
+	ClassifyListParamsStatusRunning   ClassifyListParamsStatus = "RUNNING"
 )
 
 type ClassifyGetParams struct {

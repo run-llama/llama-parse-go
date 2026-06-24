@@ -216,19 +216,25 @@ func (r *BetaChatGetResponse) UnmarshalJSON(data []byte) error {
 }
 
 // BetaChatGetResponseEventUnion contains all possible properties and values from
-// [BetaChatGetResponseEventThinkingDelta], [BetaChatGetResponseEventTextDelta],
-// [BetaChatGetResponseEventThinking], [BetaChatGetResponseEventText],
-// [BetaChatGetResponseEventToolCall], [BetaChatGetResponseEventToolResult],
-// [BetaChatGetResponseEventStop], [BetaChatGetResponseEventUserInput].
+// [BetaChatGetResponseEventStop], [BetaChatGetResponseEventTextDelta],
+// [BetaChatGetResponseEventText], [BetaChatGetResponseEventThinkingDelta],
+// [BetaChatGetResponseEventThinking], [BetaChatGetResponseEventToolCall],
+// [BetaChatGetResponseEventToolResult], [BetaChatGetResponseEventUserInput].
 //
 // Use the [BetaChatGetResponseEventUnion.AsAny] method to switch on the variant.
 //
 // Use the methods beginning with 'As' to cast the union to one of its variants.
 type BetaChatGetResponseEventUnion struct {
+	// This field is from variant [BetaChatGetResponseEventStop].
+	Error string `json:"error"`
+	// This field is from variant [BetaChatGetResponseEventStop].
+	IsError bool `json:"is_error"`
+	// This field is from variant [BetaChatGetResponseEventStop].
+	Usage BetaChatGetResponseEventStopUsage `json:"usage"`
+	// Any of "stop", "text_delta", "text", "thinking_delta", "thinking", "tool_call",
+	// "tool_result", "user_input".
+	Type    string `json:"type"`
 	Content string `json:"content"`
-	// Any of "thinking_delta", "text_delta", "thinking", "text", "tool_call",
-	// "tool_result", "stop", "user_input".
-	Type string `json:"type"`
 	// This field is from variant [BetaChatGetResponseEventToolCall].
 	Arguments map[string]any `json:"arguments"`
 	CallID    string         `json:"call_id"`
@@ -237,23 +243,17 @@ type BetaChatGetResponseEventUnion struct {
 	Result any `json:"result"`
 	// This field is from variant [BetaChatGetResponseEventToolResult].
 	ImageAttachment BetaChatGetResponseEventToolResultImageAttachment `json:"image_attachment"`
-	// This field is from variant [BetaChatGetResponseEventStop].
-	Error string `json:"error"`
-	// This field is from variant [BetaChatGetResponseEventStop].
-	IsError bool `json:"is_error"`
-	// This field is from variant [BetaChatGetResponseEventStop].
-	Usage BetaChatGetResponseEventStopUsage `json:"usage"`
-	JSON  struct {
-		Content         respjson.Field
+	JSON            struct {
+		Error           respjson.Field
+		IsError         respjson.Field
+		Usage           respjson.Field
 		Type            respjson.Field
+		Content         respjson.Field
 		Arguments       respjson.Field
 		CallID          respjson.Field
 		Name            respjson.Field
 		Result          respjson.Field
 		ImageAttachment respjson.Field
-		Error           respjson.Field
-		IsError         respjson.Field
-		Usage           respjson.Field
 		raw             string
 	} `json:"-"`
 }
@@ -265,52 +265,52 @@ type anyBetaChatGetResponseEvent interface {
 	implBetaChatGetResponseEventUnion()
 }
 
-func (BetaChatGetResponseEventThinkingDelta) implBetaChatGetResponseEventUnion() {}
+func (BetaChatGetResponseEventStop) implBetaChatGetResponseEventUnion()          {}
 func (BetaChatGetResponseEventTextDelta) implBetaChatGetResponseEventUnion()     {}
-func (BetaChatGetResponseEventThinking) implBetaChatGetResponseEventUnion()      {}
 func (BetaChatGetResponseEventText) implBetaChatGetResponseEventUnion()          {}
+func (BetaChatGetResponseEventThinkingDelta) implBetaChatGetResponseEventUnion() {}
+func (BetaChatGetResponseEventThinking) implBetaChatGetResponseEventUnion()      {}
 func (BetaChatGetResponseEventToolCall) implBetaChatGetResponseEventUnion()      {}
 func (BetaChatGetResponseEventToolResult) implBetaChatGetResponseEventUnion()    {}
-func (BetaChatGetResponseEventStop) implBetaChatGetResponseEventUnion()          {}
 func (BetaChatGetResponseEventUserInput) implBetaChatGetResponseEventUnion()     {}
 
 // Use the following switch statement to find the correct variant
 //
 //	switch variant := BetaChatGetResponseEventUnion.AsAny().(type) {
-//	case llamacloudprod.BetaChatGetResponseEventThinkingDelta:
+//	case llamacloudprod.BetaChatGetResponseEventStop:
 //	case llamacloudprod.BetaChatGetResponseEventTextDelta:
-//	case llamacloudprod.BetaChatGetResponseEventThinking:
 //	case llamacloudprod.BetaChatGetResponseEventText:
+//	case llamacloudprod.BetaChatGetResponseEventThinkingDelta:
+//	case llamacloudprod.BetaChatGetResponseEventThinking:
 //	case llamacloudprod.BetaChatGetResponseEventToolCall:
 //	case llamacloudprod.BetaChatGetResponseEventToolResult:
-//	case llamacloudprod.BetaChatGetResponseEventStop:
 //	case llamacloudprod.BetaChatGetResponseEventUserInput:
 //	default:
 //	  fmt.Errorf("no variant present")
 //	}
 func (u BetaChatGetResponseEventUnion) AsAny() anyBetaChatGetResponseEvent {
 	switch u.Type {
-	case "thinking_delta":
-		return u.AsThinkingDelta()
+	case "stop":
+		return u.AsStop()
 	case "text_delta":
 		return u.AsTextDelta()
-	case "thinking":
-		return u.AsThinking()
 	case "text":
 		return u.AsText()
+	case "thinking_delta":
+		return u.AsThinkingDelta()
+	case "thinking":
+		return u.AsThinking()
 	case "tool_call":
 		return u.AsToolCall()
 	case "tool_result":
 		return u.AsToolResult()
-	case "stop":
-		return u.AsStop()
 	case "user_input":
 		return u.AsUserInput()
 	}
 	return nil
 }
 
-func (u BetaChatGetResponseEventUnion) AsThinkingDelta() (v BetaChatGetResponseEventThinkingDelta) {
+func (u BetaChatGetResponseEventUnion) AsStop() (v BetaChatGetResponseEventStop) {
 	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
 	return
 }
@@ -320,12 +320,17 @@ func (u BetaChatGetResponseEventUnion) AsTextDelta() (v BetaChatGetResponseEvent
 	return
 }
 
-func (u BetaChatGetResponseEventUnion) AsThinking() (v BetaChatGetResponseEventThinking) {
+func (u BetaChatGetResponseEventUnion) AsText() (v BetaChatGetResponseEventText) {
 	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
 	return
 }
 
-func (u BetaChatGetResponseEventUnion) AsText() (v BetaChatGetResponseEventText) {
+func (u BetaChatGetResponseEventUnion) AsThinkingDelta() (v BetaChatGetResponseEventThinkingDelta) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u BetaChatGetResponseEventUnion) AsThinking() (v BetaChatGetResponseEventThinking) {
 	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
 	return
 }
@@ -336,11 +341,6 @@ func (u BetaChatGetResponseEventUnion) AsToolCall() (v BetaChatGetResponseEventT
 }
 
 func (u BetaChatGetResponseEventUnion) AsToolResult() (v BetaChatGetResponseEventToolResult) {
-	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
-	return
-}
-
-func (u BetaChatGetResponseEventUnion) AsStop() (v BetaChatGetResponseEventStop) {
 	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
 	return
 }
@@ -357,13 +357,17 @@ func (r *BetaChatGetResponseEventUnion) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-type BetaChatGetResponseEventThinkingDelta struct {
-	Content string `json:"content" api:"required"`
-	// Any of "thinking_delta".
+type BetaChatGetResponseEventStop struct {
+	Error   string                            `json:"error" api:"required"`
+	IsError bool                              `json:"is_error" api:"required"`
+	Usage   BetaChatGetResponseEventStopUsage `json:"usage" api:"required"`
+	// Any of "stop".
 	Type string `json:"type"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
-		Content     respjson.Field
+		Error       respjson.Field
+		IsError     respjson.Field
+		Usage       respjson.Field
 		Type        respjson.Field
 		ExtraFields map[string]respjson.Field
 		raw         string
@@ -371,8 +375,30 @@ type BetaChatGetResponseEventThinkingDelta struct {
 }
 
 // Returns the unmodified JSON received from the API
-func (r BetaChatGetResponseEventThinkingDelta) RawJSON() string { return r.JSON.raw }
-func (r *BetaChatGetResponseEventThinkingDelta) UnmarshalJSON(data []byte) error {
+func (r BetaChatGetResponseEventStop) RawJSON() string { return r.JSON.raw }
+func (r *BetaChatGetResponseEventStop) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+type BetaChatGetResponseEventStopUsage struct {
+	DurationMs        float64 `json:"duration_ms"`
+	TotalInputTokens  int64   `json:"total_input_tokens" api:"nullable"`
+	TotalOutputTokens int64   `json:"total_output_tokens" api:"nullable"`
+	Turns             int64   `json:"turns"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		DurationMs        respjson.Field
+		TotalInputTokens  respjson.Field
+		TotalOutputTokens respjson.Field
+		Turns             respjson.Field
+		ExtraFields       map[string]respjson.Field
+		raw               string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r BetaChatGetResponseEventStopUsage) RawJSON() string { return r.JSON.raw }
+func (r *BetaChatGetResponseEventStopUsage) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
@@ -395,25 +421,6 @@ func (r *BetaChatGetResponseEventTextDelta) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-type BetaChatGetResponseEventThinking struct {
-	Content string `json:"content" api:"required"`
-	// Any of "thinking".
-	Type string `json:"type"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		Content     respjson.Field
-		Type        respjson.Field
-		ExtraFields map[string]respjson.Field
-		raw         string
-	} `json:"-"`
-}
-
-// Returns the unmodified JSON received from the API
-func (r BetaChatGetResponseEventThinking) RawJSON() string { return r.JSON.raw }
-func (r *BetaChatGetResponseEventThinking) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
 type BetaChatGetResponseEventText struct {
 	Content string `json:"content" api:"required"`
 	// Any of "text".
@@ -430,6 +437,44 @@ type BetaChatGetResponseEventText struct {
 // Returns the unmodified JSON received from the API
 func (r BetaChatGetResponseEventText) RawJSON() string { return r.JSON.raw }
 func (r *BetaChatGetResponseEventText) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+type BetaChatGetResponseEventThinkingDelta struct {
+	Content string `json:"content" api:"required"`
+	// Any of "thinking_delta".
+	Type string `json:"type"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Content     respjson.Field
+		Type        respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r BetaChatGetResponseEventThinkingDelta) RawJSON() string { return r.JSON.raw }
+func (r *BetaChatGetResponseEventThinkingDelta) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+type BetaChatGetResponseEventThinking struct {
+	Content string `json:"content" api:"required"`
+	// Any of "thinking".
+	Type string `json:"type"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Content     respjson.Field
+		Type        respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r BetaChatGetResponseEventThinking) RawJSON() string { return r.JSON.raw }
+func (r *BetaChatGetResponseEventThinking) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
@@ -498,51 +543,6 @@ type BetaChatGetResponseEventToolResultImageAttachment struct {
 // Returns the unmodified JSON received from the API
 func (r BetaChatGetResponseEventToolResultImageAttachment) RawJSON() string { return r.JSON.raw }
 func (r *BetaChatGetResponseEventToolResultImageAttachment) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-type BetaChatGetResponseEventStop struct {
-	Error   string                            `json:"error" api:"required"`
-	IsError bool                              `json:"is_error" api:"required"`
-	Usage   BetaChatGetResponseEventStopUsage `json:"usage" api:"required"`
-	// Any of "stop".
-	Type string `json:"type"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		Error       respjson.Field
-		IsError     respjson.Field
-		Usage       respjson.Field
-		Type        respjson.Field
-		ExtraFields map[string]respjson.Field
-		raw         string
-	} `json:"-"`
-}
-
-// Returns the unmodified JSON received from the API
-func (r BetaChatGetResponseEventStop) RawJSON() string { return r.JSON.raw }
-func (r *BetaChatGetResponseEventStop) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-type BetaChatGetResponseEventStopUsage struct {
-	DurationMs        float64 `json:"duration_ms"`
-	TotalInputTokens  int64   `json:"total_input_tokens" api:"nullable"`
-	TotalOutputTokens int64   `json:"total_output_tokens" api:"nullable"`
-	Turns             int64   `json:"turns"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		DurationMs        respjson.Field
-		TotalInputTokens  respjson.Field
-		TotalOutputTokens respjson.Field
-		Turns             respjson.Field
-		ExtraFields       map[string]respjson.Field
-		raw               string
-	} `json:"-"`
-}
-
-// Returns the unmodified JSON received from the API
-func (r BetaChatGetResponseEventStopUsage) RawJSON() string { return r.JSON.raw }
-func (r *BetaChatGetResponseEventStopUsage) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
