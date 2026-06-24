@@ -38,7 +38,7 @@ func TestUserAgentHeader(t *testing.T) {
 			},
 		}),
 	)
-	_, _ = client.Pipelines.List(context.Background(), llamacloudprod.PipelineListParams{
+	_, _ = client.Beta.Indexes.List(context.Background(), llamacloudprod.BetaIndexListParams{
 		ProjectID: llamacloudprod.String("my-project-id"),
 	})
 	if userAgent != fmt.Sprintf("LlamaCloud/Go %s", internal.PackageVersion) {
@@ -64,7 +64,7 @@ func TestRetryAfter(t *testing.T) {
 			},
 		}),
 	)
-	_, err := client.Pipelines.List(context.Background(), llamacloudprod.PipelineListParams{
+	_, err := client.Beta.Indexes.List(context.Background(), llamacloudprod.BetaIndexListParams{
 		ProjectID: llamacloudprod.String("my-project-id"),
 	})
 	if err == nil {
@@ -101,7 +101,7 @@ func TestDeleteRetryCountHeader(t *testing.T) {
 		}),
 		option.WithHeaderDel("X-Stainless-Retry-Count"),
 	)
-	_, err := client.Pipelines.List(context.Background(), llamacloudprod.PipelineListParams{
+	_, err := client.Beta.Indexes.List(context.Background(), llamacloudprod.BetaIndexListParams{
 		ProjectID: llamacloudprod.String("my-project-id"),
 	})
 	if err == nil {
@@ -133,7 +133,7 @@ func TestOverwriteRetryCountHeader(t *testing.T) {
 		}),
 		option.WithHeader("X-Stainless-Retry-Count", "42"),
 	)
-	_, err := client.Pipelines.List(context.Background(), llamacloudprod.PipelineListParams{
+	_, err := client.Beta.Indexes.List(context.Background(), llamacloudprod.BetaIndexListParams{
 		ProjectID: llamacloudprod.String("my-project-id"),
 	})
 	if err == nil {
@@ -164,7 +164,7 @@ func TestRetryAfterMs(t *testing.T) {
 			},
 		}),
 	)
-	_, err := client.Pipelines.List(context.Background(), llamacloudprod.PipelineListParams{
+	_, err := client.Beta.Indexes.List(context.Background(), llamacloudprod.BetaIndexListParams{
 		ProjectID: llamacloudprod.String("my-project-id"),
 	})
 	if err == nil {
@@ -189,7 +189,7 @@ func TestContextCancel(t *testing.T) {
 	)
 	cancelCtx, cancel := context.WithCancel(context.Background())
 	cancel()
-	_, err := client.Pipelines.List(cancelCtx, llamacloudprod.PipelineListParams{
+	_, err := client.Beta.Indexes.List(cancelCtx, llamacloudprod.BetaIndexListParams{
 		ProjectID: llamacloudprod.String("my-project-id"),
 	})
 	if err == nil {
@@ -211,7 +211,7 @@ func TestContextCancelDelay(t *testing.T) {
 	)
 	cancelCtx, cancel := context.WithTimeout(context.Background(), 2*time.Millisecond)
 	defer cancel()
-	_, err := client.Pipelines.List(cancelCtx, llamacloudprod.PipelineListParams{
+	_, err := client.Beta.Indexes.List(cancelCtx, llamacloudprod.BetaIndexListParams{
 		ProjectID: llamacloudprod.String("my-project-id"),
 	})
 	if err == nil {
@@ -239,7 +239,7 @@ func TestContextDeadline(t *testing.T) {
 				},
 			}),
 		)
-		_, err := client.Pipelines.List(deadlineCtx, llamacloudprod.PipelineListParams{
+		_, err := client.Beta.Indexes.List(deadlineCtx, llamacloudprod.BetaIndexListParams{
 			ProjectID: llamacloudprod.String("my-project-id"),
 		})
 		if err == nil {

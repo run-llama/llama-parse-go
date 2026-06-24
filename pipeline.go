@@ -57,6 +57,8 @@ func NewPipelineService(opts ...option.RequestOption) (r PipelineService) {
 //
 // A pipeline connects data sources to a vector store for RAG. After creation, call
 // `POST /pipelines/{id}/sync` to start ingesting documents.
+//
+// Deprecated: deprecated
 func (r *PipelineService) New(ctx context.Context, params PipelineNewParams, opts ...option.RequestOption) (res *Pipeline, err error) {
 	opts = slices.Concat(r.options, opts)
 	path := "api/v1/pipelines"
@@ -65,6 +67,8 @@ func (r *PipelineService) New(ctx context.Context, params PipelineNewParams, opt
 }
 
 // Update an existing pipeline's configuration.
+//
+// Deprecated: deprecated
 func (r *PipelineService) Update(ctx context.Context, pipelineID string, body PipelineUpdateParams, opts ...option.RequestOption) (res *Pipeline, err error) {
 	opts = slices.Concat(r.options, opts)
 	if pipelineID == "" {
@@ -77,6 +81,8 @@ func (r *PipelineService) Update(ctx context.Context, pipelineID string, body Pi
 }
 
 // Search for pipelines by name, type, or project.
+//
+// Deprecated: deprecated
 func (r *PipelineService) List(ctx context.Context, query PipelineListParams, opts ...option.RequestOption) (res *[]Pipeline, err error) {
 	opts = slices.Concat(r.options, opts)
 	path := "api/v1/pipelines"
@@ -88,6 +94,8 @@ func (r *PipelineService) List(ctx context.Context, query PipelineListParams, op
 //
 // Removes pipeline files, data sources, and vector store data. This operation is
 // irreversible.
+//
+// Deprecated: deprecated
 func (r *PipelineService) Delete(ctx context.Context, pipelineID string, opts ...option.RequestOption) (err error) {
 	opts = slices.Concat(r.options, opts)
 	opts = append([]option.RequestOption{option.WithHeader("Accept", "*/*")}, opts...)
@@ -101,6 +109,8 @@ func (r *PipelineService) Delete(ctx context.Context, pipelineID string, opts ..
 }
 
 // Get a pipeline by ID.
+//
+// Deprecated: deprecated
 func (r *PipelineService) Get(ctx context.Context, pipelineID string, opts ...option.RequestOption) (res *Pipeline, err error) {
 	opts = slices.Concat(r.options, opts)
 	if pipelineID == "" {
@@ -116,6 +126,8 @@ func (r *PipelineService) Get(ctx context.Context, pipelineID string, opts ...op
 //
 // Returns document counts, sync progress, and the last effective timestamp. Only
 // available for managed pipelines.
+//
+// Deprecated: deprecated
 func (r *PipelineService) GetStatus(ctx context.Context, pipelineID string, query PipelineGetStatusParams, opts ...option.RequestOption) (res *ManagedIngestionStatusResponse, err error) {
 	opts = slices.Concat(r.options, opts)
 	if pipelineID == "" {
@@ -132,6 +144,8 @@ func (r *PipelineService) GetStatus(ctx context.Context, pipelineID string, quer
 // Searches the pipeline's vector store using the provided query and retrieval
 // parameters. Supports dense, sparse, and hybrid search modes with configurable
 // top-k and reranking.
+//
+// Deprecated: deprecated
 func (r *PipelineService) RunSearch(ctx context.Context, pipelineID string, params PipelineRunSearchParams, opts ...option.RequestOption) (res *PipelineRunSearchResponse, err error) {
 	opts = slices.Concat(r.options, opts)
 	if pipelineID == "" {
@@ -147,6 +161,8 @@ func (r *PipelineService) RunSearch(ctx context.Context, pipelineID string, para
 //
 // Updates the pipeline if one with the same name and project already exists,
 // otherwise creates a new one.
+//
+// Deprecated: deprecated
 func (r *PipelineService) Upsert(ctx context.Context, params PipelineUpsertParams, opts ...option.RequestOption) (res *Pipeline, err error) {
 	opts = slices.Concat(r.options, opts)
 	path := "api/v1/pipelines"
@@ -1948,7 +1964,8 @@ type LlamaParseParametersWebhookConfigurationResp struct {
 	// "parse.cancelled", "classify.pending", "classify.running", "classify.success",
 	// "classify.error", "classify.partial_success", "classify.cancelled",
 	// "sheets.pending", "sheets.success", "sheets.error", "sheets.partial_success",
-	// "sheets.cancelled", "unmapped_event".
+	// "sheets.cancelled", "split.pending", "split.processing", "split.success",
+	// "split.error", "split.cancelled", "unmapped_event".
 	WebhookEvents []string `json:"webhook_events" api:"nullable"`
 	// Custom HTTP headers sent with each webhook request (e.g. auth tokens)
 	WebhookHeaders map[string]string `json:"webhook_headers" api:"nullable"`
@@ -2134,7 +2151,8 @@ type LlamaParseParametersWebhookConfiguration struct {
 	// "parse.cancelled", "classify.pending", "classify.running", "classify.success",
 	// "classify.error", "classify.partial_success", "classify.cancelled",
 	// "sheets.pending", "sheets.success", "sheets.error", "sheets.partial_success",
-	// "sheets.cancelled", "unmapped_event".
+	// "sheets.cancelled", "split.pending", "split.processing", "split.success",
+	// "split.error", "split.cancelled", "unmapped_event".
 	WebhookEvents []string `json:"webhook_events,omitzero"`
 	// Custom HTTP headers sent with each webhook request (e.g. auth tokens)
 	WebhookHeaders map[string]string `json:"webhook_headers,omitzero"`

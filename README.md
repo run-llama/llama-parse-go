@@ -279,7 +279,7 @@ client := llamacloudprod.NewClient(
 	option.WithHeader("X-Some-Header", "custom_header_info"),
 )
 
-client.Pipelines.List(context.TODO(), ...,
+client.Beta.Indexes.List(context.TODO(), ...,
 	// Override the header
 	option.WithHeader("X-Some-Header", "some_other_custom_header_info"),
 	// Add an undocumented field to the request body, using sjson syntax
@@ -339,7 +339,7 @@ When the API returns a non-success status code, we return an error with type
 To handle errors, we recommend that you use the `errors.As` pattern:
 
 ```go
-_, err := client.Pipelines.List(context.TODO(), llamacloudprod.PipelineListParams{
+_, err := client.Beta.Indexes.List(context.TODO(), llamacloudprod.BetaIndexListParams{
 	ProjectID: llamacloudprod.String("my-project-id"),
 })
 if err != nil {
@@ -348,7 +348,7 @@ if err != nil {
 		println(string(apierr.DumpRequest(true)))  // Prints the serialized HTTP request
 		println(string(apierr.DumpResponse(true))) // Prints the serialized HTTP response
 	}
-	panic(err.Error()) // GET "/api/v1/pipelines": 400 Bad Request { ... }
+	panic(err.Error()) // GET "/api/v1/indexes": 400 Bad Request { ... }
 }
 ```
 
@@ -366,9 +366,9 @@ To set a per-retry timeout, use `option.WithRequestTimeout()`.
 // This sets the timeout for the request, including all the retries.
 ctx, cancel := context.WithTimeout(context.Background(), 5*time.Minute)
 defer cancel()
-client.Pipelines.List(
+client.Beta.Indexes.List(
 	ctx,
-	llamacloudprod.PipelineListParams{
+	llamacloudprod.BetaIndexListParams{
 		ProjectID: llamacloudprod.String("my-project-id"),
 	},
 	// This sets the per-retry timeout
@@ -425,9 +425,9 @@ client := llamacloudprod.NewClient(
 )
 
 // Override per-request:
-client.Pipelines.List(
+client.Beta.Indexes.List(
 	context.TODO(),
-	llamacloudprod.PipelineListParams{
+	llamacloudprod.BetaIndexListParams{
 		ProjectID: llamacloudprod.String("my-project-id"),
 	},
 	option.WithMaxRetries(5),
@@ -442,9 +442,9 @@ you need to examine response headers, status codes, or other details.
 ```go
 // Create a variable to store the HTTP response
 var response *http.Response
-pipelines, err := client.Pipelines.List(
+page, err := client.Beta.Indexes.List(
 	context.TODO(),
-	llamacloudprod.PipelineListParams{
+	llamacloudprod.BetaIndexListParams{
 		ProjectID: llamacloudprod.String("my-project-id"),
 	},
 	option.WithResponseInto(&response),
@@ -452,7 +452,7 @@ pipelines, err := client.Pipelines.List(
 if err != nil {
 	// handle error
 }
-fmt.Printf("%+v\n", pipelines)
+fmt.Printf("%+v\n", page)
 
 fmt.Printf("Status Code: %d\n", response.StatusCode)
 fmt.Printf("Headers: %+#v\n", response.Header)

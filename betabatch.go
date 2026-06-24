@@ -737,7 +737,8 @@ type BetaBatchNewParamsJobConfigBatchParseJobRecordCreateParametersWebhookConfig
 	// "parse.cancelled", "classify.pending", "classify.running", "classify.success",
 	// "classify.error", "classify.partial_success", "classify.cancelled",
 	// "sheets.pending", "sheets.success", "sheets.error", "sheets.partial_success",
-	// "sheets.cancelled", "unmapped_event".
+	// "sheets.cancelled", "split.pending", "split.processing", "split.success",
+	// "split.error", "split.cancelled", "unmapped_event".
 	WebhookEvents []string `json:"webhook_events,omitzero"`
 	// Custom HTTP headers sent with each webhook request (e.g. auth tokens)
 	WebhookHeaders map[string]string `json:"webhook_headers,omitzero"`
