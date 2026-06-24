@@ -1213,9 +1213,9 @@ type ParseV2ParametersResp struct {
 	// Current `latest` by tier:
 	//
 	// - `fast`: `2025-12-11`
-	// - `cost_effective`: `2026-06-18`
-	// - `agentic`: `2026-06-18`
-	// - `agentic_plus`: `2026-06-18`
+	// - `cost_effective`: `2026-06-17`
+	// - `agentic`: `2026-06-11`
+	// - `agentic_plus`: `2026-06-11`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
 	Version ParseV2ParametersVersion `json:"version" api:"required"`
@@ -1308,16 +1308,17 @@ const (
 // Current `latest` by tier:
 //
 // - `fast`: `2025-12-11`
-// - `cost_effective`: `2026-06-18`
-// - `agentic`: `2026-06-18`
-// - `agentic_plus`: `2026-06-18`
+// - `cost_effective`: `2026-06-17`
+// - `agentic`: `2026-06-11`
+// - `agentic_plus`: `2026-06-11`
 //
 // Full list: `GET /api/v2/parse/versions`.
 type ParseV2ParametersVersion string
 
 const (
 	ParseV2ParametersVersionLatest     ParseV2ParametersVersion = "latest"
-	ParseV2ParametersVersion2026_06_18 ParseV2ParametersVersion = "2026-06-18"
+	ParseV2ParametersVersion2026_06_17 ParseV2ParametersVersion = "2026-06-17"
+	ParseV2ParametersVersion2026_06_11 ParseV2ParametersVersion = "2026-06-11"
 	ParseV2ParametersVersion2025_12_11 ParseV2ParametersVersion = "2025-12-11"
 )
 
@@ -2001,9 +2002,9 @@ type ParseV2ParametersProcessingOptionsAutoModeConfigurationParsingConfResp stru
 	// Current `latest` by tier:
 	//
 	// - `fast`: `2025-12-11`
-	// - `cost_effective`: `2026-06-18`
-	// - `agentic`: `2026-06-18`
-	// - `agentic_plus`: `2026-06-18`
+	// - `cost_effective`: `2026-06-17`
+	// - `agentic`: `2026-06-11`
+	// - `agentic_plus`: `2026-06-11`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
 	Version string `json:"version" api:"nullable"`
@@ -3101,9 +3102,9 @@ type ParseV2Parameters struct {
 	// Current `latest` by tier:
 	//
 	// - `fast`: `2025-12-11`
-	// - `cost_effective`: `2026-06-18`
-	// - `agentic`: `2026-06-18`
-	// - `agentic_plus`: `2026-06-18`
+	// - `cost_effective`: `2026-06-17`
+	// - `agentic`: `2026-06-11`
+	// - `agentic_plus`: `2026-06-11`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
 	Version ParseV2ParametersVersion `json:"version,omitzero" api:"required"`
@@ -3713,9 +3714,9 @@ type ParseV2ParametersProcessingOptionsAutoModeConfigurationParsingConf struct {
 	// Current `latest` by tier:
 	//
 	// - `fast`: `2025-12-11`
-	// - `cost_effective`: `2026-06-18`
-	// - `agentic`: `2026-06-18`
-	// - `agentic_plus`: `2026-06-18`
+	// - `cost_effective`: `2026-06-17`
+	// - `agentic`: `2026-06-11`
+	// - `agentic_plus`: `2026-06-11`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
 	Version string `json:"version,omitzero"`
