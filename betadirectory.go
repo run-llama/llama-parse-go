@@ -407,14 +407,22 @@ func (r BetaDirectoryUpdateParams) URLQuery() (v url.Values, err error) {
 }
 
 type BetaDirectoryListParams struct {
+	// Directory name to match.
 	Name           param.Opt[string] `query:"name,omitzero" json:"-"`
 	OrganizationID param.Opt[string] `query:"organization_id,omitzero" format:"uuid" json:"-"`
 	PageSize       param.Opt[int64]  `query:"page_size,omitzero" json:"-"`
 	PageToken      param.Opt[string] `query:"page_token,omitzero" json:"-"`
 	ProjectID      param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
-	IncludeDeleted param.Opt[bool]   `query:"include_deleted,omitzero" json:"-"`
+	// Include deleted directories.
+	IncludeDeleted param.Opt[bool] `query:"include_deleted,omitzero" json:"-"`
+	// Directory type to include.
+	//
 	// Any of "ephemeral", "index", "user".
 	Type BetaDirectoryListParamsType `query:"type,omitzero" json:"-"`
+	// Filter by one or more directory types. Repeat the parameter for multiple values.
+	//
+	// Any of "ephemeral", "index", "user".
+	Types []string `query:"types,omitzero" json:"-"`
 	paramObj
 }
 
@@ -427,6 +435,7 @@ func (r BetaDirectoryListParams) URLQuery() (v url.Values, err error) {
 	})
 }
 
+// Directory type to include.
 type BetaDirectoryListParamsType string
 
 const (
