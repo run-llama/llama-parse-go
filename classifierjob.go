@@ -175,7 +175,7 @@ type ClassifyJob struct {
 	Rules []ClassifierRule `json:"rules" api:"required"`
 	// The status of the classify job
 	//
-	// Any of "PENDING", "SUCCESS", "ERROR", "PARTIAL_SUCCESS", "CANCELLED".
+	// Any of "CANCELLED", "ERROR", "PARTIAL_SUCCESS", "PENDING", "SUCCESS".
 	Status StatusEnum `json:"status" api:"required"`
 	// The ID of the user
 	UserID string `json:"user_id" api:"required"`
@@ -248,7 +248,7 @@ type ClassifyJobParam struct {
 	Rules []ClassifierRuleParam `json:"rules,omitzero" api:"required"`
 	// The status of the classify job
 	//
-	// Any of "PENDING", "SUCCESS", "ERROR", "PARTIAL_SUCCESS", "CANCELLED".
+	// Any of "CANCELLED", "ERROR", "PARTIAL_SUCCESS", "PENDING", "SUCCESS".
 	Status StatusEnum `json:"status,omitzero" api:"required"`
 	// The ID of the user
 	UserID string `json:"user_id" api:"required"`
@@ -282,14 +282,14 @@ func (r *ClassifyJobParam) UnmarshalJSON(data []byte) error {
 type ClassifyParsingConfiguration struct {
 	// The language to parse the files in
 	//
-	// Any of "af", "az", "bs", "cs", "cy", "da", "de", "en", "es", "et", "fr", "ga",
-	// "hr", "hu", "id", "is", "it", "ku", "la", "lt", "lv", "mi", "ms", "mt", "nl",
-	// "no", "oc", "pi", "pl", "pt", "ro", "rs_latin", "sk", "sl", "sq", "sv", "sw",
-	// "tl", "tr", "uz", "vi", "ar", "fa", "ug", "ur", "bn", "as", "mni", "ru",
-	// "rs_cyrillic", "be", "bg", "uk", "mn", "abq", "ady", "kbd", "ava", "dar", "inh",
-	// "che", "lbe", "lez", "tab", "tjk", "hi", "mr", "ne", "bh", "mai", "ang", "bho",
-	// "mah", "sck", "new", "gom", "sa", "bgc", "th", "ch_sim", "ch_tra", "ja", "ko",
-	// "ta", "te", "kn".
+	// Any of "abq", "ady", "af", "ang", "ar", "as", "ava", "az", "be", "bg", "bgc",
+	// "bh", "bho", "bn", "bs", "ch_sim", "ch_tra", "che", "cs", "cy", "da", "dar",
+	// "de", "en", "es", "et", "fa", "fr", "ga", "gom", "hi", "hr", "hu", "id", "inh",
+	// "is", "it", "ja", "kbd", "kn", "ko", "ku", "la", "lbe", "lez", "lt", "lv",
+	// "mah", "mai", "mi", "mn", "mni", "mr", "ms", "mt", "ne", "new", "nl", "no",
+	// "oc", "pi", "pl", "pt", "ro", "rs_cyrillic", "rs_latin", "ru", "sa", "sck",
+	// "sk", "sl", "sq", "sv", "sw", "ta", "tab", "te", "th", "tjk", "tl", "tr", "ug",
+	// "uk", "ur", "uz", "vi".
 	Lang ParsingLanguages `json:"lang"`
 	// The maximum number of pages to parse
 	MaxPages int64 `json:"max_pages" api:"nullable"`
@@ -329,14 +329,14 @@ type ClassifyParsingConfigurationParam struct {
 	TargetPages []int64 `json:"target_pages,omitzero"`
 	// The language to parse the files in
 	//
-	// Any of "af", "az", "bs", "cs", "cy", "da", "de", "en", "es", "et", "fr", "ga",
-	// "hr", "hu", "id", "is", "it", "ku", "la", "lt", "lv", "mi", "ms", "mt", "nl",
-	// "no", "oc", "pi", "pl", "pt", "ro", "rs_latin", "sk", "sl", "sq", "sv", "sw",
-	// "tl", "tr", "uz", "vi", "ar", "fa", "ug", "ur", "bn", "as", "mni", "ru",
-	// "rs_cyrillic", "be", "bg", "uk", "mn", "abq", "ady", "kbd", "ava", "dar", "inh",
-	// "che", "lbe", "lez", "tab", "tjk", "hi", "mr", "ne", "bh", "mai", "ang", "bho",
-	// "mah", "sck", "new", "gom", "sa", "bgc", "th", "ch_sim", "ch_tra", "ja", "ko",
-	// "ta", "te", "kn".
+	// Any of "abq", "ady", "af", "ang", "ar", "as", "ava", "az", "be", "bg", "bgc",
+	// "bh", "bho", "bn", "bs", "ch_sim", "ch_tra", "che", "cs", "cy", "da", "dar",
+	// "de", "en", "es", "et", "fa", "fr", "ga", "gom", "hi", "hr", "hu", "id", "inh",
+	// "is", "it", "ja", "kbd", "kn", "ko", "ku", "la", "lbe", "lez", "lt", "lv",
+	// "mah", "mai", "mi", "mn", "mni", "mr", "ms", "mt", "ne", "new", "nl", "no",
+	// "oc", "pi", "pl", "pt", "ro", "rs_cyrillic", "rs_latin", "ru", "sa", "sck",
+	// "sk", "sl", "sq", "sv", "sw", "ta", "tab", "te", "th", "tjk", "tl", "tr", "ug",
+	// "uk", "ur", "uz", "vi".
 	Lang ParsingLanguages `json:"lang,omitzero"`
 	paramObj
 }
@@ -494,7 +494,7 @@ type ClassifierJobNewParamsWebhookConfiguration struct {
 	// Format of the webhook payload body. 'string' (default) sends the payload as a
 	// JSON-encoded string; 'json' sends it as a JSON object.
 	//
-	// Any of "string", "json".
+	// Any of "json", "string".
 	WebhookOutputFormat string `json:"webhook_output_format,omitzero"`
 	paramObj
 }
@@ -509,7 +509,7 @@ func (r *ClassifierJobNewParamsWebhookConfiguration) UnmarshalJSON(data []byte) 
 
 func init() {
 	apijson.RegisterFieldValidator[ClassifierJobNewParamsWebhookConfiguration](
-		"webhook_output_format", "string", "json",
+		"webhook_output_format", "json", "string",
 	)
 }
 

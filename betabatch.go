@@ -127,13 +127,13 @@ type BetaBatchNewResponse struct {
 	ID string `json:"id" api:"required"`
 	// Type of processing operation (parse or classify)
 	//
-	// Any of "parse", "extract", "classify".
+	// Any of "classify", "extract", "parse".
 	JobType BetaBatchNewResponseJobType `json:"job_type" api:"required"`
 	// Project this job belongs to
 	ProjectID string `json:"project_id" api:"required"`
 	// Current job status
 	//
-	// Any of "pending", "running", "dispatched", "completed", "failed", "cancelled".
+	// Any of "cancelled", "completed", "dispatched", "failed", "pending", "running".
 	Status BetaBatchNewResponseStatus `json:"status" api:"required"`
 	// Total number of items in the job
 	TotalItems int64 `json:"total_items" api:"required"`
@@ -194,21 +194,21 @@ func (r *BetaBatchNewResponse) UnmarshalJSON(data []byte) error {
 type BetaBatchNewResponseJobType string
 
 const (
-	BetaBatchNewResponseJobTypeParse    BetaBatchNewResponseJobType = "parse"
-	BetaBatchNewResponseJobTypeExtract  BetaBatchNewResponseJobType = "extract"
 	BetaBatchNewResponseJobTypeClassify BetaBatchNewResponseJobType = "classify"
+	BetaBatchNewResponseJobTypeExtract  BetaBatchNewResponseJobType = "extract"
+	BetaBatchNewResponseJobTypeParse    BetaBatchNewResponseJobType = "parse"
 )
 
 // Current job status
 type BetaBatchNewResponseStatus string
 
 const (
+	BetaBatchNewResponseStatusCancelled  BetaBatchNewResponseStatus = "cancelled"
+	BetaBatchNewResponseStatusCompleted  BetaBatchNewResponseStatus = "completed"
+	BetaBatchNewResponseStatusDispatched BetaBatchNewResponseStatus = "dispatched"
+	BetaBatchNewResponseStatusFailed     BetaBatchNewResponseStatus = "failed"
 	BetaBatchNewResponseStatusPending    BetaBatchNewResponseStatus = "pending"
 	BetaBatchNewResponseStatusRunning    BetaBatchNewResponseStatus = "running"
-	BetaBatchNewResponseStatusDispatched BetaBatchNewResponseStatus = "dispatched"
-	BetaBatchNewResponseStatusCompleted  BetaBatchNewResponseStatus = "completed"
-	BetaBatchNewResponseStatusFailed     BetaBatchNewResponseStatus = "failed"
-	BetaBatchNewResponseStatusCancelled  BetaBatchNewResponseStatus = "cancelled"
 )
 
 // Response schema for a batch processing job.
@@ -217,13 +217,13 @@ type BetaBatchListResponse struct {
 	ID string `json:"id" api:"required"`
 	// Type of processing operation (parse or classify)
 	//
-	// Any of "parse", "extract", "classify".
+	// Any of "classify", "extract", "parse".
 	JobType BetaBatchListResponseJobType `json:"job_type" api:"required"`
 	// Project this job belongs to
 	ProjectID string `json:"project_id" api:"required"`
 	// Current job status
 	//
-	// Any of "pending", "running", "dispatched", "completed", "failed", "cancelled".
+	// Any of "cancelled", "completed", "dispatched", "failed", "pending", "running".
 	Status BetaBatchListResponseStatus `json:"status" api:"required"`
 	// Total number of items in the job
 	TotalItems int64 `json:"total_items" api:"required"`
@@ -284,21 +284,21 @@ func (r *BetaBatchListResponse) UnmarshalJSON(data []byte) error {
 type BetaBatchListResponseJobType string
 
 const (
-	BetaBatchListResponseJobTypeParse    BetaBatchListResponseJobType = "parse"
-	BetaBatchListResponseJobTypeExtract  BetaBatchListResponseJobType = "extract"
 	BetaBatchListResponseJobTypeClassify BetaBatchListResponseJobType = "classify"
+	BetaBatchListResponseJobTypeExtract  BetaBatchListResponseJobType = "extract"
+	BetaBatchListResponseJobTypeParse    BetaBatchListResponseJobType = "parse"
 )
 
 // Current job status
 type BetaBatchListResponseStatus string
 
 const (
+	BetaBatchListResponseStatusCancelled  BetaBatchListResponseStatus = "cancelled"
+	BetaBatchListResponseStatusCompleted  BetaBatchListResponseStatus = "completed"
+	BetaBatchListResponseStatusDispatched BetaBatchListResponseStatus = "dispatched"
+	BetaBatchListResponseStatusFailed     BetaBatchListResponseStatus = "failed"
 	BetaBatchListResponseStatusPending    BetaBatchListResponseStatus = "pending"
 	BetaBatchListResponseStatusRunning    BetaBatchListResponseStatus = "running"
-	BetaBatchListResponseStatusDispatched BetaBatchListResponseStatus = "dispatched"
-	BetaBatchListResponseStatusCompleted  BetaBatchListResponseStatus = "completed"
-	BetaBatchListResponseStatusFailed     BetaBatchListResponseStatus = "failed"
-	BetaBatchListResponseStatusCancelled  BetaBatchListResponseStatus = "cancelled"
 )
 
 // Response after cancelling a batch job.
@@ -311,7 +311,7 @@ type BetaBatchCancelResponse struct {
 	ProcessedItems int64 `json:"processed_items" api:"required"`
 	// New status (should be 'cancelled')
 	//
-	// Any of "pending", "running", "dispatched", "completed", "failed", "cancelled".
+	// Any of "cancelled", "completed", "dispatched", "failed", "pending", "running".
 	Status BetaBatchCancelResponseStatus `json:"status" api:"required"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
@@ -334,12 +334,12 @@ func (r *BetaBatchCancelResponse) UnmarshalJSON(data []byte) error {
 type BetaBatchCancelResponseStatus string
 
 const (
+	BetaBatchCancelResponseStatusCancelled  BetaBatchCancelResponseStatus = "cancelled"
+	BetaBatchCancelResponseStatusCompleted  BetaBatchCancelResponseStatus = "completed"
+	BetaBatchCancelResponseStatusDispatched BetaBatchCancelResponseStatus = "dispatched"
+	BetaBatchCancelResponseStatusFailed     BetaBatchCancelResponseStatus = "failed"
 	BetaBatchCancelResponseStatusPending    BetaBatchCancelResponseStatus = "pending"
 	BetaBatchCancelResponseStatusRunning    BetaBatchCancelResponseStatus = "running"
-	BetaBatchCancelResponseStatusDispatched BetaBatchCancelResponseStatus = "dispatched"
-	BetaBatchCancelResponseStatusCompleted  BetaBatchCancelResponseStatus = "completed"
-	BetaBatchCancelResponseStatusFailed     BetaBatchCancelResponseStatus = "failed"
-	BetaBatchCancelResponseStatusCancelled  BetaBatchCancelResponseStatus = "cancelled"
 )
 
 // Detailed status response for a batch processing job.
@@ -369,13 +369,13 @@ type BetaBatchGetStatusResponseJob struct {
 	ID string `json:"id" api:"required"`
 	// Type of processing operation (parse or classify)
 	//
-	// Any of "parse", "extract", "classify".
+	// Any of "classify", "extract", "parse".
 	JobType string `json:"job_type" api:"required"`
 	// Project this job belongs to
 	ProjectID string `json:"project_id" api:"required"`
 	// Current job status
 	//
-	// Any of "pending", "running", "dispatched", "completed", "failed", "cancelled".
+	// Any of "cancelled", "completed", "dispatched", "failed", "pending", "running".
 	Status string `json:"status" api:"required"`
 	// Total number of items in the job
 	TotalItems int64 `json:"total_items" api:"required"`
@@ -677,12 +677,12 @@ type BetaBatchNewParamsJobConfigBatchParseJobRecordCreateParameters struct {
 	Lang param.Opt[string] `json:"lang,omitzero"`
 	// The custom metadata to attach to the documents.
 	CustomMetadata map[string]any `json:"custom_metadata,omitzero"`
-	// Any of "screenshot", "embedded", "layout".
+	// Any of "embedded", "layout", "screenshot".
 	ImagesToSave []string `json:"images_to_save,omitzero"`
 	// The priority for the request. This field may be ignored or overwritten depending
 	// on the organization tier.
 	//
-	// Any of "low", "medium", "high", "critical".
+	// Any of "critical", "high", "low", "medium".
 	Priority string `json:"priority,omitzero"`
 	// The resource info about the file
 	ResourceInfo map[string]any `json:"resource_info,omitzero"`
@@ -691,14 +691,14 @@ type BetaBatchNewParamsJobConfigBatchParseJobRecordCreateParameters struct {
 	Languages             []ParsingLanguages                                                                   `json:"languages,omitzero"`
 	// Enum for representing the mode of parsing to be used.
 	//
-	// Any of "parse_page_without_llm", "parse_page_with_llm", "parse_page_with_lvm",
-	// "parse_page_with_agent", "parse_page_with_layout_agent",
-	// "parse_document_with_llm", "parse_document_with_lvm",
-	// "parse_document_with_agent".
+	// Any of "parse_document_with_agent", "parse_document_with_llm",
+	// "parse_document_with_lvm", "parse_page_with_agent",
+	// "parse_page_with_layout_agent", "parse_page_with_llm", "parse_page_with_lvm",
+	// "parse_page_without_llm".
 	ParseMode ParsingMode `json:"parse_mode,omitzero"`
 	// Enum for representing the different available page error handling modes.
 	//
-	// Any of "raw_text", "blank_page", "error_message".
+	// Any of "blank_page", "error_message", "raw_text".
 	ReplaceFailedPageMode FailPageMode `json:"replace_failed_page_mode,omitzero"`
 	// Any of "parse".
 	Type string `json:"type,omitzero"`
@@ -715,7 +715,7 @@ func (r *BetaBatchNewParamsJobConfigBatchParseJobRecordCreateParameters) Unmarsh
 
 func init() {
 	apijson.RegisterFieldValidator[BetaBatchNewParamsJobConfigBatchParseJobRecordCreateParameters](
-		"priority", "low", "medium", "high", "critical",
+		"priority", "critical", "high", "low", "medium",
 	)
 	apijson.RegisterFieldValidator[BetaBatchNewParamsJobConfigBatchParseJobRecordCreateParameters](
 		"type", "parse",
@@ -731,14 +731,14 @@ type BetaBatchNewParamsJobConfigBatchParseJobRecordCreateParametersWebhookConfig
 	// Events to subscribe to (e.g. 'parse.success', 'extract.error'). If null, all
 	// events are delivered.
 	//
-	// Any of "extract.pending", "extract.success", "extract.error",
-	// "extract.partial_success", "extract.cancelled", "parse.pending",
-	// "parse.running", "parse.success", "parse.error", "parse.partial_success",
-	// "parse.cancelled", "classify.pending", "classify.running", "classify.success",
-	// "classify.error", "classify.partial_success", "classify.cancelled",
-	// "sheets.pending", "sheets.success", "sheets.error", "sheets.partial_success",
-	// "sheets.cancelled", "split.pending", "split.processing", "split.success",
-	// "split.error", "split.cancelled", "unmapped_event".
+	// Any of "classify.cancelled", "classify.error", "classify.partial_success",
+	// "classify.pending", "classify.running", "classify.success", "extract.cancelled",
+	// "extract.error", "extract.partial_success", "extract.pending",
+	// "extract.success", "parse.cancelled", "parse.error", "parse.partial_success",
+	// "parse.pending", "parse.running", "parse.success", "sheets.cancelled",
+	// "sheets.error", "sheets.partial_success", "sheets.pending", "sheets.success",
+	// "split.cancelled", "split.error", "split.pending", "split.processing",
+	// "split.success", "unmapped_event".
 	WebhookEvents []string `json:"webhook_events,omitzero"`
 	// Custom HTTP headers sent with each webhook request (e.g. auth tokens)
 	WebhookHeaders map[string]string `json:"webhook_headers,omitzero"`
@@ -764,11 +764,11 @@ type BetaBatchListParams struct {
 	Offset param.Opt[int64] `query:"offset,omitzero" json:"-"`
 	// Filter by job type (PARSE, EXTRACT, CLASSIFY)
 	//
-	// Any of "parse", "extract", "classify".
+	// Any of "classify", "extract", "parse".
 	JobType BetaBatchListParamsJobType `query:"job_type,omitzero" json:"-"`
 	// Filter by job status (PENDING, RUNNING, COMPLETED, FAILED, CANCELLED)
 	//
-	// Any of "pending", "running", "dispatched", "completed", "failed", "cancelled".
+	// Any of "cancelled", "completed", "dispatched", "failed", "pending", "running".
 	Status BetaBatchListParamsStatus `query:"status,omitzero" json:"-"`
 	paramObj
 }
@@ -785,21 +785,21 @@ func (r BetaBatchListParams) URLQuery() (v url.Values, err error) {
 type BetaBatchListParamsJobType string
 
 const (
-	BetaBatchListParamsJobTypeParse    BetaBatchListParamsJobType = "parse"
-	BetaBatchListParamsJobTypeExtract  BetaBatchListParamsJobType = "extract"
 	BetaBatchListParamsJobTypeClassify BetaBatchListParamsJobType = "classify"
+	BetaBatchListParamsJobTypeExtract  BetaBatchListParamsJobType = "extract"
+	BetaBatchListParamsJobTypeParse    BetaBatchListParamsJobType = "parse"
 )
 
 // Filter by job status (PENDING, RUNNING, COMPLETED, FAILED, CANCELLED)
 type BetaBatchListParamsStatus string
 
 const (
+	BetaBatchListParamsStatusCancelled  BetaBatchListParamsStatus = "cancelled"
+	BetaBatchListParamsStatusCompleted  BetaBatchListParamsStatus = "completed"
+	BetaBatchListParamsStatusDispatched BetaBatchListParamsStatus = "dispatched"
+	BetaBatchListParamsStatusFailed     BetaBatchListParamsStatus = "failed"
 	BetaBatchListParamsStatusPending    BetaBatchListParamsStatus = "pending"
 	BetaBatchListParamsStatusRunning    BetaBatchListParamsStatus = "running"
-	BetaBatchListParamsStatusDispatched BetaBatchListParamsStatus = "dispatched"
-	BetaBatchListParamsStatusCompleted  BetaBatchListParamsStatus = "completed"
-	BetaBatchListParamsStatusFailed     BetaBatchListParamsStatus = "failed"
-	BetaBatchListParamsStatusCancelled  BetaBatchListParamsStatus = "cancelled"
 )
 
 type BetaBatchCancelParams struct {

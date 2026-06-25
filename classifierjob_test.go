@@ -36,7 +36,7 @@ func TestClassifierJobNewWithOptionalParams(t *testing.T) {
 		ProjectID:      llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		Mode:           llamacloudprod.ClassifierJobNewParamsModeFast,
 		ParsingConfiguration: llamacloudprod.ClassifyParsingConfigurationParam{
-			Lang:        llamacloudprod.ParsingLanguagesAf,
+			Lang:        llamacloudprod.ParsingLanguagesAbq,
 			MaxPages:    llamacloudprod.Int(0),
 			TargetPages: []int64{0},
 		},

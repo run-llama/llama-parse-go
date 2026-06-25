@@ -34,7 +34,7 @@ func TestBetaBatchJobItemListWithOptionalParams(t *testing.T) {
 			Offset:         llamacloudprod.Int(0),
 			OrganizationID: llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 			ProjectID:      llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-			Status:         llamacloudprod.BetaBatchJobItemListParamsStatusPending,
+			Status:         llamacloudprod.BetaBatchJobItemListParamsStatusCancelled,
 		},
 	)
 	if err != nil {
@@ -63,7 +63,7 @@ func TestBetaBatchJobItemGetProcessingResultsWithOptionalParams(t *testing.T) {
 		context.TODO(),
 		"item_id",
 		llamacloudprod.BetaBatchJobItemGetProcessingResultsParams{
-			JobType:        llamacloudprod.BetaBatchJobItemGetProcessingResultsParamsJobTypeParse,
+			JobType:        llamacloudprod.BetaBatchJobItemGetProcessingResultsParamsJobTypeClassify,
 			OrganizationID: llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 			ProjectID:      llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		},

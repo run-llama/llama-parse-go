@@ -171,7 +171,7 @@ type ExtractConfiguration struct {
 	TargetPages string `json:"target_pages" api:"nullable"`
 	// Extract tier: cost_effective (5 credits/page) or agentic (15 credits/page)
 	//
-	// Any of "cost_effective", "agentic".
+	// Any of "agentic", "cost_effective".
 	Tier ExtractConfigurationTier `json:"tier"`
 	// Use 'latest' for the latest release for the selected tier or a date string
 	// (YYYY-MM-DD format) to pin to the nearest release at or before that date. Job
@@ -286,8 +286,8 @@ const (
 type ExtractConfigurationTier string
 
 const (
-	ExtractConfigurationTierCostEffective ExtractConfigurationTier = "cost_effective"
 	ExtractConfigurationTierAgentic       ExtractConfigurationTier = "agentic"
+	ExtractConfigurationTierCostEffective ExtractConfigurationTier = "cost_effective"
 )
 
 // Extract configuration combining parse and extract settings.
@@ -326,7 +326,7 @@ type ExtractConfigurationParam struct {
 	ExtractionTarget ExtractConfigurationExtractionTarget `json:"extraction_target,omitzero"`
 	// Extract tier: cost_effective (5 credits/page) or agentic (15 credits/page)
 	//
-	// Any of "cost_effective", "agentic".
+	// Any of "agentic", "cost_effective".
 	Tier ExtractConfigurationTier `json:"tier,omitzero"`
 	paramObj
 }
@@ -687,14 +687,14 @@ type ExtractV2JobCreateWebhookConfigurationParam struct {
 	// Events to subscribe to (e.g. 'parse.success', 'extract.error'). If null, all
 	// events are delivered.
 	//
-	// Any of "extract.pending", "extract.success", "extract.error",
-	// "extract.partial_success", "extract.cancelled", "parse.pending",
-	// "parse.running", "parse.success", "parse.error", "parse.partial_success",
-	// "parse.cancelled", "classify.pending", "classify.running", "classify.success",
-	// "classify.error", "classify.partial_success", "classify.cancelled",
-	// "sheets.pending", "sheets.success", "sheets.error", "sheets.partial_success",
-	// "sheets.cancelled", "split.pending", "split.processing", "split.success",
-	// "split.error", "split.cancelled", "unmapped_event".
+	// Any of "classify.cancelled", "classify.error", "classify.partial_success",
+	// "classify.pending", "classify.running", "classify.success", "extract.cancelled",
+	// "extract.error", "extract.partial_success", "extract.pending",
+	// "extract.success", "parse.cancelled", "parse.error", "parse.partial_success",
+	// "parse.pending", "parse.running", "parse.success", "sheets.cancelled",
+	// "sheets.error", "sheets.partial_success", "sheets.pending", "sheets.success",
+	// "split.cancelled", "split.error", "split.pending", "split.processing",
+	// "split.success", "unmapped_event".
 	WebhookEvents []string `json:"webhook_events,omitzero"`
 	// Custom HTTP headers sent with each webhook request (e.g. auth tokens)
 	WebhookHeaders map[string]string `json:"webhook_headers,omitzero"`
@@ -1159,7 +1159,7 @@ type ExtractListParams struct {
 	JobIDs []string `query:"job_ids,omitzero" json:"-"`
 	// Filter by status
 	//
-	// Any of "PENDING", "THROTTLED", "RUNNING", "COMPLETED", "FAILED", "CANCELLED".
+	// Any of "CANCELLED", "COMPLETED", "FAILED", "PENDING", "RUNNING", "THROTTLED".
 	Status ExtractListParamsStatus `query:"status,omitzero" json:"-"`
 	// Additional fields to include: configuration, extract_metadata
 	Expand []string `query:"expand,omitzero" json:"-"`
@@ -1178,12 +1178,12 @@ func (r ExtractListParams) URLQuery() (v url.Values, err error) {
 type ExtractListParamsStatus string
 
 const (
-	ExtractListParamsStatusPending   ExtractListParamsStatus = "PENDING"
-	ExtractListParamsStatusThrottled ExtractListParamsStatus = "THROTTLED"
-	ExtractListParamsStatusRunning   ExtractListParamsStatus = "RUNNING"
+	ExtractListParamsStatusCancelled ExtractListParamsStatus = "CANCELLED"
 	ExtractListParamsStatusCompleted ExtractListParamsStatus = "COMPLETED"
 	ExtractListParamsStatusFailed    ExtractListParamsStatus = "FAILED"
-	ExtractListParamsStatusCancelled ExtractListParamsStatus = "CANCELLED"
+	ExtractListParamsStatusPending   ExtractListParamsStatus = "PENDING"
+	ExtractListParamsStatusRunning   ExtractListParamsStatus = "RUNNING"
+	ExtractListParamsStatusThrottled ExtractListParamsStatus = "THROTTLED"
 )
 
 type ExtractDeleteParams struct {

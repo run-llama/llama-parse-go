@@ -68,11 +68,11 @@ type CloudBoxDataSource = shared.CloudBoxDataSource
 // This is an alias to an internal type.
 type CloudBoxDataSourceAuthenticationMechanism = shared.CloudBoxDataSourceAuthenticationMechanism
 
-// Equals "developer_token"
-const CloudBoxDataSourceAuthenticationMechanismDeveloperToken = shared.CloudBoxDataSourceAuthenticationMechanismDeveloperToken
-
 // Equals "ccg"
 const CloudBoxDataSourceAuthenticationMechanismCcg = shared.CloudBoxDataSourceAuthenticationMechanismCcg
+
+// Equals "developer_token"
+const CloudBoxDataSourceAuthenticationMechanismDeveloperToken = shared.CloudBoxDataSourceAuthenticationMechanismDeveloperToken
 
 // This is an alias to an internal type.
 type CloudBoxDataSourceParam = shared.CloudBoxDataSourceParam
@@ -267,40 +267,40 @@ type PgVectorHnswSettings = shared.PgVectorHnswSettings
 // This is an alias to an internal type.
 type PgVectorHnswSettingsDistanceMethod = shared.PgVectorHnswSettingsDistanceMethod
 
-// Equals "l2"
-const PgVectorHnswSettingsDistanceMethodL2 = shared.PgVectorHnswSettingsDistanceMethodL2
-
-// Equals "ip"
-const PgVectorHnswSettingsDistanceMethodIP = shared.PgVectorHnswSettingsDistanceMethodIP
-
 // Equals "cosine"
 const PgVectorHnswSettingsDistanceMethodCosine = shared.PgVectorHnswSettingsDistanceMethodCosine
-
-// Equals "l1"
-const PgVectorHnswSettingsDistanceMethodL1 = shared.PgVectorHnswSettingsDistanceMethodL1
 
 // Equals "hamming"
 const PgVectorHnswSettingsDistanceMethodHamming = shared.PgVectorHnswSettingsDistanceMethodHamming
 
+// Equals "ip"
+const PgVectorHnswSettingsDistanceMethodIP = shared.PgVectorHnswSettingsDistanceMethodIP
+
 // Equals "jaccard"
 const PgVectorHnswSettingsDistanceMethodJaccard = shared.PgVectorHnswSettingsDistanceMethodJaccard
+
+// Equals "l1"
+const PgVectorHnswSettingsDistanceMethodL1 = shared.PgVectorHnswSettingsDistanceMethodL1
+
+// Equals "l2"
+const PgVectorHnswSettingsDistanceMethodL2 = shared.PgVectorHnswSettingsDistanceMethodL2
 
 // The type of vector to use.
 //
 // This is an alias to an internal type.
 type PgVectorHnswSettingsVectorType = shared.PgVectorHnswSettingsVectorType
 
-// Equals "vector"
-const PgVectorHnswSettingsVectorTypeVector = shared.PgVectorHnswSettingsVectorTypeVector
+// Equals "bit"
+const PgVectorHnswSettingsVectorTypeBit = shared.PgVectorHnswSettingsVectorTypeBit
 
 // Equals "half_vec"
 const PgVectorHnswSettingsVectorTypeHalfVec = shared.PgVectorHnswSettingsVectorTypeHalfVec
 
-// Equals "bit"
-const PgVectorHnswSettingsVectorTypeBit = shared.PgVectorHnswSettingsVectorTypeBit
-
 // Equals "sparse_vec"
 const PgVectorHnswSettingsVectorTypeSparseVec = shared.PgVectorHnswSettingsVectorTypeSparseVec
+
+// Equals "vector"
+const PgVectorHnswSettingsVectorTypeVector = shared.PgVectorHnswSettingsVectorTypeVector
 
 // HNSW settings for PGVector.
 //

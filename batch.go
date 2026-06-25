@@ -108,7 +108,7 @@ type BatchNewResponse struct {
 	SourceDirectoryID string `json:"source_directory_id" api:"required"`
 	// Current batch status.
 	//
-	// Any of "PENDING", "THROTTLED", "RUNNING", "COMPLETED", "FAILED", "CANCELLED".
+	// Any of "CANCELLED", "COMPLETED", "FAILED", "PENDING", "RUNNING", "THROTTLED".
 	Status BatchNewResponseStatus `json:"status" api:"required"`
 	// Creation datetime
 	CreatedAt time.Time `json:"created_at" api:"nullable" format:"date-time"`
@@ -191,12 +191,12 @@ const (
 type BatchNewResponseStatus string
 
 const (
-	BatchNewResponseStatusPending   BatchNewResponseStatus = "PENDING"
-	BatchNewResponseStatusThrottled BatchNewResponseStatus = "THROTTLED"
-	BatchNewResponseStatusRunning   BatchNewResponseStatus = "RUNNING"
+	BatchNewResponseStatusCancelled BatchNewResponseStatus = "CANCELLED"
 	BatchNewResponseStatusCompleted BatchNewResponseStatus = "COMPLETED"
 	BatchNewResponseStatusFailed    BatchNewResponseStatus = "FAILED"
-	BatchNewResponseStatusCancelled BatchNewResponseStatus = "CANCELLED"
+	BatchNewResponseStatusPending   BatchNewResponseStatus = "PENDING"
+	BatchNewResponseStatusRunning   BatchNewResponseStatus = "RUNNING"
+	BatchNewResponseStatusThrottled BatchNewResponseStatus = "THROTTLED"
 )
 
 // Result projection for one source directory file in a batch.
@@ -297,7 +297,7 @@ type BatchListResponse struct {
 	SourceDirectoryID string `json:"source_directory_id" api:"required"`
 	// Current batch status.
 	//
-	// Any of "PENDING", "THROTTLED", "RUNNING", "COMPLETED", "FAILED", "CANCELLED".
+	// Any of "CANCELLED", "COMPLETED", "FAILED", "PENDING", "RUNNING", "THROTTLED".
 	Status BatchListResponseStatus `json:"status" api:"required"`
 	// Creation datetime
 	CreatedAt time.Time `json:"created_at" api:"nullable" format:"date-time"`
@@ -380,12 +380,12 @@ const (
 type BatchListResponseStatus string
 
 const (
-	BatchListResponseStatusPending   BatchListResponseStatus = "PENDING"
-	BatchListResponseStatusThrottled BatchListResponseStatus = "THROTTLED"
-	BatchListResponseStatusRunning   BatchListResponseStatus = "RUNNING"
+	BatchListResponseStatusCancelled BatchListResponseStatus = "CANCELLED"
 	BatchListResponseStatusCompleted BatchListResponseStatus = "COMPLETED"
 	BatchListResponseStatusFailed    BatchListResponseStatus = "FAILED"
-	BatchListResponseStatusCancelled BatchListResponseStatus = "CANCELLED"
+	BatchListResponseStatusPending   BatchListResponseStatus = "PENDING"
+	BatchListResponseStatusRunning   BatchListResponseStatus = "RUNNING"
+	BatchListResponseStatusThrottled BatchListResponseStatus = "THROTTLED"
 )
 
 // Result projection for one source directory file in a batch.
@@ -486,7 +486,7 @@ type BatchGetResponse struct {
 	SourceDirectoryID string `json:"source_directory_id" api:"required"`
 	// Current batch status.
 	//
-	// Any of "PENDING", "THROTTLED", "RUNNING", "COMPLETED", "FAILED", "CANCELLED".
+	// Any of "CANCELLED", "COMPLETED", "FAILED", "PENDING", "RUNNING", "THROTTLED".
 	Status BatchGetResponseStatus `json:"status" api:"required"`
 	// Creation datetime
 	CreatedAt time.Time `json:"created_at" api:"nullable" format:"date-time"`
@@ -569,12 +569,12 @@ const (
 type BatchGetResponseStatus string
 
 const (
-	BatchGetResponseStatusPending   BatchGetResponseStatus = "PENDING"
-	BatchGetResponseStatusThrottled BatchGetResponseStatus = "THROTTLED"
-	BatchGetResponseStatusRunning   BatchGetResponseStatus = "RUNNING"
+	BatchGetResponseStatusCancelled BatchGetResponseStatus = "CANCELLED"
 	BatchGetResponseStatusCompleted BatchGetResponseStatus = "COMPLETED"
 	BatchGetResponseStatusFailed    BatchGetResponseStatus = "FAILED"
-	BatchGetResponseStatusCancelled BatchGetResponseStatus = "CANCELLED"
+	BatchGetResponseStatusPending   BatchGetResponseStatus = "PENDING"
+	BatchGetResponseStatusRunning   BatchGetResponseStatus = "RUNNING"
+	BatchGetResponseStatusThrottled BatchGetResponseStatus = "THROTTLED"
 )
 
 // Result projection for one source directory file in a batch.
@@ -729,7 +729,7 @@ type BatchListParams struct {
 	PageToken           param.Opt[string]    `query:"page_token,omitzero" json:"-"`
 	ProjectID           param.Opt[string]    `query:"project_id,omitzero" format:"uuid" json:"-"`
 	SourceDirectoryID   param.Opt[string]    `query:"source_directory_id,omitzero" json:"-"`
-	// Any of "PENDING", "THROTTLED", "RUNNING", "COMPLETED", "FAILED", "CANCELLED".
+	// Any of "CANCELLED", "COMPLETED", "FAILED", "PENDING", "RUNNING", "THROTTLED".
 	Status BatchListParamsStatus `query:"status,omitzero" json:"-"`
 	paramObj
 }
@@ -745,12 +745,12 @@ func (r BatchListParams) URLQuery() (v url.Values, err error) {
 type BatchListParamsStatus string
 
 const (
-	BatchListParamsStatusPending   BatchListParamsStatus = "PENDING"
-	BatchListParamsStatusThrottled BatchListParamsStatus = "THROTTLED"
-	BatchListParamsStatusRunning   BatchListParamsStatus = "RUNNING"
+	BatchListParamsStatusCancelled BatchListParamsStatus = "CANCELLED"
 	BatchListParamsStatusCompleted BatchListParamsStatus = "COMPLETED"
 	BatchListParamsStatusFailed    BatchListParamsStatus = "FAILED"
-	BatchListParamsStatusCancelled BatchListParamsStatus = "CANCELLED"
+	BatchListParamsStatusPending   BatchListParamsStatus = "PENDING"
+	BatchListParamsStatusRunning   BatchListParamsStatus = "RUNNING"
+	BatchListParamsStatusThrottled BatchListParamsStatus = "THROTTLED"
 )
 
 type BatchGetParams struct {

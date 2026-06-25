@@ -103,9 +103,9 @@ type DataSource struct {
 	// The name of the data source.
 	Name      string `json:"name" api:"required"`
 	ProjectID string `json:"project_id" api:"required" format:"uuid"`
-	// Any of "S3", "AZURE_STORAGE_BLOB", "GOOGLE_DRIVE", "MICROSOFT_ONEDRIVE",
-	// "MICROSOFT_SHAREPOINT", "SLACK", "NOTION_PAGE", "CONFLUENCE", "JIRA", "JIRA_V2",
-	// "BOX".
+	// Any of "AZURE_STORAGE_BLOB", "BOX", "CONFLUENCE", "GOOGLE_DRIVE", "JIRA",
+	// "JIRA_V2", "MICROSOFT_ONEDRIVE", "MICROSOFT_SHAREPOINT", "NOTION_PAGE", "S3",
+	// "SLACK".
 	SourceType DataSourceSourceType `json:"source_type" api:"required"`
 	// Creation datetime
 	CreatedAt time.Time `json:"created_at" api:"nullable" format:"date-time"`
@@ -385,17 +385,17 @@ func (r *DataSourceComponentUnion) UnmarshalJSON(data []byte) error {
 type DataSourceSourceType string
 
 const (
-	DataSourceSourceTypeS3                  DataSourceSourceType = "S3"
 	DataSourceSourceTypeAzureStorageBlob    DataSourceSourceType = "AZURE_STORAGE_BLOB"
-	DataSourceSourceTypeGoogleDrive         DataSourceSourceType = "GOOGLE_DRIVE"
-	DataSourceSourceTypeMicrosoftOnedrive   DataSourceSourceType = "MICROSOFT_ONEDRIVE"
-	DataSourceSourceTypeMicrosoftSharepoint DataSourceSourceType = "MICROSOFT_SHAREPOINT"
-	DataSourceSourceTypeSlack               DataSourceSourceType = "SLACK"
-	DataSourceSourceTypeNotionPage          DataSourceSourceType = "NOTION_PAGE"
+	DataSourceSourceTypeBox                 DataSourceSourceType = "BOX"
 	DataSourceSourceTypeConfluence          DataSourceSourceType = "CONFLUENCE"
+	DataSourceSourceTypeGoogleDrive         DataSourceSourceType = "GOOGLE_DRIVE"
 	DataSourceSourceTypeJira                DataSourceSourceType = "JIRA"
 	DataSourceSourceTypeJiraV2              DataSourceSourceType = "JIRA_V2"
-	DataSourceSourceTypeBox                 DataSourceSourceType = "BOX"
+	DataSourceSourceTypeMicrosoftOnedrive   DataSourceSourceType = "MICROSOFT_ONEDRIVE"
+	DataSourceSourceTypeMicrosoftSharepoint DataSourceSourceType = "MICROSOFT_SHAREPOINT"
+	DataSourceSourceTypeNotionPage          DataSourceSourceType = "NOTION_PAGE"
+	DataSourceSourceTypeS3                  DataSourceSourceType = "S3"
+	DataSourceSourceTypeSlack               DataSourceSourceType = "SLACK"
 )
 
 // DataSourceCustomMetadataUnion contains all possible properties and values from
@@ -492,9 +492,9 @@ type DataSourceNewParams struct {
 	Component DataSourceNewParamsComponentUnion `json:"component,omitzero" api:"required"`
 	// The name of the data source.
 	Name string `json:"name" api:"required"`
-	// Any of "S3", "AZURE_STORAGE_BLOB", "GOOGLE_DRIVE", "MICROSOFT_ONEDRIVE",
-	// "MICROSOFT_SHAREPOINT", "SLACK", "NOTION_PAGE", "CONFLUENCE", "JIRA", "JIRA_V2",
-	// "BOX".
+	// Any of "AZURE_STORAGE_BLOB", "BOX", "CONFLUENCE", "GOOGLE_DRIVE", "JIRA",
+	// "JIRA_V2", "MICROSOFT_ONEDRIVE", "MICROSOFT_SHAREPOINT", "NOTION_PAGE", "S3",
+	// "SLACK".
 	SourceType     DataSourceNewParamsSourceType `json:"source_type,omitzero" api:"required"`
 	OrganizationID param.Opt[string]             `query:"organization_id,omitzero" format:"uuid" json:"-"`
 	ProjectID      param.Opt[string]             `query:"project_id,omitzero" format:"uuid" json:"-"`
@@ -559,17 +559,17 @@ func (u *DataSourceNewParamsComponentUnion) UnmarshalJSON(data []byte) error {
 type DataSourceNewParamsSourceType string
 
 const (
-	DataSourceNewParamsSourceTypeS3                  DataSourceNewParamsSourceType = "S3"
 	DataSourceNewParamsSourceTypeAzureStorageBlob    DataSourceNewParamsSourceType = "AZURE_STORAGE_BLOB"
-	DataSourceNewParamsSourceTypeGoogleDrive         DataSourceNewParamsSourceType = "GOOGLE_DRIVE"
-	DataSourceNewParamsSourceTypeMicrosoftOnedrive   DataSourceNewParamsSourceType = "MICROSOFT_ONEDRIVE"
-	DataSourceNewParamsSourceTypeMicrosoftSharepoint DataSourceNewParamsSourceType = "MICROSOFT_SHAREPOINT"
-	DataSourceNewParamsSourceTypeSlack               DataSourceNewParamsSourceType = "SLACK"
-	DataSourceNewParamsSourceTypeNotionPage          DataSourceNewParamsSourceType = "NOTION_PAGE"
+	DataSourceNewParamsSourceTypeBox                 DataSourceNewParamsSourceType = "BOX"
 	DataSourceNewParamsSourceTypeConfluence          DataSourceNewParamsSourceType = "CONFLUENCE"
+	DataSourceNewParamsSourceTypeGoogleDrive         DataSourceNewParamsSourceType = "GOOGLE_DRIVE"
 	DataSourceNewParamsSourceTypeJira                DataSourceNewParamsSourceType = "JIRA"
 	DataSourceNewParamsSourceTypeJiraV2              DataSourceNewParamsSourceType = "JIRA_V2"
-	DataSourceNewParamsSourceTypeBox                 DataSourceNewParamsSourceType = "BOX"
+	DataSourceNewParamsSourceTypeMicrosoftOnedrive   DataSourceNewParamsSourceType = "MICROSOFT_ONEDRIVE"
+	DataSourceNewParamsSourceTypeMicrosoftSharepoint DataSourceNewParamsSourceType = "MICROSOFT_SHAREPOINT"
+	DataSourceNewParamsSourceTypeNotionPage          DataSourceNewParamsSourceType = "NOTION_PAGE"
+	DataSourceNewParamsSourceTypeS3                  DataSourceNewParamsSourceType = "S3"
+	DataSourceNewParamsSourceTypeSlack               DataSourceNewParamsSourceType = "SLACK"
 )
 
 // Only one field can be non-zero.
@@ -596,9 +596,9 @@ func (u *DataSourceNewParamsCustomMetadataUnion) UnmarshalJSON(data []byte) erro
 }
 
 type DataSourceUpdateParams struct {
-	// Any of "S3", "AZURE_STORAGE_BLOB", "GOOGLE_DRIVE", "MICROSOFT_ONEDRIVE",
-	// "MICROSOFT_SHAREPOINT", "SLACK", "NOTION_PAGE", "CONFLUENCE", "JIRA", "JIRA_V2",
-	// "BOX".
+	// Any of "AZURE_STORAGE_BLOB", "BOX", "CONFLUENCE", "GOOGLE_DRIVE", "JIRA",
+	// "JIRA_V2", "MICROSOFT_ONEDRIVE", "MICROSOFT_SHAREPOINT", "NOTION_PAGE", "S3",
+	// "SLACK".
 	SourceType DataSourceUpdateParamsSourceType `json:"source_type,omitzero" api:"required"`
 	// The name of the data source.
 	Name param.Opt[string] `json:"name,omitzero"`
@@ -620,17 +620,17 @@ func (r *DataSourceUpdateParams) UnmarshalJSON(data []byte) error {
 type DataSourceUpdateParamsSourceType string
 
 const (
-	DataSourceUpdateParamsSourceTypeS3                  DataSourceUpdateParamsSourceType = "S3"
 	DataSourceUpdateParamsSourceTypeAzureStorageBlob    DataSourceUpdateParamsSourceType = "AZURE_STORAGE_BLOB"
-	DataSourceUpdateParamsSourceTypeGoogleDrive         DataSourceUpdateParamsSourceType = "GOOGLE_DRIVE"
-	DataSourceUpdateParamsSourceTypeMicrosoftOnedrive   DataSourceUpdateParamsSourceType = "MICROSOFT_ONEDRIVE"
-	DataSourceUpdateParamsSourceTypeMicrosoftSharepoint DataSourceUpdateParamsSourceType = "MICROSOFT_SHAREPOINT"
-	DataSourceUpdateParamsSourceTypeSlack               DataSourceUpdateParamsSourceType = "SLACK"
-	DataSourceUpdateParamsSourceTypeNotionPage          DataSourceUpdateParamsSourceType = "NOTION_PAGE"
+	DataSourceUpdateParamsSourceTypeBox                 DataSourceUpdateParamsSourceType = "BOX"
 	DataSourceUpdateParamsSourceTypeConfluence          DataSourceUpdateParamsSourceType = "CONFLUENCE"
+	DataSourceUpdateParamsSourceTypeGoogleDrive         DataSourceUpdateParamsSourceType = "GOOGLE_DRIVE"
 	DataSourceUpdateParamsSourceTypeJira                DataSourceUpdateParamsSourceType = "JIRA"
 	DataSourceUpdateParamsSourceTypeJiraV2              DataSourceUpdateParamsSourceType = "JIRA_V2"
-	DataSourceUpdateParamsSourceTypeBox                 DataSourceUpdateParamsSourceType = "BOX"
+	DataSourceUpdateParamsSourceTypeMicrosoftOnedrive   DataSourceUpdateParamsSourceType = "MICROSOFT_ONEDRIVE"
+	DataSourceUpdateParamsSourceTypeMicrosoftSharepoint DataSourceUpdateParamsSourceType = "MICROSOFT_SHAREPOINT"
+	DataSourceUpdateParamsSourceTypeNotionPage          DataSourceUpdateParamsSourceType = "NOTION_PAGE"
+	DataSourceUpdateParamsSourceTypeS3                  DataSourceUpdateParamsSourceType = "S3"
+	DataSourceUpdateParamsSourceTypeSlack               DataSourceUpdateParamsSourceType = "SLACK"
 )
 
 // Only one field can be non-zero.

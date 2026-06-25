@@ -197,9 +197,9 @@ const (
 type FailPageMode string
 
 const (
-	FailPageModeRawText      FailPageMode = "raw_text"
 	FailPageModeBlankPage    FailPageMode = "blank_page"
 	FailPageModeErrorMessage FailPageMode = "error_message"
+	FailPageModeRawText      FailPageMode = "raw_text"
 )
 
 type FooterItem struct {
@@ -230,8 +230,8 @@ func (r *FooterItem) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-// FooterItemItemUnion contains all possible properties and values from [TextItem],
-// [HeadingItem], [ListItem], [CodeItem], [TableItem], [ImageItem], [LinkItem].
+// FooterItemItemUnion contains all possible properties and values from [CodeItem],
+// [HeadingItem], [ImageItem], [LinkItem], [ListItem], [TableItem], [TextItem].
 //
 // Use the [FooterItemItemUnion.AsAny] method to switch on the variant.
 //
@@ -240,16 +240,21 @@ type FooterItemItemUnion struct {
 	Md    string `json:"md"`
 	Value string `json:"value"`
 	Bbox  []BBox `json:"bbox"`
-	// Any of "text", "heading", "list", "code", "table", "image", "link".
+	// This field is from variant [CodeItem].
+	Language string `json:"language"`
+	// Any of "code", "heading", "image", "link", "list", "table", "text".
 	Type string `json:"type"`
 	// This field is from variant [HeadingItem].
 	Level int64 `json:"level"`
+	// This field is from variant [ImageItem].
+	Caption string `json:"caption"`
+	URL     string `json:"url"`
+	// This field is from variant [LinkItem].
+	Text string `json:"text"`
 	// This field is from variant [ListItem].
 	Items []ListItemItemUnion `json:"items"`
 	// This field is from variant [ListItem].
 	Ordered bool `json:"ordered"`
-	// This field is from variant [CodeItem].
-	Language string `json:"language"`
 	// This field is from variant [TableItem].
 	Csv string `json:"csv"`
 	// This field is from variant [TableItem].
@@ -262,29 +267,24 @@ type FooterItemItemUnion struct {
 	MergedIntoPage int64 `json:"merged_into_page"`
 	// This field is from variant [TableItem].
 	ParseConcerns []TableItemParseConcern `json:"parse_concerns"`
-	// This field is from variant [ImageItem].
-	Caption string `json:"caption"`
-	URL     string `json:"url"`
-	// This field is from variant [LinkItem].
-	Text string `json:"text"`
-	JSON struct {
+	JSON          struct {
 		Md              respjson.Field
 		Value           respjson.Field
 		Bbox            respjson.Field
+		Language        respjson.Field
 		Type            respjson.Field
 		Level           respjson.Field
+		Caption         respjson.Field
+		URL             respjson.Field
+		Text            respjson.Field
 		Items           respjson.Field
 		Ordered         respjson.Field
-		Language        respjson.Field
 		Csv             respjson.Field
 		HTML            respjson.Field
 		Rows            respjson.Field
 		MergedFromPages respjson.Field
 		MergedIntoPage  respjson.Field
 		ParseConcerns   respjson.Field
-		Caption         respjson.Field
-		URL             respjson.Field
-		Text            respjson.Field
 		raw             string
 	} `json:"-"`
 }
@@ -295,60 +295,45 @@ type anyFooterItemItem interface {
 	implFooterItemItemUnion()
 }
 
-func (TextItem) implFooterItemItemUnion()    {}
-func (HeadingItem) implFooterItemItemUnion() {}
-func (ListItem) implFooterItemItemUnion()    {}
 func (CodeItem) implFooterItemItemUnion()    {}
-func (TableItem) implFooterItemItemUnion()   {}
+func (HeadingItem) implFooterItemItemUnion() {}
 func (ImageItem) implFooterItemItemUnion()   {}
 func (LinkItem) implFooterItemItemUnion()    {}
+func (ListItem) implFooterItemItemUnion()    {}
+func (TableItem) implFooterItemItemUnion()   {}
+func (TextItem) implFooterItemItemUnion()    {}
 
 // Use the following switch statement to find the correct variant
 //
 //	switch variant := FooterItemItemUnion.AsAny().(type) {
-//	case llamacloudprod.TextItem:
-//	case llamacloudprod.HeadingItem:
-//	case llamacloudprod.ListItem:
 //	case llamacloudprod.CodeItem:
-//	case llamacloudprod.TableItem:
+//	case llamacloudprod.HeadingItem:
 //	case llamacloudprod.ImageItem:
 //	case llamacloudprod.LinkItem:
+//	case llamacloudprod.ListItem:
+//	case llamacloudprod.TableItem:
+//	case llamacloudprod.TextItem:
 //	default:
 //	  fmt.Errorf("no variant present")
 //	}
 func (u FooterItemItemUnion) AsAny() anyFooterItemItem {
 	switch u.Type {
-	case "text":
-		return u.AsText()
-	case "heading":
-		return u.AsHeading()
-	case "list":
-		return u.AsList()
 	case "code":
 		return u.AsCode()
-	case "table":
-		return u.AsTable()
+	case "heading":
+		return u.AsHeading()
 	case "image":
 		return u.AsImage()
 	case "link":
 		return u.AsLink()
+	case "list":
+		return u.AsList()
+	case "table":
+		return u.AsTable()
+	case "text":
+		return u.AsText()
 	}
 	return nil
-}
-
-func (u FooterItemItemUnion) AsText() (v TextItem) {
-	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
-	return
-}
-
-func (u FooterItemItemUnion) AsHeading() (v HeadingItem) {
-	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
-	return
-}
-
-func (u FooterItemItemUnion) AsList() (v ListItem) {
-	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
-	return
 }
 
 func (u FooterItemItemUnion) AsCode() (v CodeItem) {
@@ -356,7 +341,7 @@ func (u FooterItemItemUnion) AsCode() (v CodeItem) {
 	return
 }
 
-func (u FooterItemItemUnion) AsTable() (v TableItem) {
+func (u FooterItemItemUnion) AsHeading() (v HeadingItem) {
 	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
 	return
 }
@@ -367,6 +352,21 @@ func (u FooterItemItemUnion) AsImage() (v ImageItem) {
 }
 
 func (u FooterItemItemUnion) AsLink() (v LinkItem) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u FooterItemItemUnion) AsList() (v ListItem) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u FooterItemItemUnion) AsTable() (v TableItem) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u FooterItemItemUnion) AsText() (v TextItem) {
 	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
 	return
 }
@@ -413,8 +413,8 @@ func (r *HeaderItem) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-// HeaderItemItemUnion contains all possible properties and values from [TextItem],
-// [HeadingItem], [ListItem], [CodeItem], [TableItem], [ImageItem], [LinkItem].
+// HeaderItemItemUnion contains all possible properties and values from [CodeItem],
+// [HeadingItem], [ImageItem], [LinkItem], [ListItem], [TableItem], [TextItem].
 //
 // Use the [HeaderItemItemUnion.AsAny] method to switch on the variant.
 //
@@ -423,16 +423,21 @@ type HeaderItemItemUnion struct {
 	Md    string `json:"md"`
 	Value string `json:"value"`
 	Bbox  []BBox `json:"bbox"`
-	// Any of "text", "heading", "list", "code", "table", "image", "link".
+	// This field is from variant [CodeItem].
+	Language string `json:"language"`
+	// Any of "code", "heading", "image", "link", "list", "table", "text".
 	Type string `json:"type"`
 	// This field is from variant [HeadingItem].
 	Level int64 `json:"level"`
+	// This field is from variant [ImageItem].
+	Caption string `json:"caption"`
+	URL     string `json:"url"`
+	// This field is from variant [LinkItem].
+	Text string `json:"text"`
 	// This field is from variant [ListItem].
 	Items []ListItemItemUnion `json:"items"`
 	// This field is from variant [ListItem].
 	Ordered bool `json:"ordered"`
-	// This field is from variant [CodeItem].
-	Language string `json:"language"`
 	// This field is from variant [TableItem].
 	Csv string `json:"csv"`
 	// This field is from variant [TableItem].
@@ -445,29 +450,24 @@ type HeaderItemItemUnion struct {
 	MergedIntoPage int64 `json:"merged_into_page"`
 	// This field is from variant [TableItem].
 	ParseConcerns []TableItemParseConcern `json:"parse_concerns"`
-	// This field is from variant [ImageItem].
-	Caption string `json:"caption"`
-	URL     string `json:"url"`
-	// This field is from variant [LinkItem].
-	Text string `json:"text"`
-	JSON struct {
+	JSON          struct {
 		Md              respjson.Field
 		Value           respjson.Field
 		Bbox            respjson.Field
+		Language        respjson.Field
 		Type            respjson.Field
 		Level           respjson.Field
+		Caption         respjson.Field
+		URL             respjson.Field
+		Text            respjson.Field
 		Items           respjson.Field
 		Ordered         respjson.Field
-		Language        respjson.Field
 		Csv             respjson.Field
 		HTML            respjson.Field
 		Rows            respjson.Field
 		MergedFromPages respjson.Field
 		MergedIntoPage  respjson.Field
 		ParseConcerns   respjson.Field
-		Caption         respjson.Field
-		URL             respjson.Field
-		Text            respjson.Field
 		raw             string
 	} `json:"-"`
 }
@@ -478,60 +478,45 @@ type anyHeaderItemItem interface {
 	implHeaderItemItemUnion()
 }
 
-func (TextItem) implHeaderItemItemUnion()    {}
-func (HeadingItem) implHeaderItemItemUnion() {}
-func (ListItem) implHeaderItemItemUnion()    {}
 func (CodeItem) implHeaderItemItemUnion()    {}
-func (TableItem) implHeaderItemItemUnion()   {}
+func (HeadingItem) implHeaderItemItemUnion() {}
 func (ImageItem) implHeaderItemItemUnion()   {}
 func (LinkItem) implHeaderItemItemUnion()    {}
+func (ListItem) implHeaderItemItemUnion()    {}
+func (TableItem) implHeaderItemItemUnion()   {}
+func (TextItem) implHeaderItemItemUnion()    {}
 
 // Use the following switch statement to find the correct variant
 //
 //	switch variant := HeaderItemItemUnion.AsAny().(type) {
-//	case llamacloudprod.TextItem:
-//	case llamacloudprod.HeadingItem:
-//	case llamacloudprod.ListItem:
 //	case llamacloudprod.CodeItem:
-//	case llamacloudprod.TableItem:
+//	case llamacloudprod.HeadingItem:
 //	case llamacloudprod.ImageItem:
 //	case llamacloudprod.LinkItem:
+//	case llamacloudprod.ListItem:
+//	case llamacloudprod.TableItem:
+//	case llamacloudprod.TextItem:
 //	default:
 //	  fmt.Errorf("no variant present")
 //	}
 func (u HeaderItemItemUnion) AsAny() anyHeaderItemItem {
 	switch u.Type {
-	case "text":
-		return u.AsText()
-	case "heading":
-		return u.AsHeading()
-	case "list":
-		return u.AsList()
 	case "code":
 		return u.AsCode()
-	case "table":
-		return u.AsTable()
+	case "heading":
+		return u.AsHeading()
 	case "image":
 		return u.AsImage()
 	case "link":
 		return u.AsLink()
+	case "list":
+		return u.AsList()
+	case "table":
+		return u.AsTable()
+	case "text":
+		return u.AsText()
 	}
 	return nil
-}
-
-func (u HeaderItemItemUnion) AsText() (v TextItem) {
-	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
-	return
-}
-
-func (u HeaderItemItemUnion) AsHeading() (v HeadingItem) {
-	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
-	return
-}
-
-func (u HeaderItemItemUnion) AsList() (v ListItem) {
-	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
-	return
 }
 
 func (u HeaderItemItemUnion) AsCode() (v CodeItem) {
@@ -539,7 +524,7 @@ func (u HeaderItemItemUnion) AsCode() (v CodeItem) {
 	return
 }
 
-func (u HeaderItemItemUnion) AsTable() (v TableItem) {
+func (u HeaderItemItemUnion) AsHeading() (v HeadingItem) {
 	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
 	return
 }
@@ -550,6 +535,21 @@ func (u HeaderItemItemUnion) AsImage() (v ImageItem) {
 }
 
 func (u HeaderItemItemUnion) AsLink() (v LinkItem) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u HeaderItemItemUnion) AsList() (v ListItem) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u HeaderItemItemUnion) AsTable() (v TableItem) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u HeaderItemItemUnion) AsText() (v TextItem) {
 	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
 	return
 }
@@ -766,30 +766,63 @@ const (
 type ParsingLanguages string
 
 const (
+	ParsingLanguagesAbq        ParsingLanguages = "abq"
+	ParsingLanguagesAdy        ParsingLanguages = "ady"
 	ParsingLanguagesAf         ParsingLanguages = "af"
+	ParsingLanguagesAng        ParsingLanguages = "ang"
+	ParsingLanguagesAr         ParsingLanguages = "ar"
+	ParsingLanguagesAs         ParsingLanguages = "as"
+	ParsingLanguagesAva        ParsingLanguages = "ava"
 	ParsingLanguagesAz         ParsingLanguages = "az"
+	ParsingLanguagesBe         ParsingLanguages = "be"
+	ParsingLanguagesBg         ParsingLanguages = "bg"
+	ParsingLanguagesBgc        ParsingLanguages = "bgc"
+	ParsingLanguagesBh         ParsingLanguages = "bh"
+	ParsingLanguagesBho        ParsingLanguages = "bho"
+	ParsingLanguagesBn         ParsingLanguages = "bn"
 	ParsingLanguagesBs         ParsingLanguages = "bs"
+	ParsingLanguagesChSim      ParsingLanguages = "ch_sim"
+	ParsingLanguagesChTra      ParsingLanguages = "ch_tra"
+	ParsingLanguagesChe        ParsingLanguages = "che"
 	ParsingLanguagesCs         ParsingLanguages = "cs"
 	ParsingLanguagesCy         ParsingLanguages = "cy"
 	ParsingLanguagesDa         ParsingLanguages = "da"
+	ParsingLanguagesDar        ParsingLanguages = "dar"
 	ParsingLanguagesDe         ParsingLanguages = "de"
 	ParsingLanguagesEn         ParsingLanguages = "en"
 	ParsingLanguagesEs         ParsingLanguages = "es"
 	ParsingLanguagesEt         ParsingLanguages = "et"
+	ParsingLanguagesFa         ParsingLanguages = "fa"
 	ParsingLanguagesFr         ParsingLanguages = "fr"
 	ParsingLanguagesGa         ParsingLanguages = "ga"
+	ParsingLanguagesGom        ParsingLanguages = "gom"
+	ParsingLanguagesHi         ParsingLanguages = "hi"
 	ParsingLanguagesHr         ParsingLanguages = "hr"
 	ParsingLanguagesHu         ParsingLanguages = "hu"
 	ParsingLanguagesID         ParsingLanguages = "id"
+	ParsingLanguagesInh        ParsingLanguages = "inh"
 	ParsingLanguagesIs         ParsingLanguages = "is"
 	ParsingLanguagesIt         ParsingLanguages = "it"
+	ParsingLanguagesJa         ParsingLanguages = "ja"
+	ParsingLanguagesKbd        ParsingLanguages = "kbd"
+	ParsingLanguagesKn         ParsingLanguages = "kn"
+	ParsingLanguagesKo         ParsingLanguages = "ko"
 	ParsingLanguagesKu         ParsingLanguages = "ku"
 	ParsingLanguagesLa         ParsingLanguages = "la"
+	ParsingLanguagesLbe        ParsingLanguages = "lbe"
+	ParsingLanguagesLez        ParsingLanguages = "lez"
 	ParsingLanguagesLt         ParsingLanguages = "lt"
 	ParsingLanguagesLv         ParsingLanguages = "lv"
+	ParsingLanguagesMah        ParsingLanguages = "mah"
+	ParsingLanguagesMai        ParsingLanguages = "mai"
 	ParsingLanguagesMi         ParsingLanguages = "mi"
+	ParsingLanguagesMn         ParsingLanguages = "mn"
+	ParsingLanguagesMni        ParsingLanguages = "mni"
+	ParsingLanguagesMr         ParsingLanguages = "mr"
 	ParsingLanguagesMs         ParsingLanguages = "ms"
 	ParsingLanguagesMt         ParsingLanguages = "mt"
+	ParsingLanguagesNe         ParsingLanguages = "ne"
+	ParsingLanguagesNew        ParsingLanguages = "new"
 	ParsingLanguagesNl         ParsingLanguages = "nl"
 	ParsingLanguagesNo         ParsingLanguages = "no"
 	ParsingLanguagesOc         ParsingLanguages = "oc"
@@ -797,86 +830,53 @@ const (
 	ParsingLanguagesPl         ParsingLanguages = "pl"
 	ParsingLanguagesPt         ParsingLanguages = "pt"
 	ParsingLanguagesRo         ParsingLanguages = "ro"
+	ParsingLanguagesRsCyrillic ParsingLanguages = "rs_cyrillic"
 	ParsingLanguagesRsLatin    ParsingLanguages = "rs_latin"
+	ParsingLanguagesRu         ParsingLanguages = "ru"
+	ParsingLanguagesSa         ParsingLanguages = "sa"
+	ParsingLanguagesSck        ParsingLanguages = "sck"
 	ParsingLanguagesSk         ParsingLanguages = "sk"
 	ParsingLanguagesSl         ParsingLanguages = "sl"
 	ParsingLanguagesSq         ParsingLanguages = "sq"
 	ParsingLanguagesSv         ParsingLanguages = "sv"
 	ParsingLanguagesSw         ParsingLanguages = "sw"
+	ParsingLanguagesTa         ParsingLanguages = "ta"
+	ParsingLanguagesTab        ParsingLanguages = "tab"
+	ParsingLanguagesTe         ParsingLanguages = "te"
+	ParsingLanguagesTh         ParsingLanguages = "th"
+	ParsingLanguagesTjk        ParsingLanguages = "tjk"
 	ParsingLanguagesTl         ParsingLanguages = "tl"
 	ParsingLanguagesTr         ParsingLanguages = "tr"
+	ParsingLanguagesUg         ParsingLanguages = "ug"
+	ParsingLanguagesUk         ParsingLanguages = "uk"
+	ParsingLanguagesUr         ParsingLanguages = "ur"
 	ParsingLanguagesUz         ParsingLanguages = "uz"
 	ParsingLanguagesVi         ParsingLanguages = "vi"
-	ParsingLanguagesAr         ParsingLanguages = "ar"
-	ParsingLanguagesFa         ParsingLanguages = "fa"
-	ParsingLanguagesUg         ParsingLanguages = "ug"
-	ParsingLanguagesUr         ParsingLanguages = "ur"
-	ParsingLanguagesBn         ParsingLanguages = "bn"
-	ParsingLanguagesAs         ParsingLanguages = "as"
-	ParsingLanguagesMni        ParsingLanguages = "mni"
-	ParsingLanguagesRu         ParsingLanguages = "ru"
-	ParsingLanguagesRsCyrillic ParsingLanguages = "rs_cyrillic"
-	ParsingLanguagesBe         ParsingLanguages = "be"
-	ParsingLanguagesBg         ParsingLanguages = "bg"
-	ParsingLanguagesUk         ParsingLanguages = "uk"
-	ParsingLanguagesMn         ParsingLanguages = "mn"
-	ParsingLanguagesAbq        ParsingLanguages = "abq"
-	ParsingLanguagesAdy        ParsingLanguages = "ady"
-	ParsingLanguagesKbd        ParsingLanguages = "kbd"
-	ParsingLanguagesAva        ParsingLanguages = "ava"
-	ParsingLanguagesDar        ParsingLanguages = "dar"
-	ParsingLanguagesInh        ParsingLanguages = "inh"
-	ParsingLanguagesChe        ParsingLanguages = "che"
-	ParsingLanguagesLbe        ParsingLanguages = "lbe"
-	ParsingLanguagesLez        ParsingLanguages = "lez"
-	ParsingLanguagesTab        ParsingLanguages = "tab"
-	ParsingLanguagesTjk        ParsingLanguages = "tjk"
-	ParsingLanguagesHi         ParsingLanguages = "hi"
-	ParsingLanguagesMr         ParsingLanguages = "mr"
-	ParsingLanguagesNe         ParsingLanguages = "ne"
-	ParsingLanguagesBh         ParsingLanguages = "bh"
-	ParsingLanguagesMai        ParsingLanguages = "mai"
-	ParsingLanguagesAng        ParsingLanguages = "ang"
-	ParsingLanguagesBho        ParsingLanguages = "bho"
-	ParsingLanguagesMah        ParsingLanguages = "mah"
-	ParsingLanguagesSck        ParsingLanguages = "sck"
-	ParsingLanguagesNew        ParsingLanguages = "new"
-	ParsingLanguagesGom        ParsingLanguages = "gom"
-	ParsingLanguagesSa         ParsingLanguages = "sa"
-	ParsingLanguagesBgc        ParsingLanguages = "bgc"
-	ParsingLanguagesTh         ParsingLanguages = "th"
-	ParsingLanguagesChSim      ParsingLanguages = "ch_sim"
-	ParsingLanguagesChTra      ParsingLanguages = "ch_tra"
-	ParsingLanguagesJa         ParsingLanguages = "ja"
-	ParsingLanguagesKo         ParsingLanguages = "ko"
-	ParsingLanguagesTa         ParsingLanguages = "ta"
-	ParsingLanguagesTe         ParsingLanguages = "te"
-	ParsingLanguagesKn         ParsingLanguages = "kn"
 )
 
 // Enum for representing the mode of parsing to be used.
 type ParsingMode string
 
 const (
-	ParsingModeParsePageWithoutLlm      ParsingMode = "parse_page_without_llm"
-	ParsingModeParsePageWithLlm         ParsingMode = "parse_page_with_llm"
-	ParsingModeParsePageWithLvm         ParsingMode = "parse_page_with_lvm"
-	ParsingModeParsePageWithAgent       ParsingMode = "parse_page_with_agent"
-	ParsingModeParsePageWithLayoutAgent ParsingMode = "parse_page_with_layout_agent"
+	ParsingModeParseDocumentWithAgent   ParsingMode = "parse_document_with_agent"
 	ParsingModeParseDocumentWithLlm     ParsingMode = "parse_document_with_llm"
 	ParsingModeParseDocumentWithLvm     ParsingMode = "parse_document_with_lvm"
-	ParsingModeParseDocumentWithAgent   ParsingMode = "parse_document_with_agent"
+	ParsingModeParsePageWithAgent       ParsingMode = "parse_page_with_agent"
+	ParsingModeParsePageWithLayoutAgent ParsingMode = "parse_page_with_layout_agent"
+	ParsingModeParsePageWithLlm         ParsingMode = "parse_page_with_llm"
+	ParsingModeParsePageWithLvm         ParsingMode = "parse_page_with_lvm"
+	ParsingModeParsePageWithoutLlm      ParsingMode = "parse_page_without_llm"
 )
 
 // Enum for representing the status of a job
 type StatusEnum string
 
 const (
-	StatusEnumPending        StatusEnum = "PENDING"
-	StatusEnumSuccess        StatusEnum = "SUCCESS"
+	StatusEnumCancelled      StatusEnum = "CANCELLED"
 	StatusEnumError          StatusEnum = "ERROR"
 	StatusEnumPartialSuccess StatusEnum = "PARTIAL_SUCCESS"
-	StatusEnumCancelled      StatusEnum = "CANCELLED"
+	StatusEnumPending        StatusEnum = "PENDING"
+	StatusEnumSuccess        StatusEnum = "SUCCESS"
 )
 
 type TableItem struct {
@@ -1032,7 +1032,7 @@ type ParsingNewResponse struct {
 	ProjectID string `json:"project_id" api:"required"`
 	// Current job status: PENDING, RUNNING, COMPLETED, FAILED, or CANCELLED
 	//
-	// Any of "PENDING", "RUNNING", "COMPLETED", "FAILED", "CANCELLED".
+	// Any of "CANCELLED", "COMPLETED", "FAILED", "PENDING", "RUNNING".
 	Status ParsingNewResponseStatus `json:"status" api:"required"`
 	// Creation datetime
 	CreatedAt time.Time `json:"created_at" api:"nullable" format:"date-time"`
@@ -1069,11 +1069,11 @@ func (r *ParsingNewResponse) UnmarshalJSON(data []byte) error {
 type ParsingNewResponseStatus string
 
 const (
-	ParsingNewResponseStatusPending   ParsingNewResponseStatus = "PENDING"
-	ParsingNewResponseStatusRunning   ParsingNewResponseStatus = "RUNNING"
+	ParsingNewResponseStatusCancelled ParsingNewResponseStatus = "CANCELLED"
 	ParsingNewResponseStatusCompleted ParsingNewResponseStatus = "COMPLETED"
 	ParsingNewResponseStatusFailed    ParsingNewResponseStatus = "FAILED"
-	ParsingNewResponseStatusCancelled ParsingNewResponseStatus = "CANCELLED"
+	ParsingNewResponseStatusPending   ParsingNewResponseStatus = "PENDING"
+	ParsingNewResponseStatusRunning   ParsingNewResponseStatus = "RUNNING"
 )
 
 // A parse job.
@@ -1084,7 +1084,7 @@ type ParsingListResponse struct {
 	ProjectID string `json:"project_id" api:"required"`
 	// Current job status: PENDING, RUNNING, COMPLETED, FAILED, or CANCELLED
 	//
-	// Any of "PENDING", "RUNNING", "COMPLETED", "FAILED", "CANCELLED".
+	// Any of "CANCELLED", "COMPLETED", "FAILED", "PENDING", "RUNNING".
 	Status ParsingListResponseStatus `json:"status" api:"required"`
 	// Creation datetime
 	CreatedAt time.Time `json:"created_at" api:"nullable" format:"date-time"`
@@ -1121,11 +1121,11 @@ func (r *ParsingListResponse) UnmarshalJSON(data []byte) error {
 type ParsingListResponseStatus string
 
 const (
-	ParsingListResponseStatusPending   ParsingListResponseStatus = "PENDING"
-	ParsingListResponseStatusRunning   ParsingListResponseStatus = "RUNNING"
+	ParsingListResponseStatusCancelled ParsingListResponseStatus = "CANCELLED"
 	ParsingListResponseStatusCompleted ParsingListResponseStatus = "COMPLETED"
 	ParsingListResponseStatusFailed    ParsingListResponseStatus = "FAILED"
-	ParsingListResponseStatusCancelled ParsingListResponseStatus = "CANCELLED"
+	ParsingListResponseStatusPending   ParsingListResponseStatus = "PENDING"
+	ParsingListResponseStatusRunning   ParsingListResponseStatus = "RUNNING"
 )
 
 // Parse result response with job status and optional content or metadata.
@@ -1186,7 +1186,7 @@ type ParsingGetResponseJob struct {
 	ProjectID string `json:"project_id" api:"required"`
 	// Current job status: PENDING, RUNNING, COMPLETED, FAILED, or CANCELLED
 	//
-	// Any of "PENDING", "RUNNING", "COMPLETED", "FAILED", "CANCELLED".
+	// Any of "CANCELLED", "COMPLETED", "FAILED", "PENDING", "RUNNING".
 	Status string `json:"status" api:"required"`
 	// Creation datetime
 	CreatedAt time.Time `json:"created_at" api:"nullable" format:"date-time"`
@@ -1251,7 +1251,7 @@ type ParsingGetResponseImagesContentMetadataImage struct {
 	// Image category: 'screenshot' (full page), 'embedded' (images in document), or
 	// 'layout' (cropped from layout detection)
 	//
-	// Any of "screenshot", "embedded", "layout".
+	// Any of "embedded", "layout", "screenshot".
 	Category string `json:"category" api:"nullable"`
 	// MIME type of the image
 	ContentType string `json:"content_type" api:"nullable"`
@@ -1400,8 +1400,8 @@ func (r *ParsingGetResponseItemsPageStructuredResultPage) UnmarshalJSON(data []b
 }
 
 // ParsingGetResponseItemsPageStructuredResultPageItemUnion contains all possible
-// properties and values from [TextItem], [HeadingItem], [ListItem], [CodeItem],
-// [TableItem], [ImageItem], [LinkItem], [HeaderItem], [FooterItem].
+// properties and values from [CodeItem], [FooterItem], [HeaderItem],
+// [HeadingItem], [ImageItem], [LinkItem], [ListItem], [TableItem], [TextItem].
 //
 // Use the [ParsingGetResponseItemsPageStructuredResultPageItemUnion.AsAny] method
 // to switch on the variant.
@@ -1411,18 +1411,23 @@ type ParsingGetResponseItemsPageStructuredResultPageItemUnion struct {
 	Md    string `json:"md"`
 	Value string `json:"value"`
 	Bbox  []BBox `json:"bbox"`
-	// Any of "text", "heading", "list", "code", "table", "image", "link", "header",
-	// "footer".
-	Type string `json:"type"`
-	// This field is from variant [HeadingItem].
-	Level int64 `json:"level"`
-	// This field is a union of [[]ListItemItemUnion], [[]HeaderItemItemUnion],
-	// [[]FooterItemItemUnion]
-	Items ParsingGetResponseItemsPageStructuredResultPageItemUnionItems `json:"items"`
-	// This field is from variant [ListItem].
-	Ordered bool `json:"ordered"`
 	// This field is from variant [CodeItem].
 	Language string `json:"language"`
+	// Any of "code", "footer", "header", "heading", "image", "link", "list", "table",
+	// "text".
+	Type string `json:"type"`
+	// This field is a union of [[]FooterItemItemUnion], [[]HeaderItemItemUnion],
+	// [[]ListItemItemUnion]
+	Items ParsingGetResponseItemsPageStructuredResultPageItemUnionItems `json:"items"`
+	// This field is from variant [HeadingItem].
+	Level int64 `json:"level"`
+	// This field is from variant [ImageItem].
+	Caption string `json:"caption"`
+	URL     string `json:"url"`
+	// This field is from variant [LinkItem].
+	Text string `json:"text"`
+	// This field is from variant [ListItem].
+	Ordered bool `json:"ordered"`
 	// This field is from variant [TableItem].
 	Csv string `json:"csv"`
 	// This field is from variant [TableItem].
@@ -1435,29 +1440,24 @@ type ParsingGetResponseItemsPageStructuredResultPageItemUnion struct {
 	MergedIntoPage int64 `json:"merged_into_page"`
 	// This field is from variant [TableItem].
 	ParseConcerns []TableItemParseConcern `json:"parse_concerns"`
-	// This field is from variant [ImageItem].
-	Caption string `json:"caption"`
-	URL     string `json:"url"`
-	// This field is from variant [LinkItem].
-	Text string `json:"text"`
-	JSON struct {
+	JSON          struct {
 		Md              respjson.Field
 		Value           respjson.Field
 		Bbox            respjson.Field
-		Type            respjson.Field
-		Level           respjson.Field
-		Items           respjson.Field
-		Ordered         respjson.Field
 		Language        respjson.Field
+		Type            respjson.Field
+		Items           respjson.Field
+		Level           respjson.Field
+		Caption         respjson.Field
+		URL             respjson.Field
+		Text            respjson.Field
+		Ordered         respjson.Field
 		Csv             respjson.Field
 		HTML            respjson.Field
 		Rows            respjson.Field
 		MergedFromPages respjson.Field
 		MergedIntoPage  respjson.Field
 		ParseConcerns   respjson.Field
-		Caption         respjson.Field
-		URL             respjson.Field
-		Text            respjson.Field
 		raw             string
 	} `json:"-"`
 }
@@ -1470,68 +1470,53 @@ type anyParsingGetResponseItemsPageStructuredResultPageItem interface {
 	implParsingGetResponseItemsPageStructuredResultPageItemUnion()
 }
 
-func (TextItem) implParsingGetResponseItemsPageStructuredResultPageItemUnion()    {}
-func (HeadingItem) implParsingGetResponseItemsPageStructuredResultPageItemUnion() {}
-func (ListItem) implParsingGetResponseItemsPageStructuredResultPageItemUnion()    {}
 func (CodeItem) implParsingGetResponseItemsPageStructuredResultPageItemUnion()    {}
-func (TableItem) implParsingGetResponseItemsPageStructuredResultPageItemUnion()   {}
+func (FooterItem) implParsingGetResponseItemsPageStructuredResultPageItemUnion()  {}
+func (HeaderItem) implParsingGetResponseItemsPageStructuredResultPageItemUnion()  {}
+func (HeadingItem) implParsingGetResponseItemsPageStructuredResultPageItemUnion() {}
 func (ImageItem) implParsingGetResponseItemsPageStructuredResultPageItemUnion()   {}
 func (LinkItem) implParsingGetResponseItemsPageStructuredResultPageItemUnion()    {}
-func (HeaderItem) implParsingGetResponseItemsPageStructuredResultPageItemUnion()  {}
-func (FooterItem) implParsingGetResponseItemsPageStructuredResultPageItemUnion()  {}
+func (ListItem) implParsingGetResponseItemsPageStructuredResultPageItemUnion()    {}
+func (TableItem) implParsingGetResponseItemsPageStructuredResultPageItemUnion()   {}
+func (TextItem) implParsingGetResponseItemsPageStructuredResultPageItemUnion()    {}
 
 // Use the following switch statement to find the correct variant
 //
 //	switch variant := ParsingGetResponseItemsPageStructuredResultPageItemUnion.AsAny().(type) {
-//	case llamacloudprod.TextItem:
-//	case llamacloudprod.HeadingItem:
-//	case llamacloudprod.ListItem:
 //	case llamacloudprod.CodeItem:
-//	case llamacloudprod.TableItem:
+//	case llamacloudprod.FooterItem:
+//	case llamacloudprod.HeaderItem:
+//	case llamacloudprod.HeadingItem:
 //	case llamacloudprod.ImageItem:
 //	case llamacloudprod.LinkItem:
-//	case llamacloudprod.HeaderItem:
-//	case llamacloudprod.FooterItem:
+//	case llamacloudprod.ListItem:
+//	case llamacloudprod.TableItem:
+//	case llamacloudprod.TextItem:
 //	default:
 //	  fmt.Errorf("no variant present")
 //	}
 func (u ParsingGetResponseItemsPageStructuredResultPageItemUnion) AsAny() anyParsingGetResponseItemsPageStructuredResultPageItem {
 	switch u.Type {
-	case "text":
-		return u.AsText()
-	case "heading":
-		return u.AsHeading()
-	case "list":
-		return u.AsList()
 	case "code":
 		return u.AsCode()
-	case "table":
-		return u.AsTable()
+	case "footer":
+		return u.AsFooter()
+	case "header":
+		return u.AsHeader()
+	case "heading":
+		return u.AsHeading()
 	case "image":
 		return u.AsImage()
 	case "link":
 		return u.AsLink()
-	case "header":
-		return u.AsHeader()
-	case "footer":
-		return u.AsFooter()
+	case "list":
+		return u.AsList()
+	case "table":
+		return u.AsTable()
+	case "text":
+		return u.AsText()
 	}
 	return nil
-}
-
-func (u ParsingGetResponseItemsPageStructuredResultPageItemUnion) AsText() (v TextItem) {
-	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
-	return
-}
-
-func (u ParsingGetResponseItemsPageStructuredResultPageItemUnion) AsHeading() (v HeadingItem) {
-	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
-	return
-}
-
-func (u ParsingGetResponseItemsPageStructuredResultPageItemUnion) AsList() (v ListItem) {
-	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
-	return
 }
 
 func (u ParsingGetResponseItemsPageStructuredResultPageItemUnion) AsCode() (v CodeItem) {
@@ -1539,7 +1524,17 @@ func (u ParsingGetResponseItemsPageStructuredResultPageItemUnion) AsCode() (v Co
 	return
 }
 
-func (u ParsingGetResponseItemsPageStructuredResultPageItemUnion) AsTable() (v TableItem) {
+func (u ParsingGetResponseItemsPageStructuredResultPageItemUnion) AsFooter() (v FooterItem) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u ParsingGetResponseItemsPageStructuredResultPageItemUnion) AsHeader() (v HeaderItem) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u ParsingGetResponseItemsPageStructuredResultPageItemUnion) AsHeading() (v HeadingItem) {
 	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
 	return
 }
@@ -1554,12 +1549,17 @@ func (u ParsingGetResponseItemsPageStructuredResultPageItemUnion) AsLink() (v Li
 	return
 }
 
-func (u ParsingGetResponseItemsPageStructuredResultPageItemUnion) AsHeader() (v HeaderItem) {
+func (u ParsingGetResponseItemsPageStructuredResultPageItemUnion) AsList() (v ListItem) {
 	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
 	return
 }
 
-func (u ParsingGetResponseItemsPageStructuredResultPageItemUnion) AsFooter() (v FooterItem) {
+func (u ParsingGetResponseItemsPageStructuredResultPageItemUnion) AsTable() (v TableItem) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u ParsingGetResponseItemsPageStructuredResultPageItemUnion) AsText() (v TextItem) {
 	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
 	return
 }
@@ -1582,9 +1582,9 @@ func (r *ParsingGetResponseItemsPageStructuredResultPageItemUnion) UnmarshalJSON
 // If the underlying value is not a json object, one of the following properties
 // will be valid: OfItems]
 type ParsingGetResponseItemsPageStructuredResultPageItemUnionItems struct {
-	// This field will be present if the value is a [[]ListItemItemUnion] instead of an
-	// object.
-	OfItems []ListItemItemUnion `json:",inline"`
+	// This field will be present if the value is a [[]FooterItemItemUnion] instead of
+	// an object.
+	OfItems []FooterItemItemUnion `json:",inline"`
 	JSON    struct {
 		OfItems respjson.Field
 		raw     string
@@ -1862,9 +1862,9 @@ type ParsingNewParams struct {
 	// Current `latest` by tier:
 	//
 	// - `fast`: `2025-12-11`
-	// - `cost_effective`: `2026-06-11`
-	// - `agentic`: `2026-06-11`
-	// - `agentic_plus`: `2026-06-11`
+	// - `cost_effective`: `2026-06-18`
+	// - `agentic`: `2026-06-18`
+	// - `agentic_plus`: `2026-06-18`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
 	Version        ParsingNewParamsVersion `json:"version,omitzero" api:"required"`
@@ -1952,16 +1952,16 @@ const (
 // Current `latest` by tier:
 //
 // - `fast`: `2025-12-11`
-// - `cost_effective`: `2026-06-11`
-// - `agentic`: `2026-06-11`
-// - `agentic_plus`: `2026-06-11`
+// - `cost_effective`: `2026-06-18`
+// - `agentic`: `2026-06-18`
+// - `agentic_plus`: `2026-06-18`
 //
 // Full list: `GET /api/v2/parse/versions`.
 type ParsingNewParamsVersion string
 
 const (
 	ParsingNewParamsVersionLatest     ParsingNewParamsVersion = "latest"
-	ParsingNewParamsVersion2026_06_11 ParsingNewParamsVersion = "2026-06-11"
+	ParsingNewParamsVersion2026_06_18 ParsingNewParamsVersion = "2026-06-18"
 	ParsingNewParamsVersion2025_12_11 ParsingNewParamsVersion = "2025-12-11"
 )
 
@@ -2153,7 +2153,7 @@ type ParsingNewParamsOutputOptions struct {
 	// (cropped regions from layout detection like figures and diagrams). Empty list
 	// saves no images
 	//
-	// Any of "screenshot", "embedded", "layout".
+	// Any of "embedded", "layout", "screenshot".
 	ImagesToSave []string `json:"images_to_save,omitzero"`
 	// Markdown formatting options including table styles and link annotations
 	Markdown ParsingNewParamsOutputOptionsMarkdown `json:"markdown,omitzero"`
@@ -2368,7 +2368,7 @@ type ParsingNewParamsProcessingOptions struct {
 	// 'agentic' (balanced), 'agentic_plus' (highest accuracy). Automatically enables
 	// extract_layout and precise_bounding_box when set
 	//
-	// Any of "agentic_plus", "agentic", "efficient".
+	// Any of "agentic", "agentic_plus", "efficient".
 	SpecializedChartParsing string `json:"specialized_chart_parsing,omitzero"`
 	// Options for ignoring specific text types (diagonal, hidden, text in images)
 	Ignore ParsingNewParamsProcessingOptionsIgnore `json:"ignore,omitzero"`
@@ -2387,7 +2387,7 @@ func (r *ParsingNewParamsProcessingOptions) UnmarshalJSON(data []byte) error {
 
 func init() {
 	apijson.RegisterFieldValidator[ParsingNewParamsProcessingOptions](
-		"specialized_chart_parsing", "agentic_plus", "agentic", "efficient",
+		"specialized_chart_parsing", "agentic", "agentic_plus", "efficient",
 	)
 }
 
@@ -2509,11 +2509,11 @@ type ParsingNewParamsProcessingOptionsAutoModeConfigurationParsingConf struct {
 	SpatialText ParsingNewParamsProcessingOptionsAutoModeConfigurationParsingConfSpatialText `json:"spatial_text,omitzero"`
 	// Enable specialized chart parsing with the specified mode
 	//
-	// Any of "agentic_plus", "agentic", "efficient".
+	// Any of "agentic", "agentic_plus", "efficient".
 	SpecializedChartParsing string `json:"specialized_chart_parsing,omitzero"`
 	// Override the parsing tier for matched pages. Must be paired with version
 	//
-	// Any of "fast", "cost_effective", "agentic", "agentic_plus".
+	// Any of "agentic", "agentic_plus", "cost_effective", "fast".
 	Tier string `json:"tier,omitzero"`
 	// Version for the override tier. Required when `tier` is set. Use `latest`, or pin
 	// one of that tier's dated versions.
@@ -2521,9 +2521,9 @@ type ParsingNewParamsProcessingOptionsAutoModeConfigurationParsingConf struct {
 	// Current `latest` by tier:
 	//
 	// - `fast`: `2025-12-11`
-	// - `cost_effective`: `2026-06-11`
-	// - `agentic`: `2026-06-11`
-	// - `agentic_plus`: `2026-06-11`
+	// - `cost_effective`: `2026-06-18`
+	// - `agentic`: `2026-06-18`
+	// - `agentic_plus`: `2026-06-18`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
 	Version string `json:"version,omitzero"`
@@ -2540,10 +2540,10 @@ func (r *ParsingNewParamsProcessingOptionsAutoModeConfigurationParsingConf) Unma
 
 func init() {
 	apijson.RegisterFieldValidator[ParsingNewParamsProcessingOptionsAutoModeConfigurationParsingConf](
-		"specialized_chart_parsing", "agentic_plus", "agentic", "efficient",
+		"specialized_chart_parsing", "agentic", "agentic_plus", "efficient",
 	)
 	apijson.RegisterFieldValidator[ParsingNewParamsProcessingOptionsAutoModeConfigurationParsingConf](
-		"tier", "fast", "cost_effective", "agentic", "agentic_plus",
+		"tier", "agentic", "agentic_plus", "cost_effective", "fast",
 	)
 }
 
@@ -3051,7 +3051,7 @@ type ParsingNewParamsWebhookConfiguration struct {
 	// Format of the webhook payload body. 'string' (default) sends the payload as a
 	// JSON-encoded string; 'json' sends it as a JSON object.
 	//
-	// Any of "string", "json".
+	// Any of "json", "string".
 	WebhookOutputFormat string `json:"webhook_output_format,omitzero"`
 	paramObj
 }
@@ -3066,7 +3066,7 @@ func (r *ParsingNewParamsWebhookConfiguration) UnmarshalJSON(data []byte) error 
 
 func init() {
 	apijson.RegisterFieldValidator[ParsingNewParamsWebhookConfiguration](
-		"webhook_output_format", "string", "json",
+		"webhook_output_format", "json", "string",
 	)
 }
 
@@ -3085,7 +3085,7 @@ type ParsingListParams struct {
 	JobIDs []string `query:"job_ids,omitzero" json:"-"`
 	// Filter by job status (PENDING, RUNNING, COMPLETED, FAILED, CANCELLED)
 	//
-	// Any of "PENDING", "RUNNING", "COMPLETED", "FAILED", "CANCELLED".
+	// Any of "CANCELLED", "COMPLETED", "FAILED", "PENDING", "RUNNING".
 	Status ParsingListParamsStatus `query:"status,omitzero" json:"-"`
 	paramObj
 }
@@ -3102,11 +3102,11 @@ func (r ParsingListParams) URLQuery() (v url.Values, err error) {
 type ParsingListParamsStatus string
 
 const (
-	ParsingListParamsStatusPending   ParsingListParamsStatus = "PENDING"
-	ParsingListParamsStatusRunning   ParsingListParamsStatus = "RUNNING"
+	ParsingListParamsStatusCancelled ParsingListParamsStatus = "CANCELLED"
 	ParsingListParamsStatusCompleted ParsingListParamsStatus = "COMPLETED"
 	ParsingListParamsStatusFailed    ParsingListParamsStatus = "FAILED"
-	ParsingListParamsStatusCancelled ParsingListParamsStatus = "CANCELLED"
+	ParsingListParamsStatusPending   ParsingListParamsStatus = "PENDING"
+	ParsingListParamsStatusRunning   ParsingListParamsStatus = "RUNNING"
 )
 
 type ParsingGetParams struct {

@@ -115,8 +115,8 @@ func (r *RetrieverService) Upsert(ctx context.Context, params RetrieverUpsertPar
 type CompositeRetrievalMode string
 
 const (
-	CompositeRetrievalModeRouting CompositeRetrievalMode = "routing"
 	CompositeRetrievalModeFull    CompositeRetrievalMode = "full"
+	CompositeRetrievalModeRouting CompositeRetrievalMode = "routing"
 )
 
 type CompositeRetrievalResult struct {
@@ -209,7 +209,7 @@ type ReRankConfigParam struct {
 	TopN param.Opt[int64] `json:"top_n,omitzero"`
 	// The type of reranker to use.
 	//
-	// Any of "system_default", "llm", "cohere", "bedrock", "score", "disabled".
+	// Any of "bedrock", "cohere", "disabled", "llm", "score", "system_default".
 	Type ReRankConfigType `json:"type,omitzero"`
 	paramObj
 }
@@ -226,12 +226,12 @@ func (r *ReRankConfigParam) UnmarshalJSON(data []byte) error {
 type ReRankConfigType string
 
 const (
-	ReRankConfigTypeSystemDefault ReRankConfigType = "system_default"
-	ReRankConfigTypeLlm           ReRankConfigType = "llm"
-	ReRankConfigTypeCohere        ReRankConfigType = "cohere"
 	ReRankConfigTypeBedrock       ReRankConfigType = "bedrock"
-	ReRankConfigTypeScore         ReRankConfigType = "score"
+	ReRankConfigTypeCohere        ReRankConfigType = "cohere"
 	ReRankConfigTypeDisabled      ReRankConfigType = "disabled"
+	ReRankConfigTypeLlm           ReRankConfigType = "llm"
+	ReRankConfigTypeScore         ReRankConfigType = "score"
+	ReRankConfigTypeSystemDefault ReRankConfigType = "system_default"
 )
 
 // An entity that retrieves context nodes from several sub RetrieverTools.
@@ -445,7 +445,7 @@ type RetrieverSearchParams struct {
 	RerankTopN param.Opt[int64] `json:"rerank_top_n,omitzero"`
 	// The mode of composite retrieval.
 	//
-	// Any of "routing", "full".
+	// Any of "full", "routing".
 	Mode CompositeRetrievalMode `json:"mode,omitzero"`
 	// The pipelines to use for retrieval.
 	Pipelines []RetrieverPipelineParam `json:"pipelines,omitzero"`

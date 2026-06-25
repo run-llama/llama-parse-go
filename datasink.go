@@ -103,8 +103,8 @@ type DataSink struct {
 	// The name of the data sink.
 	Name      string `json:"name" api:"required"`
 	ProjectID string `json:"project_id" api:"required" format:"uuid"`
-	// Any of "PINECONE", "POSTGRES", "QDRANT", "AZUREAI_SEARCH", "MONGODB_ATLAS",
-	// "MILVUS", "ASTRA_DB".
+	// Any of "ASTRA_DB", "AZUREAI_SEARCH", "MILVUS", "MONGODB_ATLAS", "PINECONE",
+	// "POSTGRES", "QDRANT".
 	SinkType DataSinkSinkType `json:"sink_type" api:"required"`
 	// Creation datetime
 	CreatedAt time.Time `json:"created_at" api:"nullable" format:"date-time"`
@@ -303,13 +303,13 @@ func (r *DataSinkComponentUnion) UnmarshalJSON(data []byte) error {
 type DataSinkSinkType string
 
 const (
+	DataSinkSinkTypeAstraDB       DataSinkSinkType = "ASTRA_DB"
+	DataSinkSinkTypeAzureaiSearch DataSinkSinkType = "AZUREAI_SEARCH"
+	DataSinkSinkTypeMilvus        DataSinkSinkType = "MILVUS"
+	DataSinkSinkTypeMongoDBAtlas  DataSinkSinkType = "MONGODB_ATLAS"
 	DataSinkSinkTypePinecone      DataSinkSinkType = "PINECONE"
 	DataSinkSinkTypePostgres      DataSinkSinkType = "POSTGRES"
 	DataSinkSinkTypeQdrant        DataSinkSinkType = "QDRANT"
-	DataSinkSinkTypeAzureaiSearch DataSinkSinkType = "AZUREAI_SEARCH"
-	DataSinkSinkTypeMongoDBAtlas  DataSinkSinkType = "MONGODB_ATLAS"
-	DataSinkSinkTypeMilvus        DataSinkSinkType = "MILVUS"
-	DataSinkSinkTypeAstraDB       DataSinkSinkType = "ASTRA_DB"
 )
 
 type DataSinkNewParams struct {
@@ -336,8 +336,8 @@ func (r DataSinkNewParams) URLQuery() (v url.Values, err error) {
 }
 
 type DataSinkUpdateParams struct {
-	// Any of "PINECONE", "POSTGRES", "QDRANT", "AZUREAI_SEARCH", "MONGODB_ATLAS",
-	// "MILVUS", "ASTRA_DB".
+	// Any of "ASTRA_DB", "AZUREAI_SEARCH", "MILVUS", "MONGODB_ATLAS", "PINECONE",
+	// "POSTGRES", "QDRANT".
 	SinkType DataSinkUpdateParamsSinkType `json:"sink_type,omitzero" api:"required"`
 	// The name of the data sink.
 	Name param.Opt[string] `json:"name,omitzero"`
@@ -357,13 +357,13 @@ func (r *DataSinkUpdateParams) UnmarshalJSON(data []byte) error {
 type DataSinkUpdateParamsSinkType string
 
 const (
+	DataSinkUpdateParamsSinkTypeAstraDB       DataSinkUpdateParamsSinkType = "ASTRA_DB"
+	DataSinkUpdateParamsSinkTypeAzureaiSearch DataSinkUpdateParamsSinkType = "AZUREAI_SEARCH"
+	DataSinkUpdateParamsSinkTypeMilvus        DataSinkUpdateParamsSinkType = "MILVUS"
+	DataSinkUpdateParamsSinkTypeMongoDBAtlas  DataSinkUpdateParamsSinkType = "MONGODB_ATLAS"
 	DataSinkUpdateParamsSinkTypePinecone      DataSinkUpdateParamsSinkType = "PINECONE"
 	DataSinkUpdateParamsSinkTypePostgres      DataSinkUpdateParamsSinkType = "POSTGRES"
 	DataSinkUpdateParamsSinkTypeQdrant        DataSinkUpdateParamsSinkType = "QDRANT"
-	DataSinkUpdateParamsSinkTypeAzureaiSearch DataSinkUpdateParamsSinkType = "AZUREAI_SEARCH"
-	DataSinkUpdateParamsSinkTypeMongoDBAtlas  DataSinkUpdateParamsSinkType = "MONGODB_ATLAS"
-	DataSinkUpdateParamsSinkTypeMilvus        DataSinkUpdateParamsSinkType = "MILVUS"
-	DataSinkUpdateParamsSinkTypeAstraDB       DataSinkUpdateParamsSinkType = "ASTRA_DB"
 )
 
 // Only one field can be non-zero.

@@ -33,7 +33,7 @@ func TestDataSourceNewWithOptionalParams(t *testing.T) {
 			},
 		},
 		Name:           "name",
-		SourceType:     llamacloudprod.DataSourceNewParamsSourceTypeS3,
+		SourceType:     llamacloudprod.DataSourceNewParamsSourceTypeAzureStorageBlob,
 		OrganizationID: llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		ProjectID:      llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		CustomMetadata: map[string]*llamacloudprod.DataSourceNewParamsCustomMetadataUnion{
@@ -70,7 +70,7 @@ func TestDataSourceUpdateWithOptionalParams(t *testing.T) {
 		context.TODO(),
 		"182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
 		llamacloudprod.DataSourceUpdateParams{
-			SourceType: llamacloudprod.DataSourceUpdateParamsSourceTypeS3,
+			SourceType: llamacloudprod.DataSourceUpdateParamsSourceTypeAzureStorageBlob,
 			Component: llamacloudprod.DataSourceUpdateParamsComponentUnion{
 				OfAnyMap: map[string]any{
 					"foo": "bar",

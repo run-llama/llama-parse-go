@@ -299,8 +299,8 @@ func (r ConfigurationCreate) ToParam() ConfigurationCreateParam {
 }
 
 // ConfigurationCreateParametersUnion contains all possible properties and values
-// from [SplitV1ParametersResp], [ExtractV2ParametersResp],
-// [ClassifyV2ParametersResp], [ParseV2ParametersResp],
+// from [ClassifyV2ParametersResp], [ExtractV2ParametersResp],
+// [ParseV2ParametersResp], [SplitV1ParametersResp],
 // [ConfigurationCreateParametersSpreadsheetV1], [UntypedParametersResp].
 //
 // Use the [ConfigurationCreateParametersUnion.AsAny] method to switch on the
@@ -308,13 +308,15 @@ func (r ConfigurationCreate) ToParam() ConfigurationCreateParam {
 //
 // Use the methods beginning with 'As' to cast the union to one of its variants.
 type ConfigurationCreateParametersUnion struct {
-	// This field is from variant [SplitV1ParametersResp].
-	Categories []SplitCategory `json:"categories"`
-	// Any of "split_v1", "extract_v2", "classify_v2", "parse_v2", "spreadsheet_v1",
+	// Any of "classify_v2", "extract_v2", "parse_v2", "split_v1", "spreadsheet_v1",
 	// "unknown".
 	ProductType string `json:"product_type"`
-	// This field is from variant [SplitV1ParametersResp].
-	SplittingStrategy SplitV1ParametersSplittingStrategyResp `json:"splitting_strategy"`
+	// This field is from variant [ClassifyV2ParametersResp].
+	Rules []ClassifyV2ParametersRuleResp `json:"rules"`
+	// This field is from variant [ClassifyV2ParametersResp].
+	Mode ClassifyV2ParametersMode `json:"mode"`
+	// This field is from variant [ClassifyV2ParametersResp].
+	ParsingConfiguration ClassifyV2ParametersParsingConfigurationResp `json:"parsing_configuration"`
 	// This field is from variant [ExtractV2ParametersResp].
 	DataSchema map[string]*ExtractV2ParametersDataSchemaUnionResp `json:"data_schema"`
 	// This field is from variant [ExtractV2ParametersResp].
@@ -335,12 +337,6 @@ type ConfigurationCreateParametersUnion struct {
 	TargetPages string `json:"target_pages"`
 	Tier        string `json:"tier"`
 	Version     string `json:"version"`
-	// This field is from variant [ClassifyV2ParametersResp].
-	Rules []ClassifyV2ParametersRuleResp `json:"rules"`
-	// This field is from variant [ClassifyV2ParametersResp].
-	Mode ClassifyV2ParametersMode `json:"mode"`
-	// This field is from variant [ClassifyV2ParametersResp].
-	ParsingConfiguration ClassifyV2ParametersParsingConfigurationResp `json:"parsing_configuration"`
 	// This field is from variant [ParseV2ParametersResp].
 	AgenticOptions ParseV2ParametersAgenticOptionsResp `json:"agentic_options"`
 	// This field is from variant [ParseV2ParametersResp].
@@ -363,6 +359,10 @@ type ConfigurationCreateParametersUnion struct {
 	ProcessingOptions ParseV2ParametersProcessingOptionsResp `json:"processing_options"`
 	// This field is from variant [ParseV2ParametersResp].
 	WebhookConfigurations []ParseV2ParametersWebhookConfigurationResp `json:"webhook_configurations"`
+	// This field is from variant [SplitV1ParametersResp].
+	Categories []SplitCategory `json:"categories"`
+	// This field is from variant [SplitV1ParametersResp].
+	SplittingStrategy SplitV1ParametersSplittingStrategyResp `json:"splitting_strategy"`
 	// This field is from variant [ConfigurationCreateParametersSpreadsheetV1].
 	ExtractionRange string `json:"extraction_range"`
 	// This field is from variant [ConfigurationCreateParametersSpreadsheetV1].
@@ -380,9 +380,10 @@ type ConfigurationCreateParametersUnion struct {
 	// This field is from variant [ConfigurationCreateParametersSpreadsheetV1].
 	UseExperimentalProcessing bool `json:"use_experimental_processing"`
 	JSON                      struct {
-		Categories                 respjson.Field
 		ProductType                respjson.Field
-		SplittingStrategy          respjson.Field
+		Rules                      respjson.Field
+		Mode                       respjson.Field
+		ParsingConfiguration       respjson.Field
 		DataSchema                 respjson.Field
 		CiteSources                respjson.Field
 		ConfidenceScores           respjson.Field
@@ -394,9 +395,6 @@ type ConfigurationCreateParametersUnion struct {
 		TargetPages                respjson.Field
 		Tier                       respjson.Field
 		Version                    respjson.Field
-		Rules                      respjson.Field
-		Mode                       respjson.Field
-		ParsingConfiguration       respjson.Field
 		AgenticOptions             respjson.Field
 		ClientName                 respjson.Field
 		CropBox                    respjson.Field
@@ -408,6 +406,8 @@ type ConfigurationCreateParametersUnion struct {
 		ProcessingControl          respjson.Field
 		ProcessingOptions          respjson.Field
 		WebhookConfigurations      respjson.Field
+		Categories                 respjson.Field
+		SplittingStrategy          respjson.Field
 		ExtractionRange            respjson.Field
 		FlattenHierarchicalTables  respjson.Field
 		GenerateAdditionalMetadata respjson.Field
@@ -427,20 +427,20 @@ type anyConfigurationCreateParameters interface {
 	implConfigurationCreateParametersUnion()
 }
 
-func (SplitV1ParametersResp) implConfigurationCreateParametersUnion()                      {}
-func (ExtractV2ParametersResp) implConfigurationCreateParametersUnion()                    {}
 func (ClassifyV2ParametersResp) implConfigurationCreateParametersUnion()                   {}
+func (ExtractV2ParametersResp) implConfigurationCreateParametersUnion()                    {}
 func (ParseV2ParametersResp) implConfigurationCreateParametersUnion()                      {}
+func (SplitV1ParametersResp) implConfigurationCreateParametersUnion()                      {}
 func (ConfigurationCreateParametersSpreadsheetV1) implConfigurationCreateParametersUnion() {}
 func (UntypedParametersResp) implConfigurationCreateParametersUnion()                      {}
 
 // Use the following switch statement to find the correct variant
 //
 //	switch variant := ConfigurationCreateParametersUnion.AsAny().(type) {
-//	case llamacloudprod.SplitV1ParametersResp:
-//	case llamacloudprod.ExtractV2ParametersResp:
 //	case llamacloudprod.ClassifyV2ParametersResp:
+//	case llamacloudprod.ExtractV2ParametersResp:
 //	case llamacloudprod.ParseV2ParametersResp:
+//	case llamacloudprod.SplitV1ParametersResp:
 //	case llamacloudprod.ConfigurationCreateParametersSpreadsheetV1:
 //	case llamacloudprod.UntypedParametersResp:
 //	default:
@@ -448,14 +448,14 @@ func (UntypedParametersResp) implConfigurationCreateParametersUnion()           
 //	}
 func (u ConfigurationCreateParametersUnion) AsAny() anyConfigurationCreateParameters {
 	switch u.ProductType {
-	case "split_v1":
-		return u.AsSplitV1()
-	case "extract_v2":
-		return u.AsExtractV2()
 	case "classify_v2":
 		return u.AsClassifyV2()
+	case "extract_v2":
+		return u.AsExtractV2()
 	case "parse_v2":
 		return u.AsParseV2()
+	case "split_v1":
+		return u.AsSplitV1()
 	case "spreadsheet_v1":
 		return u.AsSpreadsheetV1()
 	case "unknown":
@@ -464,7 +464,7 @@ func (u ConfigurationCreateParametersUnion) AsAny() anyConfigurationCreateParame
 	return nil
 }
 
-func (u ConfigurationCreateParametersUnion) AsSplitV1() (v SplitV1ParametersResp) {
+func (u ConfigurationCreateParametersUnion) AsClassifyV2() (v ClassifyV2ParametersResp) {
 	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
 	return
 }
@@ -474,12 +474,12 @@ func (u ConfigurationCreateParametersUnion) AsExtractV2() (v ExtractV2Parameters
 	return
 }
 
-func (u ConfigurationCreateParametersUnion) AsClassifyV2() (v ClassifyV2ParametersResp) {
+func (u ConfigurationCreateParametersUnion) AsParseV2() (v ParseV2ParametersResp) {
 	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
 	return
 }
 
-func (u ConfigurationCreateParametersUnion) AsParseV2() (v ParseV2ParametersResp) {
+func (u ConfigurationCreateParametersUnion) AsSplitV1() (v SplitV1ParametersResp) {
 	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
 	return
 }
@@ -576,20 +576,20 @@ func (r *ConfigurationCreateParam) UnmarshalJSON(data []byte) error {
 //
 // Use [param.IsOmitted] to confirm if a field is set.
 type ConfigurationCreateParametersUnionParam struct {
-	OfSplitV1       *SplitV1Parameters                               `json:",omitzero,inline"`
-	OfExtractV2     *ExtractV2Parameters                             `json:",omitzero,inline"`
 	OfClassifyV2    *ClassifyV2Parameters                            `json:",omitzero,inline"`
+	OfExtractV2     *ExtractV2Parameters                             `json:",omitzero,inline"`
 	OfParseV2       *ParseV2Parameters                               `json:",omitzero,inline"`
+	OfSplitV1       *SplitV1Parameters                               `json:",omitzero,inline"`
 	OfSpreadsheetV1 *ConfigurationCreateParametersSpreadsheetV1Param `json:",omitzero,inline"`
 	OfUnknown       *UntypedParameters                               `json:",omitzero,inline"`
 	paramUnion
 }
 
 func (u ConfigurationCreateParametersUnionParam) MarshalJSON() ([]byte, error) {
-	return param.MarshalUnion(u, u.OfSplitV1,
+	return param.MarshalUnion(u, u.OfClassifyV2,
 		u.OfExtractV2,
-		u.OfClassifyV2,
 		u.OfParseV2,
+		u.OfSplitV1,
 		u.OfSpreadsheetV1,
 		u.OfUnknown)
 }
@@ -600,10 +600,10 @@ func (u *ConfigurationCreateParametersUnionParam) UnmarshalJSON(data []byte) err
 func init() {
 	apijson.RegisterUnion[ConfigurationCreateParametersUnionParam](
 		"product_type",
-		apijson.Discriminator[SplitV1Parameters]("split_v1"),
-		apijson.Discriminator[ExtractV2Parameters]("extract_v2"),
 		apijson.Discriminator[ClassifyV2Parameters]("classify_v2"),
+		apijson.Discriminator[ExtractV2Parameters]("extract_v2"),
 		apijson.Discriminator[ParseV2Parameters]("parse_v2"),
+		apijson.Discriminator[SplitV1Parameters]("split_v1"),
 		apijson.Discriminator[ConfigurationCreateParametersSpreadsheetV1Param]("spreadsheet_v1"),
 		apijson.Discriminator[UntypedParameters]("unknown"),
 	)
@@ -670,7 +670,7 @@ type ConfigurationResponse struct {
 	Parameters ConfigurationResponseParametersUnion `json:"parameters" api:"required"`
 	// Product type.
 	//
-	// Any of "split_v1", "extract_v2", "classify_v2", "parse_v2", "spreadsheet_v1",
+	// Any of "classify_v2", "extract_v2", "parse_v2", "split_v1", "spreadsheet_v1",
 	// "unknown".
 	ProductType ConfigurationResponseProductType `json:"product_type" api:"required"`
 	// Version identifier (datetime string).
@@ -700,8 +700,8 @@ func (r *ConfigurationResponse) UnmarshalJSON(data []byte) error {
 }
 
 // ConfigurationResponseParametersUnion contains all possible properties and values
-// from [SplitV1ParametersResp], [ExtractV2ParametersResp],
-// [ClassifyV2ParametersResp], [ParseV2ParametersResp],
+// from [ClassifyV2ParametersResp], [ExtractV2ParametersResp],
+// [ParseV2ParametersResp], [SplitV1ParametersResp],
 // [ConfigurationResponseParametersSpreadsheetV1], [UntypedParametersResp].
 //
 // Use the [ConfigurationResponseParametersUnion.AsAny] method to switch on the
@@ -709,13 +709,15 @@ func (r *ConfigurationResponse) UnmarshalJSON(data []byte) error {
 //
 // Use the methods beginning with 'As' to cast the union to one of its variants.
 type ConfigurationResponseParametersUnion struct {
-	// This field is from variant [SplitV1ParametersResp].
-	Categories []SplitCategory `json:"categories"`
-	// Any of "split_v1", "extract_v2", "classify_v2", "parse_v2", "spreadsheet_v1",
+	// Any of "classify_v2", "extract_v2", "parse_v2", "split_v1", "spreadsheet_v1",
 	// "unknown".
 	ProductType string `json:"product_type"`
-	// This field is from variant [SplitV1ParametersResp].
-	SplittingStrategy SplitV1ParametersSplittingStrategyResp `json:"splitting_strategy"`
+	// This field is from variant [ClassifyV2ParametersResp].
+	Rules []ClassifyV2ParametersRuleResp `json:"rules"`
+	// This field is from variant [ClassifyV2ParametersResp].
+	Mode ClassifyV2ParametersMode `json:"mode"`
+	// This field is from variant [ClassifyV2ParametersResp].
+	ParsingConfiguration ClassifyV2ParametersParsingConfigurationResp `json:"parsing_configuration"`
 	// This field is from variant [ExtractV2ParametersResp].
 	DataSchema map[string]*ExtractV2ParametersDataSchemaUnionResp `json:"data_schema"`
 	// This field is from variant [ExtractV2ParametersResp].
@@ -736,12 +738,6 @@ type ConfigurationResponseParametersUnion struct {
 	TargetPages string `json:"target_pages"`
 	Tier        string `json:"tier"`
 	Version     string `json:"version"`
-	// This field is from variant [ClassifyV2ParametersResp].
-	Rules []ClassifyV2ParametersRuleResp `json:"rules"`
-	// This field is from variant [ClassifyV2ParametersResp].
-	Mode ClassifyV2ParametersMode `json:"mode"`
-	// This field is from variant [ClassifyV2ParametersResp].
-	ParsingConfiguration ClassifyV2ParametersParsingConfigurationResp `json:"parsing_configuration"`
 	// This field is from variant [ParseV2ParametersResp].
 	AgenticOptions ParseV2ParametersAgenticOptionsResp `json:"agentic_options"`
 	// This field is from variant [ParseV2ParametersResp].
@@ -764,6 +760,10 @@ type ConfigurationResponseParametersUnion struct {
 	ProcessingOptions ParseV2ParametersProcessingOptionsResp `json:"processing_options"`
 	// This field is from variant [ParseV2ParametersResp].
 	WebhookConfigurations []ParseV2ParametersWebhookConfigurationResp `json:"webhook_configurations"`
+	// This field is from variant [SplitV1ParametersResp].
+	Categories []SplitCategory `json:"categories"`
+	// This field is from variant [SplitV1ParametersResp].
+	SplittingStrategy SplitV1ParametersSplittingStrategyResp `json:"splitting_strategy"`
 	// This field is from variant [ConfigurationResponseParametersSpreadsheetV1].
 	ExtractionRange string `json:"extraction_range"`
 	// This field is from variant [ConfigurationResponseParametersSpreadsheetV1].
@@ -781,9 +781,10 @@ type ConfigurationResponseParametersUnion struct {
 	// This field is from variant [ConfigurationResponseParametersSpreadsheetV1].
 	UseExperimentalProcessing bool `json:"use_experimental_processing"`
 	JSON                      struct {
-		Categories                 respjson.Field
 		ProductType                respjson.Field
-		SplittingStrategy          respjson.Field
+		Rules                      respjson.Field
+		Mode                       respjson.Field
+		ParsingConfiguration       respjson.Field
 		DataSchema                 respjson.Field
 		CiteSources                respjson.Field
 		ConfidenceScores           respjson.Field
@@ -795,9 +796,6 @@ type ConfigurationResponseParametersUnion struct {
 		TargetPages                respjson.Field
 		Tier                       respjson.Field
 		Version                    respjson.Field
-		Rules                      respjson.Field
-		Mode                       respjson.Field
-		ParsingConfiguration       respjson.Field
 		AgenticOptions             respjson.Field
 		ClientName                 respjson.Field
 		CropBox                    respjson.Field
@@ -809,6 +807,8 @@ type ConfigurationResponseParametersUnion struct {
 		ProcessingControl          respjson.Field
 		ProcessingOptions          respjson.Field
 		WebhookConfigurations      respjson.Field
+		Categories                 respjson.Field
+		SplittingStrategy          respjson.Field
 		ExtractionRange            respjson.Field
 		FlattenHierarchicalTables  respjson.Field
 		GenerateAdditionalMetadata respjson.Field
@@ -828,20 +828,20 @@ type anyConfigurationResponseParameters interface {
 	implConfigurationResponseParametersUnion()
 }
 
-func (SplitV1ParametersResp) implConfigurationResponseParametersUnion()                        {}
-func (ExtractV2ParametersResp) implConfigurationResponseParametersUnion()                      {}
 func (ClassifyV2ParametersResp) implConfigurationResponseParametersUnion()                     {}
+func (ExtractV2ParametersResp) implConfigurationResponseParametersUnion()                      {}
 func (ParseV2ParametersResp) implConfigurationResponseParametersUnion()                        {}
+func (SplitV1ParametersResp) implConfigurationResponseParametersUnion()                        {}
 func (ConfigurationResponseParametersSpreadsheetV1) implConfigurationResponseParametersUnion() {}
 func (UntypedParametersResp) implConfigurationResponseParametersUnion()                        {}
 
 // Use the following switch statement to find the correct variant
 //
 //	switch variant := ConfigurationResponseParametersUnion.AsAny().(type) {
-//	case llamacloudprod.SplitV1ParametersResp:
-//	case llamacloudprod.ExtractV2ParametersResp:
 //	case llamacloudprod.ClassifyV2ParametersResp:
+//	case llamacloudprod.ExtractV2ParametersResp:
 //	case llamacloudprod.ParseV2ParametersResp:
+//	case llamacloudprod.SplitV1ParametersResp:
 //	case llamacloudprod.ConfigurationResponseParametersSpreadsheetV1:
 //	case llamacloudprod.UntypedParametersResp:
 //	default:
@@ -849,14 +849,14 @@ func (UntypedParametersResp) implConfigurationResponseParametersUnion()         
 //	}
 func (u ConfigurationResponseParametersUnion) AsAny() anyConfigurationResponseParameters {
 	switch u.ProductType {
-	case "split_v1":
-		return u.AsSplitV1()
-	case "extract_v2":
-		return u.AsExtractV2()
 	case "classify_v2":
 		return u.AsClassifyV2()
+	case "extract_v2":
+		return u.AsExtractV2()
 	case "parse_v2":
 		return u.AsParseV2()
+	case "split_v1":
+		return u.AsSplitV1()
 	case "spreadsheet_v1":
 		return u.AsSpreadsheetV1()
 	case "unknown":
@@ -865,7 +865,7 @@ func (u ConfigurationResponseParametersUnion) AsAny() anyConfigurationResponsePa
 	return nil
 }
 
-func (u ConfigurationResponseParametersUnion) AsSplitV1() (v SplitV1ParametersResp) {
+func (u ConfigurationResponseParametersUnion) AsClassifyV2() (v ClassifyV2ParametersResp) {
 	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
 	return
 }
@@ -875,12 +875,12 @@ func (u ConfigurationResponseParametersUnion) AsExtractV2() (v ExtractV2Paramete
 	return
 }
 
-func (u ConfigurationResponseParametersUnion) AsClassifyV2() (v ClassifyV2ParametersResp) {
+func (u ConfigurationResponseParametersUnion) AsParseV2() (v ParseV2ParametersResp) {
 	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
 	return
 }
 
-func (u ConfigurationResponseParametersUnion) AsParseV2() (v ParseV2ParametersResp) {
+func (u ConfigurationResponseParametersUnion) AsSplitV1() (v SplitV1ParametersResp) {
 	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
 	return
 }
@@ -958,10 +958,10 @@ func (r *ConfigurationResponseParametersSpreadsheetV1) UnmarshalJSON(data []byte
 type ConfigurationResponseProductType string
 
 const (
-	ConfigurationResponseProductTypeSplitV1       ConfigurationResponseProductType = "split_v1"
-	ConfigurationResponseProductTypeExtractV2     ConfigurationResponseProductType = "extract_v2"
 	ConfigurationResponseProductTypeClassifyV2    ConfigurationResponseProductType = "classify_v2"
+	ConfigurationResponseProductTypeExtractV2     ConfigurationResponseProductType = "extract_v2"
 	ConfigurationResponseProductTypeParseV2       ConfigurationResponseProductType = "parse_v2"
+	ConfigurationResponseProductTypeSplitV1       ConfigurationResponseProductType = "split_v1"
 	ConfigurationResponseProductTypeSpreadsheetV1 ConfigurationResponseProductType = "spreadsheet_v1"
 	ConfigurationResponseProductTypeUnknown       ConfigurationResponseProductType = "unknown"
 )
@@ -997,7 +997,7 @@ type ExtractV2ParametersResp struct {
 	TargetPages string `json:"target_pages" api:"nullable"`
 	// Extract tier: cost_effective (5 credits/page) or agentic (15 credits/page)
 	//
-	// Any of "cost_effective", "agentic".
+	// Any of "agentic", "cost_effective".
 	Tier ExtractV2ParametersTier `json:"tier"`
 	// Use 'latest' for the latest release for the selected tier or a date string
 	// (YYYY-MM-DD format) to pin to the nearest release at or before that date. Job
@@ -1113,8 +1113,8 @@ const (
 type ExtractV2ParametersTier string
 
 const (
-	ExtractV2ParametersTierCostEffective ExtractV2ParametersTier = "cost_effective"
 	ExtractV2ParametersTierAgentic       ExtractV2ParametersTier = "agentic"
+	ExtractV2ParametersTierCostEffective ExtractV2ParametersTier = "cost_effective"
 )
 
 // Typed parameters for an _extract v2_ product configuration.
@@ -1153,7 +1153,7 @@ type ExtractV2Parameters struct {
 	ExtractionTarget ExtractV2ParametersExtractionTarget `json:"extraction_target,omitzero"`
 	// Extract tier: cost_effective (5 credits/page) or agentic (15 credits/page)
 	//
-	// Any of "cost_effective", "agentic".
+	// Any of "agentic", "cost_effective".
 	Tier ExtractV2ParametersTier `json:"tier,omitzero"`
 	// Product type.
 	//
@@ -1205,7 +1205,7 @@ type ParseV2ParametersResp struct {
 	// 'agentic' (AI-powered with custom prompts), or 'agentic_plus' (premium AI with
 	// highest accuracy)
 	//
-	// Any of "fast", "cost_effective", "agentic", "agentic_plus".
+	// Any of "agentic", "agentic_plus", "cost_effective", "fast".
 	Tier ParseV2ParametersTier `json:"tier" api:"required"`
 	// Version for the selected tier. Use `latest`, or pin one of that tier's dated
 	// versions.
@@ -1213,9 +1213,9 @@ type ParseV2ParametersResp struct {
 	// Current `latest` by tier:
 	//
 	// - `fast`: `2025-12-11`
-	// - `cost_effective`: `2026-06-11`
-	// - `agentic`: `2026-06-11`
-	// - `agentic_plus`: `2026-06-11`
+	// - `cost_effective`: `2026-06-18`
+	// - `agentic`: `2026-06-18`
+	// - `agentic_plus`: `2026-06-18`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
 	Version ParseV2ParametersVersion `json:"version" api:"required"`
@@ -1296,10 +1296,10 @@ func (r ParseV2ParametersResp) ToParam() ParseV2Parameters {
 type ParseV2ParametersTier string
 
 const (
-	ParseV2ParametersTierFast          ParseV2ParametersTier = "fast"
-	ParseV2ParametersTierCostEffective ParseV2ParametersTier = "cost_effective"
 	ParseV2ParametersTierAgentic       ParseV2ParametersTier = "agentic"
 	ParseV2ParametersTierAgenticPlus   ParseV2ParametersTier = "agentic_plus"
+	ParseV2ParametersTierCostEffective ParseV2ParametersTier = "cost_effective"
+	ParseV2ParametersTierFast          ParseV2ParametersTier = "fast"
 )
 
 // Version for the selected tier. Use `latest`, or pin one of that tier's dated
@@ -1308,16 +1308,16 @@ const (
 // Current `latest` by tier:
 //
 // - `fast`: `2025-12-11`
-// - `cost_effective`: `2026-06-11`
-// - `agentic`: `2026-06-11`
-// - `agentic_plus`: `2026-06-11`
+// - `cost_effective`: `2026-06-18`
+// - `agentic`: `2026-06-18`
+// - `agentic_plus`: `2026-06-18`
 //
 // Full list: `GET /api/v2/parse/versions`.
 type ParseV2ParametersVersion string
 
 const (
 	ParseV2ParametersVersionLatest     ParseV2ParametersVersion = "latest"
-	ParseV2ParametersVersion2026_06_11 ParseV2ParametersVersion = "2026-06-11"
+	ParseV2ParametersVersion2026_06_18 ParseV2ParametersVersion = "2026-06-18"
 	ParseV2ParametersVersion2025_12_11 ParseV2ParametersVersion = "2025-12-11"
 )
 
@@ -1542,7 +1542,7 @@ type ParseV2ParametersOutputOptionsResp struct {
 	// (cropped regions from layout detection like figures and diagrams). Empty list
 	// saves no images
 	//
-	// Any of "screenshot", "embedded", "layout".
+	// Any of "embedded", "layout", "screenshot".
 	ImagesToSave []string `json:"images_to_save"`
 	// Markdown formatting options including table styles and link annotations
 	Markdown ParseV2ParametersOutputOptionsMarkdownResp `json:"markdown"`
@@ -1811,7 +1811,7 @@ type ParseV2ParametersProcessingOptionsResp struct {
 	// 'agentic' (balanced), 'agentic_plus' (highest accuracy). Automatically enables
 	// extract_layout and precise_bounding_box when set
 	//
-	// Any of "agentic_plus", "agentic", "efficient".
+	// Any of "agentic", "agentic_plus", "efficient".
 	SpecializedChartParsing string `json:"specialized_chart_parsing" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
@@ -1989,11 +1989,11 @@ type ParseV2ParametersProcessingOptionsAutoModeConfigurationParsingConfResp stru
 	SpatialText ParseV2ParametersProcessingOptionsAutoModeConfigurationParsingConfSpatialTextResp `json:"spatial_text" api:"nullable"`
 	// Enable specialized chart parsing with the specified mode
 	//
-	// Any of "agentic_plus", "agentic", "efficient".
+	// Any of "agentic", "agentic_plus", "efficient".
 	SpecializedChartParsing string `json:"specialized_chart_parsing" api:"nullable"`
 	// Override the parsing tier for matched pages. Must be paired with version
 	//
-	// Any of "fast", "cost_effective", "agentic", "agentic_plus".
+	// Any of "agentic", "agentic_plus", "cost_effective", "fast".
 	Tier string `json:"tier" api:"nullable"`
 	// Version for the override tier. Required when `tier` is set. Use `latest`, or pin
 	// one of that tier's dated versions.
@@ -2001,9 +2001,9 @@ type ParseV2ParametersProcessingOptionsAutoModeConfigurationParsingConfResp stru
 	// Current `latest` by tier:
 	//
 	// - `fast`: `2025-12-11`
-	// - `cost_effective`: `2026-06-11`
-	// - `agentic`: `2026-06-11`
-	// - `agentic_plus`: `2026-06-11`
+	// - `cost_effective`: `2026-06-18`
+	// - `agentic`: `2026-06-18`
+	// - `agentic_plus`: `2026-06-18`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
 	Version string `json:"version" api:"nullable"`
@@ -3060,7 +3060,7 @@ type ParseV2ParametersWebhookConfigurationResp struct {
 	// Format of the webhook payload body. 'string' (default) sends the payload as a
 	// JSON-encoded string; 'json' sends it as a JSON object.
 	//
-	// Any of "string", "json".
+	// Any of "json", "string".
 	WebhookOutputFormat string `json:"webhook_output_format" api:"nullable"`
 	// HTTPS URL to receive webhook POST requests. Must be publicly accessible
 	WebhookURL string `json:"webhook_url" api:"nullable"`
@@ -3093,7 +3093,7 @@ type ParseV2Parameters struct {
 	// 'agentic' (AI-powered with custom prompts), or 'agentic_plus' (premium AI with
 	// highest accuracy)
 	//
-	// Any of "fast", "cost_effective", "agentic", "agentic_plus".
+	// Any of "agentic", "agentic_plus", "cost_effective", "fast".
 	Tier ParseV2ParametersTier `json:"tier,omitzero" api:"required"`
 	// Version for the selected tier. Use `latest`, or pin one of that tier's dated
 	// versions.
@@ -3101,9 +3101,9 @@ type ParseV2Parameters struct {
 	// Current `latest` by tier:
 	//
 	// - `fast`: `2025-12-11`
-	// - `cost_effective`: `2026-06-11`
-	// - `agentic`: `2026-06-11`
-	// - `agentic_plus`: `2026-06-11`
+	// - `cost_effective`: `2026-06-18`
+	// - `agentic`: `2026-06-18`
+	// - `agentic_plus`: `2026-06-18`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
 	Version ParseV2ParametersVersion `json:"version,omitzero" api:"required"`
@@ -3345,7 +3345,7 @@ type ParseV2ParametersOutputOptions struct {
 	// (cropped regions from layout detection like figures and diagrams). Empty list
 	// saves no images
 	//
-	// Any of "screenshot", "embedded", "layout".
+	// Any of "embedded", "layout", "screenshot".
 	ImagesToSave []string `json:"images_to_save,omitzero"`
 	// Markdown formatting options including table styles and link annotations
 	Markdown ParseV2ParametersOutputOptionsMarkdown `json:"markdown,omitzero"`
@@ -3560,7 +3560,7 @@ type ParseV2ParametersProcessingOptions struct {
 	// 'agentic' (balanced), 'agentic_plus' (highest accuracy). Automatically enables
 	// extract_layout and precise_bounding_box when set
 	//
-	// Any of "agentic_plus", "agentic", "efficient".
+	// Any of "agentic", "agentic_plus", "efficient".
 	SpecializedChartParsing string `json:"specialized_chart_parsing,omitzero"`
 	// Options for ignoring specific text types (diagonal, hidden, text in images)
 	Ignore ParseV2ParametersProcessingOptionsIgnore `json:"ignore,omitzero"`
@@ -3579,7 +3579,7 @@ func (r *ParseV2ParametersProcessingOptions) UnmarshalJSON(data []byte) error {
 
 func init() {
 	apijson.RegisterFieldValidator[ParseV2ParametersProcessingOptions](
-		"specialized_chart_parsing", "agentic_plus", "agentic", "efficient",
+		"specialized_chart_parsing", "agentic", "agentic_plus", "efficient",
 	)
 }
 
@@ -3701,11 +3701,11 @@ type ParseV2ParametersProcessingOptionsAutoModeConfigurationParsingConf struct {
 	SpatialText ParseV2ParametersProcessingOptionsAutoModeConfigurationParsingConfSpatialText `json:"spatial_text,omitzero"`
 	// Enable specialized chart parsing with the specified mode
 	//
-	// Any of "agentic_plus", "agentic", "efficient".
+	// Any of "agentic", "agentic_plus", "efficient".
 	SpecializedChartParsing string `json:"specialized_chart_parsing,omitzero"`
 	// Override the parsing tier for matched pages. Must be paired with version
 	//
-	// Any of "fast", "cost_effective", "agentic", "agentic_plus".
+	// Any of "agentic", "agentic_plus", "cost_effective", "fast".
 	Tier string `json:"tier,omitzero"`
 	// Version for the override tier. Required when `tier` is set. Use `latest`, or pin
 	// one of that tier's dated versions.
@@ -3713,9 +3713,9 @@ type ParseV2ParametersProcessingOptionsAutoModeConfigurationParsingConf struct {
 	// Current `latest` by tier:
 	//
 	// - `fast`: `2025-12-11`
-	// - `cost_effective`: `2026-06-11`
-	// - `agentic`: `2026-06-11`
-	// - `agentic_plus`: `2026-06-11`
+	// - `cost_effective`: `2026-06-18`
+	// - `agentic`: `2026-06-18`
+	// - `agentic_plus`: `2026-06-18`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
 	Version string `json:"version,omitzero"`
@@ -3732,10 +3732,10 @@ func (r *ParseV2ParametersProcessingOptionsAutoModeConfigurationParsingConf) Unm
 
 func init() {
 	apijson.RegisterFieldValidator[ParseV2ParametersProcessingOptionsAutoModeConfigurationParsingConf](
-		"specialized_chart_parsing", "agentic_plus", "agentic", "efficient",
+		"specialized_chart_parsing", "agentic", "agentic_plus", "efficient",
 	)
 	apijson.RegisterFieldValidator[ParseV2ParametersProcessingOptionsAutoModeConfigurationParsingConf](
-		"tier", "fast", "cost_effective", "agentic", "agentic_plus",
+		"tier", "agentic", "agentic_plus", "cost_effective", "fast",
 	)
 }
 
@@ -4243,7 +4243,7 @@ type ParseV2ParametersWebhookConfiguration struct {
 	// Format of the webhook payload body. 'string' (default) sends the payload as a
 	// JSON-encoded string; 'json' sends it as a JSON object.
 	//
-	// Any of "string", "json".
+	// Any of "json", "string".
 	WebhookOutputFormat string `json:"webhook_output_format,omitzero"`
 	paramObj
 }
@@ -4258,7 +4258,7 @@ func (r *ParseV2ParametersWebhookConfiguration) UnmarshalJSON(data []byte) error
 
 func init() {
 	apijson.RegisterFieldValidator[ParseV2ParametersWebhookConfiguration](
-		"webhook_output_format", "string", "json",
+		"webhook_output_format", "json", "string",
 	)
 }
 
@@ -4302,7 +4302,7 @@ type SplitV1ParametersSplittingStrategyResp struct {
 	// be assigned to a defined category. 'omit': pages can be classified as
 	// 'uncategorized' but are excluded from results.
 	//
-	// Any of "include", "forbid", "omit".
+	// Any of "forbid", "include", "omit".
 	AllowUncategorized string `json:"allow_uncategorized"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
@@ -4348,7 +4348,7 @@ type SplitV1ParametersSplittingStrategy struct {
 	// be assigned to a defined category. 'omit': pages can be classified as
 	// 'uncategorized' but are excluded from results.
 	//
-	// Any of "include", "forbid", "omit".
+	// Any of "forbid", "include", "omit".
 	AllowUncategorized string `json:"allow_uncategorized,omitzero"`
 	paramObj
 }
@@ -4363,7 +4363,7 @@ func (r *SplitV1ParametersSplittingStrategy) UnmarshalJSON(data []byte) error {
 
 func init() {
 	apijson.RegisterFieldValidator[SplitV1ParametersSplittingStrategy](
-		"allow_uncategorized", "include", "forbid", "omit",
+		"allow_uncategorized", "forbid", "include", "omit",
 	)
 }
 
@@ -4491,20 +4491,20 @@ func (r ConfigurationUpdateParams) URLQuery() (v url.Values, err error) {
 //
 // Use [param.IsOmitted] to confirm if a field is set.
 type ConfigurationUpdateParamsParametersUnion struct {
-	OfSplitV1       *SplitV1Parameters                                `json:",omitzero,inline"`
-	OfExtractV2     *ExtractV2Parameters                              `json:",omitzero,inline"`
 	OfClassifyV2    *ClassifyV2Parameters                             `json:",omitzero,inline"`
+	OfExtractV2     *ExtractV2Parameters                              `json:",omitzero,inline"`
 	OfParseV2       *ParseV2Parameters                                `json:",omitzero,inline"`
+	OfSplitV1       *SplitV1Parameters                                `json:",omitzero,inline"`
 	OfSpreadsheetV1 *ConfigurationUpdateParamsParametersSpreadsheetV1 `json:",omitzero,inline"`
 	OfUnknown       *UntypedParameters                                `json:",omitzero,inline"`
 	paramUnion
 }
 
 func (u ConfigurationUpdateParamsParametersUnion) MarshalJSON() ([]byte, error) {
-	return param.MarshalUnion(u, u.OfSplitV1,
+	return param.MarshalUnion(u, u.OfClassifyV2,
 		u.OfExtractV2,
-		u.OfClassifyV2,
 		u.OfParseV2,
+		u.OfSplitV1,
 		u.OfSpreadsheetV1,
 		u.OfUnknown)
 }
@@ -4515,10 +4515,10 @@ func (u *ConfigurationUpdateParamsParametersUnion) UnmarshalJSON(data []byte) er
 func init() {
 	apijson.RegisterUnion[ConfigurationUpdateParamsParametersUnion](
 		"product_type",
-		apijson.Discriminator[SplitV1Parameters]("split_v1"),
-		apijson.Discriminator[ExtractV2Parameters]("extract_v2"),
 		apijson.Discriminator[ClassifyV2Parameters]("classify_v2"),
+		apijson.Discriminator[ExtractV2Parameters]("extract_v2"),
 		apijson.Discriminator[ParseV2Parameters]("parse_v2"),
+		apijson.Discriminator[SplitV1Parameters]("split_v1"),
 		apijson.Discriminator[ConfigurationUpdateParamsParametersSpreadsheetV1]("spreadsheet_v1"),
 		apijson.Discriminator[UntypedParameters]("unknown"),
 	)
@@ -4588,7 +4588,7 @@ type ConfigurationListParams struct {
 	LatestOnly param.Opt[bool] `query:"latest_only,omitzero" json:"-"`
 	// Filter by one or more product types. Repeat the parameter for multiple values.
 	//
-	// Any of "split_v1", "extract_v2", "classify_v2", "parse_v2", "spreadsheet_v1",
+	// Any of "classify_v2", "extract_v2", "parse_v2", "split_v1", "spreadsheet_v1",
 	// "unknown".
 	ProductType []string `query:"product_type,omitzero" json:"-"`
 	paramObj

@@ -34,12 +34,12 @@ func TestExtractNewWithOptionalParams(t *testing.T) {
 				DataSchema: map[string]*llamacloudprod.ExtractConfigurationDataSchemaUnionParam{
 					"properties": {
 						OfAnyMap: map[string]any{
-							"vendor_name":  "bar",
 							"total_amount": "bar",
+							"vendor_name":  "bar",
 						},
 					},
 					"required": {
-						OfAnyArray: []any{"vendor_name", "total_amount"},
+						OfAnyArray: []any{"total_amount", "vendor_name"},
 					},
 					"type": {
 						OfString: llamacloudprod.String("object"),
@@ -104,7 +104,7 @@ func TestExtractListWithOptionalParams(t *testing.T) {
 		PageSize:            llamacloudprod.Int(0),
 		PageToken:           llamacloudprod.String("page_token"),
 		ProjectID:           llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		Status:              llamacloudprod.ExtractListParamsStatusPending,
+		Status:              llamacloudprod.ExtractListParamsStatusCancelled,
 	})
 	if err != nil {
 		var apierr *llamacloudprod.Error
@@ -232,14 +232,14 @@ func TestExtractValidateSchema(t *testing.T) {
 			DataSchema: map[string]*llamacloudprod.ExtractV2SchemaValidateRequestDataSchemaUnionParam{
 				"properties": {
 					OfAnyMap: map[string]any{
-						"vendor_name":    "bar",
 						"invoice_number": "bar",
-						"total_amount":   "bar",
 						"line_items":     "bar",
+						"total_amount":   "bar",
+						"vendor_name":    "bar",
 					},
 				},
 				"required": {
-					OfAnyArray: []any{"vendor_name", "invoice_number", "total_amount"},
+					OfAnyArray: []any{"invoice_number", "total_amount", "vendor_name"},
 				},
 				"type": {
 					OfString: llamacloudprod.String("object"),

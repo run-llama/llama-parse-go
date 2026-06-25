@@ -137,9 +137,9 @@ type PipelineDataSource struct {
 	// The ID of the pipeline.
 	PipelineID string `json:"pipeline_id" api:"required" format:"uuid"`
 	ProjectID  string `json:"project_id" api:"required" format:"uuid"`
-	// Any of "S3", "AZURE_STORAGE_BLOB", "GOOGLE_DRIVE", "MICROSOFT_ONEDRIVE",
-	// "MICROSOFT_SHAREPOINT", "SLACK", "NOTION_PAGE", "CONFLUENCE", "JIRA", "JIRA_V2",
-	// "BOX".
+	// Any of "AZURE_STORAGE_BLOB", "BOX", "CONFLUENCE", "GOOGLE_DRIVE", "JIRA",
+	// "JIRA_V2", "MICROSOFT_ONEDRIVE", "MICROSOFT_SHAREPOINT", "NOTION_PAGE", "S3",
+	// "SLACK".
 	SourceType PipelineDataSourceSourceType `json:"source_type" api:"required"`
 	// Creation datetime
 	CreatedAt time.Time `json:"created_at" api:"nullable" format:"date-time"`
@@ -147,7 +147,7 @@ type PipelineDataSource struct {
 	CustomMetadata map[string]*PipelineDataSourceCustomMetadataUnion `json:"custom_metadata" api:"nullable"`
 	// The status of the data source in the pipeline.
 	//
-	// Any of "NOT_STARTED", "IN_PROGRESS", "SUCCESS", "ERROR", "CANCELLED".
+	// Any of "CANCELLED", "ERROR", "IN_PROGRESS", "NOT_STARTED", "SUCCESS".
 	Status PipelineDataSourceStatus `json:"status" api:"nullable"`
 	// The last time the status was updated.
 	StatusUpdatedAt time.Time `json:"status_updated_at" api:"nullable" format:"date-time"`
@@ -436,17 +436,17 @@ func (r *PipelineDataSourceComponentUnion) UnmarshalJSON(data []byte) error {
 type PipelineDataSourceSourceType string
 
 const (
-	PipelineDataSourceSourceTypeS3                  PipelineDataSourceSourceType = "S3"
 	PipelineDataSourceSourceTypeAzureStorageBlob    PipelineDataSourceSourceType = "AZURE_STORAGE_BLOB"
-	PipelineDataSourceSourceTypeGoogleDrive         PipelineDataSourceSourceType = "GOOGLE_DRIVE"
-	PipelineDataSourceSourceTypeMicrosoftOnedrive   PipelineDataSourceSourceType = "MICROSOFT_ONEDRIVE"
-	PipelineDataSourceSourceTypeMicrosoftSharepoint PipelineDataSourceSourceType = "MICROSOFT_SHAREPOINT"
-	PipelineDataSourceSourceTypeSlack               PipelineDataSourceSourceType = "SLACK"
-	PipelineDataSourceSourceTypeNotionPage          PipelineDataSourceSourceType = "NOTION_PAGE"
+	PipelineDataSourceSourceTypeBox                 PipelineDataSourceSourceType = "BOX"
 	PipelineDataSourceSourceTypeConfluence          PipelineDataSourceSourceType = "CONFLUENCE"
+	PipelineDataSourceSourceTypeGoogleDrive         PipelineDataSourceSourceType = "GOOGLE_DRIVE"
 	PipelineDataSourceSourceTypeJira                PipelineDataSourceSourceType = "JIRA"
 	PipelineDataSourceSourceTypeJiraV2              PipelineDataSourceSourceType = "JIRA_V2"
-	PipelineDataSourceSourceTypeBox                 PipelineDataSourceSourceType = "BOX"
+	PipelineDataSourceSourceTypeMicrosoftOnedrive   PipelineDataSourceSourceType = "MICROSOFT_ONEDRIVE"
+	PipelineDataSourceSourceTypeMicrosoftSharepoint PipelineDataSourceSourceType = "MICROSOFT_SHAREPOINT"
+	PipelineDataSourceSourceTypeNotionPage          PipelineDataSourceSourceType = "NOTION_PAGE"
+	PipelineDataSourceSourceTypeS3                  PipelineDataSourceSourceType = "S3"
+	PipelineDataSourceSourceTypeSlack               PipelineDataSourceSourceType = "SLACK"
 )
 
 // PipelineDataSourceCustomMetadataUnion contains all possible properties and
@@ -514,11 +514,11 @@ func (r *PipelineDataSourceCustomMetadataUnion) UnmarshalJSON(data []byte) error
 type PipelineDataSourceStatus string
 
 const (
-	PipelineDataSourceStatusNotStarted PipelineDataSourceStatus = "NOT_STARTED"
-	PipelineDataSourceStatusInProgress PipelineDataSourceStatus = "IN_PROGRESS"
-	PipelineDataSourceStatusSuccess    PipelineDataSourceStatus = "SUCCESS"
-	PipelineDataSourceStatusError      PipelineDataSourceStatus = "ERROR"
 	PipelineDataSourceStatusCancelled  PipelineDataSourceStatus = "CANCELLED"
+	PipelineDataSourceStatusError      PipelineDataSourceStatus = "ERROR"
+	PipelineDataSourceStatusInProgress PipelineDataSourceStatus = "IN_PROGRESS"
+	PipelineDataSourceStatusNotStarted PipelineDataSourceStatus = "NOT_STARTED"
+	PipelineDataSourceStatusSuccess    PipelineDataSourceStatus = "SUCCESS"
 )
 
 type PipelineDataSourceUpdateParams struct {

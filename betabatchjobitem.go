@@ -97,7 +97,7 @@ type BetaBatchJobItemListResponse struct {
 	ItemName string `json:"item_name" api:"required"`
 	// Processing status of this item
 	//
-	// Any of "pending", "processing", "completed", "failed", "skipped", "cancelled".
+	// Any of "cancelled", "completed", "failed", "pending", "processing", "skipped".
 	Status BetaBatchJobItemListResponseStatus `json:"status" api:"required"`
 	// When processing completed for this item
 	CompletedAt time.Time `json:"completed_at" api:"nullable" format:"date-time"`
@@ -139,12 +139,12 @@ func (r *BetaBatchJobItemListResponse) UnmarshalJSON(data []byte) error {
 type BetaBatchJobItemListResponseStatus string
 
 const (
-	BetaBatchJobItemListResponseStatusPending    BetaBatchJobItemListResponseStatus = "pending"
-	BetaBatchJobItemListResponseStatusProcessing BetaBatchJobItemListResponseStatus = "processing"
+	BetaBatchJobItemListResponseStatusCancelled  BetaBatchJobItemListResponseStatus = "cancelled"
 	BetaBatchJobItemListResponseStatusCompleted  BetaBatchJobItemListResponseStatus = "completed"
 	BetaBatchJobItemListResponseStatusFailed     BetaBatchJobItemListResponseStatus = "failed"
+	BetaBatchJobItemListResponseStatusPending    BetaBatchJobItemListResponseStatus = "pending"
+	BetaBatchJobItemListResponseStatusProcessing BetaBatchJobItemListResponseStatus = "processing"
 	BetaBatchJobItemListResponseStatusSkipped    BetaBatchJobItemListResponseStatus = "skipped"
-	BetaBatchJobItemListResponseStatusCancelled  BetaBatchJobItemListResponseStatus = "cancelled"
 )
 
 // Response containing all processing results for an item.
@@ -179,7 +179,7 @@ type BetaBatchJobItemGetProcessingResultsResponseProcessingResult struct {
 	JobConfig BetaBatchJobItemGetProcessingResultsResponseProcessingResultJobConfigUnion `json:"job_config" api:"required"`
 	// Type of processing performed
 	//
-	// Any of "parse", "extract", "classify".
+	// Any of "classify", "extract", "parse".
 	JobType string `json:"job_type" api:"required"`
 	// Location of the processing output
 	OutputS3Path string `json:"output_s3_path" api:"required"`
@@ -432,7 +432,7 @@ type BetaBatchJobItemGetProcessingResultsResponseProcessingResultJobConfigBatchP
 	HTMLRemoveNavigationElements             bool           `json:"html_remove_navigation_elements" api:"nullable"`
 	HTTPProxy                                string         `json:"http_proxy" api:"nullable"`
 	IgnoreDocumentElementsForLayoutDetection bool           `json:"ignore_document_elements_for_layout_detection" api:"nullable"`
-	// Any of "screenshot", "embedded", "layout".
+	// Any of "embedded", "layout", "screenshot".
 	ImagesToSave           []string `json:"images_to_save" api:"nullable"`
 	InlineImagesInMarkdown bool     `json:"inline_images_in_markdown" api:"nullable"`
 	InputS3Path            string   `json:"input_s3_path" api:"nullable"`
@@ -475,10 +475,10 @@ type BetaBatchJobItemGetProcessingResultsResponseProcessingResultJobConfigBatchP
 	PageSuffix         string  `json:"page_suffix" api:"nullable"`
 	// Enum for representing the mode of parsing to be used.
 	//
-	// Any of "parse_page_without_llm", "parse_page_with_llm", "parse_page_with_lvm",
-	// "parse_page_with_agent", "parse_page_with_layout_agent",
-	// "parse_document_with_llm", "parse_document_with_lvm",
-	// "parse_document_with_agent".
+	// Any of "parse_document_with_agent", "parse_document_with_llm",
+	// "parse_document_with_lvm", "parse_page_with_agent",
+	// "parse_page_with_layout_agent", "parse_page_with_llm", "parse_page_with_lvm",
+	// "parse_page_without_llm".
 	ParseMode          ParsingMode `json:"parse_mode" api:"nullable"`
 	ParsingInstruction string      `json:"parsing_instruction" api:"nullable"`
 	// The pipeline ID.
@@ -493,13 +493,13 @@ type BetaBatchJobItemGetProcessingResultsResponseProcessingResultJobConfigBatchP
 	// The priority for the request. This field may be ignored or overwritten depending
 	// on the organization tier.
 	//
-	// Any of "low", "medium", "high", "critical".
+	// Any of "critical", "high", "low", "medium".
 	Priority         string `json:"priority" api:"nullable"`
 	ProjectID        string `json:"project_id" api:"nullable"`
 	RemoveHiddenText bool   `json:"remove_hidden_text" api:"nullable"`
 	// Enum for representing the different available page error handling modes.
 	//
-	// Any of "raw_text", "blank_page", "error_message".
+	// Any of "blank_page", "error_message", "raw_text".
 	ReplaceFailedPageMode                   FailPageMode `json:"replace_failed_page_mode" api:"nullable"`
 	ReplaceFailedPageWithErrorMessagePrefix string       `json:"replace_failed_page_with_error_message_prefix" api:"nullable"`
 	ReplaceFailedPageWithErrorMessageSuffix string       `json:"replace_failed_page_with_error_message_suffix" api:"nullable"`
@@ -681,14 +681,14 @@ type BetaBatchJobItemGetProcessingResultsResponseProcessingResultJobConfigBatchP
 	// Events to subscribe to (e.g. 'parse.success', 'extract.error'). If null, all
 	// events are delivered.
 	//
-	// Any of "extract.pending", "extract.success", "extract.error",
-	// "extract.partial_success", "extract.cancelled", "parse.pending",
-	// "parse.running", "parse.success", "parse.error", "parse.partial_success",
-	// "parse.cancelled", "classify.pending", "classify.running", "classify.success",
-	// "classify.error", "classify.partial_success", "classify.cancelled",
-	// "sheets.pending", "sheets.success", "sheets.error", "sheets.partial_success",
-	// "sheets.cancelled", "split.pending", "split.processing", "split.success",
-	// "split.error", "split.cancelled", "unmapped_event".
+	// Any of "classify.cancelled", "classify.error", "classify.partial_success",
+	// "classify.pending", "classify.running", "classify.success", "extract.cancelled",
+	// "extract.error", "extract.partial_success", "extract.pending",
+	// "extract.success", "parse.cancelled", "parse.error", "parse.partial_success",
+	// "parse.pending", "parse.running", "parse.success", "sheets.cancelled",
+	// "sheets.error", "sheets.partial_success", "sheets.pending", "sheets.success",
+	// "split.cancelled", "split.error", "split.pending", "split.processing",
+	// "split.success", "unmapped_event".
 	WebhookEvents []string `json:"webhook_events" api:"nullable"`
 	// Custom HTTP headers sent with each webhook request (e.g. auth tokens)
 	WebhookHeaders map[string]string `json:"webhook_headers" api:"nullable"`
@@ -724,7 +724,7 @@ type BetaBatchJobItemListParams struct {
 	Offset param.Opt[int64] `query:"offset,omitzero" json:"-"`
 	// Filter items by status
 	//
-	// Any of "pending", "processing", "completed", "failed", "skipped", "cancelled".
+	// Any of "cancelled", "completed", "failed", "pending", "processing", "skipped".
 	Status BetaBatchJobItemListParamsStatus `query:"status,omitzero" json:"-"`
 	paramObj
 }
@@ -742,12 +742,12 @@ func (r BetaBatchJobItemListParams) URLQuery() (v url.Values, err error) {
 type BetaBatchJobItemListParamsStatus string
 
 const (
-	BetaBatchJobItemListParamsStatusPending    BetaBatchJobItemListParamsStatus = "pending"
-	BetaBatchJobItemListParamsStatusProcessing BetaBatchJobItemListParamsStatus = "processing"
+	BetaBatchJobItemListParamsStatusCancelled  BetaBatchJobItemListParamsStatus = "cancelled"
 	BetaBatchJobItemListParamsStatusCompleted  BetaBatchJobItemListParamsStatus = "completed"
 	BetaBatchJobItemListParamsStatusFailed     BetaBatchJobItemListParamsStatus = "failed"
+	BetaBatchJobItemListParamsStatusPending    BetaBatchJobItemListParamsStatus = "pending"
+	BetaBatchJobItemListParamsStatusProcessing BetaBatchJobItemListParamsStatus = "processing"
 	BetaBatchJobItemListParamsStatusSkipped    BetaBatchJobItemListParamsStatus = "skipped"
-	BetaBatchJobItemListParamsStatusCancelled  BetaBatchJobItemListParamsStatus = "cancelled"
 )
 
 type BetaBatchJobItemGetProcessingResultsParams struct {
@@ -755,7 +755,7 @@ type BetaBatchJobItemGetProcessingResultsParams struct {
 	ProjectID      param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
 	// Filter results by job type
 	//
-	// Any of "parse", "extract", "classify".
+	// Any of "classify", "extract", "parse".
 	JobType BetaBatchJobItemGetProcessingResultsParamsJobType `query:"job_type,omitzero" json:"-"`
 	paramObj
 }
@@ -773,7 +773,7 @@ func (r BetaBatchJobItemGetProcessingResultsParams) URLQuery() (v url.Values, er
 type BetaBatchJobItemGetProcessingResultsParamsJobType string
 
 const (
-	BetaBatchJobItemGetProcessingResultsParamsJobTypeParse    BetaBatchJobItemGetProcessingResultsParamsJobType = "parse"
-	BetaBatchJobItemGetProcessingResultsParamsJobTypeExtract  BetaBatchJobItemGetProcessingResultsParamsJobType = "extract"
 	BetaBatchJobItemGetProcessingResultsParamsJobTypeClassify BetaBatchJobItemGetProcessingResultsParamsJobType = "classify"
+	BetaBatchJobItemGetProcessingResultsParamsJobTypeExtract  BetaBatchJobItemGetProcessingResultsParamsJobType = "extract"
+	BetaBatchJobItemGetProcessingResultsParamsJobTypeParse    BetaBatchJobItemGetProcessingResultsParamsJobType = "parse"
 )

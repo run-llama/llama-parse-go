@@ -89,7 +89,7 @@ func TestClassifyListWithOptionalParams(t *testing.T) {
 		PageSize:            llamacloudprod.Int(1),
 		PageToken:           llamacloudprod.String("page_token"),
 		ProjectID:           llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		Status:              llamacloudprod.ClassifyListParamsStatusPending,
+		Status:              llamacloudprod.ClassifyListParamsStatusCompleted,
 	})
 	if err != nil {
 		var apierr *llamacloudprod.Error
