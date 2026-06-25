@@ -191,7 +191,7 @@ type PipelineFile struct {
 	ResourceInfo map[string]*PipelineFileResourceInfoUnion `json:"resource_info" api:"nullable"`
 	// Status of the pipeline file.
 	//
-	// Any of "NOT_STARTED", "IN_PROGRESS", "SUCCESS", "ERROR", "CANCELLED".
+	// Any of "CANCELLED", "ERROR", "IN_PROGRESS", "NOT_STARTED", "SUCCESS".
 	Status PipelineFileStatus `json:"status" api:"nullable"`
 	// The last time the status was updated.
 	StatusUpdatedAt time.Time `json:"status_updated_at" api:"nullable" format:"date-time"`
@@ -477,11 +477,11 @@ func (r *PipelineFileResourceInfoUnion) UnmarshalJSON(data []byte) error {
 type PipelineFileStatus string
 
 const (
-	PipelineFileStatusNotStarted PipelineFileStatus = "NOT_STARTED"
-	PipelineFileStatusInProgress PipelineFileStatus = "IN_PROGRESS"
-	PipelineFileStatusSuccess    PipelineFileStatus = "SUCCESS"
-	PipelineFileStatusError      PipelineFileStatus = "ERROR"
 	PipelineFileStatusCancelled  PipelineFileStatus = "CANCELLED"
+	PipelineFileStatusError      PipelineFileStatus = "ERROR"
+	PipelineFileStatusInProgress PipelineFileStatus = "IN_PROGRESS"
+	PipelineFileStatusNotStarted PipelineFileStatus = "NOT_STARTED"
+	PipelineFileStatusSuccess    PipelineFileStatus = "SUCCESS"
 )
 
 type PipelineFileGetStatusCountsResponse struct {
@@ -614,7 +614,7 @@ type PipelineFileListParams struct {
 	OnlyManuallyUploaded param.Opt[bool]   `query:"only_manually_uploaded,omitzero" json:"-"`
 	// Filter by file statuses
 	//
-	// Any of "NOT_STARTED", "IN_PROGRESS", "SUCCESS", "ERROR", "CANCELLED".
+	// Any of "CANCELLED", "ERROR", "IN_PROGRESS", "NOT_STARTED", "SUCCESS".
 	Statuses []string `query:"statuses,omitzero" json:"-"`
 	paramObj
 }

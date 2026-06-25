@@ -33,10 +33,10 @@ func TestRetrieverRetrieverSearchWithOptionalParams(t *testing.T) {
 			Query:          "x",
 			OrganizationID: llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 			ProjectID:      llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-			Mode:           llamacloudprod.CompositeRetrievalModeRouting,
+			Mode:           llamacloudprod.CompositeRetrievalModeFull,
 			RerankConfig: llamacloudprod.ReRankConfigParam{
 				TopN: llamacloudprod.Int(1),
-				Type: llamacloudprod.ReRankConfigTypeSystemDefault,
+				Type: llamacloudprod.ReRankConfigTypeBedrock,
 			},
 			RerankTopN: llamacloudprod.Int(0),
 		},

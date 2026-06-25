@@ -68,7 +68,7 @@ func TestBatchListWithOptionalParams(t *testing.T) {
 		PageToken:           llamacloudprod.String("page_token"),
 		ProjectID:           llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		SourceDirectoryID:   llamacloudprod.String("source_directory_id"),
-		Status:              llamacloudprod.BatchListParamsStatusPending,
+		Status:              llamacloudprod.BatchListParamsStatusCancelled,
 	})
 	if err != nil {
 		var apierr *llamacloudprod.Error

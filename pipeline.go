@@ -1238,8 +1238,8 @@ type DataSinkCreateParam struct {
 	Component DataSinkCreateComponentUnionParam `json:"component,omitzero" api:"required"`
 	// The name of the data sink.
 	Name string `json:"name" api:"required"`
-	// Any of "PINECONE", "POSTGRES", "QDRANT", "AZUREAI_SEARCH", "MONGODB_ATLAS",
-	// "MILVUS", "ASTRA_DB".
+	// Any of "ASTRA_DB", "AZUREAI_SEARCH", "MILVUS", "MONGODB_ATLAS", "PINECONE",
+	// "POSTGRES", "QDRANT".
 	SinkType DataSinkCreateSinkType `json:"sink_type,omitzero" api:"required"`
 	paramObj
 }
@@ -1284,13 +1284,13 @@ func (u *DataSinkCreateComponentUnionParam) UnmarshalJSON(data []byte) error {
 type DataSinkCreateSinkType string
 
 const (
+	DataSinkCreateSinkTypeAstraDB       DataSinkCreateSinkType = "ASTRA_DB"
+	DataSinkCreateSinkTypeAzureaiSearch DataSinkCreateSinkType = "AZUREAI_SEARCH"
+	DataSinkCreateSinkTypeMilvus        DataSinkCreateSinkType = "MILVUS"
+	DataSinkCreateSinkTypeMongoDBAtlas  DataSinkCreateSinkType = "MONGODB_ATLAS"
 	DataSinkCreateSinkTypePinecone      DataSinkCreateSinkType = "PINECONE"
 	DataSinkCreateSinkTypePostgres      DataSinkCreateSinkType = "POSTGRES"
 	DataSinkCreateSinkTypeQdrant        DataSinkCreateSinkType = "QDRANT"
-	DataSinkCreateSinkTypeAzureaiSearch DataSinkCreateSinkType = "AZUREAI_SEARCH"
-	DataSinkCreateSinkTypeMongoDBAtlas  DataSinkCreateSinkType = "MONGODB_ATLAS"
-	DataSinkCreateSinkTypeMilvus        DataSinkCreateSinkType = "MILVUS"
-	DataSinkCreateSinkTypeAstraDB       DataSinkCreateSinkType = "ASTRA_DB"
 )
 
 type GeminiEmbedding struct {
@@ -1457,7 +1457,7 @@ type HuggingFaceInferenceAPIEmbedding struct {
 	NumWorkers int64 `json:"num_workers" api:"nullable"`
 	// Enum of possible pooling choices with pooling behaviors.
 	//
-	// Any of "cls", "mean", "last".
+	// Any of "cls", "last", "mean".
 	Pooling HuggingFaceInferenceAPIEmbeddingPooling `json:"pooling" api:"nullable"`
 	// Instruction to prepend during query embedding.
 	QueryInstruction string `json:"query_instruction" api:"nullable"`
@@ -1546,8 +1546,8 @@ type HuggingFaceInferenceAPIEmbeddingPooling string
 
 const (
 	HuggingFaceInferenceAPIEmbeddingPoolingCls  HuggingFaceInferenceAPIEmbeddingPooling = "cls"
-	HuggingFaceInferenceAPIEmbeddingPoolingMean HuggingFaceInferenceAPIEmbeddingPooling = "mean"
 	HuggingFaceInferenceAPIEmbeddingPoolingLast HuggingFaceInferenceAPIEmbeddingPooling = "last"
+	HuggingFaceInferenceAPIEmbeddingPoolingMean HuggingFaceInferenceAPIEmbeddingPooling = "mean"
 )
 
 type HuggingFaceInferenceAPIEmbeddingParam struct {
@@ -1580,7 +1580,7 @@ type HuggingFaceInferenceAPIEmbeddingParam struct {
 	Headers map[string]string `json:"headers,omitzero"`
 	// Enum of possible pooling choices with pooling behaviors.
 	//
-	// Any of "cls", "mean", "last".
+	// Any of "cls", "last", "mean".
 	Pooling HuggingFaceInferenceAPIEmbeddingPooling `json:"pooling,omitzero"`
 	paramObj
 }
@@ -1711,7 +1711,7 @@ type LlamaParseParametersResp struct {
 	HTMLRemoveNavigationElements             bool    `json:"html_remove_navigation_elements" api:"nullable"`
 	HTTPProxy                                string  `json:"http_proxy" api:"nullable"`
 	IgnoreDocumentElementsForLayoutDetection bool    `json:"ignore_document_elements_for_layout_detection" api:"nullable"`
-	// Any of "screenshot", "embedded", "layout".
+	// Any of "embedded", "layout", "screenshot".
 	ImagesToSave                          []string           `json:"images_to_save" api:"nullable"`
 	InlineImagesInMarkdown                bool               `json:"inline_images_in_markdown" api:"nullable"`
 	InputS3Path                           string             `json:"input_s3_path" api:"nullable"`
@@ -1746,10 +1746,10 @@ type LlamaParseParametersResp struct {
 	PageSuffix                            string             `json:"page_suffix" api:"nullable"`
 	// Enum for representing the mode of parsing to be used.
 	//
-	// Any of "parse_page_without_llm", "parse_page_with_llm", "parse_page_with_lvm",
-	// "parse_page_with_agent", "parse_page_with_layout_agent",
-	// "parse_document_with_llm", "parse_document_with_lvm",
-	// "parse_document_with_agent".
+	// Any of "parse_document_with_agent", "parse_document_with_llm",
+	// "parse_document_with_lvm", "parse_page_with_agent",
+	// "parse_page_with_layout_agent", "parse_page_with_llm", "parse_page_with_lvm",
+	// "parse_page_without_llm".
 	ParseMode                          ParsingMode `json:"parse_mode" api:"nullable"`
 	ParsingInstruction                 string      `json:"parsing_instruction" api:"nullable"`
 	PreciseBoundingBox                 bool        `json:"precise_bounding_box" api:"nullable"`
@@ -1762,13 +1762,13 @@ type LlamaParseParametersResp struct {
 	// The priority for the request. This field may be ignored or overwritten depending
 	// on the organization tier.
 	//
-	// Any of "low", "medium", "high", "critical".
+	// Any of "critical", "high", "low", "medium".
 	Priority         LlamaParseParametersPriority `json:"priority" api:"nullable"`
 	ProjectID        string                       `json:"project_id" api:"nullable"`
 	RemoveHiddenText bool                         `json:"remove_hidden_text" api:"nullable"`
 	// Enum for representing the different available page error handling modes.
 	//
-	// Any of "raw_text", "blank_page", "error_message".
+	// Any of "blank_page", "error_message", "raw_text".
 	ReplaceFailedPageMode                   FailPageMode `json:"replace_failed_page_mode" api:"nullable"`
 	ReplaceFailedPageWithErrorMessagePrefix string       `json:"replace_failed_page_with_error_message_prefix" api:"nullable"`
 	ReplaceFailedPageWithErrorMessageSuffix string       `json:"replace_failed_page_with_error_message_suffix" api:"nullable"`
@@ -1947,10 +1947,10 @@ func (r LlamaParseParametersResp) ToParam() LlamaParseParameters {
 type LlamaParseParametersPriority string
 
 const (
+	LlamaParseParametersPriorityCritical LlamaParseParametersPriority = "critical"
+	LlamaParseParametersPriorityHigh     LlamaParseParametersPriority = "high"
 	LlamaParseParametersPriorityLow      LlamaParseParametersPriority = "low"
 	LlamaParseParametersPriorityMedium   LlamaParseParametersPriority = "medium"
-	LlamaParseParametersPriorityHigh     LlamaParseParametersPriority = "high"
-	LlamaParseParametersPriorityCritical LlamaParseParametersPriority = "critical"
 )
 
 // Configuration for a single outbound webhook endpoint.
@@ -1958,14 +1958,14 @@ type LlamaParseParametersWebhookConfigurationResp struct {
 	// Events to subscribe to (e.g. 'parse.success', 'extract.error'). If null, all
 	// events are delivered.
 	//
-	// Any of "extract.pending", "extract.success", "extract.error",
-	// "extract.partial_success", "extract.cancelled", "parse.pending",
-	// "parse.running", "parse.success", "parse.error", "parse.partial_success",
-	// "parse.cancelled", "classify.pending", "classify.running", "classify.success",
-	// "classify.error", "classify.partial_success", "classify.cancelled",
-	// "sheets.pending", "sheets.success", "sheets.error", "sheets.partial_success",
-	// "sheets.cancelled", "split.pending", "split.processing", "split.success",
-	// "split.error", "split.cancelled", "unmapped_event".
+	// Any of "classify.cancelled", "classify.error", "classify.partial_success",
+	// "classify.pending", "classify.running", "classify.success", "extract.cancelled",
+	// "extract.error", "extract.partial_success", "extract.pending",
+	// "extract.success", "parse.cancelled", "parse.error", "parse.partial_success",
+	// "parse.pending", "parse.running", "parse.success", "sheets.cancelled",
+	// "sheets.error", "sheets.partial_success", "sheets.pending", "sheets.success",
+	// "split.cancelled", "split.error", "split.pending", "split.processing",
+	// "split.success", "unmapped_event".
 	WebhookEvents []string `json:"webhook_events" api:"nullable"`
 	// Custom HTTP headers sent with each webhook request (e.g. auth tokens)
 	WebhookHeaders map[string]string `json:"webhook_headers" api:"nullable"`
@@ -2104,26 +2104,26 @@ type LlamaParseParameters struct {
 	VendorMultimodalModelName                param.Opt[string]  `json:"vendor_multimodal_model_name,omitzero"`
 	Version                                  param.Opt[string]  `json:"version,omitzero"`
 	WebhookURL                               param.Opt[string]  `json:"webhook_url,omitzero"`
-	// Any of "screenshot", "embedded", "layout".
+	// Any of "embedded", "layout", "screenshot".
 	ImagesToSave []string `json:"images_to_save,omitzero"`
 	// The priority for the request. This field may be ignored or overwritten depending
 	// on the organization tier.
 	//
-	// Any of "low", "medium", "high", "critical".
+	// Any of "critical", "high", "low", "medium".
 	Priority LlamaParseParametersPriority `json:"priority,omitzero"`
 	// Outbound webhook endpoints to notify on job status changes
 	WebhookConfigurations []LlamaParseParametersWebhookConfiguration `json:"webhook_configurations,omitzero"`
 	Languages             []ParsingLanguages                         `json:"languages,omitzero"`
 	// Enum for representing the mode of parsing to be used.
 	//
-	// Any of "parse_page_without_llm", "parse_page_with_llm", "parse_page_with_lvm",
-	// "parse_page_with_agent", "parse_page_with_layout_agent",
-	// "parse_document_with_llm", "parse_document_with_lvm",
-	// "parse_document_with_agent".
+	// Any of "parse_document_with_agent", "parse_document_with_llm",
+	// "parse_document_with_lvm", "parse_page_with_agent",
+	// "parse_page_with_layout_agent", "parse_page_with_llm", "parse_page_with_lvm",
+	// "parse_page_without_llm".
 	ParseMode ParsingMode `json:"parse_mode,omitzero"`
 	// Enum for representing the different available page error handling modes.
 	//
-	// Any of "raw_text", "blank_page", "error_message".
+	// Any of "blank_page", "error_message", "raw_text".
 	ReplaceFailedPageMode FailPageMode `json:"replace_failed_page_mode,omitzero"`
 	paramObj
 }
@@ -2145,14 +2145,14 @@ type LlamaParseParametersWebhookConfiguration struct {
 	// Events to subscribe to (e.g. 'parse.success', 'extract.error'). If null, all
 	// events are delivered.
 	//
-	// Any of "extract.pending", "extract.success", "extract.error",
-	// "extract.partial_success", "extract.cancelled", "parse.pending",
-	// "parse.running", "parse.success", "parse.error", "parse.partial_success",
-	// "parse.cancelled", "classify.pending", "classify.running", "classify.success",
-	// "classify.error", "classify.partial_success", "classify.cancelled",
-	// "sheets.pending", "sheets.success", "sheets.error", "sheets.partial_success",
-	// "sheets.cancelled", "split.pending", "split.processing", "split.success",
-	// "split.error", "split.cancelled", "unmapped_event".
+	// Any of "classify.cancelled", "classify.error", "classify.partial_success",
+	// "classify.pending", "classify.running", "classify.success", "extract.cancelled",
+	// "extract.error", "extract.partial_success", "extract.pending",
+	// "extract.success", "parse.cancelled", "parse.error", "parse.partial_success",
+	// "parse.pending", "parse.running", "parse.success", "sheets.cancelled",
+	// "sheets.error", "sheets.partial_success", "sheets.pending", "sheets.success",
+	// "split.cancelled", "split.error", "split.pending", "split.processing",
+	// "split.success", "unmapped_event".
 	WebhookEvents []string `json:"webhook_events,omitzero"`
 	// Custom HTTP headers sent with each webhook request (e.g. auth tokens)
 	WebhookHeaders map[string]string `json:"webhook_headers,omitzero"`
@@ -2170,8 +2170,8 @@ func (r *LlamaParseParametersWebhookConfiguration) UnmarshalJSON(data []byte) er
 type ManagedIngestionStatusResponse struct {
 	// Status of the ingestion.
 	//
-	// Any of "NOT_STARTED", "IN_PROGRESS", "SUCCESS", "ERROR", "PARTIAL_SUCCESS",
-	// "CANCELLED".
+	// Any of "CANCELLED", "ERROR", "IN_PROGRESS", "NOT_STARTED", "PARTIAL_SUCCESS",
+	// "SUCCESS".
 	Status ManagedIngestionStatusResponseStatus `json:"status" api:"required"`
 	// Date of the deployment.
 	DeploymentDate time.Time `json:"deployment_date" api:"nullable" format:"date-time"`
@@ -2203,12 +2203,12 @@ func (r *ManagedIngestionStatusResponse) UnmarshalJSON(data []byte) error {
 type ManagedIngestionStatusResponseStatus string
 
 const (
-	ManagedIngestionStatusResponseStatusNotStarted     ManagedIngestionStatusResponseStatus = "NOT_STARTED"
-	ManagedIngestionStatusResponseStatusInProgress     ManagedIngestionStatusResponseStatus = "IN_PROGRESS"
-	ManagedIngestionStatusResponseStatusSuccess        ManagedIngestionStatusResponseStatus = "SUCCESS"
-	ManagedIngestionStatusResponseStatusError          ManagedIngestionStatusResponseStatus = "ERROR"
-	ManagedIngestionStatusResponseStatusPartialSuccess ManagedIngestionStatusResponseStatus = "PARTIAL_SUCCESS"
 	ManagedIngestionStatusResponseStatusCancelled      ManagedIngestionStatusResponseStatus = "CANCELLED"
+	ManagedIngestionStatusResponseStatusError          ManagedIngestionStatusResponseStatus = "ERROR"
+	ManagedIngestionStatusResponseStatusInProgress     ManagedIngestionStatusResponseStatus = "IN_PROGRESS"
+	ManagedIngestionStatusResponseStatusNotStarted     ManagedIngestionStatusResponseStatus = "NOT_STARTED"
+	ManagedIngestionStatusResponseStatusPartialSuccess ManagedIngestionStatusResponseStatus = "PARTIAL_SUCCESS"
+	ManagedIngestionStatusResponseStatusSuccess        ManagedIngestionStatusResponseStatus = "SUCCESS"
 )
 
 type ManagedIngestionStatusResponseError struct {
@@ -2218,8 +2218,8 @@ type ManagedIngestionStatusResponseError struct {
 	Message string `json:"message" api:"required"`
 	// Name of the job that failed.
 	//
-	// Any of "MANAGED_INGESTION", "DATA_SOURCE", "FILE_UPDATER", "PARSE", "TRANSFORM",
-	// "INGESTION", "METADATA_UPDATE".
+	// Any of "DATA_SOURCE", "FILE_UPDATER", "INGESTION", "MANAGED_INGESTION",
+	// "METADATA_UPDATE", "PARSE", "TRANSFORM".
 	Step string `json:"step" api:"required"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
@@ -2242,7 +2242,7 @@ type MetadataFilters struct {
 	Filters []MetadataFiltersFilterUnion `json:"filters" api:"required"`
 	// Vector store filter conditions to combine different filters.
 	//
-	// Any of "and", "or", "not".
+	// Any of "and", "not", "or".
 	Condition MetadataFiltersCondition `json:"condition" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
@@ -2321,8 +2321,8 @@ type MetadataFiltersFilterMetadataFilter struct {
 	Value MetadataFiltersFilterMetadataFilterValueUnion `json:"value" api:"required"`
 	// Vector store filter operator.
 	//
-	// Any of "==", ">", "<", "!=", ">=", "<=", "in", "nin", "any", "all",
-	// "text_match", "text_match_insensitive", "contains", "is_empty".
+	// Any of "!=", "<", "<=", "==", ">", ">=", "all", "any", "contains", "in",
+	// "is_empty", "nin", "text_match", "text_match_insensitive".
 	Operator string `json:"operator"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
@@ -2405,8 +2405,8 @@ type MetadataFiltersCondition string
 
 const (
 	MetadataFiltersConditionAnd MetadataFiltersCondition = "and"
-	MetadataFiltersConditionOr  MetadataFiltersCondition = "or"
 	MetadataFiltersConditionNot MetadataFiltersCondition = "not"
+	MetadataFiltersConditionOr  MetadataFiltersCondition = "or"
 )
 
 // Metadata filters for vector stores.
@@ -2416,7 +2416,7 @@ type MetadataFiltersParam struct {
 	Filters []MetadataFiltersFilterUnionParam `json:"filters,omitzero" api:"required"`
 	// Vector store filter conditions to combine different filters.
 	//
-	// Any of "and", "or", "not".
+	// Any of "and", "not", "or".
 	Condition MetadataFiltersCondition `json:"condition,omitzero"`
 	paramObj
 }
@@ -2458,8 +2458,8 @@ type MetadataFiltersFilterMetadataFilterParam struct {
 	Key   string                                             `json:"key" api:"required"`
 	// Vector store filter operator.
 	//
-	// Any of "==", ">", "<", "!=", ">=", "<=", "in", "nin", "any", "all",
-	// "text_match", "text_match_insensitive", "contains", "is_empty".
+	// Any of "!=", "<", "<=", "==", ">", ">=", "all", "any", "contains", "in",
+	// "is_empty", "nin", "text_match", "text_match_insensitive".
 	Operator string `json:"operator,omitzero"`
 	paramObj
 }
@@ -2474,7 +2474,7 @@ func (r *MetadataFiltersFilterMetadataFilterParam) UnmarshalJSON(data []byte) er
 
 func init() {
 	apijson.RegisterFieldValidator[MetadataFiltersFilterMetadataFilterParam](
-		"operator", "==", ">", "<", "!=", ">=", "<=", "in", "nin", "any", "all", "text_match", "text_match_insensitive", "contains", "is_empty",
+		"operator", "!=", "<", "<=", "==", ">", ">=", "all", "any", "contains", "in", "is_empty", "nin", "text_match", "text_match_insensitive",
 	)
 }
 
@@ -2790,7 +2790,7 @@ type Pipeline struct {
 	MetadataConfig PipelineMetadataConfig `json:"metadata_config" api:"nullable"`
 	// Type of pipeline. Either PLAYGROUND or MANAGED.
 	//
-	// Any of "PLAYGROUND", "MANAGED".
+	// Any of "MANAGED", "PLAYGROUND".
 	PipelineType PipelineType `json:"pipeline_type"`
 	// Preset retrieval parameters for the pipeline.
 	PresetRetrievalParameters PresetRetrievalParamsResp `json:"preset_retrieval_parameters"`
@@ -2839,24 +2839,23 @@ func (r *Pipeline) UnmarshalJSON(data []byte) error {
 }
 
 // PipelineEmbeddingConfigUnion contains all possible properties and values from
-// [PipelineEmbeddingConfigManagedOpenAIEmbedding], [AzureOpenAIEmbeddingConfig],
-// [CohereEmbeddingConfig], [GeminiEmbeddingConfig],
-// [HuggingFaceInferenceAPIEmbeddingConfig], [OpenAIEmbeddingConfig],
-// [VertexAIEmbeddingConfig], [BedrockEmbeddingConfig].
+// [AzureOpenAIEmbeddingConfig], [BedrockEmbeddingConfig], [CohereEmbeddingConfig],
+// [GeminiEmbeddingConfig], [HuggingFaceInferenceAPIEmbeddingConfig],
+// [PipelineEmbeddingConfigManagedOpenAIEmbedding], [OpenAIEmbeddingConfig],
+// [VertexAIEmbeddingConfig].
 //
 // Use the [PipelineEmbeddingConfigUnion.AsAny] method to switch on the variant.
 //
 // Use the methods beginning with 'As' to cast the union to one of its variants.
 type PipelineEmbeddingConfigUnion struct {
-	// This field is a union of
-	// [PipelineEmbeddingConfigManagedOpenAIEmbeddingComponent],
-	// [AzureOpenAIEmbedding], [CohereEmbedding], [GeminiEmbedding],
-	// [HuggingFaceInferenceAPIEmbedding], [OpenAIEmbedding], [VertexTextEmbedding],
-	// [BedrockEmbedding]
+	// This field is a union of [AzureOpenAIEmbedding], [BedrockEmbedding],
+	// [CohereEmbedding], [GeminiEmbedding], [HuggingFaceInferenceAPIEmbedding],
+	// [PipelineEmbeddingConfigManagedOpenAIEmbeddingComponent], [OpenAIEmbedding],
+	// [VertexTextEmbedding]
 	Component PipelineEmbeddingConfigUnionComponent `json:"component"`
-	// Any of "MANAGED_OPENAI_EMBEDDING", "AZURE_EMBEDDING", "COHERE_EMBEDDING",
-	// "GEMINI_EMBEDDING", "HUGGINGFACE_API_EMBEDDING", "OPENAI_EMBEDDING",
-	// "VERTEXAI_EMBEDDING", "BEDROCK_EMBEDDING".
+	// Any of "AZURE_EMBEDDING", "BEDROCK_EMBEDDING", "COHERE_EMBEDDING",
+	// "GEMINI_EMBEDDING", "HUGGINGFACE_API_EMBEDDING", "MANAGED_OPENAI_EMBEDDING",
+	// "OPENAI_EMBEDDING", "VERTEXAI_EMBEDDING".
 	Type string `json:"type"`
 	JSON struct {
 		Component respjson.Field
@@ -2872,57 +2871,57 @@ type anyPipelineEmbeddingConfig interface {
 	implPipelineEmbeddingConfigUnion()
 }
 
-func (PipelineEmbeddingConfigManagedOpenAIEmbedding) implPipelineEmbeddingConfigUnion() {}
 func (AzureOpenAIEmbeddingConfig) implPipelineEmbeddingConfigUnion()                    {}
+func (BedrockEmbeddingConfig) implPipelineEmbeddingConfigUnion()                        {}
 func (CohereEmbeddingConfig) implPipelineEmbeddingConfigUnion()                         {}
 func (GeminiEmbeddingConfig) implPipelineEmbeddingConfigUnion()                         {}
 func (HuggingFaceInferenceAPIEmbeddingConfig) implPipelineEmbeddingConfigUnion()        {}
+func (PipelineEmbeddingConfigManagedOpenAIEmbedding) implPipelineEmbeddingConfigUnion() {}
 func (OpenAIEmbeddingConfig) implPipelineEmbeddingConfigUnion()                         {}
 func (VertexAIEmbeddingConfig) implPipelineEmbeddingConfigUnion()                       {}
-func (BedrockEmbeddingConfig) implPipelineEmbeddingConfigUnion()                        {}
 
 // Use the following switch statement to find the correct variant
 //
 //	switch variant := PipelineEmbeddingConfigUnion.AsAny().(type) {
-//	case llamacloudprod.PipelineEmbeddingConfigManagedOpenAIEmbedding:
 //	case llamacloudprod.AzureOpenAIEmbeddingConfig:
+//	case llamacloudprod.BedrockEmbeddingConfig:
 //	case llamacloudprod.CohereEmbeddingConfig:
 //	case llamacloudprod.GeminiEmbeddingConfig:
 //	case llamacloudprod.HuggingFaceInferenceAPIEmbeddingConfig:
+//	case llamacloudprod.PipelineEmbeddingConfigManagedOpenAIEmbedding:
 //	case llamacloudprod.OpenAIEmbeddingConfig:
 //	case llamacloudprod.VertexAIEmbeddingConfig:
-//	case llamacloudprod.BedrockEmbeddingConfig:
 //	default:
 //	  fmt.Errorf("no variant present")
 //	}
 func (u PipelineEmbeddingConfigUnion) AsAny() anyPipelineEmbeddingConfig {
 	switch u.Type {
-	case "MANAGED_OPENAI_EMBEDDING":
-		return u.AsManagedOpenAIEmbedding()
 	case "AZURE_EMBEDDING":
 		return u.AsAzureEmbedding()
+	case "BEDROCK_EMBEDDING":
+		return u.AsBedrockEmbedding()
 	case "COHERE_EMBEDDING":
 		return u.AsCohereEmbedding()
 	case "GEMINI_EMBEDDING":
 		return u.AsGeminiEmbedding()
 	case "HUGGINGFACE_API_EMBEDDING":
 		return u.AsHuggingfaceAPIEmbedding()
+	case "MANAGED_OPENAI_EMBEDDING":
+		return u.AsManagedOpenAIEmbedding()
 	case "OPENAI_EMBEDDING":
 		return u.AsOpenAIEmbedding()
 	case "VERTEXAI_EMBEDDING":
 		return u.AsVertexaiEmbedding()
-	case "BEDROCK_EMBEDDING":
-		return u.AsBedrockEmbedding()
 	}
 	return nil
 }
 
-func (u PipelineEmbeddingConfigUnion) AsManagedOpenAIEmbedding() (v PipelineEmbeddingConfigManagedOpenAIEmbedding) {
+func (u PipelineEmbeddingConfigUnion) AsAzureEmbedding() (v AzureOpenAIEmbeddingConfig) {
 	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
 	return
 }
 
-func (u PipelineEmbeddingConfigUnion) AsAzureEmbedding() (v AzureOpenAIEmbeddingConfig) {
+func (u PipelineEmbeddingConfigUnion) AsBedrockEmbedding() (v BedrockEmbeddingConfig) {
 	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
 	return
 }
@@ -2942,17 +2941,17 @@ func (u PipelineEmbeddingConfigUnion) AsHuggingfaceAPIEmbedding() (v HuggingFace
 	return
 }
 
+func (u PipelineEmbeddingConfigUnion) AsManagedOpenAIEmbedding() (v PipelineEmbeddingConfigManagedOpenAIEmbedding) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
 func (u PipelineEmbeddingConfigUnion) AsOpenAIEmbedding() (v OpenAIEmbeddingConfig) {
 	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
 	return
 }
 
 func (u PipelineEmbeddingConfigUnion) AsVertexaiEmbedding() (v VertexAIEmbeddingConfig) {
-	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
-	return
-}
-
-func (u PipelineEmbeddingConfigUnion) AsBedrockEmbedding() (v BedrockEmbeddingConfig) {
 	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
 	return
 }
@@ -2971,10 +2970,6 @@ func (r *PipelineEmbeddingConfigUnion) UnmarshalJSON(data []byte) error {
 // For type safety it is recommended to directly use a variant of the
 // [PipelineEmbeddingConfigUnion].
 type PipelineEmbeddingConfigUnionComponent struct {
-	ClassName        string `json:"class_name"`
-	EmbedBatchSize   int64  `json:"embed_batch_size"`
-	ModelName        string `json:"model_name"`
-	NumWorkers       int64  `json:"num_workers"`
 	AdditionalKwargs any    `json:"additional_kwargs"`
 	APIBase          string `json:"api_base"`
 	APIKey           string `json:"api_key"`
@@ -2983,11 +2978,25 @@ type PipelineEmbeddingConfigUnionComponent struct {
 	AzureDeployment string `json:"azure_deployment"`
 	// This field is from variant [AzureOpenAIEmbedding].
 	AzureEndpoint  string  `json:"azure_endpoint"`
+	ClassName      string  `json:"class_name"`
 	DefaultHeaders string  `json:"default_headers"`
 	Dimensions     int64   `json:"dimensions"`
+	EmbedBatchSize int64   `json:"embed_batch_size"`
 	MaxRetries     int64   `json:"max_retries"`
+	ModelName      string  `json:"model_name"`
+	NumWorkers     int64   `json:"num_workers"`
 	ReuseClient    bool    `json:"reuse_client"`
 	Timeout        float64 `json:"timeout"`
+	// This field is from variant [BedrockEmbedding].
+	AwsAccessKeyID string `json:"aws_access_key_id"`
+	// This field is from variant [BedrockEmbedding].
+	AwsSecretAccessKey string `json:"aws_secret_access_key"`
+	// This field is from variant [BedrockEmbedding].
+	AwsSessionToken string `json:"aws_session_token"`
+	// This field is from variant [BedrockEmbedding].
+	ProfileName string `json:"profile_name"`
+	// This field is from variant [BedrockEmbedding].
+	RegionName string `json:"region_name"`
 	// This field is from variant [CohereEmbedding].
 	EmbeddingType string `json:"embedding_type"`
 	// This field is from variant [CohereEmbedding].
@@ -3030,32 +3039,27 @@ type PipelineEmbeddingConfigUnionComponent struct {
 	TokenUri string `json:"token_uri"`
 	// This field is from variant [VertexTextEmbedding].
 	EmbedMode VertexTextEmbeddingEmbedMode `json:"embed_mode"`
-	// This field is from variant [BedrockEmbedding].
-	AwsAccessKeyID string `json:"aws_access_key_id"`
-	// This field is from variant [BedrockEmbedding].
-	AwsSecretAccessKey string `json:"aws_secret_access_key"`
-	// This field is from variant [BedrockEmbedding].
-	AwsSessionToken string `json:"aws_session_token"`
-	// This field is from variant [BedrockEmbedding].
-	ProfileName string `json:"profile_name"`
-	// This field is from variant [BedrockEmbedding].
-	RegionName string `json:"region_name"`
-	JSON       struct {
-		ClassName            respjson.Field
-		EmbedBatchSize       respjson.Field
-		ModelName            respjson.Field
-		NumWorkers           respjson.Field
+	JSON      struct {
 		AdditionalKwargs     respjson.Field
 		APIBase              respjson.Field
 		APIKey               respjson.Field
 		APIVersion           respjson.Field
 		AzureDeployment      respjson.Field
 		AzureEndpoint        respjson.Field
+		ClassName            respjson.Field
 		DefaultHeaders       respjson.Field
 		Dimensions           respjson.Field
+		EmbedBatchSize       respjson.Field
 		MaxRetries           respjson.Field
+		ModelName            respjson.Field
+		NumWorkers           respjson.Field
 		ReuseClient          respjson.Field
 		Timeout              respjson.Field
+		AwsAccessKeyID       respjson.Field
+		AwsSecretAccessKey   respjson.Field
+		AwsSessionToken      respjson.Field
+		ProfileName          respjson.Field
+		RegionName           respjson.Field
 		EmbeddingType        respjson.Field
 		InputType            respjson.Field
 		Truncate             respjson.Field
@@ -3077,11 +3081,6 @@ type PipelineEmbeddingConfigUnionComponent struct {
 		Project              respjson.Field
 		TokenUri             respjson.Field
 		EmbedMode            respjson.Field
-		AwsAccessKeyID       respjson.Field
-		AwsSecretAccessKey   respjson.Field
-		AwsSessionToken      respjson.Field
-		ProfileName          respjson.Field
-		RegionName           respjson.Field
 		raw                  string
 	} `json:"-"`
 }
@@ -3198,22 +3197,22 @@ func (r *PipelineEmbeddingModelConfig) UnmarshalJSON(data []byte) error {
 
 // PipelineEmbeddingModelConfigEmbeddingConfigUnion contains all possible
 // properties and values from [AzureOpenAIEmbeddingConfig],
-// [CohereEmbeddingConfig], [GeminiEmbeddingConfig],
+// [BedrockEmbeddingConfig], [CohereEmbeddingConfig], [GeminiEmbeddingConfig],
 // [HuggingFaceInferenceAPIEmbeddingConfig], [OpenAIEmbeddingConfig],
-// [VertexAIEmbeddingConfig], [BedrockEmbeddingConfig].
+// [VertexAIEmbeddingConfig].
 //
 // Use the [PipelineEmbeddingModelConfigEmbeddingConfigUnion.AsAny] method to
 // switch on the variant.
 //
 // Use the methods beginning with 'As' to cast the union to one of its variants.
 type PipelineEmbeddingModelConfigEmbeddingConfigUnion struct {
-	// This field is a union of [AzureOpenAIEmbedding], [CohereEmbedding],
-	// [GeminiEmbedding], [HuggingFaceInferenceAPIEmbedding], [OpenAIEmbedding],
-	// [VertexTextEmbedding], [BedrockEmbedding]
+	// This field is a union of [AzureOpenAIEmbedding], [BedrockEmbedding],
+	// [CohereEmbedding], [GeminiEmbedding], [HuggingFaceInferenceAPIEmbedding],
+	// [OpenAIEmbedding], [VertexTextEmbedding]
 	Component PipelineEmbeddingModelConfigEmbeddingConfigUnionComponent `json:"component"`
-	// Any of "AZURE_EMBEDDING", "COHERE_EMBEDDING", "GEMINI_EMBEDDING",
-	// "HUGGINGFACE_API_EMBEDDING", "OPENAI_EMBEDDING", "VERTEXAI_EMBEDDING",
-	// "BEDROCK_EMBEDDING".
+	// Any of "AZURE_EMBEDDING", "BEDROCK_EMBEDDING", "COHERE_EMBEDDING",
+	// "GEMINI_EMBEDDING", "HUGGINGFACE_API_EMBEDDING", "OPENAI_EMBEDDING",
+	// "VERTEXAI_EMBEDDING".
 	Type string `json:"type"`
 	JSON struct {
 		Component respjson.Field
@@ -3230,24 +3229,24 @@ type anyPipelineEmbeddingModelConfigEmbeddingConfig interface {
 }
 
 func (AzureOpenAIEmbeddingConfig) implPipelineEmbeddingModelConfigEmbeddingConfigUnion() {}
+func (BedrockEmbeddingConfig) implPipelineEmbeddingModelConfigEmbeddingConfigUnion()     {}
 func (CohereEmbeddingConfig) implPipelineEmbeddingModelConfigEmbeddingConfigUnion()      {}
 func (GeminiEmbeddingConfig) implPipelineEmbeddingModelConfigEmbeddingConfigUnion()      {}
 func (HuggingFaceInferenceAPIEmbeddingConfig) implPipelineEmbeddingModelConfigEmbeddingConfigUnion() {
 }
 func (OpenAIEmbeddingConfig) implPipelineEmbeddingModelConfigEmbeddingConfigUnion()   {}
 func (VertexAIEmbeddingConfig) implPipelineEmbeddingModelConfigEmbeddingConfigUnion() {}
-func (BedrockEmbeddingConfig) implPipelineEmbeddingModelConfigEmbeddingConfigUnion()  {}
 
 // Use the following switch statement to find the correct variant
 //
 //	switch variant := PipelineEmbeddingModelConfigEmbeddingConfigUnion.AsAny().(type) {
 //	case llamacloudprod.AzureOpenAIEmbeddingConfig:
+//	case llamacloudprod.BedrockEmbeddingConfig:
 //	case llamacloudprod.CohereEmbeddingConfig:
 //	case llamacloudprod.GeminiEmbeddingConfig:
 //	case llamacloudprod.HuggingFaceInferenceAPIEmbeddingConfig:
 //	case llamacloudprod.OpenAIEmbeddingConfig:
 //	case llamacloudprod.VertexAIEmbeddingConfig:
-//	case llamacloudprod.BedrockEmbeddingConfig:
 //	default:
 //	  fmt.Errorf("no variant present")
 //	}
@@ -3255,6 +3254,8 @@ func (u PipelineEmbeddingModelConfigEmbeddingConfigUnion) AsAny() anyPipelineEmb
 	switch u.Type {
 	case "AZURE_EMBEDDING":
 		return u.AsAzureEmbedding()
+	case "BEDROCK_EMBEDDING":
+		return u.AsBedrockEmbedding()
 	case "COHERE_EMBEDDING":
 		return u.AsCohereEmbedding()
 	case "GEMINI_EMBEDDING":
@@ -3265,13 +3266,16 @@ func (u PipelineEmbeddingModelConfigEmbeddingConfigUnion) AsAny() anyPipelineEmb
 		return u.AsOpenAIEmbedding()
 	case "VERTEXAI_EMBEDDING":
 		return u.AsVertexaiEmbedding()
-	case "BEDROCK_EMBEDDING":
-		return u.AsBedrockEmbedding()
 	}
 	return nil
 }
 
 func (u PipelineEmbeddingModelConfigEmbeddingConfigUnion) AsAzureEmbedding() (v AzureOpenAIEmbeddingConfig) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u PipelineEmbeddingModelConfigEmbeddingConfigUnion) AsBedrockEmbedding() (v BedrockEmbeddingConfig) {
 	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
 	return
 }
@@ -3297,11 +3301,6 @@ func (u PipelineEmbeddingModelConfigEmbeddingConfigUnion) AsOpenAIEmbedding() (v
 }
 
 func (u PipelineEmbeddingModelConfigEmbeddingConfigUnion) AsVertexaiEmbedding() (v VertexAIEmbeddingConfig) {
-	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
-	return
-}
-
-func (u PipelineEmbeddingModelConfigEmbeddingConfigUnion) AsBedrockEmbedding() (v BedrockEmbeddingConfig) {
 	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
 	return
 }
@@ -3338,6 +3337,16 @@ type PipelineEmbeddingModelConfigEmbeddingConfigUnionComponent struct {
 	NumWorkers     int64   `json:"num_workers"`
 	ReuseClient    bool    `json:"reuse_client"`
 	Timeout        float64 `json:"timeout"`
+	// This field is from variant [BedrockEmbedding].
+	AwsAccessKeyID string `json:"aws_access_key_id"`
+	// This field is from variant [BedrockEmbedding].
+	AwsSecretAccessKey string `json:"aws_secret_access_key"`
+	// This field is from variant [BedrockEmbedding].
+	AwsSessionToken string `json:"aws_session_token"`
+	// This field is from variant [BedrockEmbedding].
+	ProfileName string `json:"profile_name"`
+	// This field is from variant [BedrockEmbedding].
+	RegionName string `json:"region_name"`
 	// This field is from variant [CohereEmbedding].
 	EmbeddingType string `json:"embedding_type"`
 	// This field is from variant [CohereEmbedding].
@@ -3380,17 +3389,7 @@ type PipelineEmbeddingModelConfigEmbeddingConfigUnionComponent struct {
 	TokenUri string `json:"token_uri"`
 	// This field is from variant [VertexTextEmbedding].
 	EmbedMode VertexTextEmbeddingEmbedMode `json:"embed_mode"`
-	// This field is from variant [BedrockEmbedding].
-	AwsAccessKeyID string `json:"aws_access_key_id"`
-	// This field is from variant [BedrockEmbedding].
-	AwsSecretAccessKey string `json:"aws_secret_access_key"`
-	// This field is from variant [BedrockEmbedding].
-	AwsSessionToken string `json:"aws_session_token"`
-	// This field is from variant [BedrockEmbedding].
-	ProfileName string `json:"profile_name"`
-	// This field is from variant [BedrockEmbedding].
-	RegionName string `json:"region_name"`
-	JSON       struct {
+	JSON      struct {
 		AdditionalKwargs     respjson.Field
 		APIBase              respjson.Field
 		APIKey               respjson.Field
@@ -3406,6 +3405,11 @@ type PipelineEmbeddingModelConfigEmbeddingConfigUnionComponent struct {
 		NumWorkers           respjson.Field
 		ReuseClient          respjson.Field
 		Timeout              respjson.Field
+		AwsAccessKeyID       respjson.Field
+		AwsSecretAccessKey   respjson.Field
+		AwsSessionToken      respjson.Field
+		ProfileName          respjson.Field
+		RegionName           respjson.Field
 		EmbeddingType        respjson.Field
 		InputType            respjson.Field
 		Truncate             respjson.Field
@@ -3427,11 +3431,6 @@ type PipelineEmbeddingModelConfigEmbeddingConfigUnionComponent struct {
 		Project              respjson.Field
 		TokenUri             respjson.Field
 		EmbedMode            respjson.Field
-		AwsAccessKeyID       respjson.Field
-		AwsSecretAccessKey   respjson.Field
-		AwsSessionToken      respjson.Field
-		ProfileName          respjson.Field
-		RegionName           respjson.Field
 		raw                  string
 	} `json:"-"`
 }
@@ -3516,7 +3515,7 @@ type PipelineCreateParam struct {
 	MetadataConfig PipelineMetadataConfigParam `json:"metadata_config,omitzero"`
 	// Type of pipeline. Either PLAYGROUND or MANAGED.
 	//
-	// Any of "PLAYGROUND", "MANAGED".
+	// Any of "MANAGED", "PLAYGROUND".
 	PipelineType PipelineType `json:"pipeline_type,omitzero"`
 	// Preset retrieval parameters for the pipeline.
 	PresetRetrievalParameters PresetRetrievalParams `json:"preset_retrieval_parameters,omitzero"`
@@ -3541,23 +3540,23 @@ func (r *PipelineCreateParam) UnmarshalJSON(data []byte) error {
 // Use [param.IsOmitted] to confirm if a field is set.
 type PipelineCreateEmbeddingConfigUnionParam struct {
 	OfAzureEmbedding          *AzureOpenAIEmbeddingConfigParam             `json:",omitzero,inline"`
+	OfBedrockEmbedding        *BedrockEmbeddingConfigParam                 `json:",omitzero,inline"`
 	OfCohereEmbedding         *CohereEmbeddingConfigParam                  `json:",omitzero,inline"`
 	OfGeminiEmbedding         *GeminiEmbeddingConfigParam                  `json:",omitzero,inline"`
 	OfHuggingfaceAPIEmbedding *HuggingFaceInferenceAPIEmbeddingConfigParam `json:",omitzero,inline"`
 	OfOpenAIEmbedding         *OpenAIEmbeddingConfigParam                  `json:",omitzero,inline"`
 	OfVertexaiEmbedding       *VertexAIEmbeddingConfigParam                `json:",omitzero,inline"`
-	OfBedrockEmbedding        *BedrockEmbeddingConfigParam                 `json:",omitzero,inline"`
 	paramUnion
 }
 
 func (u PipelineCreateEmbeddingConfigUnionParam) MarshalJSON() ([]byte, error) {
 	return param.MarshalUnion(u, u.OfAzureEmbedding,
+		u.OfBedrockEmbedding,
 		u.OfCohereEmbedding,
 		u.OfGeminiEmbedding,
 		u.OfHuggingfaceAPIEmbedding,
 		u.OfOpenAIEmbedding,
-		u.OfVertexaiEmbedding,
-		u.OfBedrockEmbedding)
+		u.OfVertexaiEmbedding)
 }
 func (u *PipelineCreateEmbeddingConfigUnionParam) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, u)
@@ -3567,12 +3566,12 @@ func init() {
 	apijson.RegisterUnion[PipelineCreateEmbeddingConfigUnionParam](
 		"type",
 		apijson.Discriminator[AzureOpenAIEmbeddingConfigParam]("AZURE_EMBEDDING"),
+		apijson.Discriminator[BedrockEmbeddingConfigParam]("BEDROCK_EMBEDDING"),
 		apijson.Discriminator[CohereEmbeddingConfigParam]("COHERE_EMBEDDING"),
 		apijson.Discriminator[GeminiEmbeddingConfigParam]("GEMINI_EMBEDDING"),
 		apijson.Discriminator[HuggingFaceInferenceAPIEmbeddingConfigParam]("HUGGINGFACE_API_EMBEDDING"),
 		apijson.Discriminator[OpenAIEmbeddingConfigParam]("OPENAI_EMBEDDING"),
 		apijson.Discriminator[VertexAIEmbeddingConfigParam]("VERTEXAI_EMBEDDING"),
-		apijson.Discriminator[BedrockEmbeddingConfigParam]("BEDROCK_EMBEDDING"),
 	)
 }
 
@@ -3641,8 +3640,8 @@ func (r *PipelineMetadataConfigParam) UnmarshalJSON(data []byte) error {
 type PipelineType string
 
 const (
-	PipelineTypePlayground PipelineType = "PLAYGROUND"
 	PipelineTypeManaged    PipelineType = "MANAGED"
+	PipelineTypePlayground PipelineType = "PLAYGROUND"
 )
 
 // Schema for the search params for an retrieval execution that can be preset for a
@@ -3665,7 +3664,7 @@ type PresetRetrievalParamsResp struct {
 	RerankTopN int64 `json:"rerank_top_n" api:"nullable"`
 	// The retrieval mode for the query.
 	//
-	// Any of "chunks", "files_via_metadata", "files_via_content", "auto_routed".
+	// Any of "auto_routed", "chunks", "files_via_content", "files_via_metadata".
 	RetrievalMode RetrievalMode `json:"retrieval_mode"`
 	// Whether to retrieve image nodes.
 	//
@@ -3815,7 +3814,7 @@ type PresetRetrievalParams struct {
 	SearchFiltersInferenceSchema map[string]*PresetRetrievalParamsSearchFiltersInferenceSchemaUnion `json:"search_filters_inference_schema,omitzero"`
 	// The retrieval mode for the query.
 	//
-	// Any of "chunks", "files_via_metadata", "files_via_content", "auto_routed".
+	// Any of "auto_routed", "chunks", "files_via_content", "files_via_metadata".
 	RetrievalMode RetrievalMode `json:"retrieval_mode,omitzero"`
 	// Metadata filters for vector stores.
 	SearchFilters MetadataFiltersParam `json:"search_filters,omitzero"`
@@ -3856,10 +3855,10 @@ func (u *PresetRetrievalParamsSearchFiltersInferenceSchemaUnion) UnmarshalJSON(d
 type RetrievalMode string
 
 const (
-	RetrievalModeChunks           RetrievalMode = "chunks"
-	RetrievalModeFilesViaMetadata RetrievalMode = "files_via_metadata"
-	RetrievalModeFilesViaContent  RetrievalMode = "files_via_content"
 	RetrievalModeAutoRouted       RetrievalMode = "auto_routed"
+	RetrievalModeChunks           RetrievalMode = "chunks"
+	RetrievalModeFilesViaContent  RetrievalMode = "files_via_content"
+	RetrievalModeFilesViaMetadata RetrievalMode = "files_via_metadata"
 )
 
 // Configuration for sparse embedding models used in hybrid search.
@@ -3872,7 +3871,7 @@ type SparseModelConfig struct {
 	// for new pipelines), 'splade' uses HuggingFace Splade model, 'auto' selects based
 	// on deployment mode (BYOC uses term frequency, Cloud uses Splade).
 	//
-	// Any of "splade", "bm25", "auto".
+	// Any of "auto", "bm25", "splade".
 	ModelType SparseModelConfigModelType `json:"model_type"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
@@ -3904,9 +3903,9 @@ func (r SparseModelConfig) ToParam() SparseModelConfigParam {
 type SparseModelConfigModelType string
 
 const (
-	SparseModelConfigModelTypeSplade SparseModelConfigModelType = "splade"
-	SparseModelConfigModelTypeBm25   SparseModelConfigModelType = "bm25"
 	SparseModelConfigModelTypeAuto   SparseModelConfigModelType = "auto"
+	SparseModelConfigModelTypeBm25   SparseModelConfigModelType = "bm25"
+	SparseModelConfigModelTypeSplade SparseModelConfigModelType = "splade"
 )
 
 // Configuration for sparse embedding models used in hybrid search.
@@ -3919,7 +3918,7 @@ type SparseModelConfigParam struct {
 	// for new pipelines), 'splade' uses HuggingFace Splade model, 'auto' selects based
 	// on deployment mode (BYOC uses term frequency, Cloud uses Splade).
 	//
-	// Any of "splade", "bm25", "auto".
+	// Any of "auto", "bm25", "splade".
 	ModelType SparseModelConfigModelType `json:"model_type,omitzero"`
 	paramObj
 }
@@ -4008,7 +4007,7 @@ type VertexTextEmbedding struct {
 	EmbedBatchSize int64 `json:"embed_batch_size"`
 	// The embedding mode to use.
 	//
-	// Any of "default", "classification", "clustering", "similarity", "retrieval".
+	// Any of "classification", "clustering", "default", "retrieval", "similarity".
 	EmbedMode VertexTextEmbeddingEmbedMode `json:"embed_mode"`
 	// The modelId of the VertexAI model to use.
 	ModelName string `json:"model_name"`
@@ -4052,11 +4051,11 @@ func (r VertexTextEmbedding) ToParam() VertexTextEmbeddingParam {
 type VertexTextEmbeddingEmbedMode string
 
 const (
-	VertexTextEmbeddingEmbedModeDefault        VertexTextEmbeddingEmbedMode = "default"
 	VertexTextEmbeddingEmbedModeClassification VertexTextEmbeddingEmbedMode = "classification"
 	VertexTextEmbeddingEmbedModeClustering     VertexTextEmbeddingEmbedMode = "clustering"
-	VertexTextEmbeddingEmbedModeSimilarity     VertexTextEmbeddingEmbedMode = "similarity"
+	VertexTextEmbeddingEmbedModeDefault        VertexTextEmbeddingEmbedMode = "default"
 	VertexTextEmbeddingEmbedModeRetrieval      VertexTextEmbeddingEmbedMode = "retrieval"
+	VertexTextEmbeddingEmbedModeSimilarity     VertexTextEmbeddingEmbedMode = "similarity"
 )
 
 // The properties ClientEmail, Location, PrivateKey, PrivateKeyID, Project,
@@ -4085,7 +4084,7 @@ type VertexTextEmbeddingParam struct {
 	AdditionalKwargs map[string]any `json:"additional_kwargs,omitzero"`
 	// The embedding mode to use.
 	//
-	// Any of "default", "classification", "clustering", "similarity", "retrieval".
+	// Any of "classification", "clustering", "default", "retrieval", "similarity".
 	EmbedMode VertexTextEmbeddingEmbedMode `json:"embed_mode,omitzero"`
 	paramObj
 }
@@ -4231,23 +4230,23 @@ func (r *PipelineUpdateParams) UnmarshalJSON(data []byte) error {
 // Use [param.IsOmitted] to confirm if a field is set.
 type PipelineUpdateParamsEmbeddingConfigUnion struct {
 	OfAzureEmbedding          *AzureOpenAIEmbeddingConfigParam             `json:",omitzero,inline"`
+	OfBedrockEmbedding        *BedrockEmbeddingConfigParam                 `json:",omitzero,inline"`
 	OfCohereEmbedding         *CohereEmbeddingConfigParam                  `json:",omitzero,inline"`
 	OfGeminiEmbedding         *GeminiEmbeddingConfigParam                  `json:",omitzero,inline"`
 	OfHuggingfaceAPIEmbedding *HuggingFaceInferenceAPIEmbeddingConfigParam `json:",omitzero,inline"`
 	OfOpenAIEmbedding         *OpenAIEmbeddingConfigParam                  `json:",omitzero,inline"`
 	OfVertexaiEmbedding       *VertexAIEmbeddingConfigParam                `json:",omitzero,inline"`
-	OfBedrockEmbedding        *BedrockEmbeddingConfigParam                 `json:",omitzero,inline"`
 	paramUnion
 }
 
 func (u PipelineUpdateParamsEmbeddingConfigUnion) MarshalJSON() ([]byte, error) {
 	return param.MarshalUnion(u, u.OfAzureEmbedding,
+		u.OfBedrockEmbedding,
 		u.OfCohereEmbedding,
 		u.OfGeminiEmbedding,
 		u.OfHuggingfaceAPIEmbedding,
 		u.OfOpenAIEmbedding,
-		u.OfVertexaiEmbedding,
-		u.OfBedrockEmbedding)
+		u.OfVertexaiEmbedding)
 }
 func (u *PipelineUpdateParamsEmbeddingConfigUnion) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, u)
@@ -4257,12 +4256,12 @@ func init() {
 	apijson.RegisterUnion[PipelineUpdateParamsEmbeddingConfigUnion](
 		"type",
 		apijson.Discriminator[AzureOpenAIEmbeddingConfigParam]("AZURE_EMBEDDING"),
+		apijson.Discriminator[BedrockEmbeddingConfigParam]("BEDROCK_EMBEDDING"),
 		apijson.Discriminator[CohereEmbeddingConfigParam]("COHERE_EMBEDDING"),
 		apijson.Discriminator[GeminiEmbeddingConfigParam]("GEMINI_EMBEDDING"),
 		apijson.Discriminator[HuggingFaceInferenceAPIEmbeddingConfigParam]("HUGGINGFACE_API_EMBEDDING"),
 		apijson.Discriminator[OpenAIEmbeddingConfigParam]("OPENAI_EMBEDDING"),
 		apijson.Discriminator[VertexAIEmbeddingConfigParam]("VERTEXAI_EMBEDDING"),
-		apijson.Discriminator[BedrockEmbeddingConfigParam]("BEDROCK_EMBEDDING"),
 	)
 }
 
@@ -4289,7 +4288,7 @@ type PipelineListParams struct {
 	ProjectName    param.Opt[string] `query:"project_name,omitzero" json:"-"`
 	// Enum for representing the type of a pipeline
 	//
-	// Any of "PLAYGROUND", "MANAGED".
+	// Any of "MANAGED", "PLAYGROUND".
 	PipelineType PipelineType `query:"pipeline_type,omitzero" json:"-"`
 	paramObj
 }
@@ -4349,7 +4348,7 @@ type PipelineRunSearchParams struct {
 	SearchFiltersInferenceSchema map[string]*PipelineRunSearchParamsSearchFiltersInferenceSchemaUnion `json:"search_filters_inference_schema,omitzero"`
 	// The retrieval mode for the query.
 	//
-	// Any of "chunks", "files_via_metadata", "files_via_content", "auto_routed".
+	// Any of "auto_routed", "chunks", "files_via_content", "files_via_metadata".
 	RetrievalMode RetrievalMode `json:"retrieval_mode,omitzero"`
 	// Metadata filters for vector stores.
 	SearchFilters MetadataFiltersParam `json:"search_filters,omitzero"`

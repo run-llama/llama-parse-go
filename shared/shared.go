@@ -285,7 +285,7 @@ func init() {
 type CloudBoxDataSource struct {
 	// The type of authentication to use (Developer Token or CCG)
 	//
-	// Any of "developer_token", "ccg".
+	// Any of "ccg", "developer_token".
 	AuthenticationMechanism CloudBoxDataSourceAuthenticationMechanism `json:"authentication_mechanism" api:"required"`
 	ClassName               string                                    `json:"class_name"`
 	// Box API key used for identifying the application the user is authenticating with
@@ -337,15 +337,15 @@ func (r CloudBoxDataSource) ToParam() CloudBoxDataSourceParam {
 type CloudBoxDataSourceAuthenticationMechanism string
 
 const (
-	CloudBoxDataSourceAuthenticationMechanismDeveloperToken CloudBoxDataSourceAuthenticationMechanism = "developer_token"
 	CloudBoxDataSourceAuthenticationMechanismCcg            CloudBoxDataSourceAuthenticationMechanism = "ccg"
+	CloudBoxDataSourceAuthenticationMechanismDeveloperToken CloudBoxDataSourceAuthenticationMechanism = "developer_token"
 )
 
 // The property AuthenticationMechanism is required.
 type CloudBoxDataSourceParam struct {
 	// The type of authentication to use (Developer Token or CCG)
 	//
-	// Any of "developer_token", "ccg".
+	// Any of "ccg", "developer_token".
 	AuthenticationMechanism CloudBoxDataSourceAuthenticationMechanism `json:"authentication_mechanism,omitzero" api:"required"`
 	// Box API key used for identifying the application the user is authenticating with
 	ClientID param.Opt[string] `json:"client_id,omitzero"`
@@ -1584,7 +1584,7 @@ func (r *FailureHandlingConfigParam) UnmarshalJSON(data []byte) error {
 type PgVectorHnswSettings struct {
 	// The distance method to use.
 	//
-	// Any of "l2", "ip", "cosine", "l1", "hamming", "jaccard".
+	// Any of "cosine", "hamming", "ip", "jaccard", "l1", "l2".
 	DistanceMethod PgVectorHnswSettingsDistanceMethod `json:"distance_method"`
 	// The number of edges to use during the construction phase.
 	EfConstruction int64 `json:"ef_construction"`
@@ -1594,7 +1594,7 @@ type PgVectorHnswSettings struct {
 	M int64 `json:"m"`
 	// The type of vector to use.
 	//
-	// Any of "vector", "half_vec", "bit", "sparse_vec".
+	// Any of "bit", "half_vec", "sparse_vec", "vector".
 	VectorType PgVectorHnswSettingsVectorType `json:"vector_type"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
@@ -1627,22 +1627,22 @@ func (r PgVectorHnswSettings) ToParam() PgVectorHnswSettingsParam {
 type PgVectorHnswSettingsDistanceMethod string
 
 const (
-	PgVectorHnswSettingsDistanceMethodL2      PgVectorHnswSettingsDistanceMethod = "l2"
-	PgVectorHnswSettingsDistanceMethodIP      PgVectorHnswSettingsDistanceMethod = "ip"
 	PgVectorHnswSettingsDistanceMethodCosine  PgVectorHnswSettingsDistanceMethod = "cosine"
-	PgVectorHnswSettingsDistanceMethodL1      PgVectorHnswSettingsDistanceMethod = "l1"
 	PgVectorHnswSettingsDistanceMethodHamming PgVectorHnswSettingsDistanceMethod = "hamming"
+	PgVectorHnswSettingsDistanceMethodIP      PgVectorHnswSettingsDistanceMethod = "ip"
 	PgVectorHnswSettingsDistanceMethodJaccard PgVectorHnswSettingsDistanceMethod = "jaccard"
+	PgVectorHnswSettingsDistanceMethodL1      PgVectorHnswSettingsDistanceMethod = "l1"
+	PgVectorHnswSettingsDistanceMethodL2      PgVectorHnswSettingsDistanceMethod = "l2"
 )
 
 // The type of vector to use.
 type PgVectorHnswSettingsVectorType string
 
 const (
-	PgVectorHnswSettingsVectorTypeVector    PgVectorHnswSettingsVectorType = "vector"
-	PgVectorHnswSettingsVectorTypeHalfVec   PgVectorHnswSettingsVectorType = "half_vec"
 	PgVectorHnswSettingsVectorTypeBit       PgVectorHnswSettingsVectorType = "bit"
+	PgVectorHnswSettingsVectorTypeHalfVec   PgVectorHnswSettingsVectorType = "half_vec"
 	PgVectorHnswSettingsVectorTypeSparseVec PgVectorHnswSettingsVectorType = "sparse_vec"
+	PgVectorHnswSettingsVectorTypeVector    PgVectorHnswSettingsVectorType = "vector"
 )
 
 // HNSW settings for PGVector.
@@ -1655,11 +1655,11 @@ type PgVectorHnswSettingsParam struct {
 	M param.Opt[int64] `json:"m,omitzero"`
 	// The distance method to use.
 	//
-	// Any of "l2", "ip", "cosine", "l1", "hamming", "jaccard".
+	// Any of "cosine", "hamming", "ip", "jaccard", "l1", "l2".
 	DistanceMethod PgVectorHnswSettingsDistanceMethod `json:"distance_method,omitzero"`
 	// The type of vector to use.
 	//
-	// Any of "vector", "half_vec", "bit", "sparse_vec".
+	// Any of "bit", "half_vec", "sparse_vec", "vector".
 	VectorType PgVectorHnswSettingsVectorType `json:"vector_type,omitzero"`
 	paramObj
 }

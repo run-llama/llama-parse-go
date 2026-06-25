@@ -110,7 +110,7 @@ func TestPipelineFileListWithOptionalParams(t *testing.T) {
 			Offset:               llamacloudprod.Int(0),
 			OnlyManuallyUploaded: llamacloudprod.Bool(true),
 			OrderBy:              llamacloudprod.String("order_by"),
-			Statuses:             []string{"NOT_STARTED", "IN_PROGRESS"},
+			Statuses:             []string{"CANCELLED", "ERROR"},
 		},
 	)
 	if err != nil {

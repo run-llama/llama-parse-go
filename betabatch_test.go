@@ -79,7 +79,7 @@ func TestBetaBatchNewWithOptionalParams(t *testing.T) {
 					HTMLRemoveNavigationElements:             llamacloudprod.Bool(true),
 					HTTPProxy:                                llamacloudprod.String("http_proxy"),
 					IgnoreDocumentElementsForLayoutDetection: llamacloudprod.Bool(true),
-					ImagesToSave:                             []string{"screenshot"},
+					ImagesToSave:                             []string{"embedded"},
 					InlineImagesInMarkdown:                   llamacloudprod.Bool(true),
 					InputS3Path:                              llamacloudprod.String("input_s3_path"),
 					InputS3Region:                            llamacloudprod.String("input_s3_region"),
@@ -91,7 +91,7 @@ func TestBetaBatchNewWithOptionalParams(t *testing.T) {
 					JobTimeoutInSeconds:                      llamacloudprod.Float(0),
 					KeepPageSeparatorWhenMergingTables:       llamacloudprod.Bool(true),
 					Lang:                                     llamacloudprod.String("lang"),
-					Languages:                                []llamacloudprod.ParsingLanguages{llamacloudprod.ParsingLanguagesAf},
+					Languages:                                []llamacloudprod.ParsingLanguages{llamacloudprod.ParsingLanguagesAbq},
 					LayoutAware:                              llamacloudprod.Bool(true),
 					LineLevelBoundingBox:                     llamacloudprod.Bool(true),
 					MarkdownTableMultilineHeaderSeparator:    llamacloudprod.String("markdown_table_multiline_header_separator"),
@@ -113,7 +113,7 @@ func TestBetaBatchNewWithOptionalParams(t *testing.T) {
 					PagePrefix:                               llamacloudprod.String("page_prefix"),
 					PageSeparator:                            llamacloudprod.String("page_separator"),
 					PageSuffix:                               llamacloudprod.String("page_suffix"),
-					ParseMode:                                llamacloudprod.ParsingModeParsePageWithoutLlm,
+					ParseMode:                                llamacloudprod.ParsingModeParseDocumentWithAgent,
 					ParsingInstruction:                       llamacloudprod.String("parsing_instruction"),
 					PipelineID:                               llamacloudprod.String("pipeline_id"),
 					PreciseBoundingBox:                       llamacloudprod.Bool(true),
@@ -123,10 +123,10 @@ func TestBetaBatchNewWithOptionalParams(t *testing.T) {
 					PreserveLayoutAlignmentAcrossPages:       llamacloudprod.Bool(true),
 					PreserveVerySmallText:                    llamacloudprod.Bool(true),
 					Preset:                                   llamacloudprod.String("preset"),
-					Priority:                                 "low",
+					Priority:                                 "critical",
 					ProjectID:                                llamacloudprod.String("project_id"),
 					RemoveHiddenText:                         llamacloudprod.Bool(true),
-					ReplaceFailedPageMode:                    llamacloudprod.FailPageModeRawText,
+					ReplaceFailedPageMode:                    llamacloudprod.FailPageModeBlankPage,
 					ReplaceFailedPageWithErrorMessagePrefix:  llamacloudprod.String("replace_failed_page_with_error_message_prefix"),
 					ReplaceFailedPageWithErrorMessageSuffix:  llamacloudprod.String("replace_failed_page_with_error_message_suffix"),
 					ResourceInfo: map[string]any{
@@ -211,12 +211,12 @@ func TestBetaBatchListWithOptionalParams(t *testing.T) {
 	)
 	_, err := client.Beta.Batch.List(context.TODO(), llamacloudprod.BetaBatchListParams{
 		DirectoryID:    llamacloudprod.String("directory_id"),
-		JobType:        llamacloudprod.BetaBatchListParamsJobTypeParse,
+		JobType:        llamacloudprod.BetaBatchListParamsJobTypeClassify,
 		Limit:          llamacloudprod.Int(1),
 		Offset:         llamacloudprod.Int(0),
 		OrganizationID: llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		ProjectID:      llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		Status:         llamacloudprod.BetaBatchListParamsStatusPending,
+		Status:         llamacloudprod.BetaBatchListParamsStatusCancelled,
 	})
 	if err != nil {
 		var apierr *llamacloudprod.Error

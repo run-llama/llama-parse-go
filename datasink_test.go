@@ -34,7 +34,7 @@ func TestDataSinkNewWithOptionalParams(t *testing.T) {
 				},
 			},
 			Name:     "name",
-			SinkType: llamacloudprod.DataSinkCreateSinkTypePinecone,
+			SinkType: llamacloudprod.DataSinkCreateSinkTypeAstraDB,
 		},
 		OrganizationID: llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		ProjectID:      llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
@@ -65,7 +65,7 @@ func TestDataSinkUpdateWithOptionalParams(t *testing.T) {
 		context.TODO(),
 		"182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
 		llamacloudprod.DataSinkUpdateParams{
-			SinkType: llamacloudprod.DataSinkUpdateParamsSinkTypePinecone,
+			SinkType: llamacloudprod.DataSinkUpdateParamsSinkTypeAstraDB,
 			Component: llamacloudprod.DataSinkUpdateParamsComponentUnion{
 				OfAnyMap: map[string]any{
 					"foo": "bar",
