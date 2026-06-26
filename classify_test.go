@@ -51,8 +51,9 @@ func TestClassifyNewWithOptionalParams(t *testing.T) {
 				WebhookHeaders: map[string]string{
 					"Authorization": "Bearer sk-...",
 				},
-				WebhookOutputFormat: llamacloudprod.String("json"),
-				WebhookURL:          llamacloudprod.String("https://example.com/webhooks/llamacloud"),
+				WebhookOutputFormat:  llamacloudprod.String("json"),
+				WebhookSigningSecret: llamacloudprod.String("whsec_..."),
+				WebhookURL:           llamacloudprod.String("https://example.com/webhooks/llamacloud"),
 			}},
 		},
 		OrganizationID: llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
