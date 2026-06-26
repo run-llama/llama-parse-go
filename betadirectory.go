@@ -344,8 +344,6 @@ type BetaDirectoryNewParams struct {
 	ProjectID      param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
 	// Optional description shown to users.
 	Description param.Opt[string] `json:"description,omitzero"`
-	// When this directory expires. Required for ephemeral directories.
-	ExpiresAt param.Opt[time.Time] `json:"expires_at,omitzero" format:"date-time"`
 	// Reserved system-managed metadata.
 	SystemMetadata map[string]any `json:"system_metadata,omitzero"`
 	// Directory type. Use 'ephemeral' for batch processing with automatic cleanup.
