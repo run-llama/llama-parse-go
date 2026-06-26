@@ -116,6 +116,8 @@ type BetaIndexNewResponse struct {
 	ExportConfigID string `json:"export_config_id" api:"required"`
 	// Index name.
 	Name string `json:"name" api:"required"`
+	// ID of the output directory holding the indexed files.
+	OutputDirectoryID string `json:"output_directory_id" api:"required"`
 	// Project this index belongs to.
 	ProjectID string `json:"project_id" api:"required"`
 	// ID of the source directory.
@@ -139,6 +141,7 @@ type BetaIndexNewResponse struct {
 		ID                respjson.Field
 		ExportConfigID    respjson.Field
 		Name              respjson.Field
+		OutputDirectoryID respjson.Field
 		ProjectID         respjson.Field
 		SourceDirectoryID respjson.Field
 		SyncConfigID      respjson.Field
@@ -167,6 +170,8 @@ type BetaIndexListResponse struct {
 	ExportConfigID string `json:"export_config_id" api:"required"`
 	// Index name.
 	Name string `json:"name" api:"required"`
+	// ID of the output directory holding the indexed files.
+	OutputDirectoryID string `json:"output_directory_id" api:"required"`
 	// Project this index belongs to.
 	ProjectID string `json:"project_id" api:"required"`
 	// ID of the source directory.
@@ -190,6 +195,7 @@ type BetaIndexListResponse struct {
 		ID                respjson.Field
 		ExportConfigID    respjson.Field
 		Name              respjson.Field
+		OutputDirectoryID respjson.Field
 		ProjectID         respjson.Field
 		SourceDirectoryID respjson.Field
 		SyncConfigID      respjson.Field
@@ -218,6 +224,8 @@ type BetaIndexGetResponse struct {
 	ExportConfigID string `json:"export_config_id" api:"required"`
 	// Index name.
 	Name string `json:"name" api:"required"`
+	// ID of the output directory holding the indexed files.
+	OutputDirectoryID string `json:"output_directory_id" api:"required"`
 	// Project this index belongs to.
 	ProjectID string `json:"project_id" api:"required"`
 	// ID of the source directory.
@@ -241,6 +249,7 @@ type BetaIndexGetResponse struct {
 		ID                respjson.Field
 		ExportConfigID    respjson.Field
 		Name              respjson.Field
+		OutputDirectoryID respjson.Field
 		ProjectID         respjson.Field
 		SourceDirectoryID respjson.Field
 		SyncConfigID      respjson.Field
