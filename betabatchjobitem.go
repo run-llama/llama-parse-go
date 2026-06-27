@@ -694,16 +694,22 @@ type BetaBatchJobItemGetProcessingResultsResponseProcessingResultJobConfigBatchP
 	WebhookHeaders map[string]string `json:"webhook_headers" api:"nullable"`
 	// Response format sent to the webhook: 'string' (default) or 'json'
 	WebhookOutputFormat string `json:"webhook_output_format" api:"nullable"`
+	// Shared signing secret used to sign webhook deliveries. When set, each request
+	// includes an HMAC-SHA256 signature of the request body in the 'LC-Signature'
+	// header (value 'sha256=<hex>'). Recompute the HMAC over the raw request body with
+	// this secret to verify the delivery is authentic.
+	WebhookSigningSecret string `json:"webhook_signing_secret" api:"nullable"`
 	// URL to receive webhook POST notifications
 	WebhookURL string `json:"webhook_url" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
-		WebhookEvents       respjson.Field
-		WebhookHeaders      respjson.Field
-		WebhookOutputFormat respjson.Field
-		WebhookURL          respjson.Field
-		ExtraFields         map[string]respjson.Field
-		raw                 string
+		WebhookEvents        respjson.Field
+		WebhookHeaders       respjson.Field
+		WebhookOutputFormat  respjson.Field
+		WebhookSigningSecret respjson.Field
+		WebhookURL           respjson.Field
+		ExtraFields          map[string]respjson.Field
+		raw                  string
 	} `json:"-"`
 }
 

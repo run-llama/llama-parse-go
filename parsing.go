@@ -1044,6 +1044,8 @@ type ParsingNewResponse struct {
 	Tier string `json:"tier" api:"nullable"`
 	// Update datetime
 	UpdatedAt time.Time `json:"updated_at" api:"nullable" format:"date-time"`
+	// Key/value tags associated with this job.
+	UserMetadata map[string]string `json:"user_metadata" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		ID           respjson.Field
@@ -1054,6 +1056,7 @@ type ParsingNewResponse struct {
 		Name         respjson.Field
 		Tier         respjson.Field
 		UpdatedAt    respjson.Field
+		UserMetadata respjson.Field
 		ExtraFields  map[string]respjson.Field
 		raw          string
 	} `json:"-"`
@@ -1096,6 +1099,8 @@ type ParsingListResponse struct {
 	Tier string `json:"tier" api:"nullable"`
 	// Update datetime
 	UpdatedAt time.Time `json:"updated_at" api:"nullable" format:"date-time"`
+	// Key/value tags associated with this job.
+	UserMetadata map[string]string `json:"user_metadata" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		ID           respjson.Field
@@ -1106,6 +1111,7 @@ type ParsingListResponse struct {
 		Name         respjson.Field
 		Tier         respjson.Field
 		UpdatedAt    respjson.Field
+		UserMetadata respjson.Field
 		ExtraFields  map[string]respjson.Field
 		raw          string
 	} `json:"-"`
@@ -1198,6 +1204,8 @@ type ParsingGetResponseJob struct {
 	Tier string `json:"tier" api:"nullable"`
 	// Update datetime
 	UpdatedAt time.Time `json:"updated_at" api:"nullable" format:"date-time"`
+	// Key/value tags associated with this job.
+	UserMetadata map[string]string `json:"user_metadata" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		ID           respjson.Field
@@ -1208,6 +1216,7 @@ type ParsingGetResponseJob struct {
 		Name         respjson.Field
 		Tier         respjson.Field
 		UpdatedAt    respjson.Field
+		UserMetadata respjson.Field
 		ExtraFields  map[string]respjson.Field
 		raw          string
 	} `json:"-"`
@@ -1862,7 +1871,7 @@ type ParsingNewParams struct {
 	// Current `latest` by tier:
 	//
 	// - `fast`: `2025-12-11`
-	// - `cost_effective`: `2026-06-18`
+	// - `cost_effective`: `2026-06-26`
 	// - `agentic`: `2026-06-18`
 	// - `agentic_plus`: `2026-06-18`
 	//
@@ -1898,6 +1907,12 @@ type ParsingNewParams struct {
 	// simple documents with standard layouts. Currently has no configurable options
 	// but reserved for future expansion.
 	FastOptions any `json:"fast_options,omitzero"`
+	// Arbitrary key/value tags to attach to this job. Returned when retrieving the
+	// job. Not searchable. Limits apply to the number of entries and the length of
+	// keys and values; oversized metadata is rejected.
+	UserMetadata map[string]string `json:"user_metadata,omitzero"`
+	// IDs of saved webhook configurations to notify for this job.
+	WebhookConfigurationIDs []string `json:"webhook_configuration_ids,omitzero"`
 	// Crop boundaries to process only a portion of each page. Values are ratios 0-1
 	// from page edges
 	CropBox ParsingNewParamsCropBox `json:"crop_box,omitzero"`
@@ -1952,7 +1967,7 @@ const (
 // Current `latest` by tier:
 //
 // - `fast`: `2025-12-11`
-// - `cost_effective`: `2026-06-18`
+// - `cost_effective`: `2026-06-26`
 // - `agentic`: `2026-06-18`
 // - `agentic_plus`: `2026-06-18`
 //
@@ -1961,6 +1976,7 @@ type ParsingNewParamsVersion string
 
 const (
 	ParsingNewParamsVersionLatest     ParsingNewParamsVersion = "latest"
+	ParsingNewParamsVersion2026_06_26 ParsingNewParamsVersion = "2026-06-26"
 	ParsingNewParamsVersion2026_06_18 ParsingNewParamsVersion = "2026-06-18"
 	ParsingNewParamsVersion2025_12_11 ParsingNewParamsVersion = "2025-12-11"
 )
@@ -2521,7 +2537,7 @@ type ParsingNewParamsProcessingOptionsAutoModeConfigurationParsingConf struct {
 	// Current `latest` by tier:
 	//
 	// - `fast`: `2025-12-11`
-	// - `cost_effective`: `2026-06-18`
+	// - `cost_effective`: `2026-06-26`
 	// - `agentic`: `2026-06-18`
 	// - `agentic_plus`: `2026-06-18`
 	//
@@ -3038,6 +3054,11 @@ func (r *ParsingNewParamsProcessingOptionsOcrParameters) UnmarshalJSON(data []by
 // Webhooks are called when specified events occur during job processing. Configure
 // multiple webhook configurations to send to different endpoints.
 type ParsingNewParamsWebhookConfiguration struct {
+	// Shared signing secret used to sign webhook deliveries. When set, each request
+	// includes an HMAC-SHA256 signature of the request body in the 'LC-Signature'
+	// header (value 'sha256=<hex>'). Recompute the HMAC over the raw request body with
+	// this secret to verify the delivery is authentic.
+	WebhookSigningSecret param.Opt[string] `json:"webhook_signing_secret,omitzero"`
 	// HTTPS URL to receive webhook POST requests. Must be publicly accessible
 	WebhookURL param.Opt[string] `json:"webhook_url,omitzero"`
 	// Events that trigger this webhook. Options: 'parse.success' (job completed),

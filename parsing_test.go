@@ -238,13 +238,19 @@ func TestParsingNewWithOptionalParams(t *testing.T) {
 			SpecializedChartParsing: "agentic",
 		},
 		SourceURL: llamacloudprod.String("https:"),
+		UserMetadata: map[string]string{
+			"owner": "jerry",
+			"team":  "research",
+		},
+		WebhookConfigurationIDs: []string{"whc-...", "whc-..."},
 		WebhookConfigurations: []llamacloudprod.ParsingNewParamsWebhookConfiguration{{
 			WebhookEvents: []string{"parse.success", "parse.error"},
 			WebhookHeaders: map[string]any{
 				"foo": "bar",
 			},
-			WebhookOutputFormat: "json",
-			WebhookURL:          llamacloudprod.String("https:"),
+			WebhookOutputFormat:  "json",
+			WebhookSigningSecret: llamacloudprod.String("webhook_signing_secret"),
+			WebhookURL:           llamacloudprod.String("https:"),
 		}},
 	})
 	if err != nil {

@@ -726,6 +726,11 @@ func init() {
 type BetaBatchNewParamsJobConfigBatchParseJobRecordCreateParametersWebhookConfiguration struct {
 	// Response format sent to the webhook: 'string' (default) or 'json'
 	WebhookOutputFormat param.Opt[string] `json:"webhook_output_format,omitzero"`
+	// Shared signing secret used to sign webhook deliveries. When set, each request
+	// includes an HMAC-SHA256 signature of the request body in the 'LC-Signature'
+	// header (value 'sha256=<hex>'). Recompute the HMAC over the raw request body with
+	// this secret to verify the delivery is authentic.
+	WebhookSigningSecret param.Opt[string] `json:"webhook_signing_secret,omitzero"`
 	// URL to receive webhook POST notifications
 	WebhookURL param.Opt[string] `json:"webhook_url,omitzero"`
 	// Events to subscribe to (e.g. 'parse.success', 'extract.error'). If null, all
