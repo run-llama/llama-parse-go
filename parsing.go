@@ -1044,6 +1044,8 @@ type ParsingNewResponse struct {
 	Tier string `json:"tier" api:"nullable"`
 	// Update datetime
 	UpdatedAt time.Time `json:"updated_at" api:"nullable" format:"date-time"`
+	// Key/value tags associated with this job.
+	UserMetadata map[string]string `json:"user_metadata" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		ID           respjson.Field
@@ -1054,6 +1056,7 @@ type ParsingNewResponse struct {
 		Name         respjson.Field
 		Tier         respjson.Field
 		UpdatedAt    respjson.Field
+		UserMetadata respjson.Field
 		ExtraFields  map[string]respjson.Field
 		raw          string
 	} `json:"-"`
@@ -1096,6 +1099,8 @@ type ParsingListResponse struct {
 	Tier string `json:"tier" api:"nullable"`
 	// Update datetime
 	UpdatedAt time.Time `json:"updated_at" api:"nullable" format:"date-time"`
+	// Key/value tags associated with this job.
+	UserMetadata map[string]string `json:"user_metadata" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		ID           respjson.Field
@@ -1106,6 +1111,7 @@ type ParsingListResponse struct {
 		Name         respjson.Field
 		Tier         respjson.Field
 		UpdatedAt    respjson.Field
+		UserMetadata respjson.Field
 		ExtraFields  map[string]respjson.Field
 		raw          string
 	} `json:"-"`
@@ -1198,6 +1204,8 @@ type ParsingGetResponseJob struct {
 	Tier string `json:"tier" api:"nullable"`
 	// Update datetime
 	UpdatedAt time.Time `json:"updated_at" api:"nullable" format:"date-time"`
+	// Key/value tags associated with this job.
+	UserMetadata map[string]string `json:"user_metadata" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		ID           respjson.Field
@@ -1208,6 +1216,7 @@ type ParsingGetResponseJob struct {
 		Name         respjson.Field
 		Tier         respjson.Field
 		UpdatedAt    respjson.Field
+		UserMetadata respjson.Field
 		ExtraFields  map[string]respjson.Field
 		raw          string
 	} `json:"-"`
@@ -1898,6 +1907,10 @@ type ParsingNewParams struct {
 	// simple documents with standard layouts. Currently has no configurable options
 	// but reserved for future expansion.
 	FastOptions any `json:"fast_options,omitzero"`
+	// Arbitrary key/value tags to attach to this job. Returned when retrieving the
+	// job. Not searchable. Limits apply to the number of entries and the length of
+	// keys and values; oversized metadata is rejected.
+	UserMetadata map[string]string `json:"user_metadata,omitzero"`
 	// Crop boundaries to process only a portion of each page. Values are ratios 0-1
 	// from page edges
 	CropBox ParsingNewParamsCropBox `json:"crop_box,omitzero"`

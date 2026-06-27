@@ -238,6 +238,10 @@ func TestParsingNewWithOptionalParams(t *testing.T) {
 			SpecializedChartParsing: "agentic",
 		},
 		SourceURL: llamacloudprod.String("https:"),
+		UserMetadata: map[string]string{
+			"owner": "jerry",
+			"team":  "research",
+		},
 		WebhookConfigurations: []llamacloudprod.ParsingNewParamsWebhookConfiguration{{
 			WebhookEvents: []string{"parse.success", "parse.error"},
 			WebhookHeaders: map[string]any{
