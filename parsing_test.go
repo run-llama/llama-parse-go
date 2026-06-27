@@ -242,6 +242,7 @@ func TestParsingNewWithOptionalParams(t *testing.T) {
 			"owner": "jerry",
 			"team":  "research",
 		},
+		WebhookConfigurationIDs: []string{"whc-...", "whc-..."},
 		WebhookConfigurations: []llamacloudprod.ParsingNewParamsWebhookConfiguration{{
 			WebhookEvents: []string{"parse.success", "parse.error"},
 			WebhookHeaders: map[string]any{

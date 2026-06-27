@@ -1911,6 +1911,8 @@ type ParsingNewParams struct {
 	// job. Not searchable. Limits apply to the number of entries and the length of
 	// keys and values; oversized metadata is rejected.
 	UserMetadata map[string]string `json:"user_metadata,omitzero"`
+	// IDs of saved webhook configurations to notify for this job.
+	WebhookConfigurationIDs []string `json:"webhook_configuration_ids,omitzero"`
 	// Crop boundaries to process only a portion of each page. Values are ratios 0-1
 	// from page edges
 	CropBox ParsingNewParamsCropBox `json:"crop_box,omitzero"`

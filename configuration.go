@@ -358,6 +358,8 @@ type ConfigurationCreateParametersUnion struct {
 	// This field is from variant [ParseV2ParametersResp].
 	ProcessingOptions ParseV2ParametersProcessingOptionsResp `json:"processing_options"`
 	// This field is from variant [ParseV2ParametersResp].
+	WebhookConfigurationIDs []string `json:"webhook_configuration_ids"`
+	// This field is from variant [ParseV2ParametersResp].
 	WebhookConfigurations []ParseV2ParametersWebhookConfigurationResp `json:"webhook_configurations"`
 	// This field is from variant [SplitV1ParametersResp].
 	Categories []SplitCategory `json:"categories"`
@@ -405,6 +407,7 @@ type ConfigurationCreateParametersUnion struct {
 		PageRanges                 respjson.Field
 		ProcessingControl          respjson.Field
 		ProcessingOptions          respjson.Field
+		WebhookConfigurationIDs    respjson.Field
 		WebhookConfigurations      respjson.Field
 		Categories                 respjson.Field
 		SplittingStrategy          respjson.Field
@@ -759,6 +762,8 @@ type ConfigurationResponseParametersUnion struct {
 	// This field is from variant [ParseV2ParametersResp].
 	ProcessingOptions ParseV2ParametersProcessingOptionsResp `json:"processing_options"`
 	// This field is from variant [ParseV2ParametersResp].
+	WebhookConfigurationIDs []string `json:"webhook_configuration_ids"`
+	// This field is from variant [ParseV2ParametersResp].
 	WebhookConfigurations []ParseV2ParametersWebhookConfigurationResp `json:"webhook_configurations"`
 	// This field is from variant [SplitV1ParametersResp].
 	Categories []SplitCategory `json:"categories"`
@@ -806,6 +811,7 @@ type ConfigurationResponseParametersUnion struct {
 		PageRanges                 respjson.Field
 		ProcessingControl          respjson.Field
 		ProcessingOptions          respjson.Field
+		WebhookConfigurationIDs    respjson.Field
 		WebhookConfigurations      respjson.Field
 		Categories                 respjson.Field
 		SplittingStrategy          respjson.Field
@@ -1251,27 +1257,30 @@ type ParseV2ParametersResp struct {
 	ProcessingControl ParseV2ParametersProcessingControlResp `json:"processing_control"`
 	// Document processing options including OCR, table extraction, and chart parsing
 	ProcessingOptions ParseV2ParametersProcessingOptionsResp `json:"processing_options"`
+	// IDs of saved webhook configurations to notify for this job.
+	WebhookConfigurationIDs []string `json:"webhook_configuration_ids" api:"nullable"`
 	// Webhook endpoints for job status notifications. Multiple webhooks can be
 	// configured for different events or services
 	WebhookConfigurations []ParseV2ParametersWebhookConfigurationResp `json:"webhook_configurations"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
-		ProductType           respjson.Field
-		Tier                  respjson.Field
-		Version               respjson.Field
-		AgenticOptions        respjson.Field
-		ClientName            respjson.Field
-		CropBox               respjson.Field
-		DisableCache          respjson.Field
-		FastOptions           respjson.Field
-		InputOptions          respjson.Field
-		OutputOptions         respjson.Field
-		PageRanges            respjson.Field
-		ProcessingControl     respjson.Field
-		ProcessingOptions     respjson.Field
-		WebhookConfigurations respjson.Field
-		ExtraFields           map[string]respjson.Field
-		raw                   string
+		ProductType             respjson.Field
+		Tier                    respjson.Field
+		Version                 respjson.Field
+		AgenticOptions          respjson.Field
+		ClientName              respjson.Field
+		CropBox                 respjson.Field
+		DisableCache            respjson.Field
+		FastOptions             respjson.Field
+		InputOptions            respjson.Field
+		OutputOptions           respjson.Field
+		PageRanges              respjson.Field
+		ProcessingControl       respjson.Field
+		ProcessingOptions       respjson.Field
+		WebhookConfigurationIDs respjson.Field
+		WebhookConfigurations   respjson.Field
+		ExtraFields             map[string]respjson.Field
+		raw                     string
 	} `json:"-"`
 }
 
@@ -3132,6 +3141,8 @@ type ParseV2Parameters struct {
 	// simple documents with standard layouts. Currently has no configurable options
 	// but reserved for future expansion.
 	FastOptions any `json:"fast_options,omitzero"`
+	// IDs of saved webhook configurations to notify for this job.
+	WebhookConfigurationIDs []string `json:"webhook_configuration_ids,omitzero"`
 	// Crop boundaries to process only a portion of each page. Values are ratios 0-1
 	// from page edges
 	CropBox ParseV2ParametersCropBox `json:"crop_box,omitzero"`
