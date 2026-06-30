@@ -65,10 +65,15 @@ jobs:
           # workflow-free while still delivering production's release-please
           # content (CHANGELOG, version, manifest) for the next build to reseal.
           git checkout --force -B stlc/from-prod origin/main
-          git reset --hard production/main
+          # Squash-MERGE, not reset: staging is usually ahead of production on
+          # generated code, so merge production's release commits in rather than
+          # reset to production's tree (which would revert staging's newer code).
+          if ! git merge --squash production/main; then
+            echo "Back-sync conflicts with production - needs manual resolution." >&2
+            git reset --hard origin/main; exit 1
+          fi
           rm -rf .github/workflows
           git checkout origin/main -- .github/workflows
-          git reset --soft origin/main
           git add -A
           if git diff --cached --quiet; then
             echo "Production differs from staging only in workflow files - nothing to back-sync."
