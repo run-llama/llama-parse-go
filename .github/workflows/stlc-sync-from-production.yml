@@ -51,41 +51,12 @@ jobs:
             echo "behind=true" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Build the back-sync branch (production content, staging workflows)
-        id: build
+      - name: Push production main to the back-sync branch on staging
         if: steps.diff.outputs.behind == 'true'
-        run: |
-          git config user.name stlc-bot
-          git config user.email stlc-bot@users.noreply.github.com
-          # Squash production's changes into one commit on top of staging main,
-          # keeping staging's own .github/workflows/. GITHUB_TOKEN is a GitHub
-          # App token and may not push commits that create or update
-          # .github/workflows/** — and production carries workflow files staging
-          # does not (release.yml, publish-*.yml). Dropping them keeps the push
-          # workflow-free while still delivering production's release-please
-          # content (CHANGELOG, version, manifest) for the next build to reseal.
-          git checkout --force -B stlc/from-prod origin/main
-          # Squash-MERGE, not reset: staging is usually ahead of production on
-          # generated code, so merge production's release commits in rather than
-          # reset to production's tree (which would revert staging's newer code).
-          if ! git merge --squash production/main; then
-            echo "Back-sync conflicts with production - needs manual resolution." >&2
-            git reset --hard origin/main; exit 1
-          fi
-          rm -rf .github/workflows
-          git checkout origin/main -- .github/workflows
-          git add -A
-          if git diff --cached --quiet; then
-            echo "Production differs from staging only in workflow files - nothing to back-sync."
-            echo "synced=false" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          git commit -m "Sync release changes from production"
-          git push origin stlc/from-prod --force
-          echo "synced=true" >> "$GITHUB_OUTPUT"
+        run: git push origin production/main:refs/heads/stlc/from-prod --force
 
       - name: Open or update the back-sync PR on staging
-        if: steps.build.outputs.synced == 'true'
+        if: steps.diff.outputs.behind == 'true'
         run: |
           EXISTING_PR=$(gh pr list --head stlc/from-prod --base main --state open --json number --jq '.[0].number')
           if [ -z "${EXISTING_PR}" ]; then
@@ -97,9 +68,5 @@ jobs:
           fi
           # Auto-merge so the loop is hands-off. If auto-merge isn't enabled on
           # the repo, the PR is left open for a one-click merge instead.
-          # main is unprotected, so merge immediately. --auto would wait on a
-          # required check that doesn't exist here, and this bot PR's CI is gated
-          # behind manual approval (GITHUB_TOKEN-created PRs never auto-run CI),
-          # so waiting would block forever. An immediate merge needs neither.
-          gh pr merge stlc/from-prod --merge --delete-branch \
-            || echo "Could not merge the back-sync PR automatically; merge it manually."
+          gh pr merge stlc/from-prod --merge --auto \
+            || echo "Auto-merge unavailable — merge the back-sync PR manually."
