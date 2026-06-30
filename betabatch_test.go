@@ -164,8 +164,9 @@ func TestBetaBatchNewWithOptionalParams(t *testing.T) {
 						WebhookHeaders: map[string]string{
 							"Authorization": "Bearer sk-...",
 						},
-						WebhookOutputFormat: llamacloudprod.String("json"),
-						WebhookURL:          llamacloudprod.String("https://example.com/webhooks/llamacloud"),
+						WebhookOutputFormat:  llamacloudprod.String("json"),
+						WebhookSigningSecret: llamacloudprod.String("whsec_..."),
+						WebhookURL:           llamacloudprod.String("https://example.com/webhooks/llamacloud"),
 					}},
 					WebhookURL: llamacloudprod.String("webhook_url"),
 				},
