@@ -97,5 +97,9 @@ jobs:
           fi
           # Auto-merge so the loop is hands-off. If auto-merge isn't enabled on
           # the repo, the PR is left open for a one-click merge instead.
-          gh pr merge stlc/from-prod --merge --auto \
-            || echo "Auto-merge unavailable — merge the back-sync PR manually."
+          # main is unprotected, so merge immediately. --auto would wait on a
+          # required check that doesn't exist here, and this bot PR's CI is gated
+          # behind manual approval (GITHUB_TOKEN-created PRs never auto-run CI),
+          # so waiting would block forever. An immediate merge needs neither.
+          gh pr merge stlc/from-prod --merge --delete-branch \
+            || echo "Could not merge the back-sync PR automatically; merge it manually."
