@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.1.0](https://github.com/run-llama/llama-parse-go/compare/v1.0.0...v1.1.0) (2026-06-30)
+
+
+### Features
+
+* **index:** add output_directory_id to IndexResponse ([#21149](https://github.com/run-llama/llama-parse-go/issues/21149)) ([bed12f3](https://github.com/run-llama/llama-parse-go/commit/bed12f31a6f7c8bbbadb38a6e43f959435fdd459))
+
+
+### Bug Fixes
+
+* **ci:** keep staging workflows on back-sync so GITHUB_TOKEN can push ([210783b](https://github.com/run-llama/llama-parse-go/commit/210783b00e32285d6e05fbddf72cf36d43dc6f73))
+* **ci:** merge back-sync PR immediately instead of --auto ([883b7a7](https://github.com/run-llama/llama-parse-go/commit/883b7a7650ada825601728dc1aee96a172ae41ca))
+* **ci:** squash-MERGE production into staging, don't reset to it ([0729cc5](https://github.com/run-llama/llama-parse-go/commit/0729cc5744ec0c22428133a0bc4e8c645cef9011))
+
 ## [1.0.0](https://github.com/run-llama/llama-parse-go/compare/v0.0.1...v1.0.0) (2026-06-25)
 
 
