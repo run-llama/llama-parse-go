@@ -51,12 +51,36 @@ jobs:
             echo "behind=true" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Push production main to the back-sync branch on staging
+      - name: Build the back-sync branch (production content, staging workflows)
+        id: build
         if: steps.diff.outputs.behind == 'true'
-        run: git push origin production/main:refs/heads/stlc/from-prod --force
+        run: |
+          git config user.name stlc-bot
+          git config user.email stlc-bot@users.noreply.github.com
+          # Squash production's changes into one commit on top of staging main,
+          # keeping staging's own .github/workflows/. GITHUB_TOKEN is a GitHub
+          # App token and may not push commits that create or update
+          # .github/workflows/** — and production carries workflow files staging
+          # does not (release.yml, publish-*.yml). Dropping them keeps the push
+          # workflow-free while still delivering production's release-please
+          # content (CHANGELOG, version, manifest) for the next build to reseal.
+          git checkout --force -B stlc/from-prod origin/main
+          git reset --hard production/main
+          rm -rf .github/workflows
+          git checkout origin/main -- .github/workflows
+          git reset --soft origin/main
+          git add -A
+          if git diff --cached --quiet; then
+            echo "Production differs from staging only in workflow files - nothing to back-sync."
+            echo "synced=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git commit -m "Sync release changes from production"
+          git push origin stlc/from-prod --force
+          echo "synced=true" >> "$GITHUB_OUTPUT"
 
       - name: Open or update the back-sync PR on staging
-        if: steps.diff.outputs.behind == 'true'
+        if: steps.build.outputs.synced == 'true'
         run: |
           EXISTING_PR=$(gh pr list --head stlc/from-prod --base main --state open --json number --jq '.[0].number')
           if [ -z "${EXISTING_PR}" ]; then
