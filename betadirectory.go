@@ -127,9 +127,9 @@ type BetaDirectoryNewResponse struct {
 	ExpiresAt time.Time `json:"expires_at" api:"nullable" format:"date-time"`
 	// Reserved system-managed metadata.
 	SystemMetadata map[string]any `json:"system_metadata" api:"nullable"`
-	// Directory type: 'user', 'index', 'ephemeral', or 'system_ephemeral'.
+	// Directory type: 'user', 'index', or 'ephemeral'.
 	//
-	// Any of "ephemeral", "index", "system_ephemeral", "user".
+	// Any of "ephemeral", "index", "user".
 	Type BetaDirectoryNewResponseType `json:"type" api:"nullable"`
 	// Update datetime
 	UpdatedAt time.Time `json:"updated_at" api:"nullable" format:"date-time"`
@@ -156,14 +156,13 @@ func (r *BetaDirectoryNewResponse) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-// Directory type: 'user', 'index', 'ephemeral', or 'system_ephemeral'.
+// Directory type: 'user', 'index', or 'ephemeral'.
 type BetaDirectoryNewResponseType string
 
 const (
-	BetaDirectoryNewResponseTypeEphemeral       BetaDirectoryNewResponseType = "ephemeral"
-	BetaDirectoryNewResponseTypeIndex           BetaDirectoryNewResponseType = "index"
-	BetaDirectoryNewResponseTypeSystemEphemeral BetaDirectoryNewResponseType = "system_ephemeral"
-	BetaDirectoryNewResponseTypeUser            BetaDirectoryNewResponseType = "user"
+	BetaDirectoryNewResponseTypeEphemeral BetaDirectoryNewResponseType = "ephemeral"
+	BetaDirectoryNewResponseTypeIndex     BetaDirectoryNewResponseType = "index"
+	BetaDirectoryNewResponseTypeUser      BetaDirectoryNewResponseType = "user"
 )
 
 // API response schema for a directory.
@@ -184,9 +183,9 @@ type BetaDirectoryUpdateResponse struct {
 	ExpiresAt time.Time `json:"expires_at" api:"nullable" format:"date-time"`
 	// Reserved system-managed metadata.
 	SystemMetadata map[string]any `json:"system_metadata" api:"nullable"`
-	// Directory type: 'user', 'index', 'ephemeral', or 'system_ephemeral'.
+	// Directory type: 'user', 'index', or 'ephemeral'.
 	//
-	// Any of "ephemeral", "index", "system_ephemeral", "user".
+	// Any of "ephemeral", "index", "user".
 	Type BetaDirectoryUpdateResponseType `json:"type" api:"nullable"`
 	// Update datetime
 	UpdatedAt time.Time `json:"updated_at" api:"nullable" format:"date-time"`
@@ -213,14 +212,13 @@ func (r *BetaDirectoryUpdateResponse) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-// Directory type: 'user', 'index', 'ephemeral', or 'system_ephemeral'.
+// Directory type: 'user', 'index', or 'ephemeral'.
 type BetaDirectoryUpdateResponseType string
 
 const (
-	BetaDirectoryUpdateResponseTypeEphemeral       BetaDirectoryUpdateResponseType = "ephemeral"
-	BetaDirectoryUpdateResponseTypeIndex           BetaDirectoryUpdateResponseType = "index"
-	BetaDirectoryUpdateResponseTypeSystemEphemeral BetaDirectoryUpdateResponseType = "system_ephemeral"
-	BetaDirectoryUpdateResponseTypeUser            BetaDirectoryUpdateResponseType = "user"
+	BetaDirectoryUpdateResponseTypeEphemeral BetaDirectoryUpdateResponseType = "ephemeral"
+	BetaDirectoryUpdateResponseTypeIndex     BetaDirectoryUpdateResponseType = "index"
+	BetaDirectoryUpdateResponseTypeUser      BetaDirectoryUpdateResponseType = "user"
 )
 
 // API response schema for a directory.
@@ -241,9 +239,9 @@ type BetaDirectoryListResponse struct {
 	ExpiresAt time.Time `json:"expires_at" api:"nullable" format:"date-time"`
 	// Reserved system-managed metadata.
 	SystemMetadata map[string]any `json:"system_metadata" api:"nullable"`
-	// Directory type: 'user', 'index', 'ephemeral', or 'system_ephemeral'.
+	// Directory type: 'user', 'index', or 'ephemeral'.
 	//
-	// Any of "ephemeral", "index", "system_ephemeral", "user".
+	// Any of "ephemeral", "index", "user".
 	Type BetaDirectoryListResponseType `json:"type" api:"nullable"`
 	// Update datetime
 	UpdatedAt time.Time `json:"updated_at" api:"nullable" format:"date-time"`
@@ -270,14 +268,13 @@ func (r *BetaDirectoryListResponse) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-// Directory type: 'user', 'index', 'ephemeral', or 'system_ephemeral'.
+// Directory type: 'user', 'index', or 'ephemeral'.
 type BetaDirectoryListResponseType string
 
 const (
-	BetaDirectoryListResponseTypeEphemeral       BetaDirectoryListResponseType = "ephemeral"
-	BetaDirectoryListResponseTypeIndex           BetaDirectoryListResponseType = "index"
-	BetaDirectoryListResponseTypeSystemEphemeral BetaDirectoryListResponseType = "system_ephemeral"
-	BetaDirectoryListResponseTypeUser            BetaDirectoryListResponseType = "user"
+	BetaDirectoryListResponseTypeEphemeral BetaDirectoryListResponseType = "ephemeral"
+	BetaDirectoryListResponseTypeIndex     BetaDirectoryListResponseType = "index"
+	BetaDirectoryListResponseTypeUser      BetaDirectoryListResponseType = "user"
 )
 
 // API response schema for a directory.
@@ -298,9 +295,9 @@ type BetaDirectoryGetResponse struct {
 	ExpiresAt time.Time `json:"expires_at" api:"nullable" format:"date-time"`
 	// Reserved system-managed metadata.
 	SystemMetadata map[string]any `json:"system_metadata" api:"nullable"`
-	// Directory type: 'user', 'index', 'ephemeral', or 'system_ephemeral'.
+	// Directory type: 'user', 'index', or 'ephemeral'.
 	//
-	// Any of "ephemeral", "index", "system_ephemeral", "user".
+	// Any of "ephemeral", "index", "user".
 	Type BetaDirectoryGetResponseType `json:"type" api:"nullable"`
 	// Update datetime
 	UpdatedAt time.Time `json:"updated_at" api:"nullable" format:"date-time"`
@@ -327,14 +324,13 @@ func (r *BetaDirectoryGetResponse) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-// Directory type: 'user', 'index', 'ephemeral', or 'system_ephemeral'.
+// Directory type: 'user', 'index', or 'ephemeral'.
 type BetaDirectoryGetResponseType string
 
 const (
-	BetaDirectoryGetResponseTypeEphemeral       BetaDirectoryGetResponseType = "ephemeral"
-	BetaDirectoryGetResponseTypeIndex           BetaDirectoryGetResponseType = "index"
-	BetaDirectoryGetResponseTypeSystemEphemeral BetaDirectoryGetResponseType = "system_ephemeral"
-	BetaDirectoryGetResponseTypeUser            BetaDirectoryGetResponseType = "user"
+	BetaDirectoryGetResponseTypeEphemeral BetaDirectoryGetResponseType = "ephemeral"
+	BetaDirectoryGetResponseTypeIndex     BetaDirectoryGetResponseType = "index"
+	BetaDirectoryGetResponseTypeUser      BetaDirectoryGetResponseType = "user"
 )
 
 type BetaDirectoryNewParams struct {
