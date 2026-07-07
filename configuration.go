@@ -1218,7 +1218,7 @@ type ParseV2ParametersResp struct {
 	//
 	// Current `latest` by tier:
 	//
-	// - `fast`: `2025-12-11`
+	// - `fast`: `2026-06-15`
 	// - `cost_effective`: `2026-06-26`
 	// - `agentic`: `2026-06-18`
 	// - `agentic_plus`: `2026-06-18`
@@ -1316,7 +1316,7 @@ const (
 //
 // Current `latest` by tier:
 //
-// - `fast`: `2025-12-11`
+// - `fast`: `2026-06-15`
 // - `cost_effective`: `2026-06-26`
 // - `agentic`: `2026-06-18`
 // - `agentic_plus`: `2026-06-18`
@@ -1328,7 +1328,7 @@ const (
 	ParseV2ParametersVersionLatest     ParseV2ParametersVersion = "latest"
 	ParseV2ParametersVersion2026_06_26 ParseV2ParametersVersion = "2026-06-26"
 	ParseV2ParametersVersion2026_06_18 ParseV2ParametersVersion = "2026-06-18"
-	ParseV2ParametersVersion2025_12_11 ParseV2ParametersVersion = "2025-12-11"
+	ParseV2ParametersVersion2026_06_15 ParseV2ParametersVersion = "2026-06-15"
 )
 
 // Options for AI-powered parsing tiers (cost_effective, agentic, agentic_plus).
@@ -2010,7 +2010,7 @@ type ParseV2ParametersProcessingOptionsAutoModeConfigurationParsingConfResp stru
 	//
 	// Current `latest` by tier:
 	//
-	// - `fast`: `2025-12-11`
+	// - `fast`: `2026-06-15`
 	// - `cost_effective`: `2026-06-26`
 	// - `agentic`: `2026-06-18`
 	// - `agentic_plus`: `2026-06-18`
@@ -3116,7 +3116,7 @@ type ParseV2Parameters struct {
 	//
 	// Current `latest` by tier:
 	//
-	// - `fast`: `2025-12-11`
+	// - `fast`: `2026-06-15`
 	// - `cost_effective`: `2026-06-26`
 	// - `agentic`: `2026-06-18`
 	// - `agentic_plus`: `2026-06-18`
@@ -3730,7 +3730,7 @@ type ParseV2ParametersProcessingOptionsAutoModeConfigurationParsingConf struct {
 	//
 	// Current `latest` by tier:
 	//
-	// - `fast`: `2025-12-11`
+	// - `fast`: `2026-06-15`
 	// - `cost_effective`: `2026-06-26`
 	// - `agentic`: `2026-06-18`
 	// - `agentic_plus`: `2026-06-18`
