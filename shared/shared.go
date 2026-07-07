@@ -502,6 +502,8 @@ type CloudGoogleDriveDataSource struct {
 	// The ID of the Google Drive folder to read from.
 	FolderID  string `json:"folder_id" api:"required"`
 	ClassName string `json:"class_name"`
+	// Human-readable name of the selected folder, for display.
+	FolderName string `json:"folder_name" api:"nullable"`
 	// A dictionary containing secret values
 	ServiceAccountKey     map[string]string `json:"service_account_key" api:"nullable"`
 	SupportsAccessControl bool              `json:"supports_access_control"`
@@ -509,6 +511,7 @@ type CloudGoogleDriveDataSource struct {
 	JSON struct {
 		FolderID              respjson.Field
 		ClassName             respjson.Field
+		FolderName            respjson.Field
 		ServiceAccountKey     respjson.Field
 		SupportsAccessControl respjson.Field
 		ExtraFields           map[string]respjson.Field
@@ -535,7 +538,9 @@ func (r CloudGoogleDriveDataSource) ToParam() CloudGoogleDriveDataSourceParam {
 // The property FolderID is required.
 type CloudGoogleDriveDataSourceParam struct {
 	// The ID of the Google Drive folder to read from.
-	FolderID              string            `json:"folder_id" api:"required"`
+	FolderID string `json:"folder_id" api:"required"`
+	// Human-readable name of the selected folder, for display.
+	FolderName            param.Opt[string] `json:"folder_name,omitzero"`
 	ClassName             param.Opt[string] `json:"class_name,omitzero"`
 	SupportsAccessControl param.Opt[bool]   `json:"supports_access_control,omitzero"`
 	// A dictionary containing secret values
