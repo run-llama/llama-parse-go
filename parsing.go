@@ -1873,7 +1873,7 @@ type ParsingNewParams struct {
 	// - `fast`: `2026-06-15`
 	// - `cost_effective`: `2026-06-26`
 	// - `agentic`: `2026-06-18`
-	// - `agentic_plus`: `2026-06-18`
+	// - `agentic_plus`: `2026-07-08`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
 	Version        ParsingNewParamsVersion `json:"version,omitzero" api:"required"`
@@ -1969,13 +1969,14 @@ const (
 // - `fast`: `2026-06-15`
 // - `cost_effective`: `2026-06-26`
 // - `agentic`: `2026-06-18`
-// - `agentic_plus`: `2026-06-18`
+// - `agentic_plus`: `2026-07-08`
 //
 // Full list: `GET /api/v2/parse/versions`.
 type ParsingNewParamsVersion string
 
 const (
 	ParsingNewParamsVersionLatest     ParsingNewParamsVersion = "latest"
+	ParsingNewParamsVersion2026_07_08 ParsingNewParamsVersion = "2026-07-08"
 	ParsingNewParamsVersion2026_06_26 ParsingNewParamsVersion = "2026-06-26"
 	ParsingNewParamsVersion2026_06_18 ParsingNewParamsVersion = "2026-06-18"
 	ParsingNewParamsVersion2026_06_15 ParsingNewParamsVersion = "2026-06-15"
@@ -2539,7 +2540,7 @@ type ParsingNewParamsProcessingOptionsAutoModeConfigurationParsingConf struct {
 	// - `fast`: `2026-06-15`
 	// - `cost_effective`: `2026-06-26`
 	// - `agentic`: `2026-06-18`
-	// - `agentic_plus`: `2026-06-18`
+	// - `agentic_plus`: `2026-07-08`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
 	Version string `json:"version,omitzero"`
