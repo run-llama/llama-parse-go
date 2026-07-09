@@ -231,6 +231,8 @@ type PipelineDataSourceComponentUnion struct {
 	TenantID     string `json:"tenant_id"`
 	FolderID     string `json:"folder_id"`
 	// This field is from variant [shared.CloudGoogleDriveDataSource].
+	FolderName string `json:"folder_name"`
+	// This field is from variant [shared.CloudGoogleDriveDataSource].
 	ServiceAccountKey map[string]string `json:"service_account_key"`
 	// This field is from variant [shared.CloudOneDriveDataSource].
 	UserPrincipalName string   `json:"user_principal_name"`
@@ -321,6 +323,7 @@ type PipelineDataSourceComponentUnion struct {
 		ClientSecret                         respjson.Field
 		TenantID                             respjson.Field
 		FolderID                             respjson.Field
+		FolderName                           respjson.Field
 		ServiceAccountKey                    respjson.Field
 		UserPrincipalName                    respjson.Field
 		FolderPath                           respjson.Field
