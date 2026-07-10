@@ -141,6 +141,8 @@ type PipelineDataSource struct {
 	// "JIRA_V2", "MICROSOFT_ONEDRIVE", "MICROSOFT_SHAREPOINT", "NOTION_PAGE", "S3",
 	// "SLACK".
 	SourceType PipelineDataSourceSourceType `json:"source_type" api:"required"`
+	// Reference to a brokered managed-OAuth connection backing this source.
+	BrokeredConnectionID string `json:"brokered_connection_id" api:"nullable"`
 	// Creation datetime
 	CreatedAt time.Time `json:"created_at" api:"nullable" format:"date-time"`
 	// Custom metadata that will be present on all data loaded from the data source
@@ -161,24 +163,25 @@ type PipelineDataSource struct {
 	VersionMetadata DataSourceReaderVersionMetadata `json:"version_metadata" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
-		ID                respjson.Field
-		Component         respjson.Field
-		DataSourceID      respjson.Field
-		LastSyncedAt      respjson.Field
-		Name              respjson.Field
-		PipelineID        respjson.Field
-		ProjectID         respjson.Field
-		SourceType        respjson.Field
-		CreatedAt         respjson.Field
-		CustomMetadata    respjson.Field
-		Status            respjson.Field
-		StatusUpdatedAt   respjson.Field
-		SyncInterval      respjson.Field
-		SyncScheduleSetBy respjson.Field
-		UpdatedAt         respjson.Field
-		VersionMetadata   respjson.Field
-		ExtraFields       map[string]respjson.Field
-		raw               string
+		ID                   respjson.Field
+		Component            respjson.Field
+		DataSourceID         respjson.Field
+		LastSyncedAt         respjson.Field
+		Name                 respjson.Field
+		PipelineID           respjson.Field
+		ProjectID            respjson.Field
+		SourceType           respjson.Field
+		BrokeredConnectionID respjson.Field
+		CreatedAt            respjson.Field
+		CustomMetadata       respjson.Field
+		Status               respjson.Field
+		StatusUpdatedAt      respjson.Field
+		SyncInterval         respjson.Field
+		SyncScheduleSetBy    respjson.Field
+		UpdatedAt            respjson.Field
+		VersionMetadata      respjson.Field
+		ExtraFields          map[string]respjson.Field
+		raw                  string
 	} `json:"-"`
 }
 

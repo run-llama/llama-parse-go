@@ -107,6 +107,8 @@ type DataSource struct {
 	// "JIRA_V2", "MICROSOFT_ONEDRIVE", "MICROSOFT_SHAREPOINT", "NOTION_PAGE", "S3",
 	// "SLACK".
 	SourceType DataSourceSourceType `json:"source_type" api:"required"`
+	// Reference to a brokered managed-OAuth connection backing this source.
+	BrokeredConnectionID string `json:"brokered_connection_id" api:"nullable"`
 	// Creation datetime
 	CreatedAt time.Time `json:"created_at" api:"nullable" format:"date-time"`
 	// Custom metadata that will be present on all data loaded from the data source
@@ -117,17 +119,18 @@ type DataSource struct {
 	VersionMetadata DataSourceReaderVersionMetadata `json:"version_metadata" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
-		ID              respjson.Field
-		Component       respjson.Field
-		Name            respjson.Field
-		ProjectID       respjson.Field
-		SourceType      respjson.Field
-		CreatedAt       respjson.Field
-		CustomMetadata  respjson.Field
-		UpdatedAt       respjson.Field
-		VersionMetadata respjson.Field
-		ExtraFields     map[string]respjson.Field
-		raw             string
+		ID                   respjson.Field
+		Component            respjson.Field
+		Name                 respjson.Field
+		ProjectID            respjson.Field
+		SourceType           respjson.Field
+		BrokeredConnectionID respjson.Field
+		CreatedAt            respjson.Field
+		CustomMetadata       respjson.Field
+		UpdatedAt            respjson.Field
+		VersionMetadata      respjson.Field
+		ExtraFields          map[string]respjson.Field
+		raw                  string
 	} `json:"-"`
 }
 
@@ -501,6 +504,8 @@ type DataSourceNewParams struct {
 	SourceType     DataSourceNewParamsSourceType `json:"source_type,omitzero" api:"required"`
 	OrganizationID param.Opt[string]             `query:"organization_id,omitzero" format:"uuid" json:"-"`
 	ProjectID      param.Opt[string]             `query:"project_id,omitzero" format:"uuid" json:"-"`
+	// Reference to a brokered managed-OAuth connection backing this source.
+	BrokeredConnectionID param.Opt[string] `json:"brokered_connection_id,omitzero"`
 	// Custom metadata that will be present on all data loaded from the data source
 	CustomMetadata map[string]*DataSourceNewParamsCustomMetadataUnion `json:"custom_metadata,omitzero"`
 	paramObj
@@ -603,6 +608,8 @@ type DataSourceUpdateParams struct {
 	// "JIRA_V2", "MICROSOFT_ONEDRIVE", "MICROSOFT_SHAREPOINT", "NOTION_PAGE", "S3",
 	// "SLACK".
 	SourceType DataSourceUpdateParamsSourceType `json:"source_type,omitzero" api:"required"`
+	// Reference to a brokered managed-OAuth connection backing this source.
+	BrokeredConnectionID param.Opt[string] `json:"brokered_connection_id,omitzero"`
 	// The name of the data source.
 	Name param.Opt[string] `json:"name,omitzero"`
 	// Component that implements the data source
