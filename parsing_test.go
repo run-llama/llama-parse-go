@@ -227,6 +227,7 @@ func TestParsingNewWithOptionalParams(t *testing.T) {
 				Enable: llamacloudprod.Bool(true),
 			},
 			DisableHeuristics: llamacloudprod.Bool(true),
+			Forms:             "enrich",
 			Ignore: llamacloudprod.ParsingNewParamsProcessingOptionsIgnore{
 				IgnoreDiagonalText: llamacloudprod.Bool(true),
 				IgnoreHiddenText:   llamacloudprod.Bool(true),

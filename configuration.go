@@ -1814,6 +1814,14 @@ type ParseV2ParametersProcessingOptionsResp struct {
 	// Disable automatic heuristics including outlined table extraction and adaptive
 	// long table handling. Use when heuristics produce incorrect results
 	DisableHeuristics bool `json:"disable_heuristics" api:"nullable"`
+	// Beta: set to 'enrich' to run an additional AI form-analysis pass on pages
+	// detected as forms, producing a structured tree of the form's sections, fields,
+	// and fillable grids. Retrieve the result with expand=forms. 'default' (the
+	// default) applies standard parsing with no extra pass. Not available on the fast
+	// tier
+	//
+	// Any of "default", "enrich".
+	Forms string `json:"forms" api:"nullable"`
 	// Options for ignoring specific text types (diagonal, hidden, text in images)
 	Ignore ParseV2ParametersProcessingOptionsIgnoreResp `json:"ignore"`
 	// OCR configuration including language detection settings
@@ -1830,6 +1838,7 @@ type ParseV2ParametersProcessingOptionsResp struct {
 		AutoModeConfiguration     respjson.Field
 		CostOptimizer             respjson.Field
 		DisableHeuristics         respjson.Field
+		Forms                     respjson.Field
 		Ignore                    respjson.Field
 		OcrParameters             respjson.Field
 		SpecializedChartParsing   respjson.Field
@@ -3575,6 +3584,14 @@ type ParseV2ParametersProcessingOptions struct {
 	// cheaper processing while preserving quality for complex pages. Only works with
 	// 'agentic' or 'agentic_plus' tiers.
 	CostOptimizer ParseV2ParametersProcessingOptionsCostOptimizer `json:"cost_optimizer,omitzero"`
+	// Beta: set to 'enrich' to run an additional AI form-analysis pass on pages
+	// detected as forms, producing a structured tree of the form's sections, fields,
+	// and fillable grids. Retrieve the result with expand=forms. 'default' (the
+	// default) applies standard parsing with no extra pass. Not available on the fast
+	// tier
+	//
+	// Any of "default", "enrich".
+	Forms string `json:"forms,omitzero"`
 	// Enable AI-powered chart analysis. Modes: 'efficient' (fast, lower cost),
 	// 'agentic' (balanced), 'agentic_plus' (highest accuracy). Automatically enables
 	// extract_layout and precise_bounding_box when set
@@ -3597,6 +3614,9 @@ func (r *ParseV2ParametersProcessingOptions) UnmarshalJSON(data []byte) error {
 }
 
 func init() {
+	apijson.RegisterFieldValidator[ParseV2ParametersProcessingOptions](
+		"forms", "default", "enrich",
+	)
 	apijson.RegisterFieldValidator[ParseV2ParametersProcessingOptions](
 		"specialized_chart_parsing", "agentic", "agentic_plus", "efficient",
 	)
