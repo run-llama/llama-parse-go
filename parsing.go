@@ -385,6 +385,739 @@ const (
 	FooterItemTypeFooter FooterItemType = "footer"
 )
 
+// One form detected on a page, in two representations of the same content.
+type Form struct {
+	// Structured representation: an ordered tree of sections, fields, and tables
+	Json []FormJsonUnion `json:"json" api:"required"`
+	// Flattened list representation of the same content
+	List FormListItem `json:"list" api:"required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Json        respjson.Field
+		List        respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r Form) RawJSON() string { return r.JSON.raw }
+func (r *Form) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// FormJsonUnion contains all possible properties and values from [FormField],
+// [FormSection], [FormTable].
+//
+// Use the [FormJsonUnion.AsAny] method to switch on the variant.
+//
+// Use the methods beginning with 'As' to cast the union to one of its variants.
+type FormJsonUnion struct {
+	// This field is from variant [FormField].
+	Field FormFieldField `json:"field"`
+	ID    string         `json:"id"`
+	// This field is from variant [FormField].
+	IsEmpty bool   `json:"isEmpty"`
+	Label   string `json:"label"`
+	// Any of "field", "section", "table".
+	Type string `json:"type"`
+	// This field is from variant [FormField].
+	Value FormFieldValueUnion `json:"value"`
+	// This field is from variant [FormField].
+	ValueItems []FormFieldValueItemUnion `json:"valueItems"`
+	// This field is from variant [FormSection].
+	Items []FormSectionItemUnion `json:"items"`
+	// This field is from variant [FormTable].
+	Rows [][]*FormTableRowUnion `json:"rows"`
+	// This field is from variant [FormTable].
+	Columns []string `json:"columns"`
+	JSON    struct {
+		Field      respjson.Field
+		ID         respjson.Field
+		IsEmpty    respjson.Field
+		Label      respjson.Field
+		Type       respjson.Field
+		Value      respjson.Field
+		ValueItems respjson.Field
+		Items      respjson.Field
+		Rows       respjson.Field
+		Columns    respjson.Field
+		raw        string
+	} `json:"-"`
+}
+
+// anyFormJson is implemented by each variant of [FormJsonUnion] to add type safety
+// for the return type of [FormJsonUnion.AsAny]
+type anyFormJson interface {
+	implFormJsonUnion()
+}
+
+func (FormField) implFormJsonUnion()   {}
+func (FormSection) implFormJsonUnion() {}
+func (FormTable) implFormJsonUnion()   {}
+
+// Use the following switch statement to find the correct variant
+//
+//	switch variant := FormJsonUnion.AsAny().(type) {
+//	case llamacloudprod.FormField:
+//	case llamacloudprod.FormSection:
+//	case llamacloudprod.FormTable:
+//	default:
+//	  fmt.Errorf("no variant present")
+//	}
+func (u FormJsonUnion) AsAny() anyFormJson {
+	switch u.Type {
+	case "field":
+		return u.AsField()
+	case "section":
+		return u.AsSection()
+	case "table":
+		return u.AsTable()
+	}
+	return nil
+}
+
+func (u FormJsonUnion) AsField() (v FormField) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u FormJsonUnion) AsSection() (v FormSection) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u FormJsonUnion) AsTable() (v FormTable) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+// Returns the unmodified JSON received from the API
+func (u FormJsonUnion) RawJSON() string { return u.JSON.raw }
+
+func (r *FormJsonUnion) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// One labeled form entry: a text input, checkbox, select group, or signature line.
+type FormField struct {
+	// Kind of entry: text (any free-text input), checkbox, single_select,
+	// multi_select, or signature
+	//
+	// Any of "checkbox", "multi_select", "signature", "single_select", "text".
+	Field FormFieldField `json:"field" api:"required"`
+	// Field number/letter printed on the form (e.g. '1a'), if any
+	ID string `json:"id" api:"nullable"`
+	// True for a printed-but-blank text field (mutually exclusive with value)
+	IsEmpty bool `json:"isEmpty" api:"nullable"`
+	// Printed field caption, if any
+	Label string `json:"label" api:"nullable"`
+	// Form field node
+	//
+	// Any of "field".
+	Type FormFieldType `json:"type"`
+	// Entered content: verbatim text for text fields, or a boolean for checkbox
+	// (checked) and signature (signed). Absent on blank text fields and on select
+	// groups
+	Value FormFieldValueUnion `json:"value" api:"nullable"`
+	// Options of a single_select/multi_select group (only on select fields)
+	ValueItems []FormFieldValueItemUnion `json:"valueItems" api:"nullable"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Field       respjson.Field
+		ID          respjson.Field
+		IsEmpty     respjson.Field
+		Label       respjson.Field
+		Type        respjson.Field
+		Value       respjson.Field
+		ValueItems  respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r FormField) RawJSON() string { return r.JSON.raw }
+func (r *FormField) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Kind of entry: text (any free-text input), checkbox, single_select,
+// multi_select, or signature
+type FormFieldField string
+
+const (
+	FormFieldFieldCheckbox     FormFieldField = "checkbox"
+	FormFieldFieldMultiSelect  FormFieldField = "multi_select"
+	FormFieldFieldSignature    FormFieldField = "signature"
+	FormFieldFieldSingleSelect FormFieldField = "single_select"
+	FormFieldFieldText         FormFieldField = "text"
+)
+
+// Form field node
+type FormFieldType string
+
+const (
+	FormFieldTypeField FormFieldType = "field"
+)
+
+// FormFieldValueUnion contains all possible properties and values from [string],
+// [bool].
+//
+// Use the methods beginning with 'As' to cast the union to one of its variants.
+//
+// If the underlying value is not a json object, one of the following properties
+// will be valid: OfString OfBool]
+type FormFieldValueUnion struct {
+	// This field will be present if the value is a [string] instead of an object.
+	OfString string `json:",inline"`
+	// This field will be present if the value is a [bool] instead of an object.
+	OfBool bool `json:",inline"`
+	JSON   struct {
+		OfString respjson.Field
+		OfBool   respjson.Field
+		raw      string
+	} `json:"-"`
+}
+
+func (u FormFieldValueUnion) AsString() (v string) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u FormFieldValueUnion) AsBool() (v bool) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+// Returns the unmodified JSON received from the API
+func (u FormFieldValueUnion) RawJSON() string { return u.JSON.raw }
+
+func (r *FormFieldValueUnion) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// FormFieldValueItemUnion contains all possible properties and values from
+// [FormField], [FormSection], [FormTable].
+//
+// Use the [FormFieldValueItemUnion.AsAny] method to switch on the variant.
+//
+// Use the methods beginning with 'As' to cast the union to one of its variants.
+type FormFieldValueItemUnion struct {
+	// This field is from variant [FormField].
+	Field FormFieldField `json:"field"`
+	ID    string         `json:"id"`
+	// This field is from variant [FormField].
+	IsEmpty bool   `json:"isEmpty"`
+	Label   string `json:"label"`
+	// Any of "field", "section", "table".
+	Type string `json:"type"`
+	// This field is from variant [FormField].
+	Value FormFieldValueUnion `json:"value"`
+	// This field is from variant [FormField].
+	ValueItems []FormFieldValueItemUnion `json:"valueItems"`
+	// This field is from variant [FormSection].
+	Items []FormSectionItemUnion `json:"items"`
+	// This field is from variant [FormTable].
+	Rows [][]*FormTableRowUnion `json:"rows"`
+	// This field is from variant [FormTable].
+	Columns []string `json:"columns"`
+	JSON    struct {
+		Field      respjson.Field
+		ID         respjson.Field
+		IsEmpty    respjson.Field
+		Label      respjson.Field
+		Type       respjson.Field
+		Value      respjson.Field
+		ValueItems respjson.Field
+		Items      respjson.Field
+		Rows       respjson.Field
+		Columns    respjson.Field
+		raw        string
+	} `json:"-"`
+}
+
+// anyFormFieldValueItem is implemented by each variant of
+// [FormFieldValueItemUnion] to add type safety for the return type of
+// [FormFieldValueItemUnion.AsAny]
+type anyFormFieldValueItem interface {
+	implFormFieldValueItemUnion()
+}
+
+func (FormField) implFormFieldValueItemUnion()   {}
+func (FormSection) implFormFieldValueItemUnion() {}
+func (FormTable) implFormFieldValueItemUnion()   {}
+
+// Use the following switch statement to find the correct variant
+//
+//	switch variant := FormFieldValueItemUnion.AsAny().(type) {
+//	case llamacloudprod.FormField:
+//	case llamacloudprod.FormSection:
+//	case llamacloudprod.FormTable:
+//	default:
+//	  fmt.Errorf("no variant present")
+//	}
+func (u FormFieldValueItemUnion) AsAny() anyFormFieldValueItem {
+	switch u.Type {
+	case "field":
+		return u.AsField()
+	case "section":
+		return u.AsSection()
+	case "table":
+		return u.AsTable()
+	}
+	return nil
+}
+
+func (u FormFieldValueItemUnion) AsField() (v FormField) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u FormFieldValueItemUnion) AsSection() (v FormSection) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u FormFieldValueItemUnion) AsTable() (v FormTable) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+// Returns the unmodified JSON received from the API
+func (u FormFieldValueItemUnion) RawJSON() string { return u.JSON.raw }
+
+func (r *FormFieldValueItemUnion) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// The list representation of form content: nested lists of rendered field lines.
+type FormListItem struct {
+	// Nested lines and sub-lists, in the form's reading order
+	Items []FormListItemItemUnion `json:"items" api:"required"`
+	// Markdown representation of this list
+	Md string `json:"md" api:"required"`
+	// Whether the list is ordered
+	Ordered bool `json:"ordered" api:"required"`
+	// List node
+	//
+	// Any of "list".
+	Type FormListItemType `json:"type"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Items       respjson.Field
+		Md          respjson.Field
+		Ordered     respjson.Field
+		Type        respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r FormListItem) RawJSON() string { return r.JSON.raw }
+func (r *FormListItem) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// FormListItemItemUnion contains all possible properties and values from
+// [FormListTextItem], [FormListItem].
+//
+// Use the methods beginning with 'As' to cast the union to one of its variants.
+type FormListItemItemUnion struct {
+	Md string `json:"md"`
+	// This field is from variant [FormListTextItem].
+	Value string `json:"value"`
+	Type  string `json:"type"`
+	// This field is from variant [FormListItem].
+	Items []FormListItemItemUnion `json:"items"`
+	// This field is from variant [FormListItem].
+	Ordered bool `json:"ordered"`
+	JSON    struct {
+		Md      respjson.Field
+		Value   respjson.Field
+		Type    respjson.Field
+		Items   respjson.Field
+		Ordered respjson.Field
+		raw     string
+	} `json:"-"`
+}
+
+func (u FormListItemItemUnion) AsFormListTextItem() (v FormListTextItem) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u FormListItemItemUnion) AsFormListItem() (v FormListItem) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+// Returns the unmodified JSON received from the API
+func (u FormListItemItemUnion) RawJSON() string { return u.JSON.raw }
+
+func (r *FormListItemItemUnion) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// List node
+type FormListItemType string
+
+const (
+	FormListItemTypeList FormListItemType = "list"
+)
+
+// One line of a form's list representation.
+type FormListTextItem struct {
+	// Markdown representation of the line
+	Md string `json:"md" api:"required"`
+	// Line content (e.g. '[1a] Wages: 29,513')
+	Value string `json:"value" api:"required"`
+	// Text line
+	//
+	// Any of "text".
+	Type FormListTextItemType `json:"type"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Md          respjson.Field
+		Value       respjson.Field
+		Type        respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r FormListTextItem) RawJSON() string { return r.JSON.raw }
+func (r *FormListTextItem) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Text line
+type FormListTextItemType string
+
+const (
+	FormListTextItemTypeText FormListTextItemType = "text"
+)
+
+// A grouping of form content, in the form's reading order.
+type FormSection struct {
+	// Child form nodes in reading order
+	Items []FormSectionItemUnion `json:"items" api:"required"`
+	// Identifier printed on the form (e.g. 'Part III'), if any
+	ID string `json:"id" api:"nullable"`
+	// Printed section heading, if any
+	Label string `json:"label" api:"nullable"`
+	// Form section node
+	//
+	// Any of "section".
+	Type FormSectionType `json:"type"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Items       respjson.Field
+		ID          respjson.Field
+		Label       respjson.Field
+		Type        respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r FormSection) RawJSON() string { return r.JSON.raw }
+func (r *FormSection) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// FormSectionItemUnion contains all possible properties and values from
+// [FormField], [FormSection], [FormTable].
+//
+// Use the [FormSectionItemUnion.AsAny] method to switch on the variant.
+//
+// Use the methods beginning with 'As' to cast the union to one of its variants.
+type FormSectionItemUnion struct {
+	// This field is from variant [FormField].
+	Field FormFieldField `json:"field"`
+	ID    string         `json:"id"`
+	// This field is from variant [FormField].
+	IsEmpty bool   `json:"isEmpty"`
+	Label   string `json:"label"`
+	// Any of "field", "section", "table".
+	Type string `json:"type"`
+	// This field is from variant [FormField].
+	Value FormFieldValueUnion `json:"value"`
+	// This field is from variant [FormField].
+	ValueItems []FormFieldValueItemUnion `json:"valueItems"`
+	// This field is from variant [FormSection].
+	Items []FormSectionItemUnion `json:"items"`
+	// This field is from variant [FormTable].
+	Rows [][]*FormTableRowUnion `json:"rows"`
+	// This field is from variant [FormTable].
+	Columns []string `json:"columns"`
+	JSON    struct {
+		Field      respjson.Field
+		ID         respjson.Field
+		IsEmpty    respjson.Field
+		Label      respjson.Field
+		Type       respjson.Field
+		Value      respjson.Field
+		ValueItems respjson.Field
+		Items      respjson.Field
+		Rows       respjson.Field
+		Columns    respjson.Field
+		raw        string
+	} `json:"-"`
+}
+
+// anyFormSectionItem is implemented by each variant of [FormSectionItemUnion] to
+// add type safety for the return type of [FormSectionItemUnion.AsAny]
+type anyFormSectionItem interface {
+	implFormSectionItemUnion()
+}
+
+func (FormField) implFormSectionItemUnion()   {}
+func (FormSection) implFormSectionItemUnion() {}
+func (FormTable) implFormSectionItemUnion()   {}
+
+// Use the following switch statement to find the correct variant
+//
+//	switch variant := FormSectionItemUnion.AsAny().(type) {
+//	case llamacloudprod.FormField:
+//	case llamacloudprod.FormSection:
+//	case llamacloudprod.FormTable:
+//	default:
+//	  fmt.Errorf("no variant present")
+//	}
+func (u FormSectionItemUnion) AsAny() anyFormSectionItem {
+	switch u.Type {
+	case "field":
+		return u.AsField()
+	case "section":
+		return u.AsSection()
+	case "table":
+		return u.AsTable()
+	}
+	return nil
+}
+
+func (u FormSectionItemUnion) AsField() (v FormField) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u FormSectionItemUnion) AsSection() (v FormSection) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u FormSectionItemUnion) AsTable() (v FormTable) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+// Returns the unmodified JSON received from the API
+func (u FormSectionItemUnion) RawJSON() string { return u.JSON.raw }
+
+func (r *FormSectionItemUnion) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Form section node
+type FormSectionType string
+
+const (
+	FormSectionTypeSection FormSectionType = "section"
+)
+
+// A fillable grid printed on the form: repeating records or a row-by-column
+// matrix.
+type FormTable struct {
+	// Table cells: a verbatim string, null for a printed-but-blank cell, or an object
+	// holding the cell's own form nodes
+	Rows [][]*FormTableRowUnion `json:"rows" api:"required"`
+	// Identifier printed on the form, if any
+	ID string `json:"id" api:"nullable"`
+	// Printed column headers in order, if any
+	Columns []string `json:"columns" api:"nullable"`
+	// Printed table caption, if any
+	Label string `json:"label" api:"nullable"`
+	// Form table node
+	//
+	// Any of "table".
+	Type FormTableType `json:"type"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Rows        respjson.Field
+		ID          respjson.Field
+		Columns     respjson.Field
+		Label       respjson.Field
+		Type        respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r FormTable) RawJSON() string { return r.JSON.raw }
+func (r *FormTable) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// FormTableRowUnion contains all possible properties and values from [string],
+// [FormTableCellItems].
+//
+// Use the methods beginning with 'As' to cast the union to one of its variants.
+//
+// If the underlying value is not a json object, one of the following properties
+// will be valid: OfString]
+type FormTableRowUnion struct {
+	// This field will be present if the value is a [string] instead of an object.
+	OfString string `json:",inline"`
+	// This field is from variant [FormTableCellItems].
+	Items []FormTableCellItemsItemUnion `json:"items"`
+	JSON  struct {
+		OfString respjson.Field
+		Items    respjson.Field
+		raw      string
+	} `json:"-"`
+}
+
+func (u FormTableRowUnion) AsString() (v string) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u FormTableRowUnion) AsFormTableCellItems() (v FormTableCellItems) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+// Returns the unmodified JSON received from the API
+func (u FormTableRowUnion) RawJSON() string { return u.JSON.raw }
+
+func (r *FormTableRowUnion) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Form table node
+type FormTableType string
+
+const (
+	FormTableTypeTable FormTableType = "table"
+)
+
+// A table cell holding its own form nodes (e.g. a checkbox column).
+type FormTableCellItems struct {
+	// Form nodes inside the cell
+	Items []FormTableCellItemsItemUnion `json:"items" api:"required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Items       respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r FormTableCellItems) RawJSON() string { return r.JSON.raw }
+func (r *FormTableCellItems) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// FormTableCellItemsItemUnion contains all possible properties and values from
+// [FormField], [FormSection], [FormTable].
+//
+// Use the [FormTableCellItemsItemUnion.AsAny] method to switch on the variant.
+//
+// Use the methods beginning with 'As' to cast the union to one of its variants.
+type FormTableCellItemsItemUnion struct {
+	// This field is from variant [FormField].
+	Field FormFieldField `json:"field"`
+	ID    string         `json:"id"`
+	// This field is from variant [FormField].
+	IsEmpty bool   `json:"isEmpty"`
+	Label   string `json:"label"`
+	// Any of "field", "section", "table".
+	Type string `json:"type"`
+	// This field is from variant [FormField].
+	Value FormFieldValueUnion `json:"value"`
+	// This field is from variant [FormField].
+	ValueItems []FormFieldValueItemUnion `json:"valueItems"`
+	// This field is from variant [FormSection].
+	Items []FormSectionItemUnion `json:"items"`
+	// This field is from variant [FormTable].
+	Rows [][]*FormTableRowUnion `json:"rows"`
+	// This field is from variant [FormTable].
+	Columns []string `json:"columns"`
+	JSON    struct {
+		Field      respjson.Field
+		ID         respjson.Field
+		IsEmpty    respjson.Field
+		Label      respjson.Field
+		Type       respjson.Field
+		Value      respjson.Field
+		ValueItems respjson.Field
+		Items      respjson.Field
+		Rows       respjson.Field
+		Columns    respjson.Field
+		raw        string
+	} `json:"-"`
+}
+
+// anyFormTableCellItemsItem is implemented by each variant of
+// [FormTableCellItemsItemUnion] to add type safety for the return type of
+// [FormTableCellItemsItemUnion.AsAny]
+type anyFormTableCellItemsItem interface {
+	implFormTableCellItemsItemUnion()
+}
+
+func (FormField) implFormTableCellItemsItemUnion()   {}
+func (FormSection) implFormTableCellItemsItemUnion() {}
+func (FormTable) implFormTableCellItemsItemUnion()   {}
+
+// Use the following switch statement to find the correct variant
+//
+//	switch variant := FormTableCellItemsItemUnion.AsAny().(type) {
+//	case llamacloudprod.FormField:
+//	case llamacloudprod.FormSection:
+//	case llamacloudprod.FormTable:
+//	default:
+//	  fmt.Errorf("no variant present")
+//	}
+func (u FormTableCellItemsItemUnion) AsAny() anyFormTableCellItemsItem {
+	switch u.Type {
+	case "field":
+		return u.AsField()
+	case "section":
+		return u.AsSection()
+	case "table":
+		return u.AsTable()
+	}
+	return nil
+}
+
+func (u FormTableCellItemsItemUnion) AsField() (v FormField) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u FormTableCellItemsItemUnion) AsSection() (v FormSection) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u FormTableCellItemsItemUnion) AsTable() (v FormTable) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+// Returns the unmodified JSON received from the API
+func (u FormTableCellItemsItemUnion) RawJSON() string { return u.JSON.raw }
+
+func (r *FormTableCellItemsItemUnion) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
 type HeaderItem struct {
 	// List of items within the header
 	Items []HeaderItemItemUnion `json:"items" api:"required"`
@@ -1256,9 +1989,9 @@ func (r *ParsingGetResponseForms) UnmarshalJSON(data []byte) error {
 // Use the methods beginning with 'As' to cast the union to one of its variants.
 type ParsingGetResponseFormsPageUnion struct {
 	// This field is from variant [ParsingGetResponseFormsPageFormsResultPage].
-	Forms      []ParsingGetResponseFormsPageFormsResultPageForm `json:"forms"`
-	PageNumber int64                                            `json:"page_number"`
-	Success    bool                                             `json:"success"`
+	Forms      []Form `json:"forms"`
+	PageNumber int64  `json:"page_number"`
+	Success    bool   `json:"success"`
 	// This field is from variant [ParsingGetResponseFormsPageFailedFormsPage].
 	Error string `json:"error"`
 	JSON  struct {
@@ -1290,7 +2023,7 @@ func (r *ParsingGetResponseFormsPageUnion) UnmarshalJSON(data []byte) error {
 // Forms found on one page. Pages without form content have an empty forms list.
 type ParsingGetResponseFormsPageFormsResultPage struct {
 	// Forms detected on the page
-	Forms []ParsingGetResponseFormsPageFormsResultPageForm `json:"forms" api:"required"`
+	Forms []Form `json:"forms" api:"required"`
 	// Page number of the document
 	PageNumber int64 `json:"page_number" api:"required"`
 	// Success indicator
@@ -1308,337 +2041,6 @@ type ParsingGetResponseFormsPageFormsResultPage struct {
 // Returns the unmodified JSON received from the API
 func (r ParsingGetResponseFormsPageFormsResultPage) RawJSON() string { return r.JSON.raw }
 func (r *ParsingGetResponseFormsPageFormsResultPage) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-// One form detected on a page, in two representations of the same content.
-type ParsingGetResponseFormsPageFormsResultPageForm struct {
-	// Structured representation: an ordered tree of sections, fields, and tables
-	Json []ParsingGetResponseFormsPageFormsResultPageFormJsonUnion `json:"json" api:"required"`
-	// Flattened list representation of the same content
-	List ParsingGetResponseFormsPageFormsResultPageFormList `json:"list" api:"required"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		Json        respjson.Field
-		List        respjson.Field
-		ExtraFields map[string]respjson.Field
-		raw         string
-	} `json:"-"`
-}
-
-// Returns the unmodified JSON received from the API
-func (r ParsingGetResponseFormsPageFormsResultPageForm) RawJSON() string { return r.JSON.raw }
-func (r *ParsingGetResponseFormsPageFormsResultPageForm) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-// ParsingGetResponseFormsPageFormsResultPageFormJsonUnion contains all possible
-// properties and values from
-// [ParsingGetResponseFormsPageFormsResultPageFormJsonField],
-// [ParsingGetResponseFormsPageFormsResultPageFormJsonSection],
-// [ParsingGetResponseFormsPageFormsResultPageFormJsonTable].
-//
-// Use the [ParsingGetResponseFormsPageFormsResultPageFormJsonUnion.AsAny] method
-// to switch on the variant.
-//
-// Use the methods beginning with 'As' to cast the union to one of its variants.
-type ParsingGetResponseFormsPageFormsResultPageFormJsonUnion struct {
-	// This field is from variant
-	// [ParsingGetResponseFormsPageFormsResultPageFormJsonField].
-	Field string `json:"field"`
-	ID    string `json:"id"`
-	// This field is from variant
-	// [ParsingGetResponseFormsPageFormsResultPageFormJsonField].
-	IsEmpty bool   `json:"isEmpty"`
-	Label   string `json:"label"`
-	// Any of "field", "section", "table".
-	Type string `json:"type"`
-	// This field is from variant
-	// [ParsingGetResponseFormsPageFormsResultPageFormJsonField].
-	Value ParsingGetResponseFormsPageFormsResultPageFormJsonFieldValueUnion `json:"value"`
-	// This field is from variant
-	// [ParsingGetResponseFormsPageFormsResultPageFormJsonField].
-	ValueItems []any `json:"valueItems"`
-	// This field is from variant
-	// [ParsingGetResponseFormsPageFormsResultPageFormJsonSection].
-	Items []any `json:"items"`
-	// This field is from variant
-	// [ParsingGetResponseFormsPageFormsResultPageFormJsonTable].
-	Rows [][]*any `json:"rows"`
-	// This field is from variant
-	// [ParsingGetResponseFormsPageFormsResultPageFormJsonTable].
-	Columns []string `json:"columns"`
-	JSON    struct {
-		Field      respjson.Field
-		ID         respjson.Field
-		IsEmpty    respjson.Field
-		Label      respjson.Field
-		Type       respjson.Field
-		Value      respjson.Field
-		ValueItems respjson.Field
-		Items      respjson.Field
-		Rows       respjson.Field
-		Columns    respjson.Field
-		raw        string
-	} `json:"-"`
-}
-
-// anyParsingGetResponseFormsPageFormsResultPageFormJson is implemented by each
-// variant of [ParsingGetResponseFormsPageFormsResultPageFormJsonUnion] to add type
-// safety for the return type of
-// [ParsingGetResponseFormsPageFormsResultPageFormJsonUnion.AsAny]
-type anyParsingGetResponseFormsPageFormsResultPageFormJson interface {
-	implParsingGetResponseFormsPageFormsResultPageFormJsonUnion()
-}
-
-func (ParsingGetResponseFormsPageFormsResultPageFormJsonField) implParsingGetResponseFormsPageFormsResultPageFormJsonUnion() {
-}
-func (ParsingGetResponseFormsPageFormsResultPageFormJsonSection) implParsingGetResponseFormsPageFormsResultPageFormJsonUnion() {
-}
-func (ParsingGetResponseFormsPageFormsResultPageFormJsonTable) implParsingGetResponseFormsPageFormsResultPageFormJsonUnion() {
-}
-
-// Use the following switch statement to find the correct variant
-//
-//	switch variant := ParsingGetResponseFormsPageFormsResultPageFormJsonUnion.AsAny().(type) {
-//	case llamacloudprod.ParsingGetResponseFormsPageFormsResultPageFormJsonField:
-//	case llamacloudprod.ParsingGetResponseFormsPageFormsResultPageFormJsonSection:
-//	case llamacloudprod.ParsingGetResponseFormsPageFormsResultPageFormJsonTable:
-//	default:
-//	  fmt.Errorf("no variant present")
-//	}
-func (u ParsingGetResponseFormsPageFormsResultPageFormJsonUnion) AsAny() anyParsingGetResponseFormsPageFormsResultPageFormJson {
-	switch u.Type {
-	case "field":
-		return u.AsField()
-	case "section":
-		return u.AsSection()
-	case "table":
-		return u.AsTable()
-	}
-	return nil
-}
-
-func (u ParsingGetResponseFormsPageFormsResultPageFormJsonUnion) AsField() (v ParsingGetResponseFormsPageFormsResultPageFormJsonField) {
-	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
-	return
-}
-
-func (u ParsingGetResponseFormsPageFormsResultPageFormJsonUnion) AsSection() (v ParsingGetResponseFormsPageFormsResultPageFormJsonSection) {
-	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
-	return
-}
-
-func (u ParsingGetResponseFormsPageFormsResultPageFormJsonUnion) AsTable() (v ParsingGetResponseFormsPageFormsResultPageFormJsonTable) {
-	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
-	return
-}
-
-// Returns the unmodified JSON received from the API
-func (u ParsingGetResponseFormsPageFormsResultPageFormJsonUnion) RawJSON() string { return u.JSON.raw }
-
-func (r *ParsingGetResponseFormsPageFormsResultPageFormJsonUnion) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-// One labeled form entry: a text input, checkbox, select group, or signature line.
-type ParsingGetResponseFormsPageFormsResultPageFormJsonField struct {
-	// Kind of entry: text (any free-text input), checkbox, single_select,
-	// multi_select, or signature
-	//
-	// Any of "checkbox", "multi_select", "signature", "single_select", "text".
-	Field string `json:"field" api:"required"`
-	// Field number/letter printed on the form (e.g. '1a'), if any
-	ID string `json:"id" api:"nullable"`
-	// True for a printed-but-blank text field (mutually exclusive with value)
-	IsEmpty bool `json:"isEmpty" api:"nullable"`
-	// Printed field caption, if any
-	Label string `json:"label" api:"nullable"`
-	// Form field node
-	//
-	// Any of "field".
-	Type string `json:"type"`
-	// Entered content: verbatim text for text fields, or a boolean for checkbox
-	// (checked) and signature (signed). Absent on blank text fields and on select
-	// groups
-	Value ParsingGetResponseFormsPageFormsResultPageFormJsonFieldValueUnion `json:"value" api:"nullable"`
-	// Options of a single_select/multi_select group (only on select fields)
-	ValueItems []any `json:"valueItems" api:"nullable"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		Field       respjson.Field
-		ID          respjson.Field
-		IsEmpty     respjson.Field
-		Label       respjson.Field
-		Type        respjson.Field
-		Value       respjson.Field
-		ValueItems  respjson.Field
-		ExtraFields map[string]respjson.Field
-		raw         string
-	} `json:"-"`
-}
-
-// Returns the unmodified JSON received from the API
-func (r ParsingGetResponseFormsPageFormsResultPageFormJsonField) RawJSON() string { return r.JSON.raw }
-func (r *ParsingGetResponseFormsPageFormsResultPageFormJsonField) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-// ParsingGetResponseFormsPageFormsResultPageFormJsonFieldValueUnion contains all
-// possible properties and values from [string], [bool].
-//
-// Use the methods beginning with 'As' to cast the union to one of its variants.
-//
-// If the underlying value is not a json object, one of the following properties
-// will be valid: OfString OfBool]
-type ParsingGetResponseFormsPageFormsResultPageFormJsonFieldValueUnion struct {
-	// This field will be present if the value is a [string] instead of an object.
-	OfString string `json:",inline"`
-	// This field will be present if the value is a [bool] instead of an object.
-	OfBool bool `json:",inline"`
-	JSON   struct {
-		OfString respjson.Field
-		OfBool   respjson.Field
-		raw      string
-	} `json:"-"`
-}
-
-func (u ParsingGetResponseFormsPageFormsResultPageFormJsonFieldValueUnion) AsString() (v string) {
-	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
-	return
-}
-
-func (u ParsingGetResponseFormsPageFormsResultPageFormJsonFieldValueUnion) AsBool() (v bool) {
-	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
-	return
-}
-
-// Returns the unmodified JSON received from the API
-func (u ParsingGetResponseFormsPageFormsResultPageFormJsonFieldValueUnion) RawJSON() string {
-	return u.JSON.raw
-}
-
-func (r *ParsingGetResponseFormsPageFormsResultPageFormJsonFieldValueUnion) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-// A grouping of form content, in the form's reading order.
-type ParsingGetResponseFormsPageFormsResultPageFormJsonSection struct {
-	// Child form nodes in reading order
-	Items []any `json:"items" api:"required"`
-	// Identifier printed on the form (e.g. 'Part III'), if any
-	ID string `json:"id" api:"nullable"`
-	// Printed section heading, if any
-	Label string `json:"label" api:"nullable"`
-	// Form section node
-	//
-	// Any of "section".
-	Type string `json:"type"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		Items       respjson.Field
-		ID          respjson.Field
-		Label       respjson.Field
-		Type        respjson.Field
-		ExtraFields map[string]respjson.Field
-		raw         string
-	} `json:"-"`
-}
-
-// Returns the unmodified JSON received from the API
-func (r ParsingGetResponseFormsPageFormsResultPageFormJsonSection) RawJSON() string {
-	return r.JSON.raw
-}
-func (r *ParsingGetResponseFormsPageFormsResultPageFormJsonSection) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-// A fillable grid printed on the form: repeating records or a row-by-column
-// matrix.
-type ParsingGetResponseFormsPageFormsResultPageFormJsonTable struct {
-	// Table cells: a verbatim string, null for a printed-but-blank cell, or an object
-	// holding the cell's own form nodes
-	Rows [][]*any `json:"rows" api:"required"`
-	// Identifier printed on the form, if any
-	ID string `json:"id" api:"nullable"`
-	// Printed column headers in order, if any
-	Columns []string `json:"columns" api:"nullable"`
-	// Printed table caption, if any
-	Label string `json:"label" api:"nullable"`
-	// Form table node
-	//
-	// Any of "table".
-	Type string `json:"type"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		Rows        respjson.Field
-		ID          respjson.Field
-		Columns     respjson.Field
-		Label       respjson.Field
-		Type        respjson.Field
-		ExtraFields map[string]respjson.Field
-		raw         string
-	} `json:"-"`
-}
-
-// Returns the unmodified JSON received from the API
-func (r ParsingGetResponseFormsPageFormsResultPageFormJsonTable) RawJSON() string { return r.JSON.raw }
-func (r *ParsingGetResponseFormsPageFormsResultPageFormJsonTable) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-// Flattened list representation of the same content
-type ParsingGetResponseFormsPageFormsResultPageFormList struct {
-	// Nested lines and sub-lists, in the form's reading order
-	Items []ParsingGetResponseFormsPageFormsResultPageFormListItem `json:"items" api:"required"`
-	// Markdown representation of this list
-	Md string `json:"md" api:"required"`
-	// Whether the list is ordered
-	Ordered bool `json:"ordered" api:"required"`
-	// List node
-	//
-	// Any of "list".
-	Type string `json:"type"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		Items       respjson.Field
-		Md          respjson.Field
-		Ordered     respjson.Field
-		Type        respjson.Field
-		ExtraFields map[string]respjson.Field
-		raw         string
-	} `json:"-"`
-}
-
-// Returns the unmodified JSON received from the API
-func (r ParsingGetResponseFormsPageFormsResultPageFormList) RawJSON() string { return r.JSON.raw }
-func (r *ParsingGetResponseFormsPageFormsResultPageFormList) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-// One line of a form's list representation.
-type ParsingGetResponseFormsPageFormsResultPageFormListItem struct {
-	// Markdown representation of the line
-	Md string `json:"md" api:"required"`
-	// Line content (e.g. '[1a] Wages: 29,513')
-	Value string `json:"value" api:"required"`
-	// Text line
-	//
-	// Any of "text".
-	Type string `json:"type"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		Md          respjson.Field
-		Value       respjson.Field
-		Type        respjson.Field
-		ExtraFields map[string]respjson.Field
-		raw         string
-	} `json:"-"`
-}
-
-// Returns the unmodified JSON received from the API
-func (r ParsingGetResponseFormsPageFormsResultPageFormListItem) RawJSON() string { return r.JSON.raw }
-func (r *ParsingGetResponseFormsPageFormsResultPageFormListItem) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 

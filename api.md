@@ -91,6 +91,13 @@ Response Types:
 - <a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go">llamacloudprod</a>.<a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go#CodeItem">CodeItem</a>
 - <a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go">llamacloudprod</a>.<a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go#FailPageMode">FailPageMode</a>
 - <a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go">llamacloudprod</a>.<a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go#FooterItem">FooterItem</a>
+- <a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go">llamacloudprod</a>.<a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go#Form">Form</a>
+- <a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go">llamacloudprod</a>.<a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go#FormField">FormField</a>
+- <a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go">llamacloudprod</a>.<a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go#FormListItem">FormListItem</a>
+- <a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go">llamacloudprod</a>.<a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go#FormListTextItem">FormListTextItem</a>
+- <a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go">llamacloudprod</a>.<a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go#FormSection">FormSection</a>
+- <a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go">llamacloudprod</a>.<a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go#FormTable">FormTable</a>
+- <a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go">llamacloudprod</a>.<a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go#FormTableCellItems">FormTableCellItems</a>
 - <a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go">llamacloudprod</a>.<a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go#HeaderItem">HeaderItem</a>
 - <a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go">llamacloudprod</a>.<a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go#HeadingItem">HeadingItem</a>
 - <a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go">llamacloudprod</a>.<a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go#ImageItem">ImageItem</a>
