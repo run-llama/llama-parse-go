@@ -1687,6 +1687,7 @@ type LlamaParseParametersResp struct {
 	BoundingBox                              string  `json:"bounding_box" api:"nullable"`
 	CompactMarkdownTable                     bool    `json:"compact_markdown_table" api:"nullable"`
 	ComplementalFormattingInstruction        string  `json:"complemental_formatting_instruction" api:"nullable"`
+	ConfidenceScores                         string  `json:"confidence_scores" api:"nullable"`
 	ContentGuidelineInstruction              string  `json:"content_guideline_instruction" api:"nullable"`
 	ContinuousMode                           bool    `json:"continuous_mode" api:"nullable"`
 	DisableImageExtraction                   bool    `json:"disable_image_extraction" api:"nullable"`
@@ -1823,6 +1824,7 @@ type LlamaParseParametersResp struct {
 		BoundingBox                              respjson.Field
 		CompactMarkdownTable                     respjson.Field
 		ComplementalFormattingInstruction        respjson.Field
+		ConfidenceScores                         respjson.Field
 		ContentGuidelineInstruction              respjson.Field
 		ContinuousMode                           respjson.Field
 		DisableImageExtraction                   respjson.Field
@@ -2017,6 +2019,7 @@ type LlamaParseParameters struct {
 	BoundingBox                              param.Opt[string]  `json:"bounding_box,omitzero"`
 	CompactMarkdownTable                     param.Opt[bool]    `json:"compact_markdown_table,omitzero"`
 	ComplementalFormattingInstruction        param.Opt[string]  `json:"complemental_formatting_instruction,omitzero"`
+	ConfidenceScores                         param.Opt[string]  `json:"confidence_scores,omitzero"`
 	ContentGuidelineInstruction              param.Opt[string]  `json:"content_guideline_instruction,omitzero"`
 	ContinuousMode                           param.Opt[bool]    `json:"continuous_mode,omitzero"`
 	DisableImageExtraction                   param.Opt[bool]    `json:"disable_image_extraction,omitzero"`
