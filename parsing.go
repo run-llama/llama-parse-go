@@ -3215,12 +3215,12 @@ type ParsingNewParamsProcessingOptions struct {
 	// content, document structure, or filename patterns. Each entry defines trigger
 	// conditions and the parsing configuration to apply when triggered
 	AutoModeConfiguration []ParsingNewParamsProcessingOptionsAutoModeConfiguration `json:"auto_mode_configuration,omitzero"`
-	// Confidence scoring mode. 'default': standard scoring. 'verified': more accurate
+	// Confidence scoring effort. Omit for standard scoring. 'high': more accurate
 	// assessment of the parsing quality of every page, plus a document-level score in
 	// the result metadata; costs an additional 5 credits per page
 	//
-	// Any of "default", "verified".
-	ConfidenceScores string `json:"confidence_scores,omitzero"`
+	// Any of "high".
+	ConfidenceScoreEffort string `json:"confidence_score_effort,omitzero"`
 	// Cost optimizer configuration for reducing parsing costs on simpler pages.
 	//
 	// When enabled, the parser analyzes each page and routes simpler pages to faster,
@@ -3258,7 +3258,7 @@ func (r *ParsingNewParamsProcessingOptions) UnmarshalJSON(data []byte) error {
 
 func init() {
 	apijson.RegisterFieldValidator[ParsingNewParamsProcessingOptions](
-		"confidence_scores", "default", "verified",
+		"confidence_score_effort", "high",
 	)
 	apijson.RegisterFieldValidator[ParsingNewParamsProcessingOptions](
 		"forms", "default", "enrich",

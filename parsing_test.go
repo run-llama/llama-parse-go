@@ -223,7 +223,7 @@ func TestParsingNewWithOptionalParams(t *testing.T) {
 				TextInPage:       llamacloudprod.String("text_in_page"),
 				TriggerMode:      llamacloudprod.String("trigger_mode"),
 			}},
-			ConfidenceScores: "verified",
+			ConfidenceScoreEffort: "high",
 			CostOptimizer: llamacloudprod.ParsingNewParamsProcessingOptionsCostOptimizer{
 				Enable: llamacloudprod.Bool(true),
 			},

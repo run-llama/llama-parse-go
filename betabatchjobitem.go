@@ -406,7 +406,7 @@ type BetaBatchJobItemGetProcessingResultsResponseProcessingResultJobConfigBatchP
 	BoundingBox                       string  `json:"bounding_box" api:"nullable"`
 	CompactMarkdownTable              bool    `json:"compact_markdown_table" api:"nullable"`
 	ComplementalFormattingInstruction string  `json:"complemental_formatting_instruction" api:"nullable"`
-	ConfidenceScores                  string  `json:"confidence_scores" api:"nullable"`
+	ConfidenceScoreEffort             string  `json:"confidence_score_effort" api:"nullable"`
 	ContentGuidelineInstruction       string  `json:"content_guideline_instruction" api:"nullable"`
 	ContinuousMode                    bool    `json:"continuous_mode" api:"nullable"`
 	// The custom metadata to attach to the documents.
@@ -559,7 +559,7 @@ type BetaBatchJobItemGetProcessingResultsResponseProcessingResultJobConfigBatchP
 		BoundingBox                              respjson.Field
 		CompactMarkdownTable                     respjson.Field
 		ComplementalFormattingInstruction        respjson.Field
-		ConfidenceScores                         respjson.Field
+		ConfidenceScoreEffort                    respjson.Field
 		ContentGuidelineInstruction              respjson.Field
 		ContinuousMode                           respjson.Field
 		CustomMetadata                           respjson.Field

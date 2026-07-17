@@ -52,7 +52,7 @@ func TestBetaBatchNewWithOptionalParams(t *testing.T) {
 					BoundingBox:                       llamacloudprod.String("bounding_box"),
 					CompactMarkdownTable:              llamacloudprod.Bool(true),
 					ComplementalFormattingInstruction: llamacloudprod.String("complemental_formatting_instruction"),
-					ConfidenceScores:                  llamacloudprod.String("confidence_scores"),
+					ConfidenceScoreEffort:             llamacloudprod.String("confidence_score_effort"),
 					ContentGuidelineInstruction:       llamacloudprod.String("content_guideline_instruction"),
 					ContinuousMode:                    llamacloudprod.Bool(true),
 					CustomMetadata: map[string]any{
