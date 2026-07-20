@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-package llamacloudprod_test
+package llamacloud_test
 
 import (
 	"context"
@@ -22,23 +22,23 @@ func TestBetaBatchJobItemListWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := llamacloudprod.NewClient(
+	client := llamacloud.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Beta.Batch.JobItems.List(
 		context.TODO(),
 		"job_id",
-		llamacloudprod.BetaBatchJobItemListParams{
-			Limit:          llamacloudprod.Int(1),
-			Offset:         llamacloudprod.Int(0),
-			OrganizationID: llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-			ProjectID:      llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-			Status:         llamacloudprod.BetaBatchJobItemListParamsStatusCancelled,
+		llamacloud.BetaBatchJobItemListParams{
+			Limit:          llamacloud.Int(1),
+			Offset:         llamacloud.Int(0),
+			OrganizationID: llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+			ProjectID:      llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+			Status:         llamacloud.BetaBatchJobItemListParamsStatusCancelled,
 		},
 	)
 	if err != nil {
-		var apierr *llamacloudprod.Error
+		var apierr *llamacloud.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -55,21 +55,21 @@ func TestBetaBatchJobItemGetProcessingResultsWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := llamacloudprod.NewClient(
+	client := llamacloud.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Beta.Batch.JobItems.GetProcessingResults(
 		context.TODO(),
 		"item_id",
-		llamacloudprod.BetaBatchJobItemGetProcessingResultsParams{
-			JobType:        llamacloudprod.BetaBatchJobItemGetProcessingResultsParamsJobTypeClassify,
-			OrganizationID: llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-			ProjectID:      llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		llamacloud.BetaBatchJobItemGetProcessingResultsParams{
+			JobType:        llamacloud.BetaBatchJobItemGetProcessingResultsParamsJobTypeClassify,
+			OrganizationID: llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+			ProjectID:      llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		},
 	)
 	if err != nil {
-		var apierr *llamacloudprod.Error
+		var apierr *llamacloud.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}

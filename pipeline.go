@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-package llamacloudprod
+package llamacloud
 
 import (
 	"context"
@@ -2897,14 +2897,14 @@ func (VertexAIEmbeddingConfig) implPipelineEmbeddingConfigUnion()               
 // Use the following switch statement to find the correct variant
 //
 //	switch variant := PipelineEmbeddingConfigUnion.AsAny().(type) {
-//	case llamacloudprod.AzureOpenAIEmbeddingConfig:
-//	case llamacloudprod.BedrockEmbeddingConfig:
-//	case llamacloudprod.CohereEmbeddingConfig:
-//	case llamacloudprod.GeminiEmbeddingConfig:
-//	case llamacloudprod.HuggingFaceInferenceAPIEmbeddingConfig:
-//	case llamacloudprod.PipelineEmbeddingConfigManagedOpenAIEmbedding:
-//	case llamacloudprod.OpenAIEmbeddingConfig:
-//	case llamacloudprod.VertexAIEmbeddingConfig:
+//	case llamacloud.AzureOpenAIEmbeddingConfig:
+//	case llamacloud.BedrockEmbeddingConfig:
+//	case llamacloud.CohereEmbeddingConfig:
+//	case llamacloud.GeminiEmbeddingConfig:
+//	case llamacloud.HuggingFaceInferenceAPIEmbeddingConfig:
+//	case llamacloud.PipelineEmbeddingConfigManagedOpenAIEmbedding:
+//	case llamacloud.OpenAIEmbeddingConfig:
+//	case llamacloud.VertexAIEmbeddingConfig:
 //	default:
 //	  fmt.Errorf("no variant present")
 //	}
@@ -3254,13 +3254,13 @@ func (VertexAIEmbeddingConfig) implPipelineEmbeddingModelConfigEmbeddingConfigUn
 // Use the following switch statement to find the correct variant
 //
 //	switch variant := PipelineEmbeddingModelConfigEmbeddingConfigUnion.AsAny().(type) {
-//	case llamacloudprod.AzureOpenAIEmbeddingConfig:
-//	case llamacloudprod.BedrockEmbeddingConfig:
-//	case llamacloudprod.CohereEmbeddingConfig:
-//	case llamacloudprod.GeminiEmbeddingConfig:
-//	case llamacloudprod.HuggingFaceInferenceAPIEmbeddingConfig:
-//	case llamacloudprod.OpenAIEmbeddingConfig:
-//	case llamacloudprod.VertexAIEmbeddingConfig:
+//	case llamacloud.AzureOpenAIEmbeddingConfig:
+//	case llamacloud.BedrockEmbeddingConfig:
+//	case llamacloud.CohereEmbeddingConfig:
+//	case llamacloud.GeminiEmbeddingConfig:
+//	case llamacloud.HuggingFaceInferenceAPIEmbeddingConfig:
+//	case llamacloud.OpenAIEmbeddingConfig:
+//	case llamacloud.VertexAIEmbeddingConfig:
 //	default:
 //	  fmt.Errorf("no variant present")
 //	}

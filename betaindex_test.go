@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-package llamacloudprod_test
+package llamacloud_test
 
 import (
 	"context"
@@ -22,26 +22,26 @@ func TestBetaIndexNewWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := llamacloudprod.NewClient(
+	client := llamacloud.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Beta.Indexes.New(context.TODO(), llamacloudprod.BetaIndexNewParams{
+	_, err := client.Beta.Indexes.New(context.TODO(), llamacloud.BetaIndexNewParams{
 		SourceDirectoryID: "dir-abc123",
-		OrganizationID:    llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		ProjectID:         llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		Description:       llamacloudprod.String("description"),
-		Name:              llamacloudprod.String("name"),
-		Products: []llamacloudprod.BetaIndexNewParamsProduct{{
+		OrganizationID:    llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		ProjectID:         llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		Description:       llamacloud.String("description"),
+		Name:              llamacloud.String("name"),
+		Products: []llamacloud.BetaIndexNewParamsProduct{{
 			ProductConfigID: "cfg-abc123",
 			ProductType:     "parse",
 		}},
 		StoreAttachments: []string{"screenshots"},
-		SyncFrequency:    llamacloudprod.String("manual"),
-		VectorTarget:     llamacloudprod.BetaIndexNewParamsVectorTargetDefault,
+		SyncFrequency:    llamacloud.String("manual"),
+		VectorTarget:     llamacloud.BetaIndexNewParamsVectorTargetDefault,
 	})
 	if err != nil {
-		var apierr *llamacloudprod.Error
+		var apierr *llamacloud.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -58,19 +58,19 @@ func TestBetaIndexListWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := llamacloudprod.NewClient(
+	client := llamacloud.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Beta.Indexes.List(context.TODO(), llamacloudprod.BetaIndexListParams{
-		OrganizationID:    llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		PageSize:          llamacloudprod.Int(0),
-		PageToken:         llamacloudprod.String("page_token"),
-		ProjectID:         llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		SourceDirectoryID: llamacloudprod.String("source_directory_id"),
+	_, err := client.Beta.Indexes.List(context.TODO(), llamacloud.BetaIndexListParams{
+		OrganizationID:    llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		PageSize:          llamacloud.Int(0),
+		PageToken:         llamacloud.String("page_token"),
+		ProjectID:         llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		SourceDirectoryID: llamacloud.String("source_directory_id"),
 	})
 	if err != nil {
-		var apierr *llamacloudprod.Error
+		var apierr *llamacloud.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -87,20 +87,20 @@ func TestBetaIndexDeleteWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := llamacloudprod.NewClient(
+	client := llamacloud.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
 	err := client.Beta.Indexes.Delete(
 		context.TODO(),
 		"index_id",
-		llamacloudprod.BetaIndexDeleteParams{
-			OrganizationID: llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-			ProjectID:      llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		llamacloud.BetaIndexDeleteParams{
+			OrganizationID: llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+			ProjectID:      llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		},
 	)
 	if err != nil {
-		var apierr *llamacloudprod.Error
+		var apierr *llamacloud.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -117,20 +117,20 @@ func TestBetaIndexGetWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := llamacloudprod.NewClient(
+	client := llamacloud.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Beta.Indexes.Get(
 		context.TODO(),
 		"index_id",
-		llamacloudprod.BetaIndexGetParams{
-			OrganizationID: llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-			ProjectID:      llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		llamacloud.BetaIndexGetParams{
+			OrganizationID: llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+			ProjectID:      llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		},
 	)
 	if err != nil {
-		var apierr *llamacloudprod.Error
+		var apierr *llamacloud.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -147,20 +147,20 @@ func TestBetaIndexSyncWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := llamacloudprod.NewClient(
+	client := llamacloud.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Beta.Indexes.Sync(
 		context.TODO(),
 		"index_id",
-		llamacloudprod.BetaIndexSyncParams{
-			OrganizationID: llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-			ProjectID:      llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		llamacloud.BetaIndexSyncParams{
+			OrganizationID: llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+			ProjectID:      llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		},
 	)
 	if err != nil {
-		var apierr *llamacloudprod.Error
+		var apierr *llamacloud.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}

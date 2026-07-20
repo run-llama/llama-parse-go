@@ -26,7 +26,7 @@ Use the Llama Cloud MCP Server to enable AI assistants to interact with this API
 
 ```go
 import (
-	"github.com/run-llama/llama-parse-go" // imported as llamacloudprod
+	"github.com/run-llama/llama-parse-go" // imported as llamacloud
 )
 ```
 
@@ -62,13 +62,13 @@ import (
 )
 
 func main() {
-	client := llamacloudprod.NewClient(
+	client := llamacloud.NewClient(
 		option.WithAPIKey("My API Key"), // defaults to os.LookupEnv("LLAMA_CLOUD_API_KEY")
 	)
-	parsing, err := client.Parsing.New(context.TODO(), llamacloudprod.ParsingNewParams{
-		Tier:    llamacloudprod.ParsingNewParamsTierAgentic,
-		Version: llamacloudprod.ParsingNewParamsVersionLatest,
-		FileID:  llamacloudprod.String("abc1234"),
+	parsing, err := client.Parsing.New(context.TODO(), llamacloud.ParsingNewParams{
+		Tier:    llamacloud.ParsingNewParamsTierAgentic,
+		Version: llamacloud.ParsingNewParamsVersionLatest,
+		FileID:  llamacloud.String("abc1234"),
 	})
 	if err != nil {
 		panic(err.Error())
@@ -80,13 +80,13 @@ func main() {
 
 ### Request fields
 
-The llamacloudprod library uses the [`omitzero`](https://tip.golang.org/doc/go1.24#encodingjsonpkgencodingjson)
+The llamacloud library uses the [`omitzero`](https://tip.golang.org/doc/go1.24#encodingjsonpkgencodingjson)
 semantics from the Go 1.24+ `encoding/json` release for request fields.
 
 Required primitive fields (`int64`, `string`, etc.) feature the tag <code>\`api:"required"\`</code>. These
 fields are always serialized, even their zero values.
 
-Optional primitive types are wrapped in a `param.Opt[T]`. These fields can be set with the provided constructors, `llamacloudprod.String(string)`, `llamacloudprod.Int(int64)`, etc.
+Optional primitive types are wrapped in a `param.Opt[T]`. These fields can be set with the provided constructors, `llamacloud.String(string)`, `llamacloud.Int(int64)`, etc.
 
 Any `param.Opt[T]`, map, slice, struct or string enum uses the
 tag <code>\`json:"...,omitzero"\`</code>. Its zero value is considered omitted.
@@ -94,17 +94,17 @@ tag <code>\`json:"...,omitzero"\`</code>. Its zero value is considered omitted.
 The `param.IsOmitted(any)` function can confirm the presence of any `omitzero` field.
 
 ```go
-p := llamacloudprod.ExampleParams{
-	ID:   "id_xxx",                     // required property
-	Name: llamacloudprod.String("..."), // optional property
+p := llamacloud.ExampleParams{
+	ID:   "id_xxx",                 // required property
+	Name: llamacloud.String("..."), // optional property
 
-	Point: llamacloudprod.Point{
-		X: 0,                     // required field will serialize as 0
-		Y: llamacloudprod.Int(1), // optional field will serialize as 1
+	Point: llamacloud.Point{
+		X: 0,                 // required field will serialize as 0
+		Y: llamacloud.Int(1), // optional field will serialize as 1
 		// ... omitted non-required fields will not be serialized
 	},
 
-	Origin: llamacloudprod.Origin{}, // the zero value of [Origin] is considered omitted
+	Origin: llamacloud.Origin{}, // the zero value of [Origin] is considered omitted
 }
 ```
 
@@ -133,7 +133,7 @@ p.SetExtraFields(map[string]any{
 })
 
 // Send a number instead of an object
-custom := param.Override[llamacloudprod.FooParams](12)
+custom := param.Override[llamacloud.FooParams](12)
 ```
 
 ### Request unions
@@ -274,7 +274,7 @@ This library uses the functional options pattern. Functions defined in the
 requests. For example:
 
 ```go
-client := llamacloudprod.NewClient(
+client := llamacloud.NewClient(
 	// Adds a header to every request made by the client
 	option.WithHeader("X-Some-Header", "custom_header_info"),
 )
@@ -298,8 +298,8 @@ This library provides some conveniences for working with paginated list endpoint
 You can use `.ListAutoPaging()` methods to iterate through items across all pages:
 
 ```go
-iter := client.Extract.ListAutoPaging(context.TODO(), llamacloudprod.ExtractListParams{
-	PageSize: llamacloudprod.Int(20),
+iter := client.Extract.ListAutoPaging(context.TODO(), llamacloud.ExtractListParams{
+	PageSize: llamacloud.Int(20),
 })
 // Automatically fetches more pages as needed.
 for iter.Next() {
@@ -315,8 +315,8 @@ Or you can use simple `.List()` methods to fetch a single page and receive a sta
 with additional helper methods like `.GetNextPage()`, e.g.:
 
 ```go
-page, err := client.Extract.List(context.TODO(), llamacloudprod.ExtractListParams{
-	PageSize: llamacloudprod.Int(20),
+page, err := client.Extract.List(context.TODO(), llamacloud.ExtractListParams{
+	PageSize: llamacloud.Int(20),
 })
 for page != nil {
 	for _, extract := range page.Items {
@@ -332,18 +332,18 @@ if err != nil {
 ### Errors
 
 When the API returns a non-success status code, we return an error with type
-`*llamacloudprod.Error`. This contains the `StatusCode`, `*http.Request`, and
+`*llamacloud.Error`. This contains the `StatusCode`, `*http.Request`, and
 `*http.Response` values of the request, as well as the JSON of the error body
 (much like other response objects in the SDK).
 
 To handle errors, we recommend that you use the `errors.As` pattern:
 
 ```go
-_, err := client.Beta.Indexes.List(context.TODO(), llamacloudprod.BetaIndexListParams{
-	ProjectID: llamacloudprod.String("my-project-id"),
+_, err := client.Beta.Indexes.List(context.TODO(), llamacloud.BetaIndexListParams{
+	ProjectID: llamacloud.String("my-project-id"),
 })
 if err != nil {
-	var apierr *llamacloudprod.Error
+	var apierr *llamacloud.Error
 	if errors.As(err, &apierr) {
 		println(string(apierr.DumpRequest(true)))  // Prints the serialized HTTP request
 		println(string(apierr.DumpResponse(true))) // Prints the serialized HTTP response
@@ -368,8 +368,8 @@ ctx, cancel := context.WithTimeout(context.Background(), 5*time.Minute)
 defer cancel()
 client.Beta.Indexes.List(
 	ctx,
-	llamacloudprod.BetaIndexListParams{
-		ProjectID: llamacloudprod.String("my-project-id"),
+	llamacloud.BetaIndexListParams{
+		ProjectID: llamacloud.String("my-project-id"),
 	},
 	// This sets the per-retry timeout
 	option.WithRequestTimeout(20*time.Second),
@@ -386,26 +386,26 @@ The file name and content-type can be customized by implementing `Name() string`
 string` on the run-time type of `io.Reader`. Note that `os.File` implements `Name() string`, so a
 file returned by `os.Open` will be sent with the file name on disk.
 
-We also provide a helper `llamacloudprod.NewFile(reader io.Reader, filename string, contentType string)`
+We also provide a helper `llamacloud.NewFile(reader io.Reader, filename string, contentType string)`
 which can be used to wrap any `io.Reader` with the appropriate file name and content type.
 
 ```go
 // A file from the file system
 file, err := os.Open("/path/to/file")
-llamacloudprod.FileNewParams{
+llamacloud.FileNewParams{
 	File:    file,
 	Purpose: "purpose",
 }
 
 // A file from a string
-llamacloudprod.FileNewParams{
+llamacloud.FileNewParams{
 	File:    strings.NewReader("my file contents"),
 	Purpose: "purpose",
 }
 
 // With a custom filename and contentType
-llamacloudprod.FileNewParams{
-	File:    llamacloudprod.NewFile(strings.NewReader(`{"hello": "foo"}`), "file.go", "application/json"),
+llamacloud.FileNewParams{
+	File:    llamacloud.NewFile(strings.NewReader(`{"hello": "foo"}`), "file.go", "application/json"),
 	Purpose: "purpose",
 }
 ```
@@ -420,15 +420,15 @@ You can use the `WithMaxRetries` option to configure or disable this:
 
 ```go
 // Configure the default for all requests:
-client := llamacloudprod.NewClient(
+client := llamacloud.NewClient(
 	option.WithMaxRetries(0), // default is 2
 )
 
 // Override per-request:
 client.Beta.Indexes.List(
 	context.TODO(),
-	llamacloudprod.BetaIndexListParams{
-		ProjectID: llamacloudprod.String("my-project-id"),
+	llamacloud.BetaIndexListParams{
+		ProjectID: llamacloud.String("my-project-id"),
 	},
 	option.WithMaxRetries(5),
 )
@@ -444,8 +444,8 @@ you need to examine response headers, status codes, or other details.
 var response *http.Response
 page, err := client.Beta.Indexes.List(
 	context.TODO(),
-	llamacloudprod.BetaIndexListParams{
-		ProjectID: llamacloudprod.String("my-project-id"),
+	llamacloud.BetaIndexListParams{
+		ProjectID: llamacloud.String("my-project-id"),
 	},
 	option.WithResponseInto(&response),
 )
@@ -493,7 +493,7 @@ or the `option.WithJSONSet()` methods.
 params := FooNewParams{
     ID:   "id_xxxx",
     Data: FooNewParamsData{
-        FirstName: llamacloudprod.String("John"),
+        FirstName: llamacloud.String("John"),
     },
 }
 client.Foo.New(context.Background(), params, option.WithJSONSet("data.last_name", "Doe"))
@@ -528,7 +528,7 @@ func Logger(req *http.Request, next option.MiddlewareNext) (res *http.Response, 
     return res, err
 }
 
-client := llamacloudprod.NewClient(
+client := llamacloud.NewClient(
 	option.WithMiddleware(Logger),
 )
 ```

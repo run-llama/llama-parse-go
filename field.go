@@ -1,4 +1,4 @@
-package llamacloudprod
+package llamacloud
 
 import (
 	"github.com/run-llama/llama-parse-go/packages/param"

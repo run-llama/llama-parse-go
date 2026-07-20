@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-package llamacloudprod
+package llamacloud
 
 import (
 	"context"
@@ -306,13 +306,13 @@ func (TextItem) implFooterItemItemUnion()    {}
 // Use the following switch statement to find the correct variant
 //
 //	switch variant := FooterItemItemUnion.AsAny().(type) {
-//	case llamacloudprod.CodeItem:
-//	case llamacloudprod.HeadingItem:
-//	case llamacloudprod.ImageItem:
-//	case llamacloudprod.LinkItem:
-//	case llamacloudprod.ListItem:
-//	case llamacloudprod.TableItem:
-//	case llamacloudprod.TextItem:
+//	case llamacloud.CodeItem:
+//	case llamacloud.HeadingItem:
+//	case llamacloud.ImageItem:
+//	case llamacloud.LinkItem:
+//	case llamacloud.ListItem:
+//	case llamacloud.TableItem:
+//	case llamacloud.TextItem:
 //	default:
 //	  fmt.Errorf("no variant present")
 //	}
@@ -459,9 +459,9 @@ func (FormTable) implFormJsonUnion()   {}
 // Use the following switch statement to find the correct variant
 //
 //	switch variant := FormJsonUnion.AsAny().(type) {
-//	case llamacloudprod.FormField:
-//	case llamacloudprod.FormSection:
-//	case llamacloudprod.FormTable:
+//	case llamacloud.FormField:
+//	case llamacloud.FormSection:
+//	case llamacloud.FormTable:
 //	default:
 //	  fmt.Errorf("no variant present")
 //	}
@@ -651,9 +651,9 @@ func (FormTable) implFormFieldValueItemUnion()   {}
 // Use the following switch statement to find the correct variant
 //
 //	switch variant := FormFieldValueItemUnion.AsAny().(type) {
-//	case llamacloudprod.FormField:
-//	case llamacloudprod.FormSection:
-//	case llamacloudprod.FormTable:
+//	case llamacloud.FormField:
+//	case llamacloud.FormSection:
+//	case llamacloud.FormTable:
 //	default:
 //	  fmt.Errorf("no variant present")
 //	}
@@ -882,9 +882,9 @@ func (FormTable) implFormSectionItemUnion()   {}
 // Use the following switch statement to find the correct variant
 //
 //	switch variant := FormSectionItemUnion.AsAny().(type) {
-//	case llamacloudprod.FormField:
-//	case llamacloudprod.FormSection:
-//	case llamacloudprod.FormTable:
+//	case llamacloud.FormField:
+//	case llamacloud.FormSection:
+//	case llamacloud.FormTable:
 //	default:
 //	  fmt.Errorf("no variant present")
 //	}
@@ -1078,9 +1078,9 @@ func (FormTable) implFormTableCellItemsItemUnion()   {}
 // Use the following switch statement to find the correct variant
 //
 //	switch variant := FormTableCellItemsItemUnion.AsAny().(type) {
-//	case llamacloudprod.FormField:
-//	case llamacloudprod.FormSection:
-//	case llamacloudprod.FormTable:
+//	case llamacloud.FormField:
+//	case llamacloud.FormSection:
+//	case llamacloud.FormTable:
 //	default:
 //	  fmt.Errorf("no variant present")
 //	}
@@ -1222,13 +1222,13 @@ func (TextItem) implHeaderItemItemUnion()    {}
 // Use the following switch statement to find the correct variant
 //
 //	switch variant := HeaderItemItemUnion.AsAny().(type) {
-//	case llamacloudprod.CodeItem:
-//	case llamacloudprod.HeadingItem:
-//	case llamacloudprod.ImageItem:
-//	case llamacloudprod.LinkItem:
-//	case llamacloudprod.ListItem:
-//	case llamacloudprod.TableItem:
-//	case llamacloudprod.TextItem:
+//	case llamacloud.CodeItem:
+//	case llamacloud.HeadingItem:
+//	case llamacloud.ImageItem:
+//	case llamacloud.LinkItem:
+//	case llamacloud.ListItem:
+//	case llamacloud.TableItem:
+//	case llamacloud.TextItem:
 //	default:
 //	  fmt.Errorf("no variant present")
 //	}
@@ -2332,15 +2332,15 @@ func (TextItem) implParsingGetResponseItemsPageStructuredResultPageItemUnion()  
 // Use the following switch statement to find the correct variant
 //
 //	switch variant := ParsingGetResponseItemsPageStructuredResultPageItemUnion.AsAny().(type) {
-//	case llamacloudprod.CodeItem:
-//	case llamacloudprod.FooterItem:
-//	case llamacloudprod.HeaderItem:
-//	case llamacloudprod.HeadingItem:
-//	case llamacloudprod.ImageItem:
-//	case llamacloudprod.LinkItem:
-//	case llamacloudprod.ListItem:
-//	case llamacloudprod.TableItem:
-//	case llamacloudprod.TextItem:
+//	case llamacloud.CodeItem:
+//	case llamacloud.FooterItem:
+//	case llamacloud.HeaderItem:
+//	case llamacloud.HeadingItem:
+//	case llamacloud.ImageItem:
+//	case llamacloud.LinkItem:
+//	case llamacloud.ListItem:
+//	case llamacloud.TableItem:
+//	case llamacloud.TextItem:
 //	default:
 //	  fmt.Errorf("no variant present")
 //	}

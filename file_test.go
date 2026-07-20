@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-package llamacloudprod_test
+package llamacloud_test
 
 import (
 	"bytes"
@@ -24,19 +24,19 @@ func TestFileNewWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := llamacloudprod.NewClient(
+	client := llamacloud.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Files.New(context.TODO(), llamacloudprod.FileNewParams{
+	_, err := client.Files.New(context.TODO(), llamacloud.FileNewParams{
 		File:           io.Reader(bytes.NewBuffer([]byte("Example data"))),
 		Purpose:        "purpose",
-		OrganizationID: llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		ProjectID:      llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		ExternalFileID: llamacloudprod.String("external_file_id"),
+		OrganizationID: llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		ProjectID:      llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		ExternalFileID: llamacloud.String("external_file_id"),
 	})
 	if err != nil {
-		var apierr *llamacloudprod.Error
+		var apierr *llamacloud.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -53,23 +53,23 @@ func TestFileListWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := llamacloudprod.NewClient(
+	client := llamacloud.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Files.List(context.TODO(), llamacloudprod.FileListParams{
+	_, err := client.Files.List(context.TODO(), llamacloud.FileListParams{
 		Expand:         []string{"string", "string"},
-		ExternalFileID: llamacloudprod.String("external_file_id"),
+		ExternalFileID: llamacloud.String("external_file_id"),
 		FileIDs:        []string{"182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e", "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"},
-		FileName:       llamacloudprod.String("file_name"),
-		OrderBy:        llamacloudprod.String("order_by"),
-		OrganizationID: llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		PageSize:       llamacloudprod.Int(1),
-		PageToken:      llamacloudprod.String("page_token"),
-		ProjectID:      llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		FileName:       llamacloud.String("file_name"),
+		OrderBy:        llamacloud.String("order_by"),
+		OrganizationID: llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		PageSize:       llamacloud.Int(1),
+		PageToken:      llamacloud.String("page_token"),
+		ProjectID:      llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 	})
 	if err != nil {
-		var apierr *llamacloudprod.Error
+		var apierr *llamacloud.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -86,20 +86,20 @@ func TestFileDeleteWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := llamacloudprod.NewClient(
+	client := llamacloud.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
 	err := client.Files.Delete(
 		context.TODO(),
 		"182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-		llamacloudprod.FileDeleteParams{
-			OrganizationID: llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-			ProjectID:      llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		llamacloud.FileDeleteParams{
+			OrganizationID: llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+			ProjectID:      llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		},
 	)
 	if err != nil {
-		var apierr *llamacloudprod.Error
+		var apierr *llamacloud.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -116,21 +116,21 @@ func TestFileGetWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := llamacloudprod.NewClient(
+	client := llamacloud.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Files.Get(
 		context.TODO(),
 		"182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-		llamacloudprod.FileGetParams{
-			ExpiresAtSeconds: llamacloudprod.Int(0),
-			OrganizationID:   llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-			ProjectID:        llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		llamacloud.FileGetParams{
+			ExpiresAtSeconds: llamacloud.Int(0),
+			OrganizationID:   llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+			ProjectID:        llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		},
 	)
 	if err != nil {
-		var apierr *llamacloudprod.Error
+		var apierr *llamacloud.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -147,27 +147,27 @@ func TestFileQueryWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := llamacloudprod.NewClient(
+	client := llamacloud.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Files.Query(context.TODO(), llamacloudprod.FileQueryParams{
-		OrganizationID: llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		ProjectID:      llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		Filter: llamacloudprod.FileQueryParamsFilter{
-			DataSourceID:         llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-			ExternalFileID:       llamacloudprod.String("external_file_id"),
+	_, err := client.Files.Query(context.TODO(), llamacloud.FileQueryParams{
+		OrganizationID: llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		ProjectID:      llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		Filter: llamacloud.FileQueryParamsFilter{
+			DataSourceID:         llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+			ExternalFileID:       llamacloud.String("external_file_id"),
 			FileIDs:              []string{"182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"},
-			FileName:             llamacloudprod.String("file_name"),
-			OnlyManuallyUploaded: llamacloudprod.Bool(true),
-			ProjectID:            llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+			FileName:             llamacloud.String("file_name"),
+			OnlyManuallyUploaded: llamacloud.Bool(true),
+			ProjectID:            llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		},
-		OrderBy:   llamacloudprod.String("order_by"),
-		PageSize:  llamacloudprod.Int(0),
-		PageToken: llamacloudprod.String("page_token"),
+		OrderBy:   llamacloud.String("order_by"),
+		PageSize:  llamacloud.Int(0),
+		PageToken: llamacloud.String("page_token"),
 	})
 	if err != nil {
-		var apierr *llamacloudprod.Error
+		var apierr *llamacloud.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}

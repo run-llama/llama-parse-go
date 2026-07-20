@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-package llamacloudprod_test
+package llamacloud_test
 
 import (
 	"context"
@@ -22,27 +22,27 @@ func TestRetrieverRetrieverSearchWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := llamacloudprod.NewClient(
+	client := llamacloud.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Retrievers.Retriever.Search(
 		context.TODO(),
 		"182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-		llamacloudprod.RetrieverRetrieverSearchParams{
+		llamacloud.RetrieverRetrieverSearchParams{
 			Query:          "x",
-			OrganizationID: llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-			ProjectID:      llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-			Mode:           llamacloudprod.CompositeRetrievalModeFull,
-			RerankConfig: llamacloudprod.ReRankConfigParam{
-				TopN: llamacloudprod.Int(1),
-				Type: llamacloudprod.ReRankConfigTypeBedrock,
+			OrganizationID: llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+			ProjectID:      llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+			Mode:           llamacloud.CompositeRetrievalModeFull,
+			RerankConfig: llamacloud.ReRankConfigParam{
+				TopN: llamacloud.Int(1),
+				Type: llamacloud.ReRankConfigTypeBedrock,
 			},
-			RerankTopN: llamacloudprod.Int(0),
+			RerankTopN: llamacloud.Int(0),
 		},
 	)
 	if err != nil {
-		var apierr *llamacloudprod.Error
+		var apierr *llamacloud.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}

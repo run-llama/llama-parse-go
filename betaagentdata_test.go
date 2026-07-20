@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-package llamacloudprod_test
+package llamacloud_test
 
 import (
 	"context"
@@ -22,21 +22,21 @@ func TestBetaAgentDataNewWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := llamacloudprod.NewClient(
+	client := llamacloud.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Beta.AgentData.New(context.TODO(), llamacloudprod.BetaAgentDataNewParams{
+	_, err := client.Beta.AgentData.New(context.TODO(), llamacloud.BetaAgentDataNewParams{
 		Data: map[string]any{
 			"foo": "bar",
 		},
 		DeploymentName: "deployment_name",
-		OrganizationID: llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		ProjectID:      llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		Collection:     llamacloudprod.String("collection"),
+		OrganizationID: llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		ProjectID:      llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		Collection:     llamacloud.String("collection"),
 	})
 	if err != nil {
-		var apierr *llamacloudprod.Error
+		var apierr *llamacloud.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -53,23 +53,23 @@ func TestBetaAgentDataUpdateWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := llamacloudprod.NewClient(
+	client := llamacloud.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Beta.AgentData.Update(
 		context.TODO(),
 		"item_id",
-		llamacloudprod.BetaAgentDataUpdateParams{
+		llamacloud.BetaAgentDataUpdateParams{
 			Data: map[string]any{
 				"foo": "bar",
 			},
-			OrganizationID: llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-			ProjectID:      llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+			OrganizationID: llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+			ProjectID:      llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		},
 	)
 	if err != nil {
-		var apierr *llamacloudprod.Error
+		var apierr *llamacloud.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -86,20 +86,20 @@ func TestBetaAgentDataDeleteWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := llamacloudprod.NewClient(
+	client := llamacloud.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Beta.AgentData.Delete(
 		context.TODO(),
 		"item_id",
-		llamacloudprod.BetaAgentDataDeleteParams{
-			OrganizationID: llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-			ProjectID:      llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		llamacloud.BetaAgentDataDeleteParams{
+			OrganizationID: llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+			ProjectID:      llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		},
 	)
 	if err != nil {
-		var apierr *llamacloudprod.Error
+		var apierr *llamacloud.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -116,53 +116,53 @@ func TestBetaAgentDataAggregateWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := llamacloudprod.NewClient(
+	client := llamacloud.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Beta.AgentData.Aggregate(context.TODO(), llamacloudprod.BetaAgentDataAggregateParams{
+	_, err := client.Beta.AgentData.Aggregate(context.TODO(), llamacloud.BetaAgentDataAggregateParams{
 		DeploymentName: "deployment_name",
-		OrganizationID: llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		ProjectID:      llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		Collection:     llamacloudprod.String("collection"),
-		Count:          llamacloudprod.Bool(true),
-		Filter: map[string]llamacloudprod.BetaAgentDataAggregateParamsFilter{
+		OrganizationID: llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		ProjectID:      llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		Collection:     llamacloud.String("collection"),
+		Count:          llamacloud.Bool(true),
+		Filter: map[string]llamacloud.BetaAgentDataAggregateParamsFilter{
 			"foo": {
-				Eq: llamacloudprod.BetaAgentDataAggregateParamsFilterEqUnion{
-					OfFloat: llamacloudprod.Float(0),
+				Eq: llamacloud.BetaAgentDataAggregateParamsFilterEqUnion{
+					OfFloat: llamacloud.Float(0),
 				},
-				Excludes: []*llamacloudprod.BetaAgentDataAggregateParamsFilterExcludeUnion{{
-					OfFloat: llamacloudprod.Float(0),
+				Excludes: []*llamacloud.BetaAgentDataAggregateParamsFilterExcludeUnion{{
+					OfFloat: llamacloud.Float(0),
 				}},
-				Gt: llamacloudprod.BetaAgentDataAggregateParamsFilterGtUnion{
-					OfFloat: llamacloudprod.Float(0),
+				Gt: llamacloud.BetaAgentDataAggregateParamsFilterGtUnion{
+					OfFloat: llamacloud.Float(0),
 				},
-				Gte: llamacloudprod.BetaAgentDataAggregateParamsFilterGteUnion{
-					OfFloat: llamacloudprod.Float(0),
+				Gte: llamacloud.BetaAgentDataAggregateParamsFilterGteUnion{
+					OfFloat: llamacloud.Float(0),
 				},
-				Includes: []*llamacloudprod.BetaAgentDataAggregateParamsFilterIncludeUnion{{
-					OfFloat: llamacloudprod.Float(0),
+				Includes: []*llamacloud.BetaAgentDataAggregateParamsFilterIncludeUnion{{
+					OfFloat: llamacloud.Float(0),
 				}},
-				Lt: llamacloudprod.BetaAgentDataAggregateParamsFilterLtUnion{
-					OfFloat: llamacloudprod.Float(0),
+				Lt: llamacloud.BetaAgentDataAggregateParamsFilterLtUnion{
+					OfFloat: llamacloud.Float(0),
 				},
-				Lte: llamacloudprod.BetaAgentDataAggregateParamsFilterLteUnion{
-					OfFloat: llamacloudprod.Float(0),
+				Lte: llamacloud.BetaAgentDataAggregateParamsFilterLteUnion{
+					OfFloat: llamacloud.Float(0),
 				},
-				Ne: llamacloudprod.BetaAgentDataAggregateParamsFilterNeUnion{
-					OfFloat: llamacloudprod.Float(0),
+				Ne: llamacloud.BetaAgentDataAggregateParamsFilterNeUnion{
+					OfFloat: llamacloud.Float(0),
 				},
 			},
 		},
-		First:     llamacloudprod.Bool(true),
+		First:     llamacloud.Bool(true),
 		GroupBy:   []string{"string"},
-		Offset:    llamacloudprod.Int(0),
-		OrderBy:   llamacloudprod.String("order_by"),
-		PageSize:  llamacloudprod.Int(0),
-		PageToken: llamacloudprod.String("page_token"),
+		Offset:    llamacloud.Int(0),
+		OrderBy:   llamacloud.String("order_by"),
+		PageSize:  llamacloud.Int(0),
+		PageToken: llamacloud.String("page_token"),
 	})
 	if err != nil {
-		var apierr *llamacloudprod.Error
+		var apierr *llamacloud.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -179,46 +179,46 @@ func TestBetaAgentDataDeleteByQueryWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := llamacloudprod.NewClient(
+	client := llamacloud.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Beta.AgentData.DeleteByQuery(context.TODO(), llamacloudprod.BetaAgentDataDeleteByQueryParams{
+	_, err := client.Beta.AgentData.DeleteByQuery(context.TODO(), llamacloud.BetaAgentDataDeleteByQueryParams{
 		DeploymentName: "deployment_name",
-		OrganizationID: llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		ProjectID:      llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		Collection:     llamacloudprod.String("collection"),
-		Filter: map[string]llamacloudprod.BetaAgentDataDeleteByQueryParamsFilter{
+		OrganizationID: llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		ProjectID:      llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		Collection:     llamacloud.String("collection"),
+		Filter: map[string]llamacloud.BetaAgentDataDeleteByQueryParamsFilter{
 			"foo": {
-				Eq: llamacloudprod.BetaAgentDataDeleteByQueryParamsFilterEqUnion{
-					OfFloat: llamacloudprod.Float(0),
+				Eq: llamacloud.BetaAgentDataDeleteByQueryParamsFilterEqUnion{
+					OfFloat: llamacloud.Float(0),
 				},
-				Excludes: []*llamacloudprod.BetaAgentDataDeleteByQueryParamsFilterExcludeUnion{{
-					OfFloat: llamacloudprod.Float(0),
+				Excludes: []*llamacloud.BetaAgentDataDeleteByQueryParamsFilterExcludeUnion{{
+					OfFloat: llamacloud.Float(0),
 				}},
-				Gt: llamacloudprod.BetaAgentDataDeleteByQueryParamsFilterGtUnion{
-					OfFloat: llamacloudprod.Float(0),
+				Gt: llamacloud.BetaAgentDataDeleteByQueryParamsFilterGtUnion{
+					OfFloat: llamacloud.Float(0),
 				},
-				Gte: llamacloudprod.BetaAgentDataDeleteByQueryParamsFilterGteUnion{
-					OfFloat: llamacloudprod.Float(0),
+				Gte: llamacloud.BetaAgentDataDeleteByQueryParamsFilterGteUnion{
+					OfFloat: llamacloud.Float(0),
 				},
-				Includes: []*llamacloudprod.BetaAgentDataDeleteByQueryParamsFilterIncludeUnion{{
-					OfFloat: llamacloudprod.Float(0),
+				Includes: []*llamacloud.BetaAgentDataDeleteByQueryParamsFilterIncludeUnion{{
+					OfFloat: llamacloud.Float(0),
 				}},
-				Lt: llamacloudprod.BetaAgentDataDeleteByQueryParamsFilterLtUnion{
-					OfFloat: llamacloudprod.Float(0),
+				Lt: llamacloud.BetaAgentDataDeleteByQueryParamsFilterLtUnion{
+					OfFloat: llamacloud.Float(0),
 				},
-				Lte: llamacloudprod.BetaAgentDataDeleteByQueryParamsFilterLteUnion{
-					OfFloat: llamacloudprod.Float(0),
+				Lte: llamacloud.BetaAgentDataDeleteByQueryParamsFilterLteUnion{
+					OfFloat: llamacloud.Float(0),
 				},
-				Ne: llamacloudprod.BetaAgentDataDeleteByQueryParamsFilterNeUnion{
-					OfFloat: llamacloudprod.Float(0),
+				Ne: llamacloud.BetaAgentDataDeleteByQueryParamsFilterNeUnion{
+					OfFloat: llamacloud.Float(0),
 				},
 			},
 		},
 	})
 	if err != nil {
-		var apierr *llamacloudprod.Error
+		var apierr *llamacloud.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -235,20 +235,20 @@ func TestBetaAgentDataGetWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := llamacloudprod.NewClient(
+	client := llamacloud.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Beta.AgentData.Get(
 		context.TODO(),
 		"item_id",
-		llamacloudprod.BetaAgentDataGetParams{
-			OrganizationID: llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-			ProjectID:      llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		llamacloud.BetaAgentDataGetParams{
+			OrganizationID: llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+			ProjectID:      llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		},
 	)
 	if err != nil {
-		var apierr *llamacloudprod.Error
+		var apierr *llamacloud.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -265,51 +265,51 @@ func TestBetaAgentDataSearchWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := llamacloudprod.NewClient(
+	client := llamacloud.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Beta.AgentData.Search(context.TODO(), llamacloudprod.BetaAgentDataSearchParams{
+	_, err := client.Beta.AgentData.Search(context.TODO(), llamacloud.BetaAgentDataSearchParams{
 		DeploymentName: "deployment_name",
-		OrganizationID: llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		ProjectID:      llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		Collection:     llamacloudprod.String("collection"),
-		Filter: map[string]llamacloudprod.BetaAgentDataSearchParamsFilter{
+		OrganizationID: llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		ProjectID:      llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		Collection:     llamacloud.String("collection"),
+		Filter: map[string]llamacloud.BetaAgentDataSearchParamsFilter{
 			"foo": {
-				Eq: llamacloudprod.BetaAgentDataSearchParamsFilterEqUnion{
-					OfFloat: llamacloudprod.Float(0),
+				Eq: llamacloud.BetaAgentDataSearchParamsFilterEqUnion{
+					OfFloat: llamacloud.Float(0),
 				},
-				Excludes: []*llamacloudprod.BetaAgentDataSearchParamsFilterExcludeUnion{{
-					OfFloat: llamacloudprod.Float(0),
+				Excludes: []*llamacloud.BetaAgentDataSearchParamsFilterExcludeUnion{{
+					OfFloat: llamacloud.Float(0),
 				}},
-				Gt: llamacloudprod.BetaAgentDataSearchParamsFilterGtUnion{
-					OfFloat: llamacloudprod.Float(0),
+				Gt: llamacloud.BetaAgentDataSearchParamsFilterGtUnion{
+					OfFloat: llamacloud.Float(0),
 				},
-				Gte: llamacloudprod.BetaAgentDataSearchParamsFilterGteUnion{
-					OfFloat: llamacloudprod.Float(0),
+				Gte: llamacloud.BetaAgentDataSearchParamsFilterGteUnion{
+					OfFloat: llamacloud.Float(0),
 				},
-				Includes: []*llamacloudprod.BetaAgentDataSearchParamsFilterIncludeUnion{{
-					OfFloat: llamacloudprod.Float(0),
+				Includes: []*llamacloud.BetaAgentDataSearchParamsFilterIncludeUnion{{
+					OfFloat: llamacloud.Float(0),
 				}},
-				Lt: llamacloudprod.BetaAgentDataSearchParamsFilterLtUnion{
-					OfFloat: llamacloudprod.Float(0),
+				Lt: llamacloud.BetaAgentDataSearchParamsFilterLtUnion{
+					OfFloat: llamacloud.Float(0),
 				},
-				Lte: llamacloudprod.BetaAgentDataSearchParamsFilterLteUnion{
-					OfFloat: llamacloudprod.Float(0),
+				Lte: llamacloud.BetaAgentDataSearchParamsFilterLteUnion{
+					OfFloat: llamacloud.Float(0),
 				},
-				Ne: llamacloudprod.BetaAgentDataSearchParamsFilterNeUnion{
-					OfFloat: llamacloudprod.Float(0),
+				Ne: llamacloud.BetaAgentDataSearchParamsFilterNeUnion{
+					OfFloat: llamacloud.Float(0),
 				},
 			},
 		},
-		IncludeTotal: llamacloudprod.Bool(true),
-		Offset:       llamacloudprod.Int(0),
-		OrderBy:      llamacloudprod.String("order_by"),
-		PageSize:     llamacloudprod.Int(0),
-		PageToken:    llamacloudprod.String("page_token"),
+		IncludeTotal: llamacloud.Bool(true),
+		Offset:       llamacloud.Int(0),
+		OrderBy:      llamacloud.String("order_by"),
+		PageSize:     llamacloud.Int(0),
+		PageToken:    llamacloud.String("page_token"),
 	})
 	if err != nil {
-		var apierr *llamacloudprod.Error
+		var apierr *llamacloud.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}

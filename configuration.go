@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-package llamacloudprod
+package llamacloud
 
 import (
 	"context"
@@ -440,12 +440,12 @@ func (UntypedParametersResp) implConfigurationCreateParametersUnion()           
 // Use the following switch statement to find the correct variant
 //
 //	switch variant := ConfigurationCreateParametersUnion.AsAny().(type) {
-//	case llamacloudprod.ClassifyV2ParametersResp:
-//	case llamacloudprod.ExtractV2ParametersResp:
-//	case llamacloudprod.ParseV2ParametersResp:
-//	case llamacloudprod.SplitV1ParametersResp:
-//	case llamacloudprod.ConfigurationCreateParametersSpreadsheetV1:
-//	case llamacloudprod.UntypedParametersResp:
+//	case llamacloud.ClassifyV2ParametersResp:
+//	case llamacloud.ExtractV2ParametersResp:
+//	case llamacloud.ParseV2ParametersResp:
+//	case llamacloud.SplitV1ParametersResp:
+//	case llamacloud.ConfigurationCreateParametersSpreadsheetV1:
+//	case llamacloud.UntypedParametersResp:
 //	default:
 //	  fmt.Errorf("no variant present")
 //	}
@@ -844,12 +844,12 @@ func (UntypedParametersResp) implConfigurationResponseParametersUnion()         
 // Use the following switch statement to find the correct variant
 //
 //	switch variant := ConfigurationResponseParametersUnion.AsAny().(type) {
-//	case llamacloudprod.ClassifyV2ParametersResp:
-//	case llamacloudprod.ExtractV2ParametersResp:
-//	case llamacloudprod.ParseV2ParametersResp:
-//	case llamacloudprod.SplitV1ParametersResp:
-//	case llamacloudprod.ConfigurationResponseParametersSpreadsheetV1:
-//	case llamacloudprod.UntypedParametersResp:
+//	case llamacloud.ClassifyV2ParametersResp:
+//	case llamacloud.ExtractV2ParametersResp:
+//	case llamacloud.ParseV2ParametersResp:
+//	case llamacloud.SplitV1ParametersResp:
+//	case llamacloud.ConfigurationResponseParametersSpreadsheetV1:
+//	case llamacloud.UntypedParametersResp:
 //	default:
 //	  fmt.Errorf("no variant present")
 //	}

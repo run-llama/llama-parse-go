@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-package llamacloudprod_test
+package llamacloud_test
 
 import (
 	"context"
@@ -22,21 +22,21 @@ func TestDataSourceNewWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := llamacloudprod.NewClient(
+	client := llamacloud.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.DataSources.New(context.TODO(), llamacloudprod.DataSourceNewParams{
-		Component: llamacloudprod.DataSourceNewParamsComponentUnion{
+	_, err := client.DataSources.New(context.TODO(), llamacloud.DataSourceNewParams{
+		Component: llamacloud.DataSourceNewParamsComponentUnion{
 			OfAnyMap: map[string]any{
 				"foo": "bar",
 			},
 		},
 		Name:           "name",
-		SourceType:     llamacloudprod.DataSourceNewParamsSourceTypeAzureStorageBlob,
-		OrganizationID: llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		ProjectID:      llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		CustomMetadata: map[string]*llamacloudprod.DataSourceNewParamsCustomMetadataUnion{
+		SourceType:     llamacloud.DataSourceNewParamsSourceTypeAzureStorageBlob,
+		OrganizationID: llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		ProjectID:      llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		CustomMetadata: map[string]*llamacloud.DataSourceNewParamsCustomMetadataUnion{
 			"foo": {
 				OfAnyMap: map[string]any{
 					"foo": "bar",
@@ -45,7 +45,7 @@ func TestDataSourceNewWithOptionalParams(t *testing.T) {
 		},
 	})
 	if err != nil {
-		var apierr *llamacloudprod.Error
+		var apierr *llamacloud.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -62,32 +62,32 @@ func TestDataSourceUpdateWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := llamacloudprod.NewClient(
+	client := llamacloud.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.DataSources.Update(
 		context.TODO(),
 		"182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-		llamacloudprod.DataSourceUpdateParams{
-			SourceType: llamacloudprod.DataSourceUpdateParamsSourceTypeAzureStorageBlob,
-			Component: llamacloudprod.DataSourceUpdateParamsComponentUnion{
+		llamacloud.DataSourceUpdateParams{
+			SourceType: llamacloud.DataSourceUpdateParamsSourceTypeAzureStorageBlob,
+			Component: llamacloud.DataSourceUpdateParamsComponentUnion{
 				OfAnyMap: map[string]any{
 					"foo": "bar",
 				},
 			},
-			CustomMetadata: map[string]*llamacloudprod.DataSourceUpdateParamsCustomMetadataUnion{
+			CustomMetadata: map[string]*llamacloud.DataSourceUpdateParamsCustomMetadataUnion{
 				"foo": {
 					OfAnyMap: map[string]any{
 						"foo": "bar",
 					},
 				},
 			},
-			Name: llamacloudprod.String("name"),
+			Name: llamacloud.String("name"),
 		},
 	)
 	if err != nil {
-		var apierr *llamacloudprod.Error
+		var apierr *llamacloud.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -104,16 +104,16 @@ func TestDataSourceListWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := llamacloudprod.NewClient(
+	client := llamacloud.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.DataSources.List(context.TODO(), llamacloudprod.DataSourceListParams{
-		OrganizationID: llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		ProjectID:      llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+	_, err := client.DataSources.List(context.TODO(), llamacloud.DataSourceListParams{
+		OrganizationID: llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		ProjectID:      llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 	})
 	if err != nil {
-		var apierr *llamacloudprod.Error
+		var apierr *llamacloud.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -130,13 +130,13 @@ func TestDataSourceDelete(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := llamacloudprod.NewClient(
+	client := llamacloud.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
 	err := client.DataSources.Delete(context.TODO(), "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
 	if err != nil {
-		var apierr *llamacloudprod.Error
+		var apierr *llamacloud.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -153,13 +153,13 @@ func TestDataSourceGet(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := llamacloudprod.NewClient(
+	client := llamacloud.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.DataSources.Get(context.TODO(), "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
 	if err != nil {
-		var apierr *llamacloudprod.Error
+		var apierr *llamacloud.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
