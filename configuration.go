@@ -1001,9 +1001,10 @@ type ExtractV2ParametersResp struct {
 	// Comma-separated page numbers or ranges to process (1-based). Omit to process all
 	// pages.
 	TargetPages string `json:"target_pages" api:"nullable"`
-	// Extract tier: cost_effective (5 credits/page) or agentic (15 credits/page)
+	// Extract tier: cost_effective (5 credits/page), agentic (15 credits/page), or
+	// agentic_plus (50 credits/page)
 	//
-	// Any of "agentic", "cost_effective".
+	// Any of "agentic", "agentic_plus", "cost_effective".
 	Tier ExtractV2ParametersTier `json:"tier"`
 	// Use 'latest' for the latest release for the selected tier or a date string
 	// (YYYY-MM-DD format) to pin to the nearest release at or before that date. Job
@@ -1115,11 +1116,13 @@ const (
 	ExtractV2ParametersExtractionTargetPerTableRow ExtractV2ParametersExtractionTarget = "per_table_row"
 )
 
-// Extract tier: cost_effective (5 credits/page) or agentic (15 credits/page)
+// Extract tier: cost_effective (5 credits/page), agentic (15 credits/page), or
+// agentic_plus (50 credits/page)
 type ExtractV2ParametersTier string
 
 const (
 	ExtractV2ParametersTierAgentic       ExtractV2ParametersTier = "agentic"
+	ExtractV2ParametersTierAgenticPlus   ExtractV2ParametersTier = "agentic_plus"
 	ExtractV2ParametersTierCostEffective ExtractV2ParametersTier = "cost_effective"
 )
 
@@ -1157,9 +1160,10 @@ type ExtractV2Parameters struct {
 	//
 	// Any of "per_doc", "per_page", "per_table_row".
 	ExtractionTarget ExtractV2ParametersExtractionTarget `json:"extraction_target,omitzero"`
-	// Extract tier: cost_effective (5 credits/page) or agentic (15 credits/page)
+	// Extract tier: cost_effective (5 credits/page), agentic (15 credits/page), or
+	// agentic_plus (50 credits/page)
 	//
-	// Any of "agentic", "cost_effective".
+	// Any of "agentic", "agentic_plus", "cost_effective".
 	Tier ExtractV2ParametersTier `json:"tier,omitzero"`
 	// Product type.
 	//
