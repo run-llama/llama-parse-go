@@ -1,5 +1,23 @@
 # Changelog
 
+## [1.3.0](https://github.com/run-llama/llama-parse-go/compare/v1.2.0...v1.3.0) (2026-07-21)
+
+
+### Features
+
+* **brokered-connection:** wire data-source create/read to brokered_connection_id ([#21699](https://github.com/run-llama/llama-parse-go/issues/21699)) ([42370a3](https://github.com/run-llama/llama-parse-go/commit/42370a3695a6e6b8b4386e35771a476481def2eb))
+* **gdrive:** reuse-first connection picker in the data-source connect modal ([#21725](https://github.com/run-llama/llama-parse-go/issues/21725)) ([8f68bd6](https://github.com/run-llama/llama-parse-go/commit/8f68bd602f5bb34af1eb49f37ed7923323312e82))
+* **llamaparse:** agentic 2026-07-15 — Markdown-pipe table body for Gemini 3.1 Flash-Lite (EU primary) ([#22208](https://github.com/run-llama/llama-parse-go/issues/22208)) ([93c71a1](https://github.com/run-llama/llama-parse-go/commit/93c71a18cf6dd97485e3627a2c8aa2e099ede4b9))
+* **parse:** adding forms pass to api layer (forms=`enrich` param + output types) ([#22012](https://github.com/run-llama/llama-parse-go/issues/22012)) ([a971e2a](https://github.com/run-llama/llama-parse-go/commit/a971e2a0a70b6075440a53d383168bb53edac05e))
+* **parse:** confidence_scores="verified" — per-page AI-verified confidence + document-level score ([#22083](https://github.com/run-llama/llama-parse-go/issues/22083)) ([6b81de6](https://github.com/run-llama/llama-parse-go/commit/6b81de62a6621682eb6b5ef5154b147738398b49))
+* **parse:** rename confidence scoring option + billing event (confidence_score_effort / confidence_score_high) ([#22290](https://github.com/run-llama/llama-parse-go/issues/22290)) ([9aca741](https://github.com/run-llama/llama-parse-go/commit/9aca741eeab198c0dca8258f3daf6649f21ce657))
+* **sdk:** drop the `prod` project suffix from Go and Java namespaces ([868a030](https://github.com/run-llama/llama-parse-go/commit/868a030bf2f89ea49fab2055675cc67ddc699c2a))
+
+
+### Bug Fixes
+
+* **parse:** declare the recursive form node schemas as models ([d450216](https://github.com/run-llama/llama-parse-go/commit/d450216a1a7bda087f216ffe35ca3c8b1ed7fd8e))
+
 ## [1.2.0](https://github.com/run-llama/llama-parse-go/compare/v1.1.0...v1.2.0) (2026-07-09)
 
 
