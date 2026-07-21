@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-package llamacloudprod
+package llamacloud
 
 import (
 	"context"
@@ -1687,6 +1687,7 @@ type LlamaParseParametersResp struct {
 	BoundingBox                              string  `json:"bounding_box" api:"nullable"`
 	CompactMarkdownTable                     bool    `json:"compact_markdown_table" api:"nullable"`
 	ComplementalFormattingInstruction        string  `json:"complemental_formatting_instruction" api:"nullable"`
+	ConfidenceScoreEffort                    string  `json:"confidence_score_effort" api:"nullable"`
 	ContentGuidelineInstruction              string  `json:"content_guideline_instruction" api:"nullable"`
 	ContinuousMode                           bool    `json:"continuous_mode" api:"nullable"`
 	DisableImageExtraction                   bool    `json:"disable_image_extraction" api:"nullable"`
@@ -1823,6 +1824,7 @@ type LlamaParseParametersResp struct {
 		BoundingBox                              respjson.Field
 		CompactMarkdownTable                     respjson.Field
 		ComplementalFormattingInstruction        respjson.Field
+		ConfidenceScoreEffort                    respjson.Field
 		ContentGuidelineInstruction              respjson.Field
 		ContinuousMode                           respjson.Field
 		DisableImageExtraction                   respjson.Field
@@ -2017,6 +2019,7 @@ type LlamaParseParameters struct {
 	BoundingBox                              param.Opt[string]  `json:"bounding_box,omitzero"`
 	CompactMarkdownTable                     param.Opt[bool]    `json:"compact_markdown_table,omitzero"`
 	ComplementalFormattingInstruction        param.Opt[string]  `json:"complemental_formatting_instruction,omitzero"`
+	ConfidenceScoreEffort                    param.Opt[string]  `json:"confidence_score_effort,omitzero"`
 	ContentGuidelineInstruction              param.Opt[string]  `json:"content_guideline_instruction,omitzero"`
 	ContinuousMode                           param.Opt[bool]    `json:"continuous_mode,omitzero"`
 	DisableImageExtraction                   param.Opt[bool]    `json:"disable_image_extraction,omitzero"`
@@ -2894,14 +2897,14 @@ func (VertexAIEmbeddingConfig) implPipelineEmbeddingConfigUnion()               
 // Use the following switch statement to find the correct variant
 //
 //	switch variant := PipelineEmbeddingConfigUnion.AsAny().(type) {
-//	case llamacloudprod.AzureOpenAIEmbeddingConfig:
-//	case llamacloudprod.BedrockEmbeddingConfig:
-//	case llamacloudprod.CohereEmbeddingConfig:
-//	case llamacloudprod.GeminiEmbeddingConfig:
-//	case llamacloudprod.HuggingFaceInferenceAPIEmbeddingConfig:
-//	case llamacloudprod.PipelineEmbeddingConfigManagedOpenAIEmbedding:
-//	case llamacloudprod.OpenAIEmbeddingConfig:
-//	case llamacloudprod.VertexAIEmbeddingConfig:
+//	case llamacloud.AzureOpenAIEmbeddingConfig:
+//	case llamacloud.BedrockEmbeddingConfig:
+//	case llamacloud.CohereEmbeddingConfig:
+//	case llamacloud.GeminiEmbeddingConfig:
+//	case llamacloud.HuggingFaceInferenceAPIEmbeddingConfig:
+//	case llamacloud.PipelineEmbeddingConfigManagedOpenAIEmbedding:
+//	case llamacloud.OpenAIEmbeddingConfig:
+//	case llamacloud.VertexAIEmbeddingConfig:
 //	default:
 //	  fmt.Errorf("no variant present")
 //	}
@@ -3251,13 +3254,13 @@ func (VertexAIEmbeddingConfig) implPipelineEmbeddingModelConfigEmbeddingConfigUn
 // Use the following switch statement to find the correct variant
 //
 //	switch variant := PipelineEmbeddingModelConfigEmbeddingConfigUnion.AsAny().(type) {
-//	case llamacloudprod.AzureOpenAIEmbeddingConfig:
-//	case llamacloudprod.BedrockEmbeddingConfig:
-//	case llamacloudprod.CohereEmbeddingConfig:
-//	case llamacloudprod.GeminiEmbeddingConfig:
-//	case llamacloudprod.HuggingFaceInferenceAPIEmbeddingConfig:
-//	case llamacloudprod.OpenAIEmbeddingConfig:
-//	case llamacloudprod.VertexAIEmbeddingConfig:
+//	case llamacloud.AzureOpenAIEmbeddingConfig:
+//	case llamacloud.BedrockEmbeddingConfig:
+//	case llamacloud.CohereEmbeddingConfig:
+//	case llamacloud.GeminiEmbeddingConfig:
+//	case llamacloud.HuggingFaceInferenceAPIEmbeddingConfig:
+//	case llamacloud.OpenAIEmbeddingConfig:
+//	case llamacloud.VertexAIEmbeddingConfig:
 //	default:
 //	  fmt.Errorf("no variant present")
 //	}

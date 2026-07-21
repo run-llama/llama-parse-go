@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-package llamacloudprod
+package llamacloud
 
 import (
 	"context"
@@ -440,12 +440,12 @@ func (UntypedParametersResp) implConfigurationCreateParametersUnion()           
 // Use the following switch statement to find the correct variant
 //
 //	switch variant := ConfigurationCreateParametersUnion.AsAny().(type) {
-//	case llamacloudprod.ClassifyV2ParametersResp:
-//	case llamacloudprod.ExtractV2ParametersResp:
-//	case llamacloudprod.ParseV2ParametersResp:
-//	case llamacloudprod.SplitV1ParametersResp:
-//	case llamacloudprod.ConfigurationCreateParametersSpreadsheetV1:
-//	case llamacloudprod.UntypedParametersResp:
+//	case llamacloud.ClassifyV2ParametersResp:
+//	case llamacloud.ExtractV2ParametersResp:
+//	case llamacloud.ParseV2ParametersResp:
+//	case llamacloud.SplitV1ParametersResp:
+//	case llamacloud.ConfigurationCreateParametersSpreadsheetV1:
+//	case llamacloud.UntypedParametersResp:
 //	default:
 //	  fmt.Errorf("no variant present")
 //	}
@@ -844,12 +844,12 @@ func (UntypedParametersResp) implConfigurationResponseParametersUnion()         
 // Use the following switch statement to find the correct variant
 //
 //	switch variant := ConfigurationResponseParametersUnion.AsAny().(type) {
-//	case llamacloudprod.ClassifyV2ParametersResp:
-//	case llamacloudprod.ExtractV2ParametersResp:
-//	case llamacloudprod.ParseV2ParametersResp:
-//	case llamacloudprod.SplitV1ParametersResp:
-//	case llamacloudprod.ConfigurationResponseParametersSpreadsheetV1:
-//	case llamacloudprod.UntypedParametersResp:
+//	case llamacloud.ClassifyV2ParametersResp:
+//	case llamacloud.ExtractV2ParametersResp:
+//	case llamacloud.ParseV2ParametersResp:
+//	case llamacloud.SplitV1ParametersResp:
+//	case llamacloud.ConfigurationResponseParametersSpreadsheetV1:
+//	case llamacloud.UntypedParametersResp:
 //	default:
 //	  fmt.Errorf("no variant present")
 //	}
@@ -1001,9 +1001,10 @@ type ExtractV2ParametersResp struct {
 	// Comma-separated page numbers or ranges to process (1-based). Omit to process all
 	// pages.
 	TargetPages string `json:"target_pages" api:"nullable"`
-	// Extract tier: cost_effective (5 credits/page) or agentic (15 credits/page)
+	// Extract tier: cost_effective (5 credits/page), agentic (15 credits/page), or
+	// agentic_plus (50 credits/page)
 	//
-	// Any of "agentic", "cost_effective".
+	// Any of "agentic", "agentic_plus", "cost_effective".
 	Tier ExtractV2ParametersTier `json:"tier"`
 	// Use 'latest' for the latest release for the selected tier or a date string
 	// (YYYY-MM-DD format) to pin to the nearest release at or before that date. Job
@@ -1115,11 +1116,13 @@ const (
 	ExtractV2ParametersExtractionTargetPerTableRow ExtractV2ParametersExtractionTarget = "per_table_row"
 )
 
-// Extract tier: cost_effective (5 credits/page) or agentic (15 credits/page)
+// Extract tier: cost_effective (5 credits/page), agentic (15 credits/page), or
+// agentic_plus (50 credits/page)
 type ExtractV2ParametersTier string
 
 const (
 	ExtractV2ParametersTierAgentic       ExtractV2ParametersTier = "agentic"
+	ExtractV2ParametersTierAgenticPlus   ExtractV2ParametersTier = "agentic_plus"
 	ExtractV2ParametersTierCostEffective ExtractV2ParametersTier = "cost_effective"
 )
 
@@ -1157,9 +1160,10 @@ type ExtractV2Parameters struct {
 	//
 	// Any of "per_doc", "per_page", "per_table_row".
 	ExtractionTarget ExtractV2ParametersExtractionTarget `json:"extraction_target,omitzero"`
-	// Extract tier: cost_effective (5 credits/page) or agentic (15 credits/page)
+	// Extract tier: cost_effective (5 credits/page), agentic (15 credits/page), or
+	// agentic_plus (50 credits/page)
 	//
-	// Any of "agentic", "cost_effective".
+	// Any of "agentic", "agentic_plus", "cost_effective".
 	Tier ExtractV2ParametersTier `json:"tier,omitzero"`
 	// Product type.
 	//
@@ -1220,7 +1224,7 @@ type ParseV2ParametersResp struct {
 	//
 	// - `fast`: `2026-06-15`
 	// - `cost_effective`: `2026-06-26`
-	// - `agentic`: `2026-06-18`
+	// - `agentic`: `2026-07-15`
 	// - `agentic_plus`: `2026-07-08`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
@@ -1318,7 +1322,7 @@ const (
 //
 // - `fast`: `2026-06-15`
 // - `cost_effective`: `2026-06-26`
-// - `agentic`: `2026-06-18`
+// - `agentic`: `2026-07-15`
 // - `agentic_plus`: `2026-07-08`
 //
 // Full list: `GET /api/v2/parse/versions`.
@@ -1326,9 +1330,9 @@ type ParseV2ParametersVersion string
 
 const (
 	ParseV2ParametersVersionLatest     ParseV2ParametersVersion = "latest"
+	ParseV2ParametersVersion2026_07_15 ParseV2ParametersVersion = "2026-07-15"
 	ParseV2ParametersVersion2026_07_08 ParseV2ParametersVersion = "2026-07-08"
 	ParseV2ParametersVersion2026_06_26 ParseV2ParametersVersion = "2026-06-26"
-	ParseV2ParametersVersion2026_06_18 ParseV2ParametersVersion = "2026-06-18"
 	ParseV2ParametersVersion2026_06_15 ParseV2ParametersVersion = "2026-06-15"
 )
 
@@ -1805,6 +1809,12 @@ type ParseV2ParametersProcessingOptionsResp struct {
 	// content, document structure, or filename patterns. Each entry defines trigger
 	// conditions and the parsing configuration to apply when triggered
 	AutoModeConfiguration []ParseV2ParametersProcessingOptionsAutoModeConfigurationResp `json:"auto_mode_configuration" api:"nullable"`
+	// Confidence scoring effort. Omit for standard scoring. 'high': more accurate
+	// assessment of the parsing quality of every page, plus a document-level score in
+	// the result metadata; costs an additional 5 credits per page
+	//
+	// Any of "high".
+	ConfidenceScoreEffort string `json:"confidence_score_effort" api:"nullable"`
 	// Cost optimizer configuration for reducing parsing costs on simpler pages.
 	//
 	// When enabled, the parser analyzes each page and routes simpler pages to faster,
@@ -1814,6 +1824,14 @@ type ParseV2ParametersProcessingOptionsResp struct {
 	// Disable automatic heuristics including outlined table extraction and adaptive
 	// long table handling. Use when heuristics produce incorrect results
 	DisableHeuristics bool `json:"disable_heuristics" api:"nullable"`
+	// Beta: set to 'enrich' to run an additional AI form-analysis pass on pages
+	// detected as forms, producing a structured tree of the form's sections, fields,
+	// and fillable grids. Retrieve the result with expand=forms. 'default' (the
+	// default) applies standard parsing with no extra pass. Not available on the fast
+	// tier
+	//
+	// Any of "default", "enrich".
+	Forms string `json:"forms" api:"nullable"`
 	// Options for ignoring specific text types (diagonal, hidden, text in images)
 	Ignore ParseV2ParametersProcessingOptionsIgnoreResp `json:"ignore"`
 	// OCR configuration including language detection settings
@@ -1828,8 +1846,10 @@ type ParseV2ParametersProcessingOptionsResp struct {
 	JSON struct {
 		AggressiveTableExtraction respjson.Field
 		AutoModeConfiguration     respjson.Field
+		ConfidenceScoreEffort     respjson.Field
 		CostOptimizer             respjson.Field
 		DisableHeuristics         respjson.Field
+		Forms                     respjson.Field
 		Ignore                    respjson.Field
 		OcrParameters             respjson.Field
 		SpecializedChartParsing   respjson.Field
@@ -2013,7 +2033,7 @@ type ParseV2ParametersProcessingOptionsAutoModeConfigurationParsingConfResp stru
 	//
 	// - `fast`: `2026-06-15`
 	// - `cost_effective`: `2026-06-26`
-	// - `agentic`: `2026-06-18`
+	// - `agentic`: `2026-07-15`
 	// - `agentic_plus`: `2026-07-08`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
@@ -3119,7 +3139,7 @@ type ParseV2Parameters struct {
 	//
 	// - `fast`: `2026-06-15`
 	// - `cost_effective`: `2026-06-26`
-	// - `agentic`: `2026-06-18`
+	// - `agentic`: `2026-07-15`
 	// - `agentic_plus`: `2026-07-08`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
@@ -3569,12 +3589,26 @@ type ParseV2ParametersProcessingOptions struct {
 	// content, document structure, or filename patterns. Each entry defines trigger
 	// conditions and the parsing configuration to apply when triggered
 	AutoModeConfiguration []ParseV2ParametersProcessingOptionsAutoModeConfiguration `json:"auto_mode_configuration,omitzero"`
+	// Confidence scoring effort. Omit for standard scoring. 'high': more accurate
+	// assessment of the parsing quality of every page, plus a document-level score in
+	// the result metadata; costs an additional 5 credits per page
+	//
+	// Any of "high".
+	ConfidenceScoreEffort string `json:"confidence_score_effort,omitzero"`
 	// Cost optimizer configuration for reducing parsing costs on simpler pages.
 	//
 	// When enabled, the parser analyzes each page and routes simpler pages to faster,
 	// cheaper processing while preserving quality for complex pages. Only works with
 	// 'agentic' or 'agentic_plus' tiers.
 	CostOptimizer ParseV2ParametersProcessingOptionsCostOptimizer `json:"cost_optimizer,omitzero"`
+	// Beta: set to 'enrich' to run an additional AI form-analysis pass on pages
+	// detected as forms, producing a structured tree of the form's sections, fields,
+	// and fillable grids. Retrieve the result with expand=forms. 'default' (the
+	// default) applies standard parsing with no extra pass. Not available on the fast
+	// tier
+	//
+	// Any of "default", "enrich".
+	Forms string `json:"forms,omitzero"`
 	// Enable AI-powered chart analysis. Modes: 'efficient' (fast, lower cost),
 	// 'agentic' (balanced), 'agentic_plus' (highest accuracy). Automatically enables
 	// extract_layout and precise_bounding_box when set
@@ -3597,6 +3631,12 @@ func (r *ParseV2ParametersProcessingOptions) UnmarshalJSON(data []byte) error {
 }
 
 func init() {
+	apijson.RegisterFieldValidator[ParseV2ParametersProcessingOptions](
+		"confidence_score_effort", "high",
+	)
+	apijson.RegisterFieldValidator[ParseV2ParametersProcessingOptions](
+		"forms", "default", "enrich",
+	)
 	apijson.RegisterFieldValidator[ParseV2ParametersProcessingOptions](
 		"specialized_chart_parsing", "agentic", "agentic_plus", "efficient",
 	)
@@ -3733,7 +3773,7 @@ type ParseV2ParametersProcessingOptionsAutoModeConfigurationParsingConf struct {
 	//
 	// - `fast`: `2026-06-15`
 	// - `cost_effective`: `2026-06-26`
-	// - `agentic`: `2026-06-18`
+	// - `agentic`: `2026-07-15`
 	// - `agentic_plus`: `2026-07-08`
 	//
 	// Full list: `GET /api/v2/parse/versions`.

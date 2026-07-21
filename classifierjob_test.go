@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-package llamacloudprod_test
+package llamacloud_test
 
 import (
 	"context"
@@ -22,36 +22,36 @@ func TestClassifierJobNewWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := llamacloudprod.NewClient(
+	client := llamacloud.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Classifier.Jobs.New(context.TODO(), llamacloudprod.ClassifierJobNewParams{
+	_, err := client.Classifier.Jobs.New(context.TODO(), llamacloud.ClassifierJobNewParams{
 		FileIDs: []string{"182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"},
-		Rules: []llamacloudprod.ClassifierRuleParam{{
+		Rules: []llamacloud.ClassifierRuleParam{{
 			Description: "contains invoice number, line items, and total amount",
 			Type:        "invoice",
 		}},
-		OrganizationID: llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		ProjectID:      llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		Mode:           llamacloudprod.ClassifierJobNewParamsModeFast,
-		ParsingConfiguration: llamacloudprod.ClassifyParsingConfigurationParam{
-			Lang:        llamacloudprod.ParsingLanguagesAbq,
-			MaxPages:    llamacloudprod.Int(0),
+		OrganizationID: llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		ProjectID:      llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		Mode:           llamacloud.ClassifierJobNewParamsModeFast,
+		ParsingConfiguration: llamacloud.ClassifyParsingConfigurationParam{
+			Lang:        llamacloud.ParsingLanguagesAbq,
+			MaxPages:    llamacloud.Int(0),
 			TargetPages: []int64{0},
 		},
-		WebhookConfigurations: []llamacloudprod.ClassifierJobNewParamsWebhookConfiguration{{
+		WebhookConfigurations: []llamacloud.ClassifierJobNewParamsWebhookConfiguration{{
 			WebhookEvents: []string{"parse.success", "parse.error"},
 			WebhookHeaders: map[string]any{
 				"foo": "bar",
 			},
 			WebhookOutputFormat:  "json",
-			WebhookSigningSecret: llamacloudprod.String("webhook_signing_secret"),
-			WebhookURL:           llamacloudprod.String("https:"),
+			WebhookSigningSecret: llamacloud.String("webhook_signing_secret"),
+			WebhookURL:           llamacloud.String("https:"),
 		}},
 	})
 	if err != nil {
-		var apierr *llamacloudprod.Error
+		var apierr *llamacloud.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -68,18 +68,18 @@ func TestClassifierJobListWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := llamacloudprod.NewClient(
+	client := llamacloud.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Classifier.Jobs.List(context.TODO(), llamacloudprod.ClassifierJobListParams{
-		OrganizationID: llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		PageSize:       llamacloudprod.Int(0),
-		PageToken:      llamacloudprod.String("page_token"),
-		ProjectID:      llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+	_, err := client.Classifier.Jobs.List(context.TODO(), llamacloud.ClassifierJobListParams{
+		OrganizationID: llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		PageSize:       llamacloud.Int(0),
+		PageToken:      llamacloud.String("page_token"),
+		ProjectID:      llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 	})
 	if err != nil {
-		var apierr *llamacloudprod.Error
+		var apierr *llamacloud.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -96,20 +96,20 @@ func TestClassifierJobGetWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := llamacloudprod.NewClient(
+	client := llamacloud.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Classifier.Jobs.Get(
 		context.TODO(),
 		"182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-		llamacloudprod.ClassifierJobGetParams{
-			OrganizationID: llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-			ProjectID:      llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		llamacloud.ClassifierJobGetParams{
+			OrganizationID: llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+			ProjectID:      llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		},
 	)
 	if err != nil {
-		var apierr *llamacloudprod.Error
+		var apierr *llamacloud.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -126,20 +126,20 @@ func TestClassifierJobGetResultsWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := llamacloudprod.NewClient(
+	client := llamacloud.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Classifier.Jobs.GetResults(
 		context.TODO(),
 		"182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-		llamacloudprod.ClassifierJobGetResultsParams{
-			OrganizationID: llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-			ProjectID:      llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		llamacloud.ClassifierJobGetResultsParams{
+			OrganizationID: llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+			ProjectID:      llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		},
 	)
 	if err != nil {
-		var apierr *llamacloudprod.Error
+		var apierr *llamacloud.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}

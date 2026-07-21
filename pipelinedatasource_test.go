@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-package llamacloudprod_test
+package llamacloud_test
 
 import (
 	"context"
@@ -22,20 +22,20 @@ func TestPipelineDataSourceUpdateWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := llamacloudprod.NewClient(
+	client := llamacloud.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Pipelines.DataSources.Update(
 		context.TODO(),
 		"182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-		llamacloudprod.PipelineDataSourceUpdateParams{
+		llamacloud.PipelineDataSourceUpdateParams{
 			PipelineID:   "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-			SyncInterval: llamacloudprod.Float(0),
+			SyncInterval: llamacloud.Float(0),
 		},
 	)
 	if err != nil {
-		var apierr *llamacloudprod.Error
+		var apierr *llamacloud.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -52,13 +52,13 @@ func TestPipelineDataSourceGetDataSources(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := llamacloudprod.NewClient(
+	client := llamacloud.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Pipelines.DataSources.GetDataSources(context.TODO(), "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
 	if err != nil {
-		var apierr *llamacloudprod.Error
+		var apierr *llamacloud.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -75,19 +75,19 @@ func TestPipelineDataSourceGetStatus(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := llamacloudprod.NewClient(
+	client := llamacloud.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Pipelines.DataSources.GetStatus(
 		context.TODO(),
 		"182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-		llamacloudprod.PipelineDataSourceGetStatusParams{
+		llamacloud.PipelineDataSourceGetStatusParams{
 			PipelineID: "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
 		},
 	)
 	if err != nil {
-		var apierr *llamacloudprod.Error
+		var apierr *llamacloud.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -104,20 +104,20 @@ func TestPipelineDataSourceSyncWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := llamacloudprod.NewClient(
+	client := llamacloud.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Pipelines.DataSources.Sync(
 		context.TODO(),
 		"182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-		llamacloudprod.PipelineDataSourceSyncParams{
+		llamacloud.PipelineDataSourceSyncParams{
 			PipelineID:      "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
 			PipelineFileIDs: []string{"182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"},
 		},
 	)
 	if err != nil {
-		var apierr *llamacloudprod.Error
+		var apierr *llamacloud.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -134,22 +134,22 @@ func TestPipelineDataSourceUpdateDataSources(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := llamacloudprod.NewClient(
+	client := llamacloud.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Pipelines.DataSources.UpdateDataSources(
 		context.TODO(),
 		"182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-		llamacloudprod.PipelineDataSourceUpdateDataSourcesParams{
-			Body: []llamacloudprod.PipelineDataSourceUpdateDataSourcesParamsBody{{
+		llamacloud.PipelineDataSourceUpdateDataSourcesParams{
+			Body: []llamacloud.PipelineDataSourceUpdateDataSourcesParamsBody{{
 				DataSourceID: "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-				SyncInterval: llamacloudprod.Float(0),
+				SyncInterval: llamacloud.Float(0),
 			}},
 		},
 	)
 	if err != nil {
-		var apierr *llamacloudprod.Error
+		var apierr *llamacloud.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}

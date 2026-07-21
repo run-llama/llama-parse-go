@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-package llamacloudprod_test
+package llamacloud_test
 
 import (
 	"context"
@@ -23,238 +23,240 @@ func TestParsingNewWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := llamacloudprod.NewClient(
+	client := llamacloud.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Parsing.New(context.TODO(), llamacloudprod.ParsingNewParams{
-		Tier:           llamacloudprod.ParsingNewParamsTierFast,
-		Version:        llamacloudprod.ParsingNewParamsVersionLatest,
-		OrganizationID: llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		ProjectID:      llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		AgenticOptions: llamacloudprod.ParsingNewParamsAgenticOptions{
-			CustomPrompt: llamacloudprod.String("custom_prompt"),
+	_, err := client.Parsing.New(context.TODO(), llamacloud.ParsingNewParams{
+		Tier:           llamacloud.ParsingNewParamsTierFast,
+		Version:        llamacloud.ParsingNewParamsVersionLatest,
+		OrganizationID: llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		ProjectID:      llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		AgenticOptions: llamacloud.ParsingNewParamsAgenticOptions{
+			CustomPrompt: llamacloud.String("custom_prompt"),
 		},
-		ClientName:      llamacloudprod.String("client_name"),
-		ConfigurationID: llamacloudprod.String("configuration_id"),
-		CropBox: llamacloudprod.ParsingNewParamsCropBox{
-			Bottom: llamacloudprod.Float(0),
-			Left:   llamacloudprod.Float(0),
-			Right:  llamacloudprod.Float(0),
-			Top:    llamacloudprod.Float(0),
+		ClientName:      llamacloud.String("client_name"),
+		ConfigurationID: llamacloud.String("configuration_id"),
+		CropBox: llamacloud.ParsingNewParamsCropBox{
+			Bottom: llamacloud.Float(0),
+			Left:   llamacloud.Float(0),
+			Right:  llamacloud.Float(0),
+			Top:    llamacloud.Float(0),
 		},
-		DisableCache: llamacloudprod.Bool(true),
+		DisableCache: llamacloud.Bool(true),
 		FastOptions:  map[string]any{},
-		FileID:       llamacloudprod.String("file_id"),
-		HTTPProxy:    llamacloudprod.String("https:"),
-		InputOptions: llamacloudprod.ParsingNewParamsInputOptions{
-			HTML: llamacloudprod.ParsingNewParamsInputOptionsHTML{
-				MakeAllElementsVisible:   llamacloudprod.Bool(true),
-				RemoveFixedElements:      llamacloudprod.Bool(true),
-				RemoveNavigationElements: llamacloudprod.Bool(true),
+		FileID:       llamacloud.String("file_id"),
+		HTTPProxy:    llamacloud.String("https:"),
+		InputOptions: llamacloud.ParsingNewParamsInputOptions{
+			HTML: llamacloud.ParsingNewParamsInputOptionsHTML{
+				MakeAllElementsVisible:   llamacloud.Bool(true),
+				RemoveFixedElements:      llamacloud.Bool(true),
+				RemoveNavigationElements: llamacloud.Bool(true),
 			},
-			Image: llamacloudprod.ParsingNewParamsInputOptionsImage{
-				CameraPhotoCorrection: llamacloudprod.Bool(true),
+			Image: llamacloud.ParsingNewParamsInputOptionsImage{
+				CameraPhotoCorrection: llamacloud.Bool(true),
 			},
 			Pdf: map[string]any{},
-			Presentation: llamacloudprod.ParsingNewParamsInputOptionsPresentation{
-				OutOfBoundsContent: llamacloudprod.Bool(true),
-				SkipEmbeddedData:   llamacloudprod.Bool(true),
+			Presentation: llamacloud.ParsingNewParamsInputOptionsPresentation{
+				OutOfBoundsContent: llamacloud.Bool(true),
+				SkipEmbeddedData:   llamacloud.Bool(true),
 			},
-			Spreadsheet: llamacloudprod.ParsingNewParamsInputOptionsSpreadsheet{
-				DetectSubTablesInSheets:         llamacloudprod.Bool(true),
-				ForceFormulaComputationInSheets: llamacloudprod.Bool(true),
-				IncludeHiddenSheets:             llamacloudprod.Bool(true),
+			Spreadsheet: llamacloud.ParsingNewParamsInputOptionsSpreadsheet{
+				DetectSubTablesInSheets:         llamacloud.Bool(true),
+				ForceFormulaComputationInSheets: llamacloud.Bool(true),
+				IncludeHiddenSheets:             llamacloud.Bool(true),
 			},
 		},
-		OutputOptions: llamacloudprod.ParsingNewParamsOutputOptions{
+		OutputOptions: llamacloud.ParsingNewParamsOutputOptions{
 			AdditionalOutputs:        []string{"stripped_md", "concatenated_stripped_txt", "word_bbox"},
-			ExtractPrintedPageNumber: llamacloudprod.Bool(true),
+			ExtractPrintedPageNumber: llamacloud.Bool(true),
 			GranularBboxes:           []string{"word", "line", "cell"},
 			ImagesToSave:             []string{"embedded"},
-			Markdown: llamacloudprod.ParsingNewParamsOutputOptionsMarkdown{
-				AnnotateLinks: llamacloudprod.Bool(true),
-				InlineImages:  llamacloudprod.Bool(true),
-				Tables: llamacloudprod.ParsingNewParamsOutputOptionsMarkdownTables{
-					CompactMarkdownTables:           llamacloudprod.Bool(true),
-					MarkdownTableMultilineSeparator: llamacloudprod.String("markdown_table_multiline_separator"),
-					MergeContinuedTables:            llamacloudprod.Bool(true),
-					OutputTablesAsMarkdown:          llamacloudprod.Bool(true),
+			Markdown: llamacloud.ParsingNewParamsOutputOptionsMarkdown{
+				AnnotateLinks: llamacloud.Bool(true),
+				InlineImages:  llamacloud.Bool(true),
+				Tables: llamacloud.ParsingNewParamsOutputOptionsMarkdownTables{
+					CompactMarkdownTables:           llamacloud.Bool(true),
+					MarkdownTableMultilineSeparator: llamacloud.String("markdown_table_multiline_separator"),
+					MergeContinuedTables:            llamacloud.Bool(true),
+					OutputTablesAsMarkdown:          llamacloud.Bool(true),
 				},
 			},
-			SpatialText: llamacloudprod.ParsingNewParamsOutputOptionsSpatialText{
-				DoNotUnrollColumns:                 llamacloudprod.Bool(true),
-				PreserveLayoutAlignmentAcrossPages: llamacloudprod.Bool(true),
-				PreserveVerySmallText:              llamacloudprod.Bool(true),
+			SpatialText: llamacloud.ParsingNewParamsOutputOptionsSpatialText{
+				DoNotUnrollColumns:                 llamacloud.Bool(true),
+				PreserveLayoutAlignmentAcrossPages: llamacloud.Bool(true),
+				PreserveVerySmallText:              llamacloud.Bool(true),
 			},
-			TablesAsSpreadsheet: llamacloudprod.ParsingNewParamsOutputOptionsTablesAsSpreadsheet{
-				Enable:         llamacloudprod.Bool(true),
-				GuessSheetName: llamacloudprod.Bool(true),
-			},
-		},
-		PageRanges: llamacloudprod.ParsingNewParamsPageRanges{
-			MaxPages:    llamacloudprod.Int(1),
-			TargetPages: llamacloudprod.String("target_pages"),
-		},
-		ProcessingControl: llamacloudprod.ParsingNewParamsProcessingControl{
-			JobFailureConditions: llamacloudprod.ParsingNewParamsProcessingControlJobFailureConditions{
-				AllowedPageFailureRatio:           llamacloudprod.Float(1),
-				FailOnBuggyFont:                   llamacloudprod.Bool(true),
-				FailOnImageExtractionError:        llamacloudprod.Bool(true),
-				FailOnImageOcrError:               llamacloudprod.Bool(true),
-				FailOnMarkdownReconstructionError: llamacloudprod.Bool(true),
-			},
-			Timeouts: llamacloudprod.ParsingNewParamsProcessingControlTimeouts{
-				BaseInSeconds:             llamacloudprod.Int(1),
-				ExtraTimePerPageInSeconds: llamacloudprod.Int(1),
+			TablesAsSpreadsheet: llamacloud.ParsingNewParamsOutputOptionsTablesAsSpreadsheet{
+				Enable:         llamacloud.Bool(true),
+				GuessSheetName: llamacloud.Bool(true),
 			},
 		},
-		ProcessingOptions: llamacloudprod.ParsingNewParamsProcessingOptions{
-			AggressiveTableExtraction: llamacloudprod.Bool(true),
-			AutoModeConfiguration: []llamacloudprod.ParsingNewParamsProcessingOptionsAutoModeConfiguration{{
-				ParsingConf: llamacloudprod.ParsingNewParamsProcessingOptionsAutoModeConfigurationParsingConf{
-					AdaptiveLongTable:         llamacloudprod.Bool(true),
-					AggressiveTableExtraction: llamacloudprod.Bool(true),
-					CropBox: llamacloudprod.ParsingNewParamsProcessingOptionsAutoModeConfigurationParsingConfCropBox{
-						Bottom: llamacloudprod.Float(0),
-						Left:   llamacloudprod.Float(0),
-						Right:  llamacloudprod.Float(0),
-						Top:    llamacloudprod.Float(0),
+		PageRanges: llamacloud.ParsingNewParamsPageRanges{
+			MaxPages:    llamacloud.Int(1),
+			TargetPages: llamacloud.String("target_pages"),
+		},
+		ProcessingControl: llamacloud.ParsingNewParamsProcessingControl{
+			JobFailureConditions: llamacloud.ParsingNewParamsProcessingControlJobFailureConditions{
+				AllowedPageFailureRatio:           llamacloud.Float(1),
+				FailOnBuggyFont:                   llamacloud.Bool(true),
+				FailOnImageExtractionError:        llamacloud.Bool(true),
+				FailOnImageOcrError:               llamacloud.Bool(true),
+				FailOnMarkdownReconstructionError: llamacloud.Bool(true),
+			},
+			Timeouts: llamacloud.ParsingNewParamsProcessingControlTimeouts{
+				BaseInSeconds:             llamacloud.Int(1),
+				ExtraTimePerPageInSeconds: llamacloud.Int(1),
+			},
+		},
+		ProcessingOptions: llamacloud.ParsingNewParamsProcessingOptions{
+			AggressiveTableExtraction: llamacloud.Bool(true),
+			AutoModeConfiguration: []llamacloud.ParsingNewParamsProcessingOptionsAutoModeConfiguration{{
+				ParsingConf: llamacloud.ParsingNewParamsProcessingOptionsAutoModeConfigurationParsingConf{
+					AdaptiveLongTable:         llamacloud.Bool(true),
+					AggressiveTableExtraction: llamacloud.Bool(true),
+					CropBox: llamacloud.ParsingNewParamsProcessingOptionsAutoModeConfigurationParsingConfCropBox{
+						Bottom: llamacloud.Float(0),
+						Left:   llamacloud.Float(0),
+						Right:  llamacloud.Float(0),
+						Top:    llamacloud.Float(0),
 					},
-					CustomPrompt:  llamacloudprod.String("custom_prompt"),
-					ExtractLayout: llamacloudprod.Bool(true),
-					HighResOcr:    llamacloudprod.Bool(true),
-					Ignore: llamacloudprod.ParsingNewParamsProcessingOptionsAutoModeConfigurationParsingConfIgnore{
-						IgnoreDiagonalText: llamacloudprod.Bool(true),
-						IgnoreHiddenText:   llamacloudprod.Bool(true),
+					CustomPrompt:  llamacloud.String("custom_prompt"),
+					ExtractLayout: llamacloud.Bool(true),
+					HighResOcr:    llamacloud.Bool(true),
+					Ignore: llamacloud.ParsingNewParamsProcessingOptionsAutoModeConfigurationParsingConfIgnore{
+						IgnoreDiagonalText: llamacloud.Bool(true),
+						IgnoreHiddenText:   llamacloud.Bool(true),
 					},
-					Language:                llamacloudprod.String("language"),
-					OutlinedTableExtraction: llamacloudprod.Bool(true),
-					Presentation: llamacloudprod.ParsingNewParamsProcessingOptionsAutoModeConfigurationParsingConfPresentation{
-						OutOfBoundsContent: llamacloudprod.Bool(true),
-						SkipEmbeddedData:   llamacloudprod.Bool(true),
+					Language:                llamacloud.String("language"),
+					OutlinedTableExtraction: llamacloud.Bool(true),
+					Presentation: llamacloud.ParsingNewParamsProcessingOptionsAutoModeConfigurationParsingConfPresentation{
+						OutOfBoundsContent: llamacloud.Bool(true),
+						SkipEmbeddedData:   llamacloud.Bool(true),
 					},
-					SpatialText: llamacloudprod.ParsingNewParamsProcessingOptionsAutoModeConfigurationParsingConfSpatialText{
-						DoNotUnrollColumns:                 llamacloudprod.Bool(true),
-						PreserveLayoutAlignmentAcrossPages: llamacloudprod.Bool(true),
-						PreserveVerySmallText:              llamacloudprod.Bool(true),
+					SpatialText: llamacloud.ParsingNewParamsProcessingOptionsAutoModeConfigurationParsingConfSpatialText{
+						DoNotUnrollColumns:                 llamacloud.Bool(true),
+						PreserveLayoutAlignmentAcrossPages: llamacloud.Bool(true),
+						PreserveVerySmallText:              llamacloud.Bool(true),
 					},
 					SpecializedChartParsing: "agentic",
 					Tier:                    "agentic",
 					Version:                 "latest",
 				},
-				FilenameMatchGlob:     llamacloudprod.String("*.txt"),
+				FilenameMatchGlob:     llamacloud.String("*.txt"),
 				FilenameMatchGlobList: []string{"string"},
-				FilenameRegexp:        llamacloudprod.String("filename_regexp"),
-				FilenameRegexpMode:    llamacloudprod.String("filename_regexp_mode"),
-				FullPageImageInPage:   llamacloudprod.Bool(true),
-				FullPageImageInPageThreshold: llamacloudprod.ParsingNewParamsProcessingOptionsAutoModeConfigurationFullPageImageInPageThresholdUnion{
-					OfFloat: llamacloudprod.Float(0),
+				FilenameRegexp:        llamacloud.String("filename_regexp"),
+				FilenameRegexpMode:    llamacloud.String("filename_regexp_mode"),
+				FullPageImageInPage:   llamacloud.Bool(true),
+				FullPageImageInPageThreshold: llamacloud.ParsingNewParamsProcessingOptionsAutoModeConfigurationFullPageImageInPageThresholdUnion{
+					OfFloat: llamacloud.Float(0),
 				},
-				ImageInPage:         llamacloudprod.Bool(true),
-				LayoutElementInPage: llamacloudprod.String("layout_element_in_page"),
-				LayoutElementInPageConfidenceThreshold: llamacloudprod.ParsingNewParamsProcessingOptionsAutoModeConfigurationLayoutElementInPageConfidenceThresholdUnion{
-					OfFloat: llamacloudprod.Float(0),
+				ImageInPage:         llamacloud.Bool(true),
+				LayoutElementInPage: llamacloud.String("layout_element_in_page"),
+				LayoutElementInPageConfidenceThreshold: llamacloud.ParsingNewParamsProcessingOptionsAutoModeConfigurationLayoutElementInPageConfidenceThresholdUnion{
+					OfFloat: llamacloud.Float(0),
 				},
-				PageContainsAtLeastNCharts: llamacloudprod.ParsingNewParamsProcessingOptionsAutoModeConfigurationPageContainsAtLeastNChartsUnion{
-					OfInt: llamacloudprod.Int(0),
+				PageContainsAtLeastNCharts: llamacloud.ParsingNewParamsProcessingOptionsAutoModeConfigurationPageContainsAtLeastNChartsUnion{
+					OfInt: llamacloud.Int(0),
 				},
-				PageContainsAtLeastNImages: llamacloudprod.ParsingNewParamsProcessingOptionsAutoModeConfigurationPageContainsAtLeastNImagesUnion{
-					OfInt: llamacloudprod.Int(0),
+				PageContainsAtLeastNImages: llamacloud.ParsingNewParamsProcessingOptionsAutoModeConfigurationPageContainsAtLeastNImagesUnion{
+					OfInt: llamacloud.Int(0),
 				},
-				PageContainsAtLeastNLayoutElements: llamacloudprod.ParsingNewParamsProcessingOptionsAutoModeConfigurationPageContainsAtLeastNLayoutElementsUnion{
-					OfInt: llamacloudprod.Int(0),
+				PageContainsAtLeastNLayoutElements: llamacloud.ParsingNewParamsProcessingOptionsAutoModeConfigurationPageContainsAtLeastNLayoutElementsUnion{
+					OfInt: llamacloud.Int(0),
 				},
-				PageContainsAtLeastNLines: llamacloudprod.ParsingNewParamsProcessingOptionsAutoModeConfigurationPageContainsAtLeastNLinesUnion{
-					OfInt: llamacloudprod.Int(0),
+				PageContainsAtLeastNLines: llamacloud.ParsingNewParamsProcessingOptionsAutoModeConfigurationPageContainsAtLeastNLinesUnion{
+					OfInt: llamacloud.Int(0),
 				},
-				PageContainsAtLeastNLinks: llamacloudprod.ParsingNewParamsProcessingOptionsAutoModeConfigurationPageContainsAtLeastNLinksUnion{
-					OfInt: llamacloudprod.Int(0),
+				PageContainsAtLeastNLinks: llamacloud.ParsingNewParamsProcessingOptionsAutoModeConfigurationPageContainsAtLeastNLinksUnion{
+					OfInt: llamacloud.Int(0),
 				},
-				PageContainsAtLeastNNumbers: llamacloudprod.ParsingNewParamsProcessingOptionsAutoModeConfigurationPageContainsAtLeastNNumbersUnion{
-					OfInt: llamacloudprod.Int(0),
+				PageContainsAtLeastNNumbers: llamacloud.ParsingNewParamsProcessingOptionsAutoModeConfigurationPageContainsAtLeastNNumbersUnion{
+					OfInt: llamacloud.Int(0),
 				},
-				PageContainsAtLeastNPercentNumbers: llamacloudprod.ParsingNewParamsProcessingOptionsAutoModeConfigurationPageContainsAtLeastNPercentNumbersUnion{
-					OfInt: llamacloudprod.Int(0),
+				PageContainsAtLeastNPercentNumbers: llamacloud.ParsingNewParamsProcessingOptionsAutoModeConfigurationPageContainsAtLeastNPercentNumbersUnion{
+					OfInt: llamacloud.Int(0),
 				},
-				PageContainsAtLeastNTables: llamacloudprod.ParsingNewParamsProcessingOptionsAutoModeConfigurationPageContainsAtLeastNTablesUnion{
-					OfInt: llamacloudprod.Int(0),
+				PageContainsAtLeastNTables: llamacloud.ParsingNewParamsProcessingOptionsAutoModeConfigurationPageContainsAtLeastNTablesUnion{
+					OfInt: llamacloud.Int(0),
 				},
-				PageContainsAtLeastNWords: llamacloudprod.ParsingNewParamsProcessingOptionsAutoModeConfigurationPageContainsAtLeastNWordsUnion{
-					OfInt: llamacloudprod.Int(0),
+				PageContainsAtLeastNWords: llamacloud.ParsingNewParamsProcessingOptionsAutoModeConfigurationPageContainsAtLeastNWordsUnion{
+					OfInt: llamacloud.Int(0),
 				},
-				PageContainsAtMostNCharts: llamacloudprod.ParsingNewParamsProcessingOptionsAutoModeConfigurationPageContainsAtMostNChartsUnion{
-					OfInt: llamacloudprod.Int(0),
+				PageContainsAtMostNCharts: llamacloud.ParsingNewParamsProcessingOptionsAutoModeConfigurationPageContainsAtMostNChartsUnion{
+					OfInt: llamacloud.Int(0),
 				},
-				PageContainsAtMostNImages: llamacloudprod.ParsingNewParamsProcessingOptionsAutoModeConfigurationPageContainsAtMostNImagesUnion{
-					OfInt: llamacloudprod.Int(0),
+				PageContainsAtMostNImages: llamacloud.ParsingNewParamsProcessingOptionsAutoModeConfigurationPageContainsAtMostNImagesUnion{
+					OfInt: llamacloud.Int(0),
 				},
-				PageContainsAtMostNLayoutElements: llamacloudprod.ParsingNewParamsProcessingOptionsAutoModeConfigurationPageContainsAtMostNLayoutElementsUnion{
-					OfInt: llamacloudprod.Int(0),
+				PageContainsAtMostNLayoutElements: llamacloud.ParsingNewParamsProcessingOptionsAutoModeConfigurationPageContainsAtMostNLayoutElementsUnion{
+					OfInt: llamacloud.Int(0),
 				},
-				PageContainsAtMostNLines: llamacloudprod.ParsingNewParamsProcessingOptionsAutoModeConfigurationPageContainsAtMostNLinesUnion{
-					OfInt: llamacloudprod.Int(0),
+				PageContainsAtMostNLines: llamacloud.ParsingNewParamsProcessingOptionsAutoModeConfigurationPageContainsAtMostNLinesUnion{
+					OfInt: llamacloud.Int(0),
 				},
-				PageContainsAtMostNLinks: llamacloudprod.ParsingNewParamsProcessingOptionsAutoModeConfigurationPageContainsAtMostNLinksUnion{
-					OfInt: llamacloudprod.Int(0),
+				PageContainsAtMostNLinks: llamacloud.ParsingNewParamsProcessingOptionsAutoModeConfigurationPageContainsAtMostNLinksUnion{
+					OfInt: llamacloud.Int(0),
 				},
-				PageContainsAtMostNNumbers: llamacloudprod.ParsingNewParamsProcessingOptionsAutoModeConfigurationPageContainsAtMostNNumbersUnion{
-					OfInt: llamacloudprod.Int(0),
+				PageContainsAtMostNNumbers: llamacloud.ParsingNewParamsProcessingOptionsAutoModeConfigurationPageContainsAtMostNNumbersUnion{
+					OfInt: llamacloud.Int(0),
 				},
-				PageContainsAtMostNPercentNumbers: llamacloudprod.ParsingNewParamsProcessingOptionsAutoModeConfigurationPageContainsAtMostNPercentNumbersUnion{
-					OfInt: llamacloudprod.Int(0),
+				PageContainsAtMostNPercentNumbers: llamacloud.ParsingNewParamsProcessingOptionsAutoModeConfigurationPageContainsAtMostNPercentNumbersUnion{
+					OfInt: llamacloud.Int(0),
 				},
-				PageContainsAtMostNTables: llamacloudprod.ParsingNewParamsProcessingOptionsAutoModeConfigurationPageContainsAtMostNTablesUnion{
-					OfInt: llamacloudprod.Int(0),
+				PageContainsAtMostNTables: llamacloud.ParsingNewParamsProcessingOptionsAutoModeConfigurationPageContainsAtMostNTablesUnion{
+					OfInt: llamacloud.Int(0),
 				},
-				PageContainsAtMostNWords: llamacloudprod.ParsingNewParamsProcessingOptionsAutoModeConfigurationPageContainsAtMostNWordsUnion{
-					OfInt: llamacloudprod.Int(0),
+				PageContainsAtMostNWords: llamacloud.ParsingNewParamsProcessingOptionsAutoModeConfigurationPageContainsAtMostNWordsUnion{
+					OfInt: llamacloud.Int(0),
 				},
-				PageLongerThanNChars: llamacloudprod.ParsingNewParamsProcessingOptionsAutoModeConfigurationPageLongerThanNCharsUnion{
-					OfInt: llamacloudprod.Int(0),
+				PageLongerThanNChars: llamacloud.ParsingNewParamsProcessingOptionsAutoModeConfigurationPageLongerThanNCharsUnion{
+					OfInt: llamacloud.Int(0),
 				},
-				PageMdError: llamacloudprod.Bool(true),
-				PageShorterThanNChars: llamacloudprod.ParsingNewParamsProcessingOptionsAutoModeConfigurationPageShorterThanNCharsUnion{
-					OfInt: llamacloudprod.Int(0),
+				PageMdError: llamacloud.Bool(true),
+				PageShorterThanNChars: llamacloud.ParsingNewParamsProcessingOptionsAutoModeConfigurationPageShorterThanNCharsUnion{
+					OfInt: llamacloud.Int(0),
 				},
-				RegexpInPage:     llamacloudprod.String("regexp_in_page"),
-				RegexpInPageMode: llamacloudprod.String("regexp_in_page_mode"),
-				TableInPage:      llamacloudprod.Bool(true),
-				TextInPage:       llamacloudprod.String("text_in_page"),
-				TriggerMode:      llamacloudprod.String("trigger_mode"),
+				RegexpInPage:     llamacloud.String("regexp_in_page"),
+				RegexpInPageMode: llamacloud.String("regexp_in_page_mode"),
+				TableInPage:      llamacloud.Bool(true),
+				TextInPage:       llamacloud.String("text_in_page"),
+				TriggerMode:      llamacloud.String("trigger_mode"),
 			}},
-			CostOptimizer: llamacloudprod.ParsingNewParamsProcessingOptionsCostOptimizer{
-				Enable: llamacloudprod.Bool(true),
+			ConfidenceScoreEffort: "high",
+			CostOptimizer: llamacloud.ParsingNewParamsProcessingOptionsCostOptimizer{
+				Enable: llamacloud.Bool(true),
 			},
-			DisableHeuristics: llamacloudprod.Bool(true),
-			Ignore: llamacloudprod.ParsingNewParamsProcessingOptionsIgnore{
-				IgnoreDiagonalText: llamacloudprod.Bool(true),
-				IgnoreHiddenText:   llamacloudprod.Bool(true),
-				IgnoreTextInImage:  llamacloudprod.Bool(true),
+			DisableHeuristics: llamacloud.Bool(true),
+			Forms:             "enrich",
+			Ignore: llamacloud.ParsingNewParamsProcessingOptionsIgnore{
+				IgnoreDiagonalText: llamacloud.Bool(true),
+				IgnoreHiddenText:   llamacloud.Bool(true),
+				IgnoreTextInImage:  llamacloud.Bool(true),
 			},
-			OcrParameters: llamacloudprod.ParsingNewParamsProcessingOptionsOcrParameters{
-				Languages: []llamacloudprod.ParsingLanguages{llamacloudprod.ParsingLanguagesAbq},
+			OcrParameters: llamacloud.ParsingNewParamsProcessingOptionsOcrParameters{
+				Languages: []llamacloud.ParsingLanguages{llamacloud.ParsingLanguagesAbq},
 			},
 			SpecializedChartParsing: "agentic",
 		},
-		SourceURL: llamacloudprod.String("https:"),
+		SourceURL: llamacloud.String("https:"),
 		UserMetadata: map[string]string{
 			"owner": "jerry",
 			"team":  "research",
 		},
 		WebhookConfigurationIDs: []string{"whc-...", "whc-..."},
-		WebhookConfigurations: []llamacloudprod.ParsingNewParamsWebhookConfiguration{{
+		WebhookConfigurations: []llamacloud.ParsingNewParamsWebhookConfiguration{{
 			WebhookEvents: []string{"parse.success", "parse.error"},
 			WebhookHeaders: map[string]any{
 				"foo": "bar",
 			},
 			WebhookOutputFormat:  "json",
-			WebhookSigningSecret: llamacloudprod.String("webhook_signing_secret"),
-			WebhookURL:           llamacloudprod.String("https:"),
+			WebhookSigningSecret: llamacloud.String("webhook_signing_secret"),
+			WebhookURL:           llamacloud.String("https:"),
 		}},
 	})
 	if err != nil {
-		var apierr *llamacloudprod.Error
+		var apierr *llamacloud.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -271,22 +273,22 @@ func TestParsingListWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := llamacloudprod.NewClient(
+	client := llamacloud.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Parsing.List(context.TODO(), llamacloudprod.ParsingListParams{
-		CreatedAtOnOrAfter:  llamacloudprod.Time(time.Now()),
-		CreatedAtOnOrBefore: llamacloudprod.Time(time.Now()),
+	_, err := client.Parsing.List(context.TODO(), llamacloud.ParsingListParams{
+		CreatedAtOnOrAfter:  llamacloud.Time(time.Now()),
+		CreatedAtOnOrBefore: llamacloud.Time(time.Now()),
 		JobIDs:              []string{"string", "string"},
-		OrganizationID:      llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		PageSize:            llamacloudprod.Int(0),
-		PageToken:           llamacloudprod.String("page_token"),
-		ProjectID:           llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		Status:              llamacloudprod.ParsingListParamsStatusCancelled,
+		OrganizationID:      llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		PageSize:            llamacloud.Int(0),
+		PageToken:           llamacloud.String("page_token"),
+		ProjectID:           llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		Status:              llamacloud.ParsingListParamsStatusCancelled,
 	})
 	if err != nil {
-		var apierr *llamacloudprod.Error
+		var apierr *llamacloud.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -303,22 +305,22 @@ func TestParsingGetWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := llamacloudprod.NewClient(
+	client := llamacloud.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Parsing.Get(
 		context.TODO(),
 		"job_id",
-		llamacloudprod.ParsingGetParams{
+		llamacloud.ParsingGetParams{
 			Expand:         []string{"string"},
-			ImageFilenames: llamacloudprod.String("image_filenames"),
-			OrganizationID: llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-			ProjectID:      llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+			ImageFilenames: llamacloud.String("image_filenames"),
+			OrganizationID: llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+			ProjectID:      llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		},
 	)
 	if err != nil {
-		var apierr *llamacloudprod.Error
+		var apierr *llamacloud.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}

@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-package llamacloudprod
+package llamacloud
 
 import (
 	"context"
@@ -277,14 +277,14 @@ func (BetaChatGetResponseEventUserInput) implBetaChatGetResponseEventUnion()    
 // Use the following switch statement to find the correct variant
 //
 //	switch variant := BetaChatGetResponseEventUnion.AsAny().(type) {
-//	case llamacloudprod.BetaChatGetResponseEventStop:
-//	case llamacloudprod.BetaChatGetResponseEventTextDelta:
-//	case llamacloudprod.BetaChatGetResponseEventText:
-//	case llamacloudprod.BetaChatGetResponseEventThinkingDelta:
-//	case llamacloudprod.BetaChatGetResponseEventThinking:
-//	case llamacloudprod.BetaChatGetResponseEventToolCall:
-//	case llamacloudprod.BetaChatGetResponseEventToolResult:
-//	case llamacloudprod.BetaChatGetResponseEventUserInput:
+//	case llamacloud.BetaChatGetResponseEventStop:
+//	case llamacloud.BetaChatGetResponseEventTextDelta:
+//	case llamacloud.BetaChatGetResponseEventText:
+//	case llamacloud.BetaChatGetResponseEventThinkingDelta:
+//	case llamacloud.BetaChatGetResponseEventThinking:
+//	case llamacloud.BetaChatGetResponseEventToolCall:
+//	case llamacloud.BetaChatGetResponseEventToolResult:
+//	case llamacloud.BetaChatGetResponseEventUserInput:
 //	default:
 //	  fmt.Errorf("no variant present")
 //	}

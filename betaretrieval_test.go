@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-package llamacloudprod_test
+package llamacloud_test
 
 import (
 	"context"
@@ -22,45 +22,45 @@ func TestBetaRetrievalGetWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := llamacloudprod.NewClient(
+	client := llamacloud.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Beta.Retrieval.Get(context.TODO(), llamacloudprod.BetaRetrievalGetParams{
+	_, err := client.Beta.Retrieval.Get(context.TODO(), llamacloud.BetaRetrievalGetParams{
 		IndexID:        "idx-abc123",
 		Query:          "What are the key findings?",
-		OrganizationID: llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		ProjectID:      llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		CustomFilters: map[string]*llamacloudprod.BetaRetrievalGetParamsCustomFilterUnion{
+		OrganizationID: llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		ProjectID:      llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		CustomFilters: map[string]*llamacloud.BetaRetrievalGetParamsCustomFilterUnion{
 			"foo": {
-				OfFilterTypeUnionStrIntBoolFloat: &llamacloudprod.BetaRetrievalGetParamsCustomFilterFilterTypeUnionStrIntBoolFloat{
+				OfFilterTypeUnionStrIntBoolFloat: &llamacloud.BetaRetrievalGetParamsCustomFilterFilterTypeUnionStrIntBoolFloat{
 					Operator: "eq",
-					Value: llamacloudprod.BetaRetrievalGetParamsCustomFilterFilterTypeUnionStrIntBoolFloatValueUnion{
-						OfString: llamacloudprod.String("string"),
+					Value: llamacloud.BetaRetrievalGetParamsCustomFilterFilterTypeUnionStrIntBoolFloatValueUnion{
+						OfString: llamacloud.String("string"),
 					},
 				},
 			},
 		},
-		FullTextPipelineWeight: llamacloudprod.Float(0),
-		NumCandidates:          llamacloudprod.Int(0),
-		Rerank: llamacloudprod.BetaRetrievalGetParamsRerank{
-			Enabled: llamacloudprod.Bool(true),
-			TopN:    llamacloudprod.Int(5),
+		FullTextPipelineWeight: llamacloud.Float(0),
+		NumCandidates:          llamacloud.Int(0),
+		Rerank: llamacloud.BetaRetrievalGetParamsRerank{
+			Enabled: llamacloud.Bool(true),
+			TopN:    llamacloud.Int(5),
 		},
-		ScoreThreshold: llamacloudprod.Float(0),
-		StaticFilters: llamacloudprod.BetaRetrievalGetParamsStaticFilters{
-			ParsedDirectoryFileID: llamacloudprod.BetaRetrievalGetParamsStaticFiltersParsedDirectoryFileID{
+		ScoreThreshold: llamacloud.Float(0),
+		StaticFilters: llamacloud.BetaRetrievalGetParamsStaticFilters{
+			ParsedDirectoryFileID: llamacloud.BetaRetrievalGetParamsStaticFiltersParsedDirectoryFileID{
 				Operator: "eq",
-				Value: llamacloudprod.BetaRetrievalGetParamsStaticFiltersParsedDirectoryFileIDValueUnion{
-					OfString: llamacloudprod.String("string"),
+				Value: llamacloud.BetaRetrievalGetParamsStaticFiltersParsedDirectoryFileIDValueUnion{
+					OfString: llamacloud.String("string"),
 				},
 			},
 		},
-		TopK:                 llamacloudprod.Int(10),
-		VectorPipelineWeight: llamacloudprod.Float(0),
+		TopK:                 llamacloud.Int(10),
+		VectorPipelineWeight: llamacloud.Float(0),
 	})
 	if err != nil {
-		var apierr *llamacloudprod.Error
+		var apierr *llamacloud.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -77,21 +77,21 @@ func TestBetaRetrievalFindWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := llamacloudprod.NewClient(
+	client := llamacloud.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Beta.Retrieval.Find(context.TODO(), llamacloudprod.BetaRetrievalFindParams{
+	_, err := client.Beta.Retrieval.Find(context.TODO(), llamacloud.BetaRetrievalFindParams{
 		IndexID:          "idx-abc123",
-		OrganizationID:   llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		ProjectID:        llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		FileName:         llamacloudprod.String("file_name"),
-		FileNameContains: llamacloudprod.String("file_name_contains"),
-		PageSize:         llamacloudprod.Int(0),
-		PageToken:        llamacloudprod.String("page_token"),
+		OrganizationID:   llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		ProjectID:        llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		FileName:         llamacloud.String("file_name"),
+		FileNameContains: llamacloud.String("file_name_contains"),
+		PageSize:         llamacloud.Int(0),
+		PageToken:        llamacloud.String("page_token"),
 	})
 	if err != nil {
-		var apierr *llamacloudprod.Error
+		var apierr *llamacloud.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -108,22 +108,22 @@ func TestBetaRetrievalGrepWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := llamacloudprod.NewClient(
+	client := llamacloud.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Beta.Retrieval.Grep(context.TODO(), llamacloudprod.BetaRetrievalGrepParams{
+	_, err := client.Beta.Retrieval.Grep(context.TODO(), llamacloud.BetaRetrievalGrepParams{
 		FileID:         "file_id",
 		IndexID:        "idx-abc123",
 		Pattern:        "revenue|profit",
-		OrganizationID: llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		ProjectID:      llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		ContextChars:   llamacloudprod.Int(0),
-		PageSize:       llamacloudprod.Int(0),
-		PageToken:      llamacloudprod.String("page_token"),
+		OrganizationID: llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		ProjectID:      llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		ContextChars:   llamacloud.Int(0),
+		PageSize:       llamacloud.Int(0),
+		PageToken:      llamacloud.String("page_token"),
 	})
 	if err != nil {
-		var apierr *llamacloudprod.Error
+		var apierr *llamacloud.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -140,20 +140,20 @@ func TestBetaRetrievalReadWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := llamacloudprod.NewClient(
+	client := llamacloud.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Beta.Retrieval.Read(context.TODO(), llamacloudprod.BetaRetrievalReadParams{
+	_, err := client.Beta.Retrieval.Read(context.TODO(), llamacloud.BetaRetrievalReadParams{
 		FileID:         "file_id",
 		IndexID:        "idx-abc123",
-		OrganizationID: llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		ProjectID:      llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		MaxLength:      llamacloudprod.Int(0),
-		Offset:         llamacloudprod.Int(0),
+		OrganizationID: llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		ProjectID:      llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		MaxLength:      llamacloud.Int(0),
+		Offset:         llamacloud.Int(0),
 	})
 	if err != nil {
-		var apierr *llamacloudprod.Error
+		var apierr *llamacloud.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}

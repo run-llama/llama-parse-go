@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-package llamacloudprod_test
+package llamacloud_test
 
 import (
 	"context"
@@ -23,15 +23,15 @@ func TestExtractNewWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := llamacloudprod.NewClient(
+	client := llamacloud.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Extract.New(context.TODO(), llamacloudprod.ExtractNewParams{
-		ExtractV2JobCreate: llamacloudprod.ExtractV2JobCreateParam{
+	_, err := client.Extract.New(context.TODO(), llamacloud.ExtractNewParams{
+		ExtractV2JobCreate: llamacloud.ExtractV2JobCreateParam{
 			FileInput: "dfl-aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
-			Configuration: llamacloudprod.ExtractConfigurationParam{
-				DataSchema: map[string]*llamacloudprod.ExtractConfigurationDataSchemaUnionParam{
+			Configuration: llamacloud.ExtractConfigurationParam{
+				DataSchema: map[string]*llamacloud.ExtractConfigurationDataSchemaUnionParam{
 					"properties": {
 						OfAnyMap: map[string]any{
 							"total_amount": "bar",
@@ -42,36 +42,36 @@ func TestExtractNewWithOptionalParams(t *testing.T) {
 						OfAnyArray: []any{"total_amount", "vendor_name"},
 					},
 					"type": {
-						OfString: llamacloudprod.String("object"),
+						OfString: llamacloud.String("object"),
 					},
 				},
-				CiteSources:      llamacloudprod.Bool(true),
-				ConfidenceScores: llamacloudprod.Bool(true),
-				ExtractionTarget: llamacloudprod.ExtractConfigurationExtractionTargetPerDoc,
-				MaxPages:         llamacloudprod.Int(10),
-				ParseConfigID:    llamacloudprod.String("cfg-11111111-2222-3333-4444-555555555555"),
-				ParseTier:        llamacloudprod.String("fast"),
-				SystemPrompt:     llamacloudprod.String("Extract all monetary values in USD. If a currency is not specified, assume USD."),
-				TargetPages:      llamacloudprod.String("1,3,5-7"),
-				Tier:             llamacloudprod.ExtractConfigurationTierCostEffective,
-				Version:          llamacloudprod.String("latest"),
+				CiteSources:      llamacloud.Bool(true),
+				ConfidenceScores: llamacloud.Bool(true),
+				ExtractionTarget: llamacloud.ExtractConfigurationExtractionTargetPerDoc,
+				MaxPages:         llamacloud.Int(10),
+				ParseConfigID:    llamacloud.String("cfg-11111111-2222-3333-4444-555555555555"),
+				ParseTier:        llamacloud.String("fast"),
+				SystemPrompt:     llamacloud.String("Extract all monetary values in USD. If a currency is not specified, assume USD."),
+				TargetPages:      llamacloud.String("1,3,5-7"),
+				Tier:             llamacloud.ExtractConfigurationTierCostEffective,
+				Version:          llamacloud.String("latest"),
 			},
-			ConfigurationID: llamacloudprod.String("cfg-11111111-2222-3333-4444-555555555555"),
-			WebhookConfigurations: []llamacloudprod.ExtractV2JobCreateWebhookConfigurationParam{{
+			ConfigurationID: llamacloud.String("cfg-11111111-2222-3333-4444-555555555555"),
+			WebhookConfigurations: []llamacloud.ExtractV2JobCreateWebhookConfigurationParam{{
 				WebhookEvents: []string{"parse.success", "parse.error"},
 				WebhookHeaders: map[string]string{
 					"Authorization": "Bearer sk-...",
 				},
-				WebhookOutputFormat:  llamacloudprod.String("json"),
-				WebhookSigningSecret: llamacloudprod.String("whsec_..."),
-				WebhookURL:           llamacloudprod.String("https://example.com/webhooks/llamacloud"),
+				WebhookOutputFormat:  llamacloud.String("json"),
+				WebhookSigningSecret: llamacloud.String("whsec_..."),
+				WebhookURL:           llamacloud.String("https://example.com/webhooks/llamacloud"),
 			}},
 		},
-		OrganizationID: llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		ProjectID:      llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		OrganizationID: llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		ProjectID:      llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 	})
 	if err != nil {
-		var apierr *llamacloudprod.Error
+		var apierr *llamacloud.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -88,27 +88,27 @@ func TestExtractListWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := llamacloudprod.NewClient(
+	client := llamacloud.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Extract.List(context.TODO(), llamacloudprod.ExtractListParams{
-		ConfigurationID:     llamacloudprod.String("cfg-11111111-2222-3333-4444-555555555555"),
-		CreatedAtOnOrAfter:  llamacloudprod.Time(time.Now()),
-		CreatedAtOnOrBefore: llamacloudprod.Time(time.Now()),
-		DocumentInputType:   llamacloudprod.String("document_input_type"),
-		DocumentInputValue:  llamacloudprod.String("document_input_value"),
+	_, err := client.Extract.List(context.TODO(), llamacloud.ExtractListParams{
+		ConfigurationID:     llamacloud.String("cfg-11111111-2222-3333-4444-555555555555"),
+		CreatedAtOnOrAfter:  llamacloud.Time(time.Now()),
+		CreatedAtOnOrBefore: llamacloud.Time(time.Now()),
+		DocumentInputType:   llamacloud.String("document_input_type"),
+		DocumentInputValue:  llamacloud.String("document_input_value"),
 		Expand:              []string{"string"},
-		FileInput:           llamacloudprod.String("file_input"),
+		FileInput:           llamacloud.String("file_input"),
 		JobIDs:              []string{"string", "string"},
-		OrganizationID:      llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		PageSize:            llamacloudprod.Int(0),
-		PageToken:           llamacloudprod.String("page_token"),
-		ProjectID:           llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		Status:              llamacloudprod.ExtractListParamsStatusCancelled,
+		OrganizationID:      llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		PageSize:            llamacloud.Int(0),
+		PageToken:           llamacloud.String("page_token"),
+		ProjectID:           llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		Status:              llamacloud.ExtractListParamsStatusCancelled,
 	})
 	if err != nil {
-		var apierr *llamacloudprod.Error
+		var apierr *llamacloud.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -125,20 +125,20 @@ func TestExtractDeleteWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := llamacloudprod.NewClient(
+	client := llamacloud.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Extract.Delete(
 		context.TODO(),
 		"job_id",
-		llamacloudprod.ExtractDeleteParams{
-			OrganizationID: llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-			ProjectID:      llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		llamacloud.ExtractDeleteParams{
+			OrganizationID: llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+			ProjectID:      llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		},
 	)
 	if err != nil {
-		var apierr *llamacloudprod.Error
+		var apierr *llamacloud.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -155,28 +155,28 @@ func TestExtractGenerateSchemaWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := llamacloudprod.NewClient(
+	client := llamacloud.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Extract.GenerateSchema(context.TODO(), llamacloudprod.ExtractGenerateSchemaParams{
-		ExtractV2SchemaGenerateRequest: llamacloudprod.ExtractV2SchemaGenerateRequestParam{
-			DataSchema: map[string]*llamacloudprod.ExtractV2SchemaGenerateRequestDataSchemaUnionParam{
+	_, err := client.Extract.GenerateSchema(context.TODO(), llamacloud.ExtractGenerateSchemaParams{
+		ExtractV2SchemaGenerateRequest: llamacloud.ExtractV2SchemaGenerateRequestParam{
+			DataSchema: map[string]*llamacloud.ExtractV2SchemaGenerateRequestDataSchemaUnionParam{
 				"foo": {
 					OfAnyMap: map[string]any{
 						"foo": "bar",
 					},
 				},
 			},
-			FileID: llamacloudprod.String("dfl-aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"),
-			Name:   llamacloudprod.String("invoice_extraction"),
-			Prompt: llamacloudprod.String("Extract vendor name, invoice number, date, line items with descriptions and amounts, and total amount from invoices."),
+			FileID: llamacloud.String("dfl-aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"),
+			Name:   llamacloud.String("invoice_extraction"),
+			Prompt: llamacloud.String("Extract vendor name, invoice number, date, line items with descriptions and amounts, and total amount from invoices."),
 		},
-		OrganizationID: llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		ProjectID:      llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		OrganizationID: llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		ProjectID:      llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 	})
 	if err != nil {
-		var apierr *llamacloudprod.Error
+		var apierr *llamacloud.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -193,21 +193,21 @@ func TestExtractGetWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := llamacloudprod.NewClient(
+	client := llamacloud.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Extract.Get(
 		context.TODO(),
 		"job_id",
-		llamacloudprod.ExtractGetParams{
+		llamacloud.ExtractGetParams{
 			Expand:         []string{"string"},
-			OrganizationID: llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-			ProjectID:      llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+			OrganizationID: llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+			ProjectID:      llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		},
 	)
 	if err != nil {
-		var apierr *llamacloudprod.Error
+		var apierr *llamacloud.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -224,13 +224,13 @@ func TestExtractValidateSchema(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := llamacloudprod.NewClient(
+	client := llamacloud.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Extract.ValidateSchema(context.TODO(), llamacloudprod.ExtractValidateSchemaParams{
-		ExtractV2SchemaValidateRequest: llamacloudprod.ExtractV2SchemaValidateRequestParam{
-			DataSchema: map[string]*llamacloudprod.ExtractV2SchemaValidateRequestDataSchemaUnionParam{
+	_, err := client.Extract.ValidateSchema(context.TODO(), llamacloud.ExtractValidateSchemaParams{
+		ExtractV2SchemaValidateRequest: llamacloud.ExtractV2SchemaValidateRequestParam{
+			DataSchema: map[string]*llamacloud.ExtractV2SchemaValidateRequestDataSchemaUnionParam{
 				"properties": {
 					OfAnyMap: map[string]any{
 						"invoice_number": "bar",
@@ -243,13 +243,13 @@ func TestExtractValidateSchema(t *testing.T) {
 					OfAnyArray: []any{"invoice_number", "total_amount", "vendor_name"},
 				},
 				"type": {
-					OfString: llamacloudprod.String("object"),
+					OfString: llamacloud.String("object"),
 				},
 			},
 		},
 	})
 	if err != nil {
-		var apierr *llamacloudprod.Error
+		var apierr *llamacloud.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}

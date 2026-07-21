@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-package llamacloudprod_test
+package llamacloud_test
 
 import (
 	"context"
@@ -22,20 +22,20 @@ func TestPipelineDocumentNew(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := llamacloudprod.NewClient(
+	client := llamacloud.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Pipelines.Documents.New(
 		context.TODO(),
 		"182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-		llamacloudprod.PipelineDocumentNewParams{
-			Body: []llamacloudprod.CloudDocumentCreateParam{{
+		llamacloud.PipelineDocumentNewParams{
+			Body: []llamacloud.CloudDocumentCreateParam{{
 				Metadata: map[string]any{
 					"foo": "bar",
 				},
 				Text:                      "text",
-				ID:                        llamacloudprod.String("id"),
+				ID:                        llamacloud.String("id"),
 				ExcludedEmbedMetadataKeys: []string{"string"},
 				ExcludedLlmMetadataKeys:   []string{"string"},
 				PagePositions:             []int64{0},
@@ -43,7 +43,7 @@ func TestPipelineDocumentNew(t *testing.T) {
 		},
 	)
 	if err != nil {
-		var apierr *llamacloudprod.Error
+		var apierr *llamacloud.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -60,24 +60,24 @@ func TestPipelineDocumentListWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := llamacloudprod.NewClient(
+	client := llamacloud.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Pipelines.Documents.List(
 		context.TODO(),
 		"182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-		llamacloudprod.PipelineDocumentListParams{
-			FileID:                     llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-			Limit:                      llamacloudprod.Int(0),
-			OnlyAPIDataSourceDocuments: llamacloudprod.Bool(true),
-			OnlyDirectUpload:           llamacloudprod.Bool(true),
-			Skip:                       llamacloudprod.Int(0),
-			StatusRefreshPolicy:        llamacloudprod.PipelineDocumentListParamsStatusRefreshPolicyCached,
+		llamacloud.PipelineDocumentListParams{
+			FileID:                     llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+			Limit:                      llamacloud.Int(0),
+			OnlyAPIDataSourceDocuments: llamacloud.Bool(true),
+			OnlyDirectUpload:           llamacloud.Bool(true),
+			Skip:                       llamacloud.Int(0),
+			StatusRefreshPolicy:        llamacloud.PipelineDocumentListParamsStatusRefreshPolicyCached,
 		},
 	)
 	if err != nil {
-		var apierr *llamacloudprod.Error
+		var apierr *llamacloud.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -94,19 +94,19 @@ func TestPipelineDocumentDelete(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := llamacloudprod.NewClient(
+	client := llamacloud.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
 	err := client.Pipelines.Documents.Delete(
 		context.TODO(),
 		"document_id",
-		llamacloudprod.PipelineDocumentDeleteParams{
+		llamacloud.PipelineDocumentDeleteParams{
 			PipelineID: "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
 		},
 	)
 	if err != nil {
-		var apierr *llamacloudprod.Error
+		var apierr *llamacloud.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -123,19 +123,19 @@ func TestPipelineDocumentGet(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := llamacloudprod.NewClient(
+	client := llamacloud.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Pipelines.Documents.Get(
 		context.TODO(),
 		"document_id",
-		llamacloudprod.PipelineDocumentGetParams{
+		llamacloud.PipelineDocumentGetParams{
 			PipelineID: "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
 		},
 	)
 	if err != nil {
-		var apierr *llamacloudprod.Error
+		var apierr *llamacloud.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -152,19 +152,19 @@ func TestPipelineDocumentGetChunks(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := llamacloudprod.NewClient(
+	client := llamacloud.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Pipelines.Documents.GetChunks(
 		context.TODO(),
 		"document_id",
-		llamacloudprod.PipelineDocumentGetChunksParams{
+		llamacloud.PipelineDocumentGetChunksParams{
 			PipelineID: "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
 		},
 	)
 	if err != nil {
-		var apierr *llamacloudprod.Error
+		var apierr *llamacloud.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -181,19 +181,19 @@ func TestPipelineDocumentGetStatus(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := llamacloudprod.NewClient(
+	client := llamacloud.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Pipelines.Documents.GetStatus(
 		context.TODO(),
 		"document_id",
-		llamacloudprod.PipelineDocumentGetStatusParams{
+		llamacloud.PipelineDocumentGetStatusParams{
 			PipelineID: "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
 		},
 	)
 	if err != nil {
-		var apierr *llamacloudprod.Error
+		var apierr *llamacloud.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -210,19 +210,19 @@ func TestPipelineDocumentSync(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := llamacloudprod.NewClient(
+	client := llamacloud.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Pipelines.Documents.Sync(
 		context.TODO(),
 		"document_id",
-		llamacloudprod.PipelineDocumentSyncParams{
+		llamacloud.PipelineDocumentSyncParams{
 			PipelineID: "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
 		},
 	)
 	if err != nil {
-		var apierr *llamacloudprod.Error
+		var apierr *llamacloud.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -239,20 +239,20 @@ func TestPipelineDocumentUpsert(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := llamacloudprod.NewClient(
+	client := llamacloud.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Pipelines.Documents.Upsert(
 		context.TODO(),
 		"182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-		llamacloudprod.PipelineDocumentUpsertParams{
-			Body: []llamacloudprod.CloudDocumentCreateParam{{
+		llamacloud.PipelineDocumentUpsertParams{
+			Body: []llamacloud.CloudDocumentCreateParam{{
 				Metadata: map[string]any{
 					"foo": "bar",
 				},
 				Text:                      "text",
-				ID:                        llamacloudprod.String("id"),
+				ID:                        llamacloud.String("id"),
 				ExcludedEmbedMetadataKeys: []string{"string"},
 				ExcludedLlmMetadataKeys:   []string{"string"},
 				PagePositions:             []int64{0},
@@ -260,7 +260,7 @@ func TestPipelineDocumentUpsert(t *testing.T) {
 		},
 	)
 	if err != nil {
-		var apierr *llamacloudprod.Error
+		var apierr *llamacloud.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}

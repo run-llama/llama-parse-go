@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-package llamacloudprod_test
+package llamacloud_test
 
 import (
 	"context"
@@ -23,44 +23,44 @@ func TestClassifyNewWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := llamacloudprod.NewClient(
+	client := llamacloud.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Classify.New(context.TODO(), llamacloudprod.ClassifyNewParams{
-		ClassifyCreateRequest: llamacloudprod.ClassifyCreateRequestParam{
-			Configuration: llamacloudprod.ClassifyConfigurationParam{
-				Rules: []llamacloudprod.ClassifyConfigurationRuleParam{{
+	_, err := client.Classify.New(context.TODO(), llamacloud.ClassifyNewParams{
+		ClassifyCreateRequest: llamacloud.ClassifyCreateRequestParam{
+			Configuration: llamacloud.ClassifyConfigurationParam{
+				Rules: []llamacloud.ClassifyConfigurationRuleParam{{
 					Description: "contains invoice number, line items, and total amount",
 					Type:        "invoice",
 				}},
-				Mode: llamacloudprod.ClassifyConfigurationModeFast,
-				ParsingConfiguration: llamacloudprod.ClassifyConfigurationParsingConfigurationParam{
-					Lang:        llamacloudprod.String("en"),
-					MaxPages:    llamacloudprod.Int(10),
-					TargetPages: llamacloudprod.String("1,3,5-7"),
+				Mode: llamacloud.ClassifyConfigurationModeFast,
+				ParsingConfiguration: llamacloud.ClassifyConfigurationParsingConfigurationParam{
+					Lang:        llamacloud.String("en"),
+					MaxPages:    llamacloud.Int(10),
+					TargetPages: llamacloud.String("1,3,5-7"),
 				},
 			},
-			ConfigurationID: llamacloudprod.String("cfg-11111111-2222-3333-4444-555555555555"),
-			FileID:          llamacloudprod.String("dfl-aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"),
-			FileInput:       llamacloudprod.String("dfl-aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"),
-			ParseJobID:      llamacloudprod.String("pjb-aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"),
-			TransactionID:   llamacloudprod.String("tx-unique-idempotency-key"),
-			WebhookConfigurations: []llamacloudprod.ClassifyCreateRequestWebhookConfigurationParam{{
+			ConfigurationID: llamacloud.String("cfg-11111111-2222-3333-4444-555555555555"),
+			FileID:          llamacloud.String("dfl-aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"),
+			FileInput:       llamacloud.String("dfl-aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"),
+			ParseJobID:      llamacloud.String("pjb-aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"),
+			TransactionID:   llamacloud.String("tx-unique-idempotency-key"),
+			WebhookConfigurations: []llamacloud.ClassifyCreateRequestWebhookConfigurationParam{{
 				WebhookEvents: []string{"parse.success", "parse.error"},
 				WebhookHeaders: map[string]string{
 					"Authorization": "Bearer sk-...",
 				},
-				WebhookOutputFormat:  llamacloudprod.String("json"),
-				WebhookSigningSecret: llamacloudprod.String("whsec_..."),
-				WebhookURL:           llamacloudprod.String("https://example.com/webhooks/llamacloud"),
+				WebhookOutputFormat:  llamacloud.String("json"),
+				WebhookSigningSecret: llamacloud.String("whsec_..."),
+				WebhookURL:           llamacloud.String("https://example.com/webhooks/llamacloud"),
 			}},
 		},
-		OrganizationID: llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		ProjectID:      llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		OrganizationID: llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		ProjectID:      llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 	})
 	if err != nil {
-		var apierr *llamacloudprod.Error
+		var apierr *llamacloud.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -77,23 +77,23 @@ func TestClassifyListWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := llamacloudprod.NewClient(
+	client := llamacloud.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Classify.List(context.TODO(), llamacloudprod.ClassifyListParams{
-		ConfigurationID:     llamacloudprod.String("cfg-11111111-2222-3333-4444-555555555555"),
-		CreatedAtOnOrAfter:  llamacloudprod.Time(time.Now()),
-		CreatedAtOnOrBefore: llamacloudprod.Time(time.Now()),
+	_, err := client.Classify.List(context.TODO(), llamacloud.ClassifyListParams{
+		ConfigurationID:     llamacloud.String("cfg-11111111-2222-3333-4444-555555555555"),
+		CreatedAtOnOrAfter:  llamacloud.Time(time.Now()),
+		CreatedAtOnOrBefore: llamacloud.Time(time.Now()),
 		JobIDs:              []string{"string", "string"},
-		OrganizationID:      llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		PageSize:            llamacloudprod.Int(1),
-		PageToken:           llamacloudprod.String("page_token"),
-		ProjectID:           llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		Status:              llamacloudprod.ClassifyListParamsStatusCompleted,
+		OrganizationID:      llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		PageSize:            llamacloud.Int(1),
+		PageToken:           llamacloud.String("page_token"),
+		ProjectID:           llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		Status:              llamacloud.ClassifyListParamsStatusCompleted,
 	})
 	if err != nil {
-		var apierr *llamacloudprod.Error
+		var apierr *llamacloud.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -110,20 +110,20 @@ func TestClassifyGetWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := llamacloudprod.NewClient(
+	client := llamacloud.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Classify.Get(
 		context.TODO(),
 		"job_id",
-		llamacloudprod.ClassifyGetParams{
-			OrganizationID: llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-			ProjectID:      llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		llamacloud.ClassifyGetParams{
+			OrganizationID: llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+			ProjectID:      llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		},
 	)
 	if err != nil {
-		var apierr *llamacloudprod.Error
+		var apierr *llamacloud.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}

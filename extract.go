@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-package llamacloudprod
+package llamacloud
 
 import (
 	"context"
@@ -169,9 +169,10 @@ type ExtractConfiguration struct {
 	// Comma-separated page numbers or ranges to process (1-based). Omit to process all
 	// pages.
 	TargetPages string `json:"target_pages" api:"nullable"`
-	// Extract tier: cost_effective (5 credits/page) or agentic (15 credits/page)
+	// Extract tier: cost_effective (5 credits/page), agentic (15 credits/page), or
+	// agentic_plus (50 credits/page)
 	//
-	// Any of "agentic", "cost_effective".
+	// Any of "agentic", "agentic_plus", "cost_effective".
 	Tier ExtractConfigurationTier `json:"tier"`
 	// Use 'latest' for the latest release for the selected tier or a date string
 	// (YYYY-MM-DD format) to pin to the nearest release at or before that date. Job
@@ -282,11 +283,13 @@ const (
 	ExtractConfigurationExtractionTargetPerTableRow ExtractConfigurationExtractionTarget = "per_table_row"
 )
 
-// Extract tier: cost_effective (5 credits/page) or agentic (15 credits/page)
+// Extract tier: cost_effective (5 credits/page), agentic (15 credits/page), or
+// agentic_plus (50 credits/page)
 type ExtractConfigurationTier string
 
 const (
 	ExtractConfigurationTierAgentic       ExtractConfigurationTier = "agentic"
+	ExtractConfigurationTierAgenticPlus   ExtractConfigurationTier = "agentic_plus"
 	ExtractConfigurationTierCostEffective ExtractConfigurationTier = "cost_effective"
 )
 
@@ -324,9 +327,10 @@ type ExtractConfigurationParam struct {
 	//
 	// Any of "per_doc", "per_page", "per_table_row".
 	ExtractionTarget ExtractConfigurationExtractionTarget `json:"extraction_target,omitzero"`
-	// Extract tier: cost_effective (5 credits/page) or agentic (15 credits/page)
+	// Extract tier: cost_effective (5 credits/page), agentic (15 credits/page), or
+	// agentic_plus (50 credits/page)
 	//
-	// Any of "agentic", "cost_effective".
+	// Any of "agentic", "agentic_plus", "cost_effective".
 	Tier ExtractConfigurationTier `json:"tier,omitzero"`
 	paramObj
 }

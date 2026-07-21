@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-package llamacloudprod
+package llamacloud
 
 import (
 	"context"
@@ -572,6 +572,7 @@ type BetaBatchNewParamsJobConfigBatchParseJobRecordCreateParameters struct {
 	BoundingBox                              param.Opt[string]  `json:"bounding_box,omitzero"`
 	CompactMarkdownTable                     param.Opt[bool]    `json:"compact_markdown_table,omitzero"`
 	ComplementalFormattingInstruction        param.Opt[string]  `json:"complemental_formatting_instruction,omitzero"`
+	ConfidenceScoreEffort                    param.Opt[string]  `json:"confidence_score_effort,omitzero"`
 	ContentGuidelineInstruction              param.Opt[string]  `json:"content_guideline_instruction,omitzero"`
 	ContinuousMode                           param.Opt[bool]    `json:"continuous_mode,omitzero"`
 	DisableImageExtraction                   param.Opt[bool]    `json:"disable_image_extraction,omitzero"`

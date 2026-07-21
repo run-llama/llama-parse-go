@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-package llamacloudprod_test
+package llamacloud_test
 
 import (
 	"context"
@@ -23,23 +23,23 @@ func TestBatchNewWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := llamacloudprod.NewClient(
+	client := llamacloud.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Batches.New(context.TODO(), llamacloudprod.BatchNewParams{
-		Config: llamacloudprod.BatchNewParamsConfig{
-			Job: llamacloudprod.BatchNewParamsConfigJob{
+	_, err := client.Batches.New(context.TODO(), llamacloud.BatchNewParams{
+		Config: llamacloud.BatchNewParamsConfig{
+			Job: llamacloud.BatchNewParamsConfigJob{
 				ConfigurationID: "cfg-PARSE_AGENTIC",
-				Type:            llamacloudprod.BatchNewParamsConfigJobTypeParseV2,
+				Type:            llamacloud.BatchNewParamsConfigJobTypeParseV2,
 			},
 		},
 		SourceDirectoryID: "dir-aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
-		OrganizationID:    llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		ProjectID:         llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		OrganizationID:    llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		ProjectID:         llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 	})
 	if err != nil {
-		var apierr *llamacloudprod.Error
+		var apierr *llamacloud.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -56,22 +56,22 @@ func TestBatchListWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := llamacloudprod.NewClient(
+	client := llamacloud.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Batches.List(context.TODO(), llamacloudprod.BatchListParams{
-		CreatedAtOnOrAfter:  llamacloudprod.Time(time.Now()),
-		CreatedAtOnOrBefore: llamacloudprod.Time(time.Now()),
-		OrganizationID:      llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		PageSize:            llamacloudprod.Int(0),
-		PageToken:           llamacloudprod.String("page_token"),
-		ProjectID:           llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		SourceDirectoryID:   llamacloudprod.String("source_directory_id"),
-		Status:              llamacloudprod.BatchListParamsStatusCancelled,
+	_, err := client.Batches.List(context.TODO(), llamacloud.BatchListParams{
+		CreatedAtOnOrAfter:  llamacloud.Time(time.Now()),
+		CreatedAtOnOrBefore: llamacloud.Time(time.Now()),
+		OrganizationID:      llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		PageSize:            llamacloud.Int(0),
+		PageToken:           llamacloud.String("page_token"),
+		ProjectID:           llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		SourceDirectoryID:   llamacloud.String("source_directory_id"),
+		Status:              llamacloud.BatchListParamsStatusCancelled,
 	})
 	if err != nil {
-		var apierr *llamacloudprod.Error
+		var apierr *llamacloud.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -88,21 +88,21 @@ func TestBatchGetWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := llamacloudprod.NewClient(
+	client := llamacloud.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Batches.Get(
 		context.TODO(),
 		"batch_id",
-		llamacloudprod.BatchGetParams{
+		llamacloud.BatchGetParams{
 			Expand:         []string{"string", "string"},
-			OrganizationID: llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-			ProjectID:      llamacloudprod.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+			OrganizationID: llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+			ProjectID:      llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		},
 	)
 	if err != nil {
-		var apierr *llamacloudprod.Error
+		var apierr *llamacloud.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
