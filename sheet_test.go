@@ -39,6 +39,7 @@ func TestSheetNewWithOptionalParams(t *testing.T) {
 			SheetNames:                 []string{"string"},
 			Specialization:             llamacloud.String("specialization"),
 			TableMergeSensitivity:      llamacloud.SheetsParsingConfigTableMergeSensitivityStrong,
+			Tier:                       llamacloud.SheetsParsingConfigTierAgentic,
 			UseExperimentalProcessing:  llamacloud.Bool(true),
 		},
 		Configuration: llamacloud.SheetsParsingConfigParam{
@@ -49,6 +50,7 @@ func TestSheetNewWithOptionalParams(t *testing.T) {
 			SheetNames:                 []string{"string"},
 			Specialization:             llamacloud.String("specialization"),
 			TableMergeSensitivity:      llamacloud.SheetsParsingConfigTableMergeSensitivityStrong,
+			Tier:                       llamacloud.SheetsParsingConfigTierAgentic,
 			UseExperimentalProcessing:  llamacloud.Bool(true),
 		},
 		ConfigurationID: llamacloud.String("cfg-11111111-2222-3333-4444-555555555555"),
