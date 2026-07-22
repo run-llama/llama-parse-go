@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.4.0](https://github.com/run-llama/llama-parse-go/compare/v1.3.0...v1.4.0) (2026-07-22)
+
+
+### Features
+
+* **extract:** report num_pages_billed on extract job usage ([#22323](https://github.com/run-llama/llama-parse-go/issues/22323)) ([673894d](https://github.com/run-llama/llama-parse-go/commit/673894d764b14d3eeeb437028ffa574f7f07974d))
+* **sheets:** cost_effective/agentic tiers and per-region billing ([#22508](https://github.com/run-llama/llama-parse-go/issues/22508)) ([e156f54](https://github.com/run-llama/llama-parse-go/commit/e156f54b7f1d083873f3da7a24f3091e49e9e358))
+
 ## [1.3.0](https://github.com/run-llama/llama-parse-go/compare/v1.2.0...v1.3.0) (2026-07-21)
 
 
