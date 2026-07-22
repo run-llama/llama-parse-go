@@ -514,25 +514,31 @@ type ConfigurationCreateParametersSpreadsheetV1 struct {
 	// Return a flattened dataframe when a detected table is recognized as
 	// hierarchical.
 	FlattenHierarchicalTables bool `json:"flatten_hierarchical_tables"`
-	// Whether to generate additional metadata (title, description) for each extracted
-	// region.
+	// Deprecated: controlled by `tier`. Whether to generate additional metadata
+	// (title, description) for each extracted region. Honored only on `agentic`.
 	GenerateAdditionalMetadata bool `json:"generate_additional_metadata"`
 	// Whether to include hidden cells when extracting regions from the spreadsheet.
 	IncludeHiddenCells bool `json:"include_hidden_cells"`
 	// The names of the sheets to extract regions from. If empty, all sheets will be
 	// processed.
 	SheetNames []string `json:"sheet_names" api:"nullable"`
-	// Optional specialization mode for domain-specific extraction. Supported values:
-	// 'financial-standard', 'financial-enhanced', 'financial-precise'. Default None
-	// uses the general-purpose pipeline.
+	// Deprecated: controlled by `tier`. Optional specialization mode for
+	// domain-specific extraction. Supported values: 'financial-standard',
+	// 'financial-enhanced', 'financial-precise'. Default None uses the general-purpose
+	// pipeline. Honored only on `agentic`.
 	Specialization string `json:"specialization" api:"nullable"`
-	// Influences how likely similar-looking regions are merged into a single table.
-	// Useful for spreadsheets that either have sparse tables (strong merging) or many
-	// distinct tables close together (weak merging).
+	// Deprecated: controlled by `tier`. Influences how likely similar-looking regions
+	// are merged into a single table. Honored only on `agentic`.
 	//
 	// Any of "strong", "weak".
 	TableMergeSensitivity string `json:"table_merge_sensitivity"`
-	// Enables experimental processing. Accuracy may be impacted.
+	// Spreadsheet extraction tier. `cost_effective` uses the rule-based/ML-only
+	// pipeline; `agentic` uses the full pipeline.
+	//
+	// Any of "agentic", "cost_effective".
+	Tier string `json:"tier"`
+	// Deprecated: controlled by `tier`. Enables experimental processing. Honored only
+	// on `agentic`.
 	UseExperimentalProcessing bool `json:"use_experimental_processing"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
@@ -544,6 +550,7 @@ type ConfigurationCreateParametersSpreadsheetV1 struct {
 		SheetNames                 respjson.Field
 		Specialization             respjson.Field
 		TableMergeSensitivity      respjson.Field
+		Tier                       respjson.Field
 		UseExperimentalProcessing  respjson.Field
 		ExtraFields                map[string]respjson.Field
 		raw                        string
@@ -619,29 +626,35 @@ type ConfigurationCreateParametersSpreadsheetV1Param struct {
 	// A1 notation of the range to extract a single region from. If None, the entire
 	// sheet is used.
 	ExtractionRange param.Opt[string] `json:"extraction_range,omitzero"`
-	// Optional specialization mode for domain-specific extraction. Supported values:
-	// 'financial-standard', 'financial-enhanced', 'financial-precise'. Default None
-	// uses the general-purpose pipeline.
+	// Deprecated: controlled by `tier`. Optional specialization mode for
+	// domain-specific extraction. Supported values: 'financial-standard',
+	// 'financial-enhanced', 'financial-precise'. Default None uses the general-purpose
+	// pipeline. Honored only on `agentic`.
 	Specialization param.Opt[string] `json:"specialization,omitzero"`
 	// Return a flattened dataframe when a detected table is recognized as
 	// hierarchical.
 	FlattenHierarchicalTables param.Opt[bool] `json:"flatten_hierarchical_tables,omitzero"`
-	// Whether to generate additional metadata (title, description) for each extracted
-	// region.
+	// Deprecated: controlled by `tier`. Whether to generate additional metadata
+	// (title, description) for each extracted region. Honored only on `agentic`.
 	GenerateAdditionalMetadata param.Opt[bool] `json:"generate_additional_metadata,omitzero"`
 	// Whether to include hidden cells when extracting regions from the spreadsheet.
 	IncludeHiddenCells param.Opt[bool] `json:"include_hidden_cells,omitzero"`
-	// Enables experimental processing. Accuracy may be impacted.
+	// Deprecated: controlled by `tier`. Enables experimental processing. Honored only
+	// on `agentic`.
 	UseExperimentalProcessing param.Opt[bool] `json:"use_experimental_processing,omitzero"`
 	// The names of the sheets to extract regions from. If empty, all sheets will be
 	// processed.
 	SheetNames []string `json:"sheet_names,omitzero"`
-	// Influences how likely similar-looking regions are merged into a single table.
-	// Useful for spreadsheets that either have sparse tables (strong merging) or many
-	// distinct tables close together (weak merging).
+	// Deprecated: controlled by `tier`. Influences how likely similar-looking regions
+	// are merged into a single table. Honored only on `agentic`.
 	//
 	// Any of "strong", "weak".
 	TableMergeSensitivity string `json:"table_merge_sensitivity,omitzero"`
+	// Spreadsheet extraction tier. `cost_effective` uses the rule-based/ML-only
+	// pipeline; `agentic` uses the full pipeline.
+	//
+	// Any of "agentic", "cost_effective".
+	Tier string `json:"tier,omitzero"`
 	// Product type.
 	//
 	// This field can be elided, and will marshal its zero value as "spreadsheet_v1".
@@ -660,6 +673,9 @@ func (r *ConfigurationCreateParametersSpreadsheetV1Param) UnmarshalJSON(data []b
 func init() {
 	apijson.RegisterFieldValidator[ConfigurationCreateParametersSpreadsheetV1Param](
 		"table_merge_sensitivity", "strong", "weak",
+	)
+	apijson.RegisterFieldValidator[ConfigurationCreateParametersSpreadsheetV1Param](
+		"tier", "agentic", "cost_effective",
 	)
 }
 
@@ -918,25 +934,31 @@ type ConfigurationResponseParametersSpreadsheetV1 struct {
 	// Return a flattened dataframe when a detected table is recognized as
 	// hierarchical.
 	FlattenHierarchicalTables bool `json:"flatten_hierarchical_tables"`
-	// Whether to generate additional metadata (title, description) for each extracted
-	// region.
+	// Deprecated: controlled by `tier`. Whether to generate additional metadata
+	// (title, description) for each extracted region. Honored only on `agentic`.
 	GenerateAdditionalMetadata bool `json:"generate_additional_metadata"`
 	// Whether to include hidden cells when extracting regions from the spreadsheet.
 	IncludeHiddenCells bool `json:"include_hidden_cells"`
 	// The names of the sheets to extract regions from. If empty, all sheets will be
 	// processed.
 	SheetNames []string `json:"sheet_names" api:"nullable"`
-	// Optional specialization mode for domain-specific extraction. Supported values:
-	// 'financial-standard', 'financial-enhanced', 'financial-precise'. Default None
-	// uses the general-purpose pipeline.
+	// Deprecated: controlled by `tier`. Optional specialization mode for
+	// domain-specific extraction. Supported values: 'financial-standard',
+	// 'financial-enhanced', 'financial-precise'. Default None uses the general-purpose
+	// pipeline. Honored only on `agentic`.
 	Specialization string `json:"specialization" api:"nullable"`
-	// Influences how likely similar-looking regions are merged into a single table.
-	// Useful for spreadsheets that either have sparse tables (strong merging) or many
-	// distinct tables close together (weak merging).
+	// Deprecated: controlled by `tier`. Influences how likely similar-looking regions
+	// are merged into a single table. Honored only on `agentic`.
 	//
 	// Any of "strong", "weak".
 	TableMergeSensitivity string `json:"table_merge_sensitivity"`
-	// Enables experimental processing. Accuracy may be impacted.
+	// Spreadsheet extraction tier. `cost_effective` uses the rule-based/ML-only
+	// pipeline; `agentic` uses the full pipeline.
+	//
+	// Any of "agentic", "cost_effective".
+	Tier string `json:"tier"`
+	// Deprecated: controlled by `tier`. Enables experimental processing. Honored only
+	// on `agentic`.
 	UseExperimentalProcessing bool `json:"use_experimental_processing"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
@@ -948,6 +970,7 @@ type ConfigurationResponseParametersSpreadsheetV1 struct {
 		SheetNames                 respjson.Field
 		Specialization             respjson.Field
 		TableMergeSensitivity      respjson.Field
+		Tier                       respjson.Field
 		UseExperimentalProcessing  respjson.Field
 		ExtraFields                map[string]respjson.Field
 		raw                        string
@@ -4595,29 +4618,35 @@ type ConfigurationUpdateParamsParametersSpreadsheetV1 struct {
 	// A1 notation of the range to extract a single region from. If None, the entire
 	// sheet is used.
 	ExtractionRange param.Opt[string] `json:"extraction_range,omitzero"`
-	// Optional specialization mode for domain-specific extraction. Supported values:
-	// 'financial-standard', 'financial-enhanced', 'financial-precise'. Default None
-	// uses the general-purpose pipeline.
+	// Deprecated: controlled by `tier`. Optional specialization mode for
+	// domain-specific extraction. Supported values: 'financial-standard',
+	// 'financial-enhanced', 'financial-precise'. Default None uses the general-purpose
+	// pipeline. Honored only on `agentic`.
 	Specialization param.Opt[string] `json:"specialization,omitzero"`
 	// Return a flattened dataframe when a detected table is recognized as
 	// hierarchical.
 	FlattenHierarchicalTables param.Opt[bool] `json:"flatten_hierarchical_tables,omitzero"`
-	// Whether to generate additional metadata (title, description) for each extracted
-	// region.
+	// Deprecated: controlled by `tier`. Whether to generate additional metadata
+	// (title, description) for each extracted region. Honored only on `agentic`.
 	GenerateAdditionalMetadata param.Opt[bool] `json:"generate_additional_metadata,omitzero"`
 	// Whether to include hidden cells when extracting regions from the spreadsheet.
 	IncludeHiddenCells param.Opt[bool] `json:"include_hidden_cells,omitzero"`
-	// Enables experimental processing. Accuracy may be impacted.
+	// Deprecated: controlled by `tier`. Enables experimental processing. Honored only
+	// on `agentic`.
 	UseExperimentalProcessing param.Opt[bool] `json:"use_experimental_processing,omitzero"`
 	// The names of the sheets to extract regions from. If empty, all sheets will be
 	// processed.
 	SheetNames []string `json:"sheet_names,omitzero"`
-	// Influences how likely similar-looking regions are merged into a single table.
-	// Useful for spreadsheets that either have sparse tables (strong merging) or many
-	// distinct tables close together (weak merging).
+	// Deprecated: controlled by `tier`. Influences how likely similar-looking regions
+	// are merged into a single table. Honored only on `agentic`.
 	//
 	// Any of "strong", "weak".
 	TableMergeSensitivity string `json:"table_merge_sensitivity,omitzero"`
+	// Spreadsheet extraction tier. `cost_effective` uses the rule-based/ML-only
+	// pipeline; `agentic` uses the full pipeline.
+	//
+	// Any of "agentic", "cost_effective".
+	Tier string `json:"tier,omitzero"`
 	// Product type.
 	//
 	// This field can be elided, and will marshal its zero value as "spreadsheet_v1".
@@ -4636,6 +4665,9 @@ func (r *ConfigurationUpdateParamsParametersSpreadsheetV1) UnmarshalJSON(data []
 func init() {
 	apijson.RegisterFieldValidator[ConfigurationUpdateParamsParametersSpreadsheetV1](
 		"table_merge_sensitivity", "strong", "weak",
+	)
+	apijson.RegisterFieldValidator[ConfigurationUpdateParamsParametersSpreadsheetV1](
+		"tier", "agentic", "cost_effective",
 	)
 }
 

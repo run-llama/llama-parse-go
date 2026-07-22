@@ -392,10 +392,13 @@ func (r *ExtractJobMetadata) UnmarshalJSON(data []byte) error {
 
 // Extraction usage metrics.
 type ExtractJobUsage struct {
+	// Number of effective pages billed
+	NumPagesBilled int64 `json:"num_pages_billed" api:"nullable"`
 	// Number of pages extracted
 	NumPagesExtracted int64 `json:"num_pages_extracted" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
+		NumPagesBilled    respjson.Field
 		NumPagesExtracted respjson.Field
 		ExtraFields       map[string]respjson.Field
 		raw               string
