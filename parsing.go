@@ -2711,7 +2711,7 @@ type ParsingNewParams struct {
 	// Current `latest` by tier:
 	//
 	// - `fast`: `2026-06-15`
-	// - `cost_effective`: `2026-06-26`
+	// - `cost_effective`: `2026-07-23`
 	// - `agentic`: `2026-07-23`
 	// - `agentic_plus`: `2026-07-08`
 	//
@@ -2807,7 +2807,7 @@ const (
 // Current `latest` by tier:
 //
 // - `fast`: `2026-06-15`
-// - `cost_effective`: `2026-06-26`
+// - `cost_effective`: `2026-07-23`
 // - `agentic`: `2026-07-23`
 // - `agentic_plus`: `2026-07-08`
 //
@@ -2818,7 +2818,6 @@ const (
 	ParsingNewParamsVersionLatest     ParsingNewParamsVersion = "latest"
 	ParsingNewParamsVersion2026_07_23 ParsingNewParamsVersion = "2026-07-23"
 	ParsingNewParamsVersion2026_07_08 ParsingNewParamsVersion = "2026-07-08"
-	ParsingNewParamsVersion2026_06_26 ParsingNewParamsVersion = "2026-06-26"
 	ParsingNewParamsVersion2026_06_15 ParsingNewParamsVersion = "2026-06-15"
 )
 
@@ -3398,7 +3397,7 @@ type ParsingNewParamsProcessingOptionsAutoModeConfigurationParsingConf struct {
 	// Current `latest` by tier:
 	//
 	// - `fast`: `2026-06-15`
-	// - `cost_effective`: `2026-06-26`
+	// - `cost_effective`: `2026-07-23`
 	// - `agentic`: `2026-07-23`
 	// - `agentic_plus`: `2026-07-08`
 	//

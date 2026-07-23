@@ -1246,7 +1246,7 @@ type ParseV2ParametersResp struct {
 	// Current `latest` by tier:
 	//
 	// - `fast`: `2026-06-15`
-	// - `cost_effective`: `2026-06-26`
+	// - `cost_effective`: `2026-07-23`
 	// - `agentic`: `2026-07-23`
 	// - `agentic_plus`: `2026-07-08`
 	//
@@ -1344,7 +1344,7 @@ const (
 // Current `latest` by tier:
 //
 // - `fast`: `2026-06-15`
-// - `cost_effective`: `2026-06-26`
+// - `cost_effective`: `2026-07-23`
 // - `agentic`: `2026-07-23`
 // - `agentic_plus`: `2026-07-08`
 //
@@ -1355,7 +1355,6 @@ const (
 	ParseV2ParametersVersionLatest     ParseV2ParametersVersion = "latest"
 	ParseV2ParametersVersion2026_07_23 ParseV2ParametersVersion = "2026-07-23"
 	ParseV2ParametersVersion2026_07_08 ParseV2ParametersVersion = "2026-07-08"
-	ParseV2ParametersVersion2026_06_26 ParseV2ParametersVersion = "2026-06-26"
 	ParseV2ParametersVersion2026_06_15 ParseV2ParametersVersion = "2026-06-15"
 )
 
@@ -2055,7 +2054,7 @@ type ParseV2ParametersProcessingOptionsAutoModeConfigurationParsingConfResp stru
 	// Current `latest` by tier:
 	//
 	// - `fast`: `2026-06-15`
-	// - `cost_effective`: `2026-06-26`
+	// - `cost_effective`: `2026-07-23`
 	// - `agentic`: `2026-07-23`
 	// - `agentic_plus`: `2026-07-08`
 	//
@@ -3161,7 +3160,7 @@ type ParseV2Parameters struct {
 	// Current `latest` by tier:
 	//
 	// - `fast`: `2026-06-15`
-	// - `cost_effective`: `2026-06-26`
+	// - `cost_effective`: `2026-07-23`
 	// - `agentic`: `2026-07-23`
 	// - `agentic_plus`: `2026-07-08`
 	//
@@ -3795,7 +3794,7 @@ type ParseV2ParametersProcessingOptionsAutoModeConfigurationParsingConf struct {
 	// Current `latest` by tier:
 	//
 	// - `fast`: `2026-06-15`
-	// - `cost_effective`: `2026-06-26`
+	// - `cost_effective`: `2026-07-23`
 	// - `agentic`: `2026-07-23`
 	// - `agentic_plus`: `2026-07-08`
 	//
