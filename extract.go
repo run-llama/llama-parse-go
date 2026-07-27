@@ -670,6 +670,8 @@ type ExtractV2JobCreateParam struct {
 	FileInput string `json:"file_input" api:"required"`
 	// Saved configuration ID
 	ConfigurationID param.Opt[string] `json:"configuration_id,omitzero"`
+	// IDs of saved webhook configurations to notify for this job.
+	WebhookConfigurationIDs []string `json:"webhook_configuration_ids,omitzero"`
 	// Outbound webhook endpoints to notify on job status changes
 	WebhookConfigurations []ExtractV2JobCreateWebhookConfigurationParam `json:"webhook_configurations,omitzero"`
 	// Extract configuration combining parse and extract settings.

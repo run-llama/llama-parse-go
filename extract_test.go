@@ -56,7 +56,8 @@ func TestExtractNewWithOptionalParams(t *testing.T) {
 				Tier:             llamacloud.ExtractConfigurationTierCostEffective,
 				Version:          llamacloud.String("latest"),
 			},
-			ConfigurationID: llamacloud.String("cfg-11111111-2222-3333-4444-555555555555"),
+			ConfigurationID:         llamacloud.String("cfg-11111111-2222-3333-4444-555555555555"),
+			WebhookConfigurationIDs: []string{"whc-...", "whc-..."},
 			WebhookConfigurations: []llamacloud.ExtractV2JobCreateWebhookConfigurationParam{{
 				WebhookEvents: []string{"parse.success", "parse.error"},
 				WebhookHeaders: map[string]string{
