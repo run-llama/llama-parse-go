@@ -53,7 +53,8 @@ func TestSheetNewWithOptionalParams(t *testing.T) {
 			Tier:                       llamacloud.SheetsParsingConfigTierAgentic,
 			UseExperimentalProcessing:  llamacloud.Bool(true),
 		},
-		ConfigurationID: llamacloud.String("cfg-11111111-2222-3333-4444-555555555555"),
+		ConfigurationID:         llamacloud.String("cfg-11111111-2222-3333-4444-555555555555"),
+		WebhookConfigurationIDs: []string{"whc-...", "whc-..."},
 		WebhookConfigurations: []llamacloud.SheetNewParamsWebhookConfiguration{{
 			WebhookEvents: []string{"parse.success", "parse.error"},
 			WebhookHeaders: map[string]string{

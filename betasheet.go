@@ -470,6 +470,8 @@ type BetaSheetNewParams struct {
 	ProjectID      param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
 	// Saved configuration ID
 	ConfigurationID param.Opt[string] `json:"configuration_id,omitzero"`
+	// IDs of saved webhook configurations to notify for this job.
+	WebhookConfigurationIDs []string `json:"webhook_configuration_ids,omitzero"`
 	// Outbound webhook endpoints to notify on job status changes
 	WebhookConfigurations []BetaSheetNewParamsWebhookConfiguration `json:"webhook_configurations,omitzero"`
 	// Configuration for spreadsheet parsing and region extraction
