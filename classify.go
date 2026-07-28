@@ -271,6 +271,8 @@ type ClassifyCreateRequestParam struct {
 	// Idempotency key scoped to the project. Reusing a key returns the original job;
 	// the new request body is ignored.
 	TransactionID param.Opt[string] `json:"transaction_id,omitzero"`
+	// IDs of saved webhook configurations to notify for this job.
+	WebhookConfigurationIDs []string `json:"webhook_configuration_ids,omitzero"`
 	// Outbound webhook endpoints to notify on job status changes
 	WebhookConfigurations []ClassifyCreateRequestWebhookConfigurationParam `json:"webhook_configurations,omitzero"`
 	// Configuration for a classify job.

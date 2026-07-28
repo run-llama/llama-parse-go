@@ -41,11 +41,12 @@ func TestClassifyNewWithOptionalParams(t *testing.T) {
 					TargetPages: llamacloud.String("1,3,5-7"),
 				},
 			},
-			ConfigurationID: llamacloud.String("cfg-11111111-2222-3333-4444-555555555555"),
-			FileID:          llamacloud.String("dfl-aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"),
-			FileInput:       llamacloud.String("dfl-aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"),
-			ParseJobID:      llamacloud.String("pjb-aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"),
-			TransactionID:   llamacloud.String("tx-unique-idempotency-key"),
+			ConfigurationID:         llamacloud.String("cfg-11111111-2222-3333-4444-555555555555"),
+			FileID:                  llamacloud.String("dfl-aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"),
+			FileInput:               llamacloud.String("dfl-aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"),
+			ParseJobID:              llamacloud.String("pjb-aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"),
+			TransactionID:           llamacloud.String("tx-unique-idempotency-key"),
+			WebhookConfigurationIDs: []string{"whc-...", "whc-..."},
 			WebhookConfigurations: []llamacloud.ClassifyCreateRequestWebhookConfigurationParam{{
 				WebhookEvents: []string{"parse.success", "parse.error"},
 				WebhookHeaders: map[string]string{
