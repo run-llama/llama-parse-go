@@ -1002,9 +1002,11 @@ type ExtractV2ParametersResp struct {
 	DataSchema map[string]*ExtractV2ParametersDataSchemaUnionResp `json:"data_schema" api:"required"`
 	// Product type.
 	ProductType constant.ExtractV2 `json:"product_type" default:"extract_v2"`
-	// Include citations in results
+	// Include citations in results. Returned under `extract_metadata` (auto-included
+	// when set). Text-level on `turbo` (no bounding boxes).
 	CiteSources bool `json:"cite_sources"`
-	// Include confidence scores in results
+	// Include confidence scores in results. Returned under `extract_metadata`
+	// (auto-included when set).
 	ConfidenceScores bool `json:"confidence_scores"`
 	// Granularity of extraction: per_doc returns one object per document, per_page
 	// returns one object per page, per_table_row returns one object per table row
@@ -1173,9 +1175,11 @@ type ExtractV2Parameters struct {
 	// Comma-separated page numbers or ranges to process (1-based). Omit to process all
 	// pages.
 	TargetPages param.Opt[string] `json:"target_pages,omitzero"`
-	// Include citations in results
+	// Include citations in results. Returned under `extract_metadata` (auto-included
+	// when set). Text-level on `turbo` (no bounding boxes).
 	CiteSources param.Opt[bool] `json:"cite_sources,omitzero"`
-	// Include confidence scores in results
+	// Include confidence scores in results. Returned under `extract_metadata`
+	// (auto-included when set).
 	ConfidenceScores param.Opt[bool] `json:"confidence_scores,omitzero"`
 	// Use 'latest' for the latest release for the selected tier or a date string
 	// (YYYY-MM-DD format) to pin to the nearest release at or before that date. Job
