@@ -1014,10 +1014,12 @@ type ExtractV2ParametersResp struct {
 	// Maximum number of pages to process. Omit for no limit.
 	MaxPages int64 `json:"max_pages" api:"nullable"`
 	// Saved parse configuration ID to control how the document is parsed before
-	// extraction
+	// extraction. Turbo extract does not support parse configuration or produce a
+	// parse output; use another tier if your workflow requires parsed text.
 	ParseConfigID string `json:"parse_config_id" api:"nullable"`
 	// Parse tier to use before extraction. Defaults to the extract tier if not
-	// specified.
+	// specified. Turbo extract does not support parse configuration or produce a parse
+	// output; use another tier if your workflow requires parsed text.
 	ParseTier string `json:"parse_tier" api:"nullable"`
 	// Custom system prompt to guide extraction behavior
 	SystemPrompt string `json:"system_prompt" api:"nullable"`
@@ -1159,10 +1161,12 @@ type ExtractV2Parameters struct {
 	// Maximum number of pages to process. Omit for no limit.
 	MaxPages param.Opt[int64] `json:"max_pages,omitzero"`
 	// Saved parse configuration ID to control how the document is parsed before
-	// extraction
+	// extraction. Turbo extract does not support parse configuration or produce a
+	// parse output; use another tier if your workflow requires parsed text.
 	ParseConfigID param.Opt[string] `json:"parse_config_id,omitzero"`
 	// Parse tier to use before extraction. Defaults to the extract tier if not
-	// specified.
+	// specified. Turbo extract does not support parse configuration or produce a parse
+	// output; use another tier if your workflow requires parsed text.
 	ParseTier param.Opt[string] `json:"parse_tier,omitzero"`
 	// Custom system prompt to guide extraction behavior
 	SystemPrompt param.Opt[string] `json:"system_prompt,omitzero"`
