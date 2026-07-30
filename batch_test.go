@@ -34,9 +34,19 @@ func TestBatchNewWithOptionalParams(t *testing.T) {
 				Type:            llamacloud.BatchNewParamsConfigJobTypeParseV2,
 			},
 		},
-		SourceDirectoryID: "dir-aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
-		OrganizationID:    llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		ProjectID:         llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		SourceDirectoryID:       "dir-aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+		OrganizationID:          llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		ProjectID:               llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		WebhookConfigurationIDs: []string{"whc-...", "whc-..."},
+		WebhookConfigurations: []llamacloud.BatchNewParamsWebhookConfiguration{{
+			WebhookEvents: []string{"parse.success", "parse.error"},
+			WebhookHeaders: map[string]string{
+				"Authorization": "Bearer sk-...",
+			},
+			WebhookOutputFormat:  llamacloud.String("json"),
+			WebhookSigningSecret: llamacloud.String("whsec_..."),
+			WebhookURL:           llamacloud.String("https://example.com/webhooks/llamacloud"),
+		}},
 	})
 	if err != nil {
 		var apierr *llamacloud.Error

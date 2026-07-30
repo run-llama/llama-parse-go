@@ -40,6 +40,18 @@ func NewBatchService(opts ...option.RequestOption) (r BatchService) {
 }
 
 // Create a batch over a source directory and start processing asynchronously.
+//
+// To be notified as the batch progresses, pass `webhook_configurations` with
+// inline endpoints and/or `webhook_configuration_ids` referencing saved
+// configurations. Batches emit `batch.pending` on create, `batch.running` once
+// processing starts, and a terminal `batch.success` or `batch.error`.
+//
+// `batch.success` means the batch finished mapping every source file to a job —
+// individual files may still have failed, so read `results` (with
+// `expand=results`) for per-file outcomes.
+//
+// Delivery order across events is not guaranteed; key on the `status` field in the
+// payload rather than arrival order.
 func (r *BatchService) New(ctx context.Context, params BatchNewParams, opts ...option.RequestOption) (res *BatchNewResponse, err error) {
 	opts = slices.Concat(r.options, opts)
 	path := "api/v2/batches"
@@ -656,6 +668,10 @@ type BatchNewParams struct {
 	SourceDirectoryID string            `json:"source_directory_id" api:"required"`
 	OrganizationID    param.Opt[string] `query:"organization_id,omitzero" format:"uuid" json:"-"`
 	ProjectID         param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
+	// IDs of saved webhook configurations to notify for this job.
+	WebhookConfigurationIDs []string `json:"webhook_configuration_ids,omitzero"`
+	// Outbound webhook endpoints to notify on job status changes
+	WebhookConfigurations []BatchNewParamsWebhookConfiguration `json:"webhook_configurations,omitzero"`
 	paramObj
 }
 
@@ -720,6 +736,44 @@ const (
 	BatchNewParamsConfigJobTypeParseV2   BatchNewParamsConfigJobType = "parse_v2"
 	BatchNewParamsConfigJobTypeExtractV2 BatchNewParamsConfigJobType = "extract_v2"
 )
+
+// Configuration for a single outbound webhook endpoint.
+type BatchNewParamsWebhookConfiguration struct {
+	// Response format sent to the webhook: 'string' (default) or 'json'
+	WebhookOutputFormat param.Opt[string] `json:"webhook_output_format,omitzero"`
+	// Shared signing secret used to sign webhook deliveries. When set, each request
+	// includes an HMAC-SHA256 signature of the request body in the 'LC-Signature'
+	// header (value 'sha256=<hex>'). Recompute the HMAC over the raw request body with
+	// this secret to verify the delivery is authentic.
+	WebhookSigningSecret param.Opt[string] `json:"webhook_signing_secret,omitzero"`
+	// URL to receive webhook POST notifications
+	WebhookURL param.Opt[string] `json:"webhook_url,omitzero"`
+	// Events to subscribe to (e.g. 'parse.success', 'extract.error'). If null, all
+	// events are delivered.
+	//
+	// Any of "batch.cancelled", "batch.error", "batch.pending", "batch.running",
+	// "batch.success", "classify.cancelled", "classify.error",
+	// "classify.partial_success", "classify.pending", "classify.running",
+	// "classify.success", "extract.cancelled", "extract.error",
+	// "extract.partial_success", "extract.pending", "extract.success",
+	// "parse.cancelled", "parse.error", "parse.partial_success", "parse.pending",
+	// "parse.running", "parse.success", "sheets.cancelled", "sheets.error",
+	// "sheets.partial_success", "sheets.pending", "sheets.success", "split.cancelled",
+	// "split.error", "split.pending", "split.processing", "split.success",
+	// "unmapped_event".
+	WebhookEvents []string `json:"webhook_events,omitzero"`
+	// Custom HTTP headers sent with each webhook request (e.g. auth tokens)
+	WebhookHeaders map[string]string `json:"webhook_headers,omitzero"`
+	paramObj
+}
+
+func (r BatchNewParamsWebhookConfiguration) MarshalJSON() (data []byte, err error) {
+	type shadow BatchNewParamsWebhookConfiguration
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *BatchNewParamsWebhookConfiguration) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
 
 type BatchListParams struct {
 	CreatedAtOnOrAfter  param.Opt[time.Time] `query:"created_at_on_or_after,omitzero" format:"date-time" json:"-"`
