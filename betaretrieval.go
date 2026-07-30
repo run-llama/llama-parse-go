@@ -381,36 +381,38 @@ func (r BetaRetrievalGetParams) URLQuery() (v url.Values, err error) {
 //
 // Use [param.IsOmitted] to confirm if a field is set.
 type BetaRetrievalGetParamsCustomFilterUnion struct {
-	OfFilterTypeUnionStrIntBoolFloat     *BetaRetrievalGetParamsCustomFilterFilterTypeUnionStrIntBoolFloat `json:",omitzero,inline"`
-	OfBetaRetrievalGetsCustomFilterArray []BetaRetrievalGetParamsCustomFilterArrayItem                     `json:",omitzero,inline"`
+	OfValueFilter                        *BetaRetrievalGetParamsCustomFilterValueFilter `json:",omitzero,inline"`
+	OfBetaRetrievalGetsCustomFilterArray []BetaRetrievalGetParamsCustomFilterArrayItem  `json:",omitzero,inline"`
 	paramUnion
 }
 
 func (u BetaRetrievalGetParamsCustomFilterUnion) MarshalJSON() ([]byte, error) {
-	return param.MarshalUnion(u, u.OfFilterTypeUnionStrIntBoolFloat, u.OfBetaRetrievalGetsCustomFilterArray)
+	return param.MarshalUnion(u, u.OfValueFilter, u.OfBetaRetrievalGetsCustomFilterArray)
 }
 func (u *BetaRetrievalGetParamsCustomFilterUnion) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, u)
 }
 
+// Filter on a single metadata field value.
+//
 // The properties Operator, Value are required.
-type BetaRetrievalGetParamsCustomFilterFilterTypeUnionStrIntBoolFloat struct {
+type BetaRetrievalGetParamsCustomFilterValueFilter struct {
 	// Any of "eq", "gt", "gte", "in", "lt", "lte", "ne", "nin".
-	Operator string                                                                     `json:"operator,omitzero" api:"required"`
-	Value    BetaRetrievalGetParamsCustomFilterFilterTypeUnionStrIntBoolFloatValueUnion `json:"value,omitzero" api:"required"`
+	Operator string                                                  `json:"operator,omitzero" api:"required"`
+	Value    BetaRetrievalGetParamsCustomFilterValueFilterValueUnion `json:"value,omitzero" api:"required"`
 	paramObj
 }
 
-func (r BetaRetrievalGetParamsCustomFilterFilterTypeUnionStrIntBoolFloat) MarshalJSON() (data []byte, err error) {
-	type shadow BetaRetrievalGetParamsCustomFilterFilterTypeUnionStrIntBoolFloat
+func (r BetaRetrievalGetParamsCustomFilterValueFilter) MarshalJSON() (data []byte, err error) {
+	type shadow BetaRetrievalGetParamsCustomFilterValueFilter
 	return param.MarshalObject(r, (*shadow)(&r))
 }
-func (r *BetaRetrievalGetParamsCustomFilterFilterTypeUnionStrIntBoolFloat) UnmarshalJSON(data []byte) error {
+func (r *BetaRetrievalGetParamsCustomFilterValueFilter) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
 func init() {
-	apijson.RegisterFieldValidator[BetaRetrievalGetParamsCustomFilterFilterTypeUnionStrIntBoolFloat](
+	apijson.RegisterFieldValidator[BetaRetrievalGetParamsCustomFilterValueFilter](
 		"operator", "eq", "gt", "gte", "in", "lt", "lte", "ne", "nin",
 	)
 }
@@ -418,38 +420,40 @@ func init() {
 // Only one field can be non-zero.
 //
 // Use [param.IsOmitted] to confirm if a field is set.
-type BetaRetrievalGetParamsCustomFilterFilterTypeUnionStrIntBoolFloatValueUnion struct {
-	OfString                                                                param.Opt[string]                                                                     `json:",omitzero,inline"`
-	OfBool                                                                  param.Opt[bool]                                                                       `json:",omitzero,inline"`
-	OfFloat                                                                 param.Opt[float64]                                                                    `json:",omitzero,inline"`
-	OfBetaRetrievalGetsCustomFilterFilterTypeUnionStrIntBoolFloatValueArray []BetaRetrievalGetParamsCustomFilterFilterTypeUnionStrIntBoolFloatValueArrayItemUnion `json:",omitzero,inline"`
+type BetaRetrievalGetParamsCustomFilterValueFilterValueUnion struct {
+	OfString                                             param.Opt[string]                                                  `json:",omitzero,inline"`
+	OfBool                                               param.Opt[bool]                                                    `json:",omitzero,inline"`
+	OfFloat                                              param.Opt[float64]                                                 `json:",omitzero,inline"`
+	OfBetaRetrievalGetsCustomFilterValueFilterValueArray []BetaRetrievalGetParamsCustomFilterValueFilterValueArrayItemUnion `json:",omitzero,inline"`
 	paramUnion
 }
 
-func (u BetaRetrievalGetParamsCustomFilterFilterTypeUnionStrIntBoolFloatValueUnion) MarshalJSON() ([]byte, error) {
-	return param.MarshalUnion(u, u.OfString, u.OfBool, u.OfFloat, u.OfBetaRetrievalGetsCustomFilterFilterTypeUnionStrIntBoolFloatValueArray)
+func (u BetaRetrievalGetParamsCustomFilterValueFilterValueUnion) MarshalJSON() ([]byte, error) {
+	return param.MarshalUnion(u, u.OfString, u.OfBool, u.OfFloat, u.OfBetaRetrievalGetsCustomFilterValueFilterValueArray)
 }
-func (u *BetaRetrievalGetParamsCustomFilterFilterTypeUnionStrIntBoolFloatValueUnion) UnmarshalJSON(data []byte) error {
+func (u *BetaRetrievalGetParamsCustomFilterValueFilterValueUnion) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, u)
 }
 
 // Only one field can be non-zero.
 //
 // Use [param.IsOmitted] to confirm if a field is set.
-type BetaRetrievalGetParamsCustomFilterFilterTypeUnionStrIntBoolFloatValueArrayItemUnion struct {
+type BetaRetrievalGetParamsCustomFilterValueFilterValueArrayItemUnion struct {
 	OfString param.Opt[string]  `json:",omitzero,inline"`
 	OfBool   param.Opt[bool]    `json:",omitzero,inline"`
 	OfFloat  param.Opt[float64] `json:",omitzero,inline"`
 	paramUnion
 }
 
-func (u BetaRetrievalGetParamsCustomFilterFilterTypeUnionStrIntBoolFloatValueArrayItemUnion) MarshalJSON() ([]byte, error) {
+func (u BetaRetrievalGetParamsCustomFilterValueFilterValueArrayItemUnion) MarshalJSON() ([]byte, error) {
 	return param.MarshalUnion(u, u.OfString, u.OfBool, u.OfFloat)
 }
-func (u *BetaRetrievalGetParamsCustomFilterFilterTypeUnionStrIntBoolFloatValueArrayItemUnion) UnmarshalJSON(data []byte) error {
+func (u *BetaRetrievalGetParamsCustomFilterValueFilterValueArrayItemUnion) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, u)
 }
 
+// One bound of a numeric range filter on a metadata field.
+//
 // The properties Operator, Value are required.
 type BetaRetrievalGetParamsCustomFilterArrayItem struct {
 	// Any of "eq", "gt", "gte", "in", "lt", "lte", "ne", "nin".
@@ -507,6 +511,7 @@ func (r *BetaRetrievalGetParamsRerank) UnmarshalJSON(data []byte) error {
 
 // Filters on built-in document fields (page range, chunk index, etc.).
 type BetaRetrievalGetParamsStaticFilters struct {
+	// Filter on a string field.
 	ParsedDirectoryFileID BetaRetrievalGetParamsStaticFiltersParsedDirectoryFileID `json:"parsed_directory_file_id,omitzero"`
 	paramObj
 }
@@ -519,6 +524,8 @@ func (r *BetaRetrievalGetParamsStaticFilters) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
+// Filter on a string field.
+//
 // The properties Operator, Value are required.
 type BetaRetrievalGetParamsStaticFiltersParsedDirectoryFileID struct {
 	// Any of "eq", "gt", "gte", "in", "lt", "lte", "ne", "nin".

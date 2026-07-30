@@ -33,9 +33,9 @@ func TestBetaRetrievalGetWithOptionalParams(t *testing.T) {
 		ProjectID:      llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		CustomFilters: map[string]*llamacloud.BetaRetrievalGetParamsCustomFilterUnion{
 			"foo": {
-				OfFilterTypeUnionStrIntBoolFloat: &llamacloud.BetaRetrievalGetParamsCustomFilterFilterTypeUnionStrIntBoolFloat{
+				OfValueFilter: &llamacloud.BetaRetrievalGetParamsCustomFilterValueFilter{
 					Operator: "eq",
-					Value: llamacloud.BetaRetrievalGetParamsCustomFilterFilterTypeUnionStrIntBoolFloatValueUnion{
+					Value: llamacloud.BetaRetrievalGetParamsCustomFilterValueFilterValueUnion{
 						OfString: llamacloud.String("string"),
 					},
 				},
