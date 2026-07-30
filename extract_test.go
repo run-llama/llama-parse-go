@@ -51,6 +51,8 @@ func TestExtractNewWithOptionalParams(t *testing.T) {
 				MaxPages:         llamacloud.Int(10),
 				ParseConfigID:    llamacloud.String("cfg-11111111-2222-3333-4444-555555555555"),
 				ParseTier:        llamacloud.String("fast"),
+				SheetNames:       []string{"Sheet 1", "Q4 Summary"},
+				SpreadsheetMode:  llamacloud.Bool(true),
 				SystemPrompt:     llamacloud.String("Extract all monetary values in USD. If a currency is not specified, assume USD."),
 				TargetPages:      llamacloud.String("1,3,5-7"),
 				Tier:             llamacloud.ExtractConfigurationTierCostEffective,
