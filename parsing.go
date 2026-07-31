@@ -2189,6 +2189,8 @@ type ParsingGetResponseItemsPageUnion struct {
 	// This field is from variant [ParsingGetResponseItemsPageStructuredResultPage].
 	PageWidth float64 `json:"page_width"`
 	Success   bool    `json:"success"`
+	// This field is from variant [ParsingGetResponseItemsPageStructuredResultPage].
+	Revisions []ParsingGetResponseItemsPageStructuredResultPageRevision `json:"revisions"`
 	// This field is from variant [ParsingGetResponseItemsPageFailedStructuredPage].
 	Error string `json:"error"`
 	JSON  struct {
@@ -2197,6 +2199,7 @@ type ParsingGetResponseItemsPageUnion struct {
 		PageNumber respjson.Field
 		PageWidth  respjson.Field
 		Success    respjson.Field
+		Revisions  respjson.Field
 		Error      respjson.Field
 		raw        string
 	} `json:"-"`
@@ -2219,6 +2222,7 @@ func (r *ParsingGetResponseItemsPageUnion) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
+// Successfully parsed page in structured items output.
 type ParsingGetResponseItemsPageStructuredResultPage struct {
 	// List of structured items on the page
 	Items []ParsingGetResponseItemsPageStructuredResultPageItemUnion `json:"items" api:"required"`
@@ -2230,6 +2234,8 @@ type ParsingGetResponseItemsPageStructuredResultPage struct {
 	PageWidth float64 `json:"page_width" api:"required"`
 	// Success indicator
 	Success bool `json:"success" api:"required"`
+	// Extracted revisions and comments on the page
+	Revisions []ParsingGetResponseItemsPageStructuredResultPageRevision `json:"revisions" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Items       respjson.Field
@@ -2237,6 +2243,7 @@ type ParsingGetResponseItemsPageStructuredResultPage struct {
 		PageNumber  respjson.Field
 		PageWidth   respjson.Field
 		Success     respjson.Field
+		Revisions   respjson.Field
 		ExtraFields map[string]respjson.Field
 		raw         string
 	} `json:"-"`
@@ -2441,6 +2448,166 @@ type ParsingGetResponseItemsPageStructuredResultPageItemUnionItems struct {
 }
 
 func (r *ParsingGetResponseItemsPageStructuredResultPageItemUnionItems) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// One extracted document revision linked to page content.
+type ParsingGetResponseItemsPageStructuredResultPageRevision struct {
+	// Revision or comment content
+	Content string `json:"content" api:"required"`
+	// Bounding box of the printed revision balloon
+	RevisionBbox ParsingGetResponseItemsPageStructuredResultPageRevisionRevisionBbox `json:"revision_bbox" api:"required"`
+	// Best available target text in the page content
+	Target string `json:"target" api:"required"`
+	// Union bounding box of the target spans
+	TargetBbox ParsingGetResponseItemsPageStructuredResultPageRevisionTargetBbox `json:"target_bbox" api:"required"`
+	// Type of revision
+	//
+	// Any of "comment", "deleted", "formatted", "inserted", "moved_from", "moved_to".
+	Type string `json:"type" api:"required"`
+	// Revision author, when available
+	Author string `json:"author" api:"nullable"`
+	// Exclusive end offset in final page markdown
+	EndIndex int64 `json:"end_index" api:"nullable"`
+	// Inclusive start offset in final page markdown
+	StartIndex int64 `json:"start_index" api:"nullable"`
+	// Disconnected target spans, when present
+	TargetSpans []ParsingGetResponseItemsPageStructuredResultPageRevisionTargetSpan `json:"target_spans" api:"nullable"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Content      respjson.Field
+		RevisionBbox respjson.Field
+		Target       respjson.Field
+		TargetBbox   respjson.Field
+		Type         respjson.Field
+		Author       respjson.Field
+		EndIndex     respjson.Field
+		StartIndex   respjson.Field
+		TargetSpans  respjson.Field
+		ExtraFields  map[string]respjson.Field
+		raw          string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r ParsingGetResponseItemsPageStructuredResultPageRevision) RawJSON() string { return r.JSON.raw }
+func (r *ParsingGetResponseItemsPageStructuredResultPageRevision) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Bounding box of the printed revision balloon
+type ParsingGetResponseItemsPageStructuredResultPageRevisionRevisionBbox struct {
+	// Height of the bounding box
+	H float64 `json:"h" api:"required"`
+	// Width of the bounding box
+	W float64 `json:"w" api:"required"`
+	// X coordinate of the bounding box
+	X float64 `json:"x" api:"required"`
+	// Y coordinate of the bounding box
+	Y float64 `json:"y" api:"required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		H           respjson.Field
+		W           respjson.Field
+		X           respjson.Field
+		Y           respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r ParsingGetResponseItemsPageStructuredResultPageRevisionRevisionBbox) RawJSON() string {
+	return r.JSON.raw
+}
+func (r *ParsingGetResponseItemsPageStructuredResultPageRevisionRevisionBbox) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Union bounding box of the target spans
+type ParsingGetResponseItemsPageStructuredResultPageRevisionTargetBbox struct {
+	// Height of the bounding box
+	H float64 `json:"h" api:"required"`
+	// Width of the bounding box
+	W float64 `json:"w" api:"required"`
+	// X coordinate of the bounding box
+	X float64 `json:"x" api:"required"`
+	// Y coordinate of the bounding box
+	Y float64 `json:"y" api:"required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		H           respjson.Field
+		W           respjson.Field
+		X           respjson.Field
+		Y           respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r ParsingGetResponseItemsPageStructuredResultPageRevisionTargetBbox) RawJSON() string {
+	return r.JSON.raw
+}
+func (r *ParsingGetResponseItemsPageStructuredResultPageRevisionTargetBbox) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// One contiguous target span linked to a document revision.
+type ParsingGetResponseItemsPageStructuredResultPageRevisionTargetSpan struct {
+	// Text covered by this target span
+	Target string `json:"target" api:"required"`
+	// Bounding box of this target span
+	TargetBbox ParsingGetResponseItemsPageStructuredResultPageRevisionTargetSpanTargetBbox `json:"target_bbox" api:"required"`
+	// Exclusive end offset in final page markdown
+	EndIndex int64 `json:"end_index" api:"nullable"`
+	// Inclusive start offset in final page markdown
+	StartIndex int64 `json:"start_index" api:"nullable"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Target      respjson.Field
+		TargetBbox  respjson.Field
+		EndIndex    respjson.Field
+		StartIndex  respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r ParsingGetResponseItemsPageStructuredResultPageRevisionTargetSpan) RawJSON() string {
+	return r.JSON.raw
+}
+func (r *ParsingGetResponseItemsPageStructuredResultPageRevisionTargetSpan) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Bounding box of this target span
+type ParsingGetResponseItemsPageStructuredResultPageRevisionTargetSpanTargetBbox struct {
+	// Height of the bounding box
+	H float64 `json:"h" api:"required"`
+	// Width of the bounding box
+	W float64 `json:"w" api:"required"`
+	// X coordinate of the bounding box
+	X float64 `json:"x" api:"required"`
+	// Y coordinate of the bounding box
+	Y float64 `json:"y" api:"required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		H           respjson.Field
+		W           respjson.Field
+		X           respjson.Field
+		Y           respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r ParsingGetResponseItemsPageStructuredResultPageRevisionTargetSpanTargetBbox) RawJSON() string {
+	return r.JSON.raw
+}
+func (r *ParsingGetResponseItemsPageStructuredResultPageRevisionTargetSpanTargetBbox) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
@@ -3034,6 +3201,8 @@ type ParsingNewParamsOutputOptionsMarkdown struct {
 	// Add link annotations to markdown output in the format [text](url). When false,
 	// only the link text is included
 	AnnotateLinks param.Opt[bool] `json:"annotate_links,omitzero"`
+	// Extract Word-style revisions and comments into structured page output
+	AnnotateRevisions param.Opt[bool] `json:"annotate_revisions,omitzero"`
 	// Embed images directly in markdown as base64 data URIs instead of extracting them
 	// as separate files. Useful for self-contained markdown output
 	InlineImages param.Opt[bool] `json:"inline_images,omitzero"`

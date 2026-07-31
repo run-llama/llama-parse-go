@@ -73,8 +73,9 @@ func TestParsingNewWithOptionalParams(t *testing.T) {
 			GranularBboxes:           []string{"word", "line", "cell"},
 			ImagesToSave:             []string{"embedded"},
 			Markdown: llamacloud.ParsingNewParamsOutputOptionsMarkdown{
-				AnnotateLinks: llamacloud.Bool(true),
-				InlineImages:  llamacloud.Bool(true),
+				AnnotateLinks:     llamacloud.Bool(true),
+				AnnotateRevisions: llamacloud.Bool(true),
+				InlineImages:      llamacloud.Bool(true),
 				Tables: llamacloud.ParsingNewParamsOutputOptionsMarkdownTables{
 					CompactMarkdownTables:           llamacloud.Bool(true),
 					MarkdownTableMultilineSeparator: llamacloud.String("markdown_table_multiline_separator"),

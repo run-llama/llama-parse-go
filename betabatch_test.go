@@ -35,6 +35,7 @@ func TestBetaBatchNewWithOptionalParams(t *testing.T) {
 					AdaptiveLongTable:                 llamacloud.Bool(true),
 					AggressiveTableExtraction:         llamacloud.Bool(true),
 					AnnotateLinks:                     llamacloud.Bool(true),
+					AnnotateRevisions:                 llamacloud.Bool(true),
 					AutoMode:                          llamacloud.Bool(true),
 					AutoModeConfigurationJson:         llamacloud.String("auto_mode_configuration_json"),
 					AutoModeTriggerOnImageInPage:      llamacloud.Bool(true),

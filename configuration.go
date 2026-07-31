@@ -1649,6 +1649,8 @@ type ParseV2ParametersOutputOptionsMarkdownResp struct {
 	// Add link annotations to markdown output in the format [text](url). When false,
 	// only the link text is included
 	AnnotateLinks bool `json:"annotate_links" api:"nullable"`
+	// Extract Word-style revisions and comments into structured page output
+	AnnotateRevisions bool `json:"annotate_revisions" api:"nullable"`
 	// Embed images directly in markdown as base64 data URIs instead of extracting them
 	// as separate files. Useful for self-contained markdown output
 	InlineImages bool `json:"inline_images" api:"nullable"`
@@ -1656,11 +1658,12 @@ type ParseV2ParametersOutputOptionsMarkdownResp struct {
 	Tables ParseV2ParametersOutputOptionsMarkdownTablesResp `json:"tables"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
-		AnnotateLinks respjson.Field
-		InlineImages  respjson.Field
-		Tables        respjson.Field
-		ExtraFields   map[string]respjson.Field
-		raw           string
+		AnnotateLinks     respjson.Field
+		AnnotateRevisions respjson.Field
+		InlineImages      respjson.Field
+		Tables            respjson.Field
+		ExtraFields       map[string]respjson.Field
+		raw               string
 	} `json:"-"`
 }
 
@@ -3467,6 +3470,8 @@ type ParseV2ParametersOutputOptionsMarkdown struct {
 	// Add link annotations to markdown output in the format [text](url). When false,
 	// only the link text is included
 	AnnotateLinks param.Opt[bool] `json:"annotate_links,omitzero"`
+	// Extract Word-style revisions and comments into structured page output
+	AnnotateRevisions param.Opt[bool] `json:"annotate_revisions,omitzero"`
 	// Embed images directly in markdown as base64 data URIs instead of extracting them
 	// as separate files. Useful for self-contained markdown output
 	InlineImages param.Opt[bool] `json:"inline_images,omitzero"`

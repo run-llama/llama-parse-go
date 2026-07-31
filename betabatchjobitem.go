@@ -389,6 +389,7 @@ type BetaBatchJobItemGetProcessingResultsResponseProcessingResultJobConfigBatchP
 	AdaptiveLongTable                 bool    `json:"adaptive_long_table" api:"nullable"`
 	AggressiveTableExtraction         bool    `json:"aggressive_table_extraction" api:"nullable"`
 	AnnotateLinks                     bool    `json:"annotate_links" api:"nullable"`
+	AnnotateRevisions                 bool    `json:"annotate_revisions" api:"nullable"`
 	AutoMode                          bool    `json:"auto_mode" api:"nullable"`
 	AutoModeConfigurationJson         string  `json:"auto_mode_configuration_json" api:"nullable"`
 	AutoModeTriggerOnImageInPage      bool    `json:"auto_mode_trigger_on_image_in_page" api:"nullable"`
@@ -542,6 +543,7 @@ type BetaBatchJobItemGetProcessingResultsResponseProcessingResultJobConfigBatchP
 		AdaptiveLongTable                        respjson.Field
 		AggressiveTableExtraction                respjson.Field
 		AnnotateLinks                            respjson.Field
+		AnnotateRevisions                        respjson.Field
 		AutoMode                                 respjson.Field
 		AutoModeConfigurationJson                respjson.Field
 		AutoModeTriggerOnImageInPage             respjson.Field
