@@ -91,6 +91,21 @@ func (r *ParsingService) ListAutoPaging(ctx context.Context, query ParsingListPa
 	return pagination.NewPaginatedCursorAutoPager(r.List(ctx, query, opts...))
 }
 
+// Cancel a running parse job.
+//
+// Stops processing and marks the job as CANCELLED. Returns the updated job. Jobs
+// already in a terminal state (COMPLETED, FAILED, CANCELLED) cannot be cancelled.
+func (r *ParsingService) Cancel(ctx context.Context, jobID string, body ParsingCancelParams, opts ...option.RequestOption) (res *ParsingCancelResponse, err error) {
+	opts = slices.Concat(r.options, opts)
+	if jobID == "" {
+		err = errors.New("missing required job_id parameter")
+		return nil, err
+	}
+	path := fmt.Sprintf("api/v2/parse/%s/cancel", url.PathEscape(jobID))
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, body, &res, opts...)
+	return res, err
+}
+
 // Retrieve a parse job with optional expanded content.
 //
 // By default returns job metadata only. Use `expand` to include parsed content:
@@ -1865,6 +1880,61 @@ const (
 	ParsingListResponseStatusFailed    ParsingListResponseStatus = "FAILED"
 	ParsingListResponseStatusPending   ParsingListResponseStatus = "PENDING"
 	ParsingListResponseStatusRunning   ParsingListResponseStatus = "RUNNING"
+)
+
+// A parse job.
+type ParsingCancelResponse struct {
+	// Unique parse job identifier
+	ID string `json:"id" api:"required"`
+	// Project this job belongs to
+	ProjectID string `json:"project_id" api:"required"`
+	// Current job status: PENDING, RUNNING, COMPLETED, FAILED, or CANCELLED
+	//
+	// Any of "CANCELLED", "COMPLETED", "FAILED", "PENDING", "RUNNING".
+	Status ParsingCancelResponseStatus `json:"status" api:"required"`
+	// Creation datetime
+	CreatedAt time.Time `json:"created_at" api:"nullable" format:"date-time"`
+	// Error details when status is FAILED
+	ErrorMessage string `json:"error_message" api:"nullable"`
+	// Optional display name for this parse job
+	Name string `json:"name" api:"nullable"`
+	// Parsing tier used for this job
+	Tier string `json:"tier" api:"nullable"`
+	// Update datetime
+	UpdatedAt time.Time `json:"updated_at" api:"nullable" format:"date-time"`
+	// Key/value tags associated with this job.
+	UserMetadata map[string]string `json:"user_metadata" api:"nullable"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		ID           respjson.Field
+		ProjectID    respjson.Field
+		Status       respjson.Field
+		CreatedAt    respjson.Field
+		ErrorMessage respjson.Field
+		Name         respjson.Field
+		Tier         respjson.Field
+		UpdatedAt    respjson.Field
+		UserMetadata respjson.Field
+		ExtraFields  map[string]respjson.Field
+		raw          string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r ParsingCancelResponse) RawJSON() string { return r.JSON.raw }
+func (r *ParsingCancelResponse) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Current job status: PENDING, RUNNING, COMPLETED, FAILED, or CANCELLED
+type ParsingCancelResponseStatus string
+
+const (
+	ParsingCancelResponseStatusCancelled ParsingCancelResponseStatus = "CANCELLED"
+	ParsingCancelResponseStatusCompleted ParsingCancelResponseStatus = "COMPLETED"
+	ParsingCancelResponseStatusFailed    ParsingCancelResponseStatus = "FAILED"
+	ParsingCancelResponseStatusPending   ParsingCancelResponseStatus = "PENDING"
+	ParsingCancelResponseStatusRunning   ParsingCancelResponseStatus = "RUNNING"
 )
 
 // Parse result response with job status and optional content or metadata.
@@ -4159,6 +4229,20 @@ const (
 	ParsingListParamsStatusPending   ParsingListParamsStatus = "PENDING"
 	ParsingListParamsStatusRunning   ParsingListParamsStatus = "RUNNING"
 )
+
+type ParsingCancelParams struct {
+	OrganizationID param.Opt[string] `query:"organization_id,omitzero" format:"uuid" json:"-"`
+	ProjectID      param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
+	paramObj
+}
+
+// URLQuery serializes [ParsingCancelParams]'s query parameters as `url.Values`.
+func (r ParsingCancelParams) URLQuery() (v url.Values, err error) {
+	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
+		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
+		NestedFormat: apiquery.NestedQueryFormatBrackets,
+	})
+}
 
 type ParsingGetParams struct {
 	// Filter to specific image filenames (optional). Example: image_0.png,image_1.jpg
