@@ -27,10 +27,11 @@ func TestBetaDirectoryNewWithOptionalParams(t *testing.T) {
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Beta.Directories.New(context.TODO(), llamacloud.BetaDirectoryNewParams{
-		Name:           "x",
-		OrganizationID: llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		ProjectID:      llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		Description:    llamacloud.String("description"),
+		Name:                    "x",
+		OrganizationID:          llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		ProjectID:               llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		ConnectorSubscriptionID: llamacloud.String("csub-abc123"),
+		Description:             llamacloud.String("description"),
 		SystemMetadata: map[string]any{
 			"foo": "bar",
 		},

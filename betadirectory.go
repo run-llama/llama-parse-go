@@ -338,6 +338,9 @@ type BetaDirectoryNewParams struct {
 	Name           string            `json:"name" api:"required"`
 	OrganizationID param.Opt[string] `query:"organization_id,omitzero" format:"uuid" json:"-"`
 	ProjectID      param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
+	// Connector Subscription whose files sync into this directory. Omit for manual
+	// uploads.
+	ConnectorSubscriptionID param.Opt[string] `json:"connector_subscription_id,omitzero"`
 	// Optional description shown to users.
 	Description param.Opt[string] `json:"description,omitzero"`
 	// Reserved system-managed metadata.
