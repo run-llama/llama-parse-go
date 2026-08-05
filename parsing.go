@@ -3215,6 +3215,10 @@ type ParsingNewParamsOutputOptions struct {
 	// Extract the printed page number as it appears in the document (e.g., 'Page 5 of
 	// 10', 'v', 'A-3'). Useful for referencing original page numbers
 	ExtractPrintedPageNumber param.Opt[bool] `json:"extract_printed_page_number,omitzero"`
+	// Save a PDF copy of the parsed document, retrievable via
+	// `expand=output_pdf_content_metadata`. Not produced for spreadsheet, plain-text,
+	// or audio inputs
+	SaveOutputPdf param.Opt[bool] `json:"save_output_pdf,omitzero"`
 	// Optional additional output artifacts to save alongside the primary parse output.
 	// Each value opts in to generating and persisting one extra file; the empty list
 	// (default) saves none. The three accepted values are: 'stripped_md' — per-page

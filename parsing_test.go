@@ -83,6 +83,7 @@ func TestParsingNewWithOptionalParams(t *testing.T) {
 					OutputTablesAsMarkdown:          llamacloud.Bool(true),
 				},
 			},
+			SaveOutputPdf: llamacloud.Bool(true),
 			SpatialText: llamacloud.ParsingNewParamsOutputOptionsSpatialText{
 				DoNotUnrollColumns:                 llamacloud.Bool(true),
 				PreserveLayoutAlignmentAcrossPages: llamacloud.Bool(true),
