@@ -3304,6 +3304,12 @@ type ParsingNewParamsOutputOptions struct {
 	// `expand=output_pdf_content_metadata`. Not produced for spreadsheet, plain-text,
 	// or audio inputs
 	SaveOutputPdf param.Opt[bool] `json:"save_output_pdf,omitzero"`
+	// Image categories to save: 'screenshot' (full page renders), 'embedded' (images
+	// found within the document), 'layout' (cropped figures and diagrams). Defaults to
+	// saving 'layout' when the output links to cropped images; pass [] to save none
+	//
+	// Any of "embedded", "layout", "screenshot".
+	ImagesToSave []string `json:"images_to_save,omitzero"`
 	// Optional additional output artifacts to save alongside the primary parse output.
 	// Each value opts in to generating and persisting one extra file; the empty list
 	// (default) saves none. The three accepted values are: 'stripped_md' — per-page
@@ -3331,13 +3337,6 @@ type ParsingNewParamsOutputOptions struct {
 	//
 	// Any of "cell", "line", "word".
 	GranularBboxes []string `json:"granular_bboxes,omitzero"`
-	// Image categories to extract and save. Options: 'screenshot' (full page renders
-	// useful for visual QA), 'embedded' (images found within the document), 'layout'
-	// (cropped regions from layout detection like figures and diagrams). Empty list
-	// saves no images
-	//
-	// Any of "embedded", "layout", "screenshot".
-	ImagesToSave []string `json:"images_to_save,omitzero"`
 	// Markdown formatting options including table styles and link annotations
 	Markdown ParsingNewParamsOutputOptionsMarkdown `json:"markdown,omitzero"`
 	// Spatial text output options for preserving document layout structure
