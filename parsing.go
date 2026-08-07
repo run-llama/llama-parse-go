@@ -113,7 +113,8 @@ func (r *ParsingService) Cancel(ctx context.Context, jobID string, body ParsingC
 // - `text` — plain text output
 // - `markdown` — markdown output
 // - `items` — structured page-by-page output
-// - `job_metadata` — usage and processing details
+// - `job_metadata` — processing details
+// - `usage` — credits billed against the job
 //
 // Content metadata fields (e.g. `text_content_metadata`) return presigned URLs for
 // downloading large results.
@@ -1792,6 +1793,8 @@ type ParsingNewResponse struct {
 	Tier string `json:"tier" api:"nullable"`
 	// Update datetime
 	UpdatedAt time.Time `json:"updated_at" api:"nullable" format:"date-time"`
+	// Usage recorded against a job.
+	Usage ParsingNewResponseUsage `json:"usage" api:"nullable"`
 	// Key/value tags associated with this job.
 	UserMetadata map[string]string `json:"user_metadata" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
@@ -1804,6 +1807,7 @@ type ParsingNewResponse struct {
 		Name         respjson.Field
 		Tier         respjson.Field
 		UpdatedAt    respjson.Field
+		Usage        respjson.Field
 		UserMetadata respjson.Field
 		ExtraFields  map[string]respjson.Field
 		raw          string
@@ -1827,6 +1831,24 @@ const (
 	ParsingNewResponseStatusRunning   ParsingNewResponseStatus = "RUNNING"
 )
 
+// Usage recorded against a job.
+type ParsingNewResponseUsage struct {
+	// Total credits billed against this job. Null until billing has recorded it.
+	Credits float64 `json:"credits" api:"nullable"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Credits     respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r ParsingNewResponseUsage) RawJSON() string { return r.JSON.raw }
+func (r *ParsingNewResponseUsage) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
 // A parse job.
 type ParsingListResponse struct {
 	// Unique parse job identifier
@@ -1847,6 +1869,8 @@ type ParsingListResponse struct {
 	Tier string `json:"tier" api:"nullable"`
 	// Update datetime
 	UpdatedAt time.Time `json:"updated_at" api:"nullable" format:"date-time"`
+	// Usage recorded against a job.
+	Usage ParsingListResponseUsage `json:"usage" api:"nullable"`
 	// Key/value tags associated with this job.
 	UserMetadata map[string]string `json:"user_metadata" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
@@ -1859,6 +1883,7 @@ type ParsingListResponse struct {
 		Name         respjson.Field
 		Tier         respjson.Field
 		UpdatedAt    respjson.Field
+		Usage        respjson.Field
 		UserMetadata respjson.Field
 		ExtraFields  map[string]respjson.Field
 		raw          string
@@ -1882,6 +1907,24 @@ const (
 	ParsingListResponseStatusRunning   ParsingListResponseStatus = "RUNNING"
 )
 
+// Usage recorded against a job.
+type ParsingListResponseUsage struct {
+	// Total credits billed against this job. Null until billing has recorded it.
+	Credits float64 `json:"credits" api:"nullable"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Credits     respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r ParsingListResponseUsage) RawJSON() string { return r.JSON.raw }
+func (r *ParsingListResponseUsage) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
 // A parse job.
 type ParsingCancelResponse struct {
 	// Unique parse job identifier
@@ -1902,6 +1945,8 @@ type ParsingCancelResponse struct {
 	Tier string `json:"tier" api:"nullable"`
 	// Update datetime
 	UpdatedAt time.Time `json:"updated_at" api:"nullable" format:"date-time"`
+	// Usage recorded against a job.
+	Usage ParsingCancelResponseUsage `json:"usage" api:"nullable"`
 	// Key/value tags associated with this job.
 	UserMetadata map[string]string `json:"user_metadata" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
@@ -1914,6 +1959,7 @@ type ParsingCancelResponse struct {
 		Name         respjson.Field
 		Tier         respjson.Field
 		UpdatedAt    respjson.Field
+		Usage        respjson.Field
 		UserMetadata respjson.Field
 		ExtraFields  map[string]respjson.Field
 		raw          string
@@ -1936,6 +1982,24 @@ const (
 	ParsingCancelResponseStatusPending   ParsingCancelResponseStatus = "PENDING"
 	ParsingCancelResponseStatusRunning   ParsingCancelResponseStatus = "RUNNING"
 )
+
+// Usage recorded against a job.
+type ParsingCancelResponseUsage struct {
+	// Total credits billed against this job. Null until billing has recorded it.
+	Credits float64 `json:"credits" api:"nullable"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Credits     respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r ParsingCancelResponseUsage) RawJSON() string { return r.JSON.raw }
+func (r *ParsingCancelResponseUsage) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
 
 // Parse result response with job status and optional content or metadata.
 //
@@ -2010,6 +2074,8 @@ type ParsingGetResponseJob struct {
 	Tier string `json:"tier" api:"nullable"`
 	// Update datetime
 	UpdatedAt time.Time `json:"updated_at" api:"nullable" format:"date-time"`
+	// Usage recorded against a job.
+	Usage ParsingGetResponseJobUsage `json:"usage" api:"nullable"`
 	// Key/value tags associated with this job.
 	UserMetadata map[string]string `json:"user_metadata" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
@@ -2022,6 +2088,7 @@ type ParsingGetResponseJob struct {
 		Name         respjson.Field
 		Tier         respjson.Field
 		UpdatedAt    respjson.Field
+		Usage        respjson.Field
 		UserMetadata respjson.Field
 		ExtraFields  map[string]respjson.Field
 		raw          string
@@ -2031,6 +2098,24 @@ type ParsingGetResponseJob struct {
 // Returns the unmodified JSON received from the API
 func (r ParsingGetResponseJob) RawJSON() string { return r.JSON.raw }
 func (r *ParsingGetResponseJob) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Usage recorded against a job.
+type ParsingGetResponseJobUsage struct {
+	// Total credits billed against this job. Null until billing has recorded it.
+	Credits float64 `json:"credits" api:"nullable"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Credits     respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r ParsingGetResponseJobUsage) RawJSON() string { return r.JSON.raw }
+func (r *ParsingGetResponseJobUsage) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
@@ -4253,7 +4338,7 @@ type ParsingGetParams struct {
 	ImageFilenames param.Opt[string] `query:"image_filenames,omitzero" json:"-"`
 	OrganizationID param.Opt[string] `query:"organization_id,omitzero" format:"uuid" json:"-"`
 	ProjectID      param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
-	// Fields to include: text, markdown, items, metadata, forms, job_metadata,
+	// Fields to include: text, markdown, items, metadata, forms, job_metadata, usage,
 	// text_content_metadata, markdown_content_metadata, items_content_metadata,
 	// metadata_content_metadata, forms_content_metadata, raw_words_content_metadata,
 	// xlsx_content_metadata, output_pdf_content_metadata, images_content_metadata.

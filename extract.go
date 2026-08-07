@@ -121,8 +121,8 @@ func (r *ExtractService) GenerateSchema(ctx context.Context, params ExtractGener
 // Get a single extraction job by ID.
 //
 // Returns the job status and results when complete. Use `expand=configuration` to
-// include the full configuration used, and `expand=extract_metadata` for per-field
-// metadata.
+// include the full configuration used, `expand=extract_metadata` for per-field
+// metadata, and `expand=usage` for credits billed against the job.
 func (r *ExtractService) Get(ctx context.Context, jobID string, query ExtractGetParams, opts ...option.RequestOption) (res *ExtractV2Job, err error) {
 	opts = slices.Concat(r.options, opts)
 	if jobID == "" {
@@ -476,6 +476,11 @@ type ExtractV2Job struct {
 	ExtractResult ExtractV2JobExtractResultUnion `json:"extract_result" api:"nullable"`
 	// Job-level metadata.
 	Metadata ExtractV2JobMetadata `json:"metadata" api:"nullable"`
+	// Usage recorded against an extract job.
+	//
+	// A parse job can back several extract jobs, so each of them reports that same
+	// parse cost in its total.
+	Usage ExtractV2JobUsage `json:"usage" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		ID              respjson.Field
@@ -490,6 +495,7 @@ type ExtractV2Job struct {
 		ExtractMetadata respjson.Field
 		ExtractResult   respjson.Field
 		Metadata        respjson.Field
+		Usage           respjson.Field
 		ExtraFields     map[string]respjson.Field
 		raw             string
 	} `json:"-"`
@@ -690,6 +696,33 @@ type ExtractV2JobMetadata struct {
 // Returns the unmodified JSON received from the API
 func (r ExtractV2JobMetadata) RawJSON() string { return r.JSON.raw }
 func (r *ExtractV2JobMetadata) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Usage recorded against an extract job.
+//
+// A parse job can back several extract jobs, so each of them reports that same
+// parse cost in its total.
+type ExtractV2JobUsage struct {
+	// Total credits billed against this job. Null until billing has recorded it.
+	Credits float64 `json:"credits" api:"nullable"`
+	// Credits billed for the extraction itself
+	ExtractCredits float64 `json:"extract_credits" api:"nullable"`
+	// Credits billed against the parse job backing this extract job
+	ParseCredits float64 `json:"parse_credits" api:"nullable"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Credits        respjson.Field
+		ExtractCredits respjson.Field
+		ParseCredits   respjson.Field
+		ExtraFields    map[string]respjson.Field
+		raw            string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r ExtractV2JobUsage) RawJSON() string { return r.JSON.raw }
+func (r *ExtractV2JobUsage) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
@@ -1275,7 +1308,7 @@ func (r ExtractGenerateSchemaParams) URLQuery() (v url.Values, err error) {
 type ExtractGetParams struct {
 	OrganizationID param.Opt[string] `query:"organization_id,omitzero" format:"uuid" json:"-"`
 	ProjectID      param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
-	// Additional fields to include: configuration, extract_metadata
+	// Additional fields to include: configuration, extract_metadata, usage
 	Expand []string `query:"expand,omitzero" json:"-"`
 	paramObj
 }
