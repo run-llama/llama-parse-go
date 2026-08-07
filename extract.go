@@ -110,6 +110,21 @@ func (r *ExtractService) Delete(ctx context.Context, jobID string, body ExtractD
 	return res, err
 }
 
+// Cancel a running extraction job.
+//
+// Stops processing and marks the job as CANCELLED. Returns the updated job. Jobs
+// already in a terminal state (COMPLETED, FAILED, CANCELLED) cannot be cancelled.
+func (r *ExtractService) Cancel(ctx context.Context, jobID string, body ExtractCancelParams, opts ...option.RequestOption) (res *ExtractV2Job, err error) {
+	opts = slices.Concat(r.options, opts)
+	if jobID == "" {
+		err = errors.New("missing required job_id parameter")
+		return nil, err
+	}
+	path := fmt.Sprintf("api/v2/extract/%s/cancel", url.PathEscape(jobID))
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, body, &res, opts...)
+	return res, err
+}
+
 // Generate a JSON schema and return a product configuration request.
 func (r *ExtractService) GenerateSchema(ctx context.Context, params ExtractGenerateSchemaParams, opts ...option.RequestOption) (res *ConfigurationCreate, err error) {
 	opts = slices.Concat(r.options, opts)
@@ -1275,6 +1290,20 @@ type ExtractDeleteParams struct {
 
 // URLQuery serializes [ExtractDeleteParams]'s query parameters as `url.Values`.
 func (r ExtractDeleteParams) URLQuery() (v url.Values, err error) {
+	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
+		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
+		NestedFormat: apiquery.NestedQueryFormatBrackets,
+	})
+}
+
+type ExtractCancelParams struct {
+	OrganizationID param.Opt[string] `query:"organization_id,omitzero" format:"uuid" json:"-"`
+	ProjectID      param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
+	paramObj
+}
+
+// URLQuery serializes [ExtractCancelParams]'s query parameters as `url.Values`.
+func (r ExtractCancelParams) URLQuery() (v url.Values, err error) {
 	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
 		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
 		NestedFormat: apiquery.NestedQueryFormatBrackets,

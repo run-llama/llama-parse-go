@@ -20,12 +20,14 @@ type Client struct {
 	options        []option.RequestOption
 	Files          FileService
 	Sheets         SheetService
+	Split          SplitService
 	Parsing        ParsingService
 	Extract        ExtractService
 	Classifier     ClassifierService
 	Batches        BatchService
 	Classify       ClassifyService
 	Configurations ConfigurationService
+	WebhookConfigs WebhookConfigService
 	Projects       ProjectService
 	DataSinks      DataSinkService
 	DataSources    DataSourceService
@@ -66,12 +68,14 @@ func NewClient(opts ...option.RequestOption) (r Client) {
 
 	r.Files = NewFileService(opts...)
 	r.Sheets = NewSheetService(opts...)
+	r.Split = NewSplitService(opts...)
 	r.Parsing = NewParsingService(opts...)
 	r.Extract = NewExtractService(opts...)
 	r.Classifier = NewClassifierService(opts...)
 	r.Batches = NewBatchService(opts...)
 	r.Classify = NewClassifyService(opts...)
 	r.Configurations = NewConfigurationService(opts...)
+	r.WebhookConfigs = NewWebhookConfigService(opts...)
 	r.Projects = NewProjectService(opts...)
 	r.DataSinks = NewDataSinkService(opts...)
 	r.DataSources = NewDataSourceService(opts...)

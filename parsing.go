@@ -129,6 +129,14 @@ func (r *ParsingService) Get(ctx context.Context, jobID string, query ParsingGet
 	return res, err
 }
 
+// List the parse versions accepted by each tier.
+func (r *ParsingService) ListVersions(ctx context.Context, opts ...option.RequestOption) (res *ParsingListVersionsResponse, err error) {
+	opts = slices.Concat(r.options, opts)
+	path := "api/v2/parse/versions"
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, nil, &res, opts...)
+	return res, err
+}
+
 // Bounding box with coordinates and optional metadata.
 type BBox struct {
 	// Height of the bounding box
@@ -3019,6 +3027,58 @@ type ParsingGetResponseTextPage struct {
 // Returns the unmodified JSON received from the API
 func (r ParsingGetResponseTextPage) RawJSON() string { return r.JSON.raw }
 func (r *ParsingGetResponseTextPage) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Versions accepted by the parse API, grouped by tier.
+type ParsingListVersionsResponse struct {
+	// Versions for the agentic tier
+	//
+	// Any of "2026-07-24", "2026-07-23", "2026-07-15", "2026-06-18", "2026-06-11",
+	// "2026-06-04", "2026-06-01", "2026-05-26", "2026-05-21", "2026-05-20",
+	// "2026-05-19", "2026-05-13", "2026-05-11", "2026-05-06", "2026-05-04",
+	// "2026-04-27", "2026-04-22", "2026-04-09", "2026-04-06", "2026-04-02",
+	// "2026-03-31", "2026-03-30", "2026-03-27", "2026-03-25", "2026-03-23",
+	// "2026-03-22", "2026-03-20", "2026-03-11", "2026-03-10", "2026-03-09",
+	// "2026-03-03", "2026-03-02", "2026-02-26", "2026-02-24", "2026-01-30",
+	// "2026-01-22", "2026-01-21", "2026-01-16", "2026-01-08", "2025-12-31",
+	// "2025-12-18", "2025-12-11".
+	Agentic []string `json:"agentic" api:"required"`
+	// Versions for the agentic_plus tier
+	//
+	// Any of "2026-07-08", "2026-06-18", "2026-06-11", "2026-06-04", "2026-06-01",
+	// "2026-05-26", "2026-05-21", "2026-05-20", "2026-05-19", "2026-05-11",
+	// "2026-05-06", "2026-05-04", "2026-05-01", "2026-04-27", "2026-04-19",
+	// "2026-04-14", "2026-04-09", "2026-04-02", "2026-03-31", "2026-03-26",
+	// "2026-03-25", "2026-03-22", "2026-03-20", "2026-03-17", "2026-03-12",
+	// "2026-03-10", "2026-03-09", "2026-03-02", "2026-02-26", "2026-02-24",
+	// "2026-01-30", "2026-01-29", "2026-01-24", "2026-01-22", "2026-01-21",
+	// "2026-01-16", "2025-12-31", "2025-12-18", "2025-12-11".
+	AgenticPlus []string `json:"agentic_plus" api:"required"`
+	// Versions for the cost_effective tier
+	//
+	// Any of "2026-07-23", "2026-06-26", "2026-06-18", "2026-06-17", "2026-06-11",
+	// "2026-06-08", "2026-06-05", "2026-05-28", "2026-04-09", "2026-03-31",
+	// "2026-03-27", "2026-03-25".
+	CostEffective []string `json:"cost_effective" api:"required"`
+	// Versions for the fast tier
+	//
+	// Any of "2026-06-15", "2025-12-11".
+	Fast []string `json:"fast" api:"required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Agentic       respjson.Field
+		AgenticPlus   respjson.Field
+		CostEffective respjson.Field
+		Fast          respjson.Field
+		ExtraFields   map[string]respjson.Field
+		raw           string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r ParsingListVersionsResponse) RawJSON() string { return r.JSON.raw }
+func (r *ParsingListVersionsResponse) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 

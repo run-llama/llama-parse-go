@@ -82,6 +82,22 @@ func (r *BatchService) ListAutoPaging(ctx context.Context, query BatchListParams
 	return pagination.NewPaginatedCursorAutoPager(r.List(ctx, query, opts...))
 }
 
+// Cancel a running batch.
+//
+// Returns immediately; the batch reaches `CANCELLED` once processing stops. Files
+// that already finished keep their results. A batch in a terminal status cannot be
+// cancelled.
+func (r *BatchService) Cancel(ctx context.Context, batchID string, body BatchCancelParams, opts ...option.RequestOption) (res *BatchCancelResponse, err error) {
+	opts = slices.Concat(r.options, opts)
+	if batchID == "" {
+		err = errors.New("missing required batch_id parameter")
+		return nil, err
+	}
+	path := fmt.Sprintf("api/v2/batches/%s/cancel", url.PathEscape(batchID))
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, body, &res, opts...)
+	return res, err
+}
+
 // Get a batch by ID.
 func (r *BatchService) Get(ctx context.Context, batchID string, query BatchGetParams, opts ...option.RequestOption) (res *BatchGetResponse, err error) {
 	opts = slices.Concat(r.options, opts)
@@ -487,6 +503,195 @@ const (
 // reliable per-file result set. `results` is only populated when explicitly
 // requested with `expand=results` and may be `null` while a batch is still
 // running.
+type BatchCancelResponse struct {
+	// Unique identifier
+	ID string `json:"id" api:"required"`
+	// Batch configuration snapshot.
+	Config BatchCancelResponseConfig `json:"config" api:"required"`
+	// Project this batch belongs to.
+	ProjectID string `json:"project_id" api:"required"`
+	// Directory being processed.
+	SourceDirectoryID string `json:"source_directory_id" api:"required"`
+	// Current batch status.
+	//
+	// Any of "CANCELLED", "COMPLETED", "FAILED", "PENDING", "RUNNING", "THROTTLED".
+	Status BatchCancelResponseStatus `json:"status" api:"required"`
+	// Creation datetime
+	CreatedAt time.Time `json:"created_at" api:"nullable" format:"date-time"`
+	// Expanded per-file result mappings. Null unless requested with expand=results, or
+	// while the batch is still running.
+	Results []BatchCancelResponseResult `json:"results" api:"nullable"`
+	// Update datetime
+	UpdatedAt time.Time `json:"updated_at" api:"nullable" format:"date-time"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		ID                respjson.Field
+		Config            respjson.Field
+		ProjectID         respjson.Field
+		SourceDirectoryID respjson.Field
+		Status            respjson.Field
+		CreatedAt         respjson.Field
+		Results           respjson.Field
+		UpdatedAt         respjson.Field
+		ExtraFields       map[string]respjson.Field
+		raw               string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r BatchCancelResponse) RawJSON() string { return r.JSON.raw }
+func (r *BatchCancelResponse) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Batch configuration snapshot.
+type BatchCancelResponseConfig struct {
+	// Job to create for each file in the source directory.
+	Job BatchCancelResponseConfigJob `json:"job" api:"required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Job         respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r BatchCancelResponseConfig) RawJSON() string { return r.JSON.raw }
+func (r *BatchCancelResponseConfig) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Job to create for each file in the source directory.
+type BatchCancelResponseConfigJob struct {
+	// Product configuration ID or built-in preset ID matching the job type.
+	ConfigurationID string `json:"configuration_id" api:"required"`
+	// Product job type to run for each source directory file.
+	//
+	// Any of "parse_v2", "extract_v2".
+	Type BatchCancelResponseConfigJobType `json:"type" api:"required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		ConfigurationID respjson.Field
+		Type            respjson.Field
+		ExtraFields     map[string]respjson.Field
+		raw             string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r BatchCancelResponseConfigJob) RawJSON() string { return r.JSON.raw }
+func (r *BatchCancelResponseConfigJob) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Product job type to run for each source directory file.
+type BatchCancelResponseConfigJobType string
+
+const (
+	BatchCancelResponseConfigJobTypeParseV2   BatchCancelResponseConfigJobType = "parse_v2"
+	BatchCancelResponseConfigJobTypeExtractV2 BatchCancelResponseConfigJobType = "extract_v2"
+)
+
+// Current batch status.
+type BatchCancelResponseStatus string
+
+const (
+	BatchCancelResponseStatusCancelled BatchCancelResponseStatus = "CANCELLED"
+	BatchCancelResponseStatusCompleted BatchCancelResponseStatus = "COMPLETED"
+	BatchCancelResponseStatusFailed    BatchCancelResponseStatus = "FAILED"
+	BatchCancelResponseStatusPending   BatchCancelResponseStatus = "PENDING"
+	BatchCancelResponseStatusRunning   BatchCancelResponseStatus = "RUNNING"
+	BatchCancelResponseStatusThrottled BatchCancelResponseStatus = "THROTTLED"
+)
+
+// Result projection for one source directory file in a batch.
+//
+// Example: { "source_directory_file_id":
+// "dfl-aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee", "job_reference": { "type":
+// "parse_v2", "id": "pjb-aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee" }, "error_message":
+// null }
+//
+// This is a projection of directory-sync state, not a separate child resource that
+// callers need to create. The source directory file ID is the stable correlation
+// key. Underlying job progress and failures should be resolved through the
+// referenced product job endpoint.
+type BatchCancelResponseResult struct {
+	// Source directory file processed by this batch.
+	SourceDirectoryFileID string `json:"source_directory_file_id" api:"required"`
+	// Batch-level mapping error if the system could not create or associate a job for
+	// this source file.
+	ErrorMessage string `json:"error_message" api:"nullable"`
+	// Reference to a job produced by a batch.
+	//
+	// Example: { "type": "parse_v2", "id": "pjb-aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"
+	// }
+	JobReference BatchCancelResponseResultJobReference `json:"job_reference" api:"nullable"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		SourceDirectoryFileID respjson.Field
+		ErrorMessage          respjson.Field
+		JobReference          respjson.Field
+		ExtraFields           map[string]respjson.Field
+		raw                   string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r BatchCancelResponseResult) RawJSON() string { return r.JSON.raw }
+func (r *BatchCancelResponseResult) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Reference to a job produced by a batch.
+//
+// Example: { "type": "parse_v2", "id": "pjb-aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"
+// }
+type BatchCancelResponseResultJobReference struct {
+	// Job ID, such as a parse job ID.
+	ID string `json:"id" api:"required"`
+	// Type of job produced for the file.
+	//
+	// Any of "parse_v2", "extract_v2".
+	Type BatchCancelResponseResultJobReferenceType `json:"type" api:"required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		ID          respjson.Field
+		Type        respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r BatchCancelResponseResultJobReference) RawJSON() string { return r.JSON.raw }
+func (r *BatchCancelResponseResultJobReference) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Type of job produced for the file.
+type BatchCancelResponseResultJobReferenceType string
+
+const (
+	BatchCancelResponseResultJobReferenceTypeParseV2   BatchCancelResponseResultJobReferenceType = "parse_v2"
+	BatchCancelResponseResultJobReferenceTypeExtractV2 BatchCancelResponseResultJobReferenceType = "extract_v2"
+)
+
+// A top-level batch.
+//
+// Example: { "id": "bat-aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee", "project_id":
+// "prj-aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee", "source_directory_id":
+// "dir-aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee", "config": { "job": { "type":
+// "parse_v2", "configuration_id": "cfg-PARSE_AGENTIC" } }, "status": "COMPLETED",
+// "results": [ { "source_directory_file_id":
+// "dfl-aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee", "job_reference": { "type":
+// "parse_v2", "id": "pjb-aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee" }, "error_message":
+// null } ] }
+//
+// Batch-level `FAILED` means the orchestration failed and cannot provide a
+// reliable per-file result set. `results` is only populated when explicitly
+// requested with `expand=results` and may be `null` while a batch is still
+// running.
 type BatchGetResponse struct {
 	// Unique identifier
 	ID string `json:"id" api:"required"`
@@ -806,6 +1011,20 @@ const (
 	BatchListParamsStatusRunning   BatchListParamsStatus = "RUNNING"
 	BatchListParamsStatusThrottled BatchListParamsStatus = "THROTTLED"
 )
+
+type BatchCancelParams struct {
+	OrganizationID param.Opt[string] `query:"organization_id,omitzero" format:"uuid" json:"-"`
+	ProjectID      param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
+	paramObj
+}
+
+// URLQuery serializes [BatchCancelParams]'s query parameters as `url.Values`.
+func (r BatchCancelParams) URLQuery() (v url.Values, err error) {
+	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
+		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
+		NestedFormat: apiquery.NestedQueryFormatBrackets,
+	})
+}
 
 type BatchGetParams struct {
 	OrganizationID param.Opt[string] `query:"organization_id,omitzero" format:"uuid" json:"-"`

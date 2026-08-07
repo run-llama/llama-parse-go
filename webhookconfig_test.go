@@ -7,14 +7,13 @@ import (
 	"errors"
 	"os"
 	"testing"
-	"time"
 
 	"github.com/run-llama/llama-parse-go"
 	"github.com/run-llama/llama-parse-go/internal/testutil"
 	"github.com/run-llama/llama-parse-go/option"
 )
 
-func TestBatchNewWithOptionalParams(t *testing.T) {
+func TestWebhookConfigNewWithOptionalParams(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
@@ -27,26 +26,18 @@ func TestBatchNewWithOptionalParams(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Batches.New(context.TODO(), llamacloud.BatchNewParams{
-		Config: llamacloud.BatchNewParamsConfig{
-			Job: llamacloud.BatchNewParamsConfigJob{
-				ConfigurationID: "cfg-PARSE_AGENTIC",
-				Type:            llamacloud.BatchNewParamsConfigJobTypeParseV2,
-			},
-		},
-		SourceDirectoryID:       "dir-aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
-		OrganizationID:          llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		ProjectID:               llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		WebhookConfigurationIDs: []string{"whc-...", "whc-..."},
-		WebhookConfigurations: []llamacloud.BatchNewParamsWebhookConfiguration{{
+	_, err := client.WebhookConfigs.New(context.TODO(), llamacloud.WebhookConfigNewParams{
+		WebhookConfigCreate: llamacloud.WebhookConfigCreateParam{
+			WebhookURL:    "https://example.com/webhooks/llamacloud",
 			WebhookEvents: []string{"parse.success", "parse.error"},
 			WebhookHeaders: map[string]string{
 				"Authorization": "Bearer sk-...",
 			},
-			WebhookOutputFormat:  llamacloud.String("json"),
+			WebhookOutputFormat:  llamacloud.WebhookConfigCreateWebhookOutputFormatJson,
 			WebhookSigningSecret: llamacloud.String("whsec_..."),
-			WebhookURL:           llamacloud.String("https://example.com/webhooks/llamacloud"),
-		}},
+		},
+		OrganizationID: llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		ProjectID:      llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 	})
 	if err != nil {
 		var apierr *llamacloud.Error
@@ -57,7 +48,7 @@ func TestBatchNewWithOptionalParams(t *testing.T) {
 	}
 }
 
-func TestBatchListWithOptionalParams(t *testing.T) {
+func TestWebhookConfigGetWithOptionalParams(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
@@ -70,42 +61,10 @@ func TestBatchListWithOptionalParams(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Batches.List(context.TODO(), llamacloud.BatchListParams{
-		CreatedAtOnOrAfter:  llamacloud.Time(time.Now()),
-		CreatedAtOnOrBefore: llamacloud.Time(time.Now()),
-		OrganizationID:      llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		PageSize:            llamacloud.Int(0),
-		PageToken:           llamacloud.String("page_token"),
-		ProjectID:           llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		SourceDirectoryID:   llamacloud.String("source_directory_id"),
-		Status:              llamacloud.BatchListParamsStatusCancelled,
-	})
-	if err != nil {
-		var apierr *llamacloud.Error
-		if errors.As(err, &apierr) {
-			t.Log(string(apierr.DumpRequest(true)))
-		}
-		t.Fatalf("err should be nil: %s", err.Error())
-	}
-}
-
-func TestBatchCancelWithOptionalParams(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
-	baseURL := "http://localhost:4010"
-	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
-		baseURL = envURL
-	}
-	if !testutil.CheckTestServer(t, baseURL) {
-		return
-	}
-	client := llamacloud.NewClient(
-		option.WithBaseURL(baseURL),
-		option.WithAPIKey("My API Key"),
-	)
-	_, err := client.Batches.Cancel(
+	_, err := client.WebhookConfigs.Get(
 		context.TODO(),
-		"batch_id",
-		llamacloud.BatchCancelParams{
+		"config_id",
+		llamacloud.WebhookConfigGetParams{
 			OrganizationID: llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 			ProjectID:      llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		},
@@ -119,7 +78,7 @@ func TestBatchCancelWithOptionalParams(t *testing.T) {
 	}
 }
 
-func TestBatchGetWithOptionalParams(t *testing.T) {
+func TestWebhookConfigUpdateWithOptionalParams(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
@@ -132,11 +91,73 @@ func TestBatchGetWithOptionalParams(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Batches.Get(
+	_, err := client.WebhookConfigs.Update(
 		context.TODO(),
-		"batch_id",
-		llamacloud.BatchGetParams{
-			Expand:         []string{"string", "string"},
+		"config_id",
+		llamacloud.WebhookConfigUpdateParams{
+			OrganizationID: llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+			ProjectID:      llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+			WebhookEvents:  []string{"batch.cancelled"},
+			WebhookHeaders: map[string]string{
+				"foo": "string",
+			},
+			WebhookOutputFormat:  llamacloud.WebhookConfigUpdateParamsWebhookOutputFormatJson,
+			WebhookSigningSecret: llamacloud.String("webhook_signing_secret"),
+			WebhookURL:           llamacloud.String("webhook_url"),
+		},
+	)
+	if err != nil {
+		var apierr *llamacloud.Error
+		if errors.As(err, &apierr) {
+			t.Log(string(apierr.DumpRequest(true)))
+		}
+		t.Fatalf("err should be nil: %s", err.Error())
+	}
+}
+
+func TestWebhookConfigListWithOptionalParams(t *testing.T) {
+	t.Skip("Mock server tests are disabled")
+	baseURL := "http://localhost:4010"
+	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
+		baseURL = envURL
+	}
+	if !testutil.CheckTestServer(t, baseURL) {
+		return
+	}
+	client := llamacloud.NewClient(
+		option.WithBaseURL(baseURL),
+		option.WithAPIKey("My API Key"),
+	)
+	_, err := client.WebhookConfigs.List(context.TODO(), llamacloud.WebhookConfigListParams{
+		OrganizationID: llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		ProjectID:      llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+	})
+	if err != nil {
+		var apierr *llamacloud.Error
+		if errors.As(err, &apierr) {
+			t.Log(string(apierr.DumpRequest(true)))
+		}
+		t.Fatalf("err should be nil: %s", err.Error())
+	}
+}
+
+func TestWebhookConfigDeleteWithOptionalParams(t *testing.T) {
+	t.Skip("Mock server tests are disabled")
+	baseURL := "http://localhost:4010"
+	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
+		baseURL = envURL
+	}
+	if !testutil.CheckTestServer(t, baseURL) {
+		return
+	}
+	client := llamacloud.NewClient(
+		option.WithBaseURL(baseURL),
+		option.WithAPIKey("My API Key"),
+	)
+	err := client.WebhookConfigs.Delete(
+		context.TODO(),
+		"config_id",
+		llamacloud.WebhookConfigDeleteParams{
 			OrganizationID: llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 			ProjectID:      llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		},
