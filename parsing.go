@@ -440,6 +440,7 @@ type FormJsonUnion struct {
 	// This field is from variant [FormField].
 	Field FormFieldField `json:"field"`
 	ID    string         `json:"id"`
+	Bbox  []BBox         `json:"bbox"`
 	// This field is from variant [FormField].
 	IsEmpty bool   `json:"isEmpty"`
 	Label   string `json:"label"`
@@ -458,6 +459,7 @@ type FormJsonUnion struct {
 	JSON    struct {
 		Field      respjson.Field
 		ID         respjson.Field
+		Bbox       respjson.Field
 		IsEmpty    respjson.Field
 		Label      respjson.Field
 		Type       respjson.Field
@@ -532,6 +534,8 @@ type FormField struct {
 	Field FormFieldField `json:"field" api:"required"`
 	// Field number/letter printed on the form (e.g. '1a'), if any
 	ID string `json:"id" api:"nullable"`
+	// Bounding boxes of the field's fillable area on the page.
+	Bbox []BBox `json:"bbox" api:"nullable"`
 	// True for a printed-but-blank text field (mutually exclusive with value)
 	IsEmpty bool `json:"isEmpty" api:"nullable"`
 	// Printed field caption, if any
@@ -550,6 +554,7 @@ type FormField struct {
 	JSON struct {
 		Field       respjson.Field
 		ID          respjson.Field
+		Bbox        respjson.Field
 		IsEmpty     respjson.Field
 		Label       respjson.Field
 		Type        respjson.Field
@@ -631,6 +636,7 @@ type FormFieldValueItemUnion struct {
 	// This field is from variant [FormField].
 	Field FormFieldField `json:"field"`
 	ID    string         `json:"id"`
+	Bbox  []BBox         `json:"bbox"`
 	// This field is from variant [FormField].
 	IsEmpty bool   `json:"isEmpty"`
 	Label   string `json:"label"`
@@ -649,6 +655,7 @@ type FormFieldValueItemUnion struct {
 	JSON    struct {
 		Field      respjson.Field
 		ID         respjson.Field
+		Bbox       respjson.Field
 		IsEmpty    respjson.Field
 		Label      respjson.Field
 		Type       respjson.Field
@@ -863,6 +870,7 @@ type FormSectionItemUnion struct {
 	// This field is from variant [FormField].
 	Field FormFieldField `json:"field"`
 	ID    string         `json:"id"`
+	Bbox  []BBox         `json:"bbox"`
 	// This field is from variant [FormField].
 	IsEmpty bool   `json:"isEmpty"`
 	Label   string `json:"label"`
@@ -881,6 +889,7 @@ type FormSectionItemUnion struct {
 	JSON    struct {
 		Field      respjson.Field
 		ID         respjson.Field
+		Bbox       respjson.Field
 		IsEmpty    respjson.Field
 		Label      respjson.Field
 		Type       respjson.Field
@@ -961,6 +970,8 @@ type FormTable struct {
 	Rows [][]*FormTableRowUnion `json:"rows" api:"required"`
 	// Identifier printed on the form, if any
 	ID string `json:"id" api:"nullable"`
+	// Bounding boxes of the table's fillable regions on the page.
+	Bbox []BBox `json:"bbox" api:"nullable"`
 	// Printed column headers in order, if any
 	Columns []string `json:"columns" api:"nullable"`
 	// Printed table caption, if any
@@ -973,6 +984,7 @@ type FormTable struct {
 	JSON struct {
 		Rows        respjson.Field
 		ID          respjson.Field
+		Bbox        respjson.Field
 		Columns     respjson.Field
 		Label       respjson.Field
 		Type        respjson.Field
@@ -1058,6 +1070,7 @@ type FormTableCellItemsItemUnion struct {
 	// This field is from variant [FormField].
 	Field FormFieldField `json:"field"`
 	ID    string         `json:"id"`
+	Bbox  []BBox         `json:"bbox"`
 	// This field is from variant [FormField].
 	IsEmpty bool   `json:"isEmpty"`
 	Label   string `json:"label"`
@@ -1076,6 +1089,7 @@ type FormTableCellItemsItemUnion struct {
 	JSON    struct {
 		Field      respjson.Field
 		ID         respjson.Field
+		Bbox       respjson.Field
 		IsEmpty    respjson.Field
 		Label      respjson.Field
 		Type       respjson.Field
@@ -2155,12 +2169,18 @@ type ParsingGetResponseFormsPageUnion struct {
 	Forms      []Form `json:"forms"`
 	PageNumber int64  `json:"page_number"`
 	Success    bool   `json:"success"`
+	// This field is from variant [ParsingGetResponseFormsPageFormsResultPage].
+	PageHeight float64 `json:"page_height"`
+	// This field is from variant [ParsingGetResponseFormsPageFormsResultPage].
+	PageWidth float64 `json:"page_width"`
 	// This field is from variant [ParsingGetResponseFormsPageFailedFormsPage].
 	Error string `json:"error"`
 	JSON  struct {
 		Forms      respjson.Field
 		PageNumber respjson.Field
 		Success    respjson.Field
+		PageHeight respjson.Field
+		PageWidth  respjson.Field
 		Error      respjson.Field
 		raw        string
 	} `json:"-"`
@@ -2191,11 +2211,17 @@ type ParsingGetResponseFormsPageFormsResultPage struct {
 	PageNumber int64 `json:"page_number" api:"required"`
 	// Success indicator
 	Success bool `json:"success" api:"required"`
+	// Height of the page in points
+	PageHeight float64 `json:"page_height" api:"nullable"`
+	// Width of the page in points
+	PageWidth float64 `json:"page_width" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Forms       respjson.Field
 		PageNumber  respjson.Field
 		Success     respjson.Field
+		PageHeight  respjson.Field
+		PageWidth   respjson.Field
 		ExtraFields map[string]respjson.Field
 		raw         string
 	} `json:"-"`
