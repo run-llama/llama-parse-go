@@ -323,6 +323,7 @@ type ConfigurationCreateParametersUnion struct {
 	CiteSources bool `json:"cite_sources"`
 	// This field is from variant [ExtractV2ParametersResp].
 	ConfidenceScores bool `json:"confidence_scores"`
+	DisableCache     bool `json:"disable_cache"`
 	// This field is from variant [ExtractV2ParametersResp].
 	ExtractionTarget ExtractV2ParametersExtractionTarget `json:"extraction_target"`
 	// This field is from variant [ExtractV2ParametersResp].
@@ -346,8 +347,6 @@ type ConfigurationCreateParametersUnion struct {
 	ClientName string `json:"client_name"`
 	// This field is from variant [ParseV2ParametersResp].
 	CropBox ParseV2ParametersCropBoxResp `json:"crop_box"`
-	// This field is from variant [ParseV2ParametersResp].
-	DisableCache bool `json:"disable_cache"`
 	// This field is from variant [ParseV2ParametersResp].
 	FastOptions any `json:"fast_options"`
 	// This field is from variant [ParseV2ParametersResp].
@@ -390,6 +389,7 @@ type ConfigurationCreateParametersUnion struct {
 		DataSchema                 respjson.Field
 		CiteSources                respjson.Field
 		ConfidenceScores           respjson.Field
+		DisableCache               respjson.Field
 		ExtractionTarget           respjson.Field
 		MaxPages                   respjson.Field
 		ParseConfigID              respjson.Field
@@ -403,7 +403,6 @@ type ConfigurationCreateParametersUnion struct {
 		AgenticOptions             respjson.Field
 		ClientName                 respjson.Field
 		CropBox                    respjson.Field
-		DisableCache               respjson.Field
 		FastOptions                respjson.Field
 		InputOptions               respjson.Field
 		OutputOptions              respjson.Field
@@ -745,6 +744,7 @@ type ConfigurationResponseParametersUnion struct {
 	CiteSources bool `json:"cite_sources"`
 	// This field is from variant [ExtractV2ParametersResp].
 	ConfidenceScores bool `json:"confidence_scores"`
+	DisableCache     bool `json:"disable_cache"`
 	// This field is from variant [ExtractV2ParametersResp].
 	ExtractionTarget ExtractV2ParametersExtractionTarget `json:"extraction_target"`
 	// This field is from variant [ExtractV2ParametersResp].
@@ -768,8 +768,6 @@ type ConfigurationResponseParametersUnion struct {
 	ClientName string `json:"client_name"`
 	// This field is from variant [ParseV2ParametersResp].
 	CropBox ParseV2ParametersCropBoxResp `json:"crop_box"`
-	// This field is from variant [ParseV2ParametersResp].
-	DisableCache bool `json:"disable_cache"`
 	// This field is from variant [ParseV2ParametersResp].
 	FastOptions any `json:"fast_options"`
 	// This field is from variant [ParseV2ParametersResp].
@@ -812,6 +810,7 @@ type ConfigurationResponseParametersUnion struct {
 		DataSchema                 respjson.Field
 		CiteSources                respjson.Field
 		ConfidenceScores           respjson.Field
+		DisableCache               respjson.Field
 		ExtractionTarget           respjson.Field
 		MaxPages                   respjson.Field
 		ParseConfigID              respjson.Field
@@ -825,7 +824,6 @@ type ConfigurationResponseParametersUnion struct {
 		AgenticOptions             respjson.Field
 		ClientName                 respjson.Field
 		CropBox                    respjson.Field
-		DisableCache               respjson.Field
 		FastOptions                respjson.Field
 		InputOptions               respjson.Field
 		OutputOptions              respjson.Field
@@ -1012,6 +1010,8 @@ type ExtractV2ParametersResp struct {
 	// Include confidence scores in results. Returned under `extract_metadata`
 	// (auto-included when set).
 	ConfidenceScores bool `json:"confidence_scores"`
+	// Disable reuse and storage of Extract results
+	DisableCache bool `json:"disable_cache"`
 	// Granularity of extraction: per_doc returns one object per document, per_page
 	// returns one object per page, per_table_row returns one object per table row
 	//
@@ -1059,6 +1059,7 @@ type ExtractV2ParametersResp struct {
 		ProductType      respjson.Field
 		CiteSources      respjson.Field
 		ConfidenceScores respjson.Field
+		DisableCache     respjson.Field
 		ExtractionTarget respjson.Field
 		MaxPages         respjson.Field
 		ParseConfigID    respjson.Field
@@ -1198,6 +1199,8 @@ type ExtractV2Parameters struct {
 	// Include confidence scores in results. Returned under `extract_metadata`
 	// (auto-included when set).
 	ConfidenceScores param.Opt[bool] `json:"confidence_scores,omitzero"`
+	// Disable reuse and storage of Extract results
+	DisableCache param.Opt[bool] `json:"disable_cache,omitzero"`
 	// Beta. When true, extract structured data directly from a spreadsheet workbook
 	// (.xlsx/.xls/.csv) — the agent reads cells straight from the workbook instead of
 	// the standard document path. Off by default (spreadsheets keep the standard

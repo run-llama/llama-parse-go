@@ -168,6 +168,8 @@ type ExtractConfiguration struct {
 	// Include confidence scores in results. Returned under `extract_metadata`
 	// (auto-included when set).
 	ConfidenceScores bool `json:"confidence_scores"`
+	// Disable reuse and storage of Extract results
+	DisableCache bool `json:"disable_cache"`
 	// Granularity of extraction: per_doc returns one object per document, per_page
 	// returns one object per page, per_table_row returns one object per table row
 	//
@@ -214,6 +216,7 @@ type ExtractConfiguration struct {
 		DataSchema       respjson.Field
 		CiteSources      respjson.Field
 		ConfidenceScores respjson.Field
+		DisableCache     respjson.Field
 		ExtractionTarget respjson.Field
 		MaxPages         respjson.Field
 		ParseConfigID    respjson.Field
@@ -353,6 +356,8 @@ type ExtractConfigurationParam struct {
 	// Include confidence scores in results. Returned under `extract_metadata`
 	// (auto-included when set).
 	ConfidenceScores param.Opt[bool] `json:"confidence_scores,omitzero"`
+	// Disable reuse and storage of Extract results
+	DisableCache param.Opt[bool] `json:"disable_cache,omitzero"`
 	// Beta. When true, extract structured data directly from a spreadsheet workbook
 	// (.xlsx/.xls/.csv) — the agent reads cells straight from the workbook instead of
 	// the standard document path. Off by default (spreadsheets keep the standard
