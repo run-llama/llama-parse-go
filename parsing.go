@@ -91,6 +91,21 @@ func (r *ParsingService) ListAutoPaging(ctx context.Context, query ParsingListPa
 	return pagination.NewPaginatedCursorAutoPager(r.List(ctx, query, opts...))
 }
 
+// Cancel a running parse job.
+//
+// Stops processing and marks the job as CANCELLED. Returns the updated job. Jobs
+// already in a terminal state (COMPLETED, FAILED, CANCELLED) cannot be cancelled.
+func (r *ParsingService) Cancel(ctx context.Context, jobID string, body ParsingCancelParams, opts ...option.RequestOption) (res *ParsingCancelResponse, err error) {
+	opts = slices.Concat(r.options, opts)
+	if jobID == "" {
+		err = errors.New("missing required job_id parameter")
+		return nil, err
+	}
+	path := fmt.Sprintf("api/v2/parse/%s/cancel", url.PathEscape(jobID))
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, body, &res, opts...)
+	return res, err
+}
+
 // Retrieve a parse job with optional expanded content.
 //
 // By default returns job metadata only. Use `expand` to include parsed content:
@@ -98,7 +113,8 @@ func (r *ParsingService) ListAutoPaging(ctx context.Context, query ParsingListPa
 // - `text` — plain text output
 // - `markdown` — markdown output
 // - `items` — structured page-by-page output
-// - `job_metadata` — usage and processing details
+// - `job_metadata` — processing details
+// - `usage` — credits billed against the job
 //
 // Content metadata fields (e.g. `text_content_metadata`) return presigned URLs for
 // downloading large results.
@@ -110,6 +126,14 @@ func (r *ParsingService) Get(ctx context.Context, jobID string, query ParsingGet
 	}
 	path := fmt.Sprintf("api/v2/parse/%s", url.PathEscape(jobID))
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, query, &res, opts...)
+	return res, err
+}
+
+// List the parse versions accepted by each tier.
+func (r *ParsingService) ListVersions(ctx context.Context, opts ...option.RequestOption) (res *ParsingListVersionsResponse, err error) {
+	opts = slices.Concat(r.options, opts)
+	path := "api/v2/parse/versions"
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, nil, &res, opts...)
 	return res, err
 }
 
@@ -416,6 +440,7 @@ type FormJsonUnion struct {
 	// This field is from variant [FormField].
 	Field FormFieldField `json:"field"`
 	ID    string         `json:"id"`
+	Bbox  []BBox         `json:"bbox"`
 	// This field is from variant [FormField].
 	IsEmpty bool   `json:"isEmpty"`
 	Label   string `json:"label"`
@@ -434,6 +459,7 @@ type FormJsonUnion struct {
 	JSON    struct {
 		Field      respjson.Field
 		ID         respjson.Field
+		Bbox       respjson.Field
 		IsEmpty    respjson.Field
 		Label      respjson.Field
 		Type       respjson.Field
@@ -508,6 +534,8 @@ type FormField struct {
 	Field FormFieldField `json:"field" api:"required"`
 	// Field number/letter printed on the form (e.g. '1a'), if any
 	ID string `json:"id" api:"nullable"`
+	// Bounding boxes of the field's fillable area on the page.
+	Bbox []BBox `json:"bbox" api:"nullable"`
 	// True for a printed-but-blank text field (mutually exclusive with value)
 	IsEmpty bool `json:"isEmpty" api:"nullable"`
 	// Printed field caption, if any
@@ -526,6 +554,7 @@ type FormField struct {
 	JSON struct {
 		Field       respjson.Field
 		ID          respjson.Field
+		Bbox        respjson.Field
 		IsEmpty     respjson.Field
 		Label       respjson.Field
 		Type        respjson.Field
@@ -607,6 +636,7 @@ type FormFieldValueItemUnion struct {
 	// This field is from variant [FormField].
 	Field FormFieldField `json:"field"`
 	ID    string         `json:"id"`
+	Bbox  []BBox         `json:"bbox"`
 	// This field is from variant [FormField].
 	IsEmpty bool   `json:"isEmpty"`
 	Label   string `json:"label"`
@@ -625,6 +655,7 @@ type FormFieldValueItemUnion struct {
 	JSON    struct {
 		Field      respjson.Field
 		ID         respjson.Field
+		Bbox       respjson.Field
 		IsEmpty    respjson.Field
 		Label      respjson.Field
 		Type       respjson.Field
@@ -839,6 +870,7 @@ type FormSectionItemUnion struct {
 	// This field is from variant [FormField].
 	Field FormFieldField `json:"field"`
 	ID    string         `json:"id"`
+	Bbox  []BBox         `json:"bbox"`
 	// This field is from variant [FormField].
 	IsEmpty bool   `json:"isEmpty"`
 	Label   string `json:"label"`
@@ -857,6 +889,7 @@ type FormSectionItemUnion struct {
 	JSON    struct {
 		Field      respjson.Field
 		ID         respjson.Field
+		Bbox       respjson.Field
 		IsEmpty    respjson.Field
 		Label      respjson.Field
 		Type       respjson.Field
@@ -937,6 +970,8 @@ type FormTable struct {
 	Rows [][]*FormTableRowUnion `json:"rows" api:"required"`
 	// Identifier printed on the form, if any
 	ID string `json:"id" api:"nullable"`
+	// Bounding boxes of the table's fillable regions on the page.
+	Bbox []BBox `json:"bbox" api:"nullable"`
 	// Printed column headers in order, if any
 	Columns []string `json:"columns" api:"nullable"`
 	// Printed table caption, if any
@@ -949,6 +984,7 @@ type FormTable struct {
 	JSON struct {
 		Rows        respjson.Field
 		ID          respjson.Field
+		Bbox        respjson.Field
 		Columns     respjson.Field
 		Label       respjson.Field
 		Type        respjson.Field
@@ -1034,6 +1070,7 @@ type FormTableCellItemsItemUnion struct {
 	// This field is from variant [FormField].
 	Field FormFieldField `json:"field"`
 	ID    string         `json:"id"`
+	Bbox  []BBox         `json:"bbox"`
 	// This field is from variant [FormField].
 	IsEmpty bool   `json:"isEmpty"`
 	Label   string `json:"label"`
@@ -1052,6 +1089,7 @@ type FormTableCellItemsItemUnion struct {
 	JSON    struct {
 		Field      respjson.Field
 		ID         respjson.Field
+		Bbox       respjson.Field
 		IsEmpty    respjson.Field
 		Label      respjson.Field
 		Type       respjson.Field
@@ -1777,6 +1815,8 @@ type ParsingNewResponse struct {
 	Tier string `json:"tier" api:"nullable"`
 	// Update datetime
 	UpdatedAt time.Time `json:"updated_at" api:"nullable" format:"date-time"`
+	// Usage recorded against a job.
+	Usage ParsingNewResponseUsage `json:"usage" api:"nullable"`
 	// Key/value tags associated with this job.
 	UserMetadata map[string]string `json:"user_metadata" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
@@ -1789,6 +1829,7 @@ type ParsingNewResponse struct {
 		Name         respjson.Field
 		Tier         respjson.Field
 		UpdatedAt    respjson.Field
+		Usage        respjson.Field
 		UserMetadata respjson.Field
 		ExtraFields  map[string]respjson.Field
 		raw          string
@@ -1812,6 +1853,24 @@ const (
 	ParsingNewResponseStatusRunning   ParsingNewResponseStatus = "RUNNING"
 )
 
+// Usage recorded against a job.
+type ParsingNewResponseUsage struct {
+	// Total credits billed against this job. Null until billing has recorded it.
+	Credits float64 `json:"credits" api:"nullable"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Credits     respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r ParsingNewResponseUsage) RawJSON() string { return r.JSON.raw }
+func (r *ParsingNewResponseUsage) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
 // A parse job.
 type ParsingListResponse struct {
 	// Unique parse job identifier
@@ -1832,6 +1891,8 @@ type ParsingListResponse struct {
 	Tier string `json:"tier" api:"nullable"`
 	// Update datetime
 	UpdatedAt time.Time `json:"updated_at" api:"nullable" format:"date-time"`
+	// Usage recorded against a job.
+	Usage ParsingListResponseUsage `json:"usage" api:"nullable"`
 	// Key/value tags associated with this job.
 	UserMetadata map[string]string `json:"user_metadata" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
@@ -1844,6 +1905,7 @@ type ParsingListResponse struct {
 		Name         respjson.Field
 		Tier         respjson.Field
 		UpdatedAt    respjson.Field
+		Usage        respjson.Field
 		UserMetadata respjson.Field
 		ExtraFields  map[string]respjson.Field
 		raw          string
@@ -1866,6 +1928,100 @@ const (
 	ParsingListResponseStatusPending   ParsingListResponseStatus = "PENDING"
 	ParsingListResponseStatusRunning   ParsingListResponseStatus = "RUNNING"
 )
+
+// Usage recorded against a job.
+type ParsingListResponseUsage struct {
+	// Total credits billed against this job. Null until billing has recorded it.
+	Credits float64 `json:"credits" api:"nullable"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Credits     respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r ParsingListResponseUsage) RawJSON() string { return r.JSON.raw }
+func (r *ParsingListResponseUsage) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// A parse job.
+type ParsingCancelResponse struct {
+	// Unique parse job identifier
+	ID string `json:"id" api:"required"`
+	// Project this job belongs to
+	ProjectID string `json:"project_id" api:"required"`
+	// Current job status: PENDING, RUNNING, COMPLETED, FAILED, or CANCELLED
+	//
+	// Any of "CANCELLED", "COMPLETED", "FAILED", "PENDING", "RUNNING".
+	Status ParsingCancelResponseStatus `json:"status" api:"required"`
+	// Creation datetime
+	CreatedAt time.Time `json:"created_at" api:"nullable" format:"date-time"`
+	// Error details when status is FAILED
+	ErrorMessage string `json:"error_message" api:"nullable"`
+	// Optional display name for this parse job
+	Name string `json:"name" api:"nullable"`
+	// Parsing tier used for this job
+	Tier string `json:"tier" api:"nullable"`
+	// Update datetime
+	UpdatedAt time.Time `json:"updated_at" api:"nullable" format:"date-time"`
+	// Usage recorded against a job.
+	Usage ParsingCancelResponseUsage `json:"usage" api:"nullable"`
+	// Key/value tags associated with this job.
+	UserMetadata map[string]string `json:"user_metadata" api:"nullable"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		ID           respjson.Field
+		ProjectID    respjson.Field
+		Status       respjson.Field
+		CreatedAt    respjson.Field
+		ErrorMessage respjson.Field
+		Name         respjson.Field
+		Tier         respjson.Field
+		UpdatedAt    respjson.Field
+		Usage        respjson.Field
+		UserMetadata respjson.Field
+		ExtraFields  map[string]respjson.Field
+		raw          string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r ParsingCancelResponse) RawJSON() string { return r.JSON.raw }
+func (r *ParsingCancelResponse) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Current job status: PENDING, RUNNING, COMPLETED, FAILED, or CANCELLED
+type ParsingCancelResponseStatus string
+
+const (
+	ParsingCancelResponseStatusCancelled ParsingCancelResponseStatus = "CANCELLED"
+	ParsingCancelResponseStatusCompleted ParsingCancelResponseStatus = "COMPLETED"
+	ParsingCancelResponseStatusFailed    ParsingCancelResponseStatus = "FAILED"
+	ParsingCancelResponseStatusPending   ParsingCancelResponseStatus = "PENDING"
+	ParsingCancelResponseStatusRunning   ParsingCancelResponseStatus = "RUNNING"
+)
+
+// Usage recorded against a job.
+type ParsingCancelResponseUsage struct {
+	// Total credits billed against this job. Null until billing has recorded it.
+	Credits float64 `json:"credits" api:"nullable"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Credits     respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r ParsingCancelResponseUsage) RawJSON() string { return r.JSON.raw }
+func (r *ParsingCancelResponseUsage) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
 
 // Parse result response with job status and optional content or metadata.
 //
@@ -1940,6 +2096,8 @@ type ParsingGetResponseJob struct {
 	Tier string `json:"tier" api:"nullable"`
 	// Update datetime
 	UpdatedAt time.Time `json:"updated_at" api:"nullable" format:"date-time"`
+	// Usage recorded against a job.
+	Usage ParsingGetResponseJobUsage `json:"usage" api:"nullable"`
 	// Key/value tags associated with this job.
 	UserMetadata map[string]string `json:"user_metadata" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
@@ -1952,6 +2110,7 @@ type ParsingGetResponseJob struct {
 		Name         respjson.Field
 		Tier         respjson.Field
 		UpdatedAt    respjson.Field
+		Usage        respjson.Field
 		UserMetadata respjson.Field
 		ExtraFields  map[string]respjson.Field
 		raw          string
@@ -1961,6 +2120,24 @@ type ParsingGetResponseJob struct {
 // Returns the unmodified JSON received from the API
 func (r ParsingGetResponseJob) RawJSON() string { return r.JSON.raw }
 func (r *ParsingGetResponseJob) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Usage recorded against a job.
+type ParsingGetResponseJobUsage struct {
+	// Total credits billed against this job. Null until billing has recorded it.
+	Credits float64 `json:"credits" api:"nullable"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Credits     respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r ParsingGetResponseJobUsage) RawJSON() string { return r.JSON.raw }
+func (r *ParsingGetResponseJobUsage) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
@@ -1992,12 +2169,18 @@ type ParsingGetResponseFormsPageUnion struct {
 	Forms      []Form `json:"forms"`
 	PageNumber int64  `json:"page_number"`
 	Success    bool   `json:"success"`
+	// This field is from variant [ParsingGetResponseFormsPageFormsResultPage].
+	PageHeight float64 `json:"page_height"`
+	// This field is from variant [ParsingGetResponseFormsPageFormsResultPage].
+	PageWidth float64 `json:"page_width"`
 	// This field is from variant [ParsingGetResponseFormsPageFailedFormsPage].
 	Error string `json:"error"`
 	JSON  struct {
 		Forms      respjson.Field
 		PageNumber respjson.Field
 		Success    respjson.Field
+		PageHeight respjson.Field
+		PageWidth  respjson.Field
 		Error      respjson.Field
 		raw        string
 	} `json:"-"`
@@ -2028,11 +2211,17 @@ type ParsingGetResponseFormsPageFormsResultPage struct {
 	PageNumber int64 `json:"page_number" api:"required"`
 	// Success indicator
 	Success bool `json:"success" api:"required"`
+	// Height of the page in points
+	PageHeight float64 `json:"page_height" api:"nullable"`
+	// Width of the page in points
+	PageWidth float64 `json:"page_width" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Forms       respjson.Field
 		PageNumber  respjson.Field
 		Success     respjson.Field
+		PageHeight  respjson.Field
+		PageWidth   respjson.Field
 		ExtraFields map[string]respjson.Field
 		raw         string
 	} `json:"-"`
@@ -2189,6 +2378,8 @@ type ParsingGetResponseItemsPageUnion struct {
 	// This field is from variant [ParsingGetResponseItemsPageStructuredResultPage].
 	PageWidth float64 `json:"page_width"`
 	Success   bool    `json:"success"`
+	// This field is from variant [ParsingGetResponseItemsPageStructuredResultPage].
+	Revisions []ParsingGetResponseItemsPageStructuredResultPageRevision `json:"revisions"`
 	// This field is from variant [ParsingGetResponseItemsPageFailedStructuredPage].
 	Error string `json:"error"`
 	JSON  struct {
@@ -2197,6 +2388,7 @@ type ParsingGetResponseItemsPageUnion struct {
 		PageNumber respjson.Field
 		PageWidth  respjson.Field
 		Success    respjson.Field
+		Revisions  respjson.Field
 		Error      respjson.Field
 		raw        string
 	} `json:"-"`
@@ -2219,6 +2411,7 @@ func (r *ParsingGetResponseItemsPageUnion) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
+// Successfully parsed page in structured items output.
 type ParsingGetResponseItemsPageStructuredResultPage struct {
 	// List of structured items on the page
 	Items []ParsingGetResponseItemsPageStructuredResultPageItemUnion `json:"items" api:"required"`
@@ -2230,6 +2423,8 @@ type ParsingGetResponseItemsPageStructuredResultPage struct {
 	PageWidth float64 `json:"page_width" api:"required"`
 	// Success indicator
 	Success bool `json:"success" api:"required"`
+	// Extracted revisions and comments on the page
+	Revisions []ParsingGetResponseItemsPageStructuredResultPageRevision `json:"revisions" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Items       respjson.Field
@@ -2237,6 +2432,7 @@ type ParsingGetResponseItemsPageStructuredResultPage struct {
 		PageNumber  respjson.Field
 		PageWidth   respjson.Field
 		Success     respjson.Field
+		Revisions   respjson.Field
 		ExtraFields map[string]respjson.Field
 		raw         string
 	} `json:"-"`
@@ -2441,6 +2637,166 @@ type ParsingGetResponseItemsPageStructuredResultPageItemUnionItems struct {
 }
 
 func (r *ParsingGetResponseItemsPageStructuredResultPageItemUnionItems) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// One extracted document revision linked to page content.
+type ParsingGetResponseItemsPageStructuredResultPageRevision struct {
+	// Revision or comment content
+	Content string `json:"content" api:"required"`
+	// Bounding box of the printed revision balloon
+	RevisionBbox ParsingGetResponseItemsPageStructuredResultPageRevisionRevisionBbox `json:"revision_bbox" api:"required"`
+	// Best available target text in the page content
+	Target string `json:"target" api:"required"`
+	// Union bounding box of the target spans
+	TargetBbox ParsingGetResponseItemsPageStructuredResultPageRevisionTargetBbox `json:"target_bbox" api:"required"`
+	// Type of revision
+	//
+	// Any of "comment", "deleted", "formatted", "inserted", "moved_from", "moved_to".
+	Type string `json:"type" api:"required"`
+	// Revision author, when available
+	Author string `json:"author" api:"nullable"`
+	// Exclusive end offset in final page markdown
+	EndIndex int64 `json:"end_index" api:"nullable"`
+	// Inclusive start offset in final page markdown
+	StartIndex int64 `json:"start_index" api:"nullable"`
+	// Disconnected target spans, when present
+	TargetSpans []ParsingGetResponseItemsPageStructuredResultPageRevisionTargetSpan `json:"target_spans" api:"nullable"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Content      respjson.Field
+		RevisionBbox respjson.Field
+		Target       respjson.Field
+		TargetBbox   respjson.Field
+		Type         respjson.Field
+		Author       respjson.Field
+		EndIndex     respjson.Field
+		StartIndex   respjson.Field
+		TargetSpans  respjson.Field
+		ExtraFields  map[string]respjson.Field
+		raw          string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r ParsingGetResponseItemsPageStructuredResultPageRevision) RawJSON() string { return r.JSON.raw }
+func (r *ParsingGetResponseItemsPageStructuredResultPageRevision) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Bounding box of the printed revision balloon
+type ParsingGetResponseItemsPageStructuredResultPageRevisionRevisionBbox struct {
+	// Height of the bounding box
+	H float64 `json:"h" api:"required"`
+	// Width of the bounding box
+	W float64 `json:"w" api:"required"`
+	// X coordinate of the bounding box
+	X float64 `json:"x" api:"required"`
+	// Y coordinate of the bounding box
+	Y float64 `json:"y" api:"required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		H           respjson.Field
+		W           respjson.Field
+		X           respjson.Field
+		Y           respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r ParsingGetResponseItemsPageStructuredResultPageRevisionRevisionBbox) RawJSON() string {
+	return r.JSON.raw
+}
+func (r *ParsingGetResponseItemsPageStructuredResultPageRevisionRevisionBbox) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Union bounding box of the target spans
+type ParsingGetResponseItemsPageStructuredResultPageRevisionTargetBbox struct {
+	// Height of the bounding box
+	H float64 `json:"h" api:"required"`
+	// Width of the bounding box
+	W float64 `json:"w" api:"required"`
+	// X coordinate of the bounding box
+	X float64 `json:"x" api:"required"`
+	// Y coordinate of the bounding box
+	Y float64 `json:"y" api:"required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		H           respjson.Field
+		W           respjson.Field
+		X           respjson.Field
+		Y           respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r ParsingGetResponseItemsPageStructuredResultPageRevisionTargetBbox) RawJSON() string {
+	return r.JSON.raw
+}
+func (r *ParsingGetResponseItemsPageStructuredResultPageRevisionTargetBbox) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// One contiguous target span linked to a document revision.
+type ParsingGetResponseItemsPageStructuredResultPageRevisionTargetSpan struct {
+	// Text covered by this target span
+	Target string `json:"target" api:"required"`
+	// Bounding box of this target span
+	TargetBbox ParsingGetResponseItemsPageStructuredResultPageRevisionTargetSpanTargetBbox `json:"target_bbox" api:"required"`
+	// Exclusive end offset in final page markdown
+	EndIndex int64 `json:"end_index" api:"nullable"`
+	// Inclusive start offset in final page markdown
+	StartIndex int64 `json:"start_index" api:"nullable"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Target      respjson.Field
+		TargetBbox  respjson.Field
+		EndIndex    respjson.Field
+		StartIndex  respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r ParsingGetResponseItemsPageStructuredResultPageRevisionTargetSpan) RawJSON() string {
+	return r.JSON.raw
+}
+func (r *ParsingGetResponseItemsPageStructuredResultPageRevisionTargetSpan) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Bounding box of this target span
+type ParsingGetResponseItemsPageStructuredResultPageRevisionTargetSpanTargetBbox struct {
+	// Height of the bounding box
+	H float64 `json:"h" api:"required"`
+	// Width of the bounding box
+	W float64 `json:"w" api:"required"`
+	// X coordinate of the bounding box
+	X float64 `json:"x" api:"required"`
+	// Y coordinate of the bounding box
+	Y float64 `json:"y" api:"required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		H           respjson.Field
+		W           respjson.Field
+		X           respjson.Field
+		Y           respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r ParsingGetResponseItemsPageStructuredResultPageRevisionTargetSpanTargetBbox) RawJSON() string {
+	return r.JSON.raw
+}
+func (r *ParsingGetResponseItemsPageStructuredResultPageRevisionTargetSpanTargetBbox) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
@@ -2700,6 +3056,58 @@ func (r *ParsingGetResponseTextPage) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
+// Versions accepted by the parse API, grouped by tier.
+type ParsingListVersionsResponse struct {
+	// Versions for the agentic tier
+	//
+	// Any of "2026-07-24", "2026-07-23", "2026-07-15", "2026-06-18", "2026-06-11",
+	// "2026-06-04", "2026-06-01", "2026-05-26", "2026-05-21", "2026-05-20",
+	// "2026-05-19", "2026-05-13", "2026-05-11", "2026-05-06", "2026-05-04",
+	// "2026-04-27", "2026-04-22", "2026-04-09", "2026-04-06", "2026-04-02",
+	// "2026-03-31", "2026-03-30", "2026-03-27", "2026-03-25", "2026-03-23",
+	// "2026-03-22", "2026-03-20", "2026-03-11", "2026-03-10", "2026-03-09",
+	// "2026-03-03", "2026-03-02", "2026-02-26", "2026-02-24", "2026-01-30",
+	// "2026-01-22", "2026-01-21", "2026-01-16", "2026-01-08", "2025-12-31",
+	// "2025-12-18", "2025-12-11".
+	Agentic []string `json:"agentic" api:"required"`
+	// Versions for the agentic_plus tier
+	//
+	// Any of "2026-07-08", "2026-06-18", "2026-06-11", "2026-06-04", "2026-06-01",
+	// "2026-05-26", "2026-05-21", "2026-05-20", "2026-05-19", "2026-05-11",
+	// "2026-05-06", "2026-05-04", "2026-05-01", "2026-04-27", "2026-04-19",
+	// "2026-04-14", "2026-04-09", "2026-04-02", "2026-03-31", "2026-03-26",
+	// "2026-03-25", "2026-03-22", "2026-03-20", "2026-03-17", "2026-03-12",
+	// "2026-03-10", "2026-03-09", "2026-03-02", "2026-02-26", "2026-02-24",
+	// "2026-01-30", "2026-01-29", "2026-01-24", "2026-01-22", "2026-01-21",
+	// "2026-01-16", "2025-12-31", "2025-12-18", "2025-12-11".
+	AgenticPlus []string `json:"agentic_plus" api:"required"`
+	// Versions for the cost_effective tier
+	//
+	// Any of "2026-08-08", "2026-07-23", "2026-06-26", "2026-06-18", "2026-06-17",
+	// "2026-06-11", "2026-06-08", "2026-06-05", "2026-05-28", "2026-04-09",
+	// "2026-03-31", "2026-03-27", "2026-03-25".
+	CostEffective []string `json:"cost_effective" api:"required"`
+	// Versions for the fast tier
+	//
+	// Any of "2026-06-15", "2025-12-11".
+	Fast []string `json:"fast" api:"required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Agentic       respjson.Field
+		AgenticPlus   respjson.Field
+		CostEffective respjson.Field
+		Fast          respjson.Field
+		ExtraFields   map[string]respjson.Field
+		raw           string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r ParsingListVersionsResponse) RawJSON() string { return r.JSON.raw }
+func (r *ParsingListVersionsResponse) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
 type ParsingNewParams struct {
 	// Parsing tier: 'fast' (rule-based, cheapest), 'cost_effective' (balanced),
 	// 'agentic' (AI-powered with custom prompts), or 'agentic_plus' (premium AI with
@@ -2711,8 +3119,8 @@ type ParsingNewParams struct {
 	// Current `latest` by tier:
 	//
 	// - `fast`: `2026-06-15`
-	// - `cost_effective`: `2026-06-26`
-	// - `agentic`: `2026-07-15`
+	// - `cost_effective`: `2026-08-08`
+	// - `agentic`: `2026-07-24`
 	// - `agentic_plus`: `2026-07-08`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
@@ -2807,8 +3215,8 @@ const (
 // Current `latest` by tier:
 //
 // - `fast`: `2026-06-15`
-// - `cost_effective`: `2026-06-26`
-// - `agentic`: `2026-07-15`
+// - `cost_effective`: `2026-08-08`
+// - `agentic`: `2026-07-24`
 // - `agentic_plus`: `2026-07-08`
 //
 // Full list: `GET /api/v2/parse/versions`.
@@ -2816,9 +3224,9 @@ type ParsingNewParamsVersion string
 
 const (
 	ParsingNewParamsVersionLatest     ParsingNewParamsVersion = "latest"
-	ParsingNewParamsVersion2026_07_15 ParsingNewParamsVersion = "2026-07-15"
+	ParsingNewParamsVersion2026_08_08 ParsingNewParamsVersion = "2026-08-08"
+	ParsingNewParamsVersion2026_07_24 ParsingNewParamsVersion = "2026-07-24"
 	ParsingNewParamsVersion2026_07_08 ParsingNewParamsVersion = "2026-07-08"
-	ParsingNewParamsVersion2026_06_26 ParsingNewParamsVersion = "2026-06-26"
 	ParsingNewParamsVersion2026_06_15 ParsingNewParamsVersion = "2026-06-15"
 )
 
@@ -2978,6 +3386,16 @@ type ParsingNewParamsOutputOptions struct {
 	// Extract the printed page number as it appears in the document (e.g., 'Page 5 of
 	// 10', 'v', 'A-3'). Useful for referencing original page numbers
 	ExtractPrintedPageNumber param.Opt[bool] `json:"extract_printed_page_number,omitzero"`
+	// Save a PDF copy of the parsed document, retrievable via
+	// `expand=output_pdf_content_metadata`. Not produced for spreadsheet, plain-text,
+	// or audio inputs
+	SaveOutputPdf param.Opt[bool] `json:"save_output_pdf,omitzero"`
+	// Image categories to save: 'screenshot' (full page renders), 'embedded' (images
+	// found within the document), 'layout' (cropped figures and diagrams). Defaults to
+	// saving 'layout' when the output links to cropped images; pass [] to save none
+	//
+	// Any of "embedded", "layout", "screenshot".
+	ImagesToSave []string `json:"images_to_save,omitzero"`
 	// Optional additional output artifacts to save alongside the primary parse output.
 	// Each value opts in to generating and persisting one extra file; the empty list
 	// (default) saves none. The three accepted values are: 'stripped_md' — per-page
@@ -3005,13 +3423,6 @@ type ParsingNewParamsOutputOptions struct {
 	//
 	// Any of "cell", "line", "word".
 	GranularBboxes []string `json:"granular_bboxes,omitzero"`
-	// Image categories to extract and save. Options: 'screenshot' (full page renders
-	// useful for visual QA), 'embedded' (images found within the document), 'layout'
-	// (cropped regions from layout detection like figures and diagrams). Empty list
-	// saves no images
-	//
-	// Any of "embedded", "layout", "screenshot".
-	ImagesToSave []string `json:"images_to_save,omitzero"`
 	// Markdown formatting options including table styles and link annotations
 	Markdown ParsingNewParamsOutputOptionsMarkdown `json:"markdown,omitzero"`
 	// Spatial text output options for preserving document layout structure
@@ -3034,6 +3445,8 @@ type ParsingNewParamsOutputOptionsMarkdown struct {
 	// Add link annotations to markdown output in the format [text](url). When false,
 	// only the link text is included
 	AnnotateLinks param.Opt[bool] `json:"annotate_links,omitzero"`
+	// Extract Word-style revisions and comments into structured page output
+	AnnotateRevisions param.Opt[bool] `json:"annotate_revisions,omitzero"`
 	// Embed images directly in markdown as base64 data URIs instead of extracting them
 	// as separate files. Useful for self-contained markdown output
 	InlineImages param.Opt[bool] `json:"inline_images,omitzero"`
@@ -3398,8 +3811,8 @@ type ParsingNewParamsProcessingOptionsAutoModeConfigurationParsingConf struct {
 	// Current `latest` by tier:
 	//
 	// - `fast`: `2026-06-15`
-	// - `cost_effective`: `2026-06-26`
-	// - `agentic`: `2026-07-15`
+	// - `cost_effective`: `2026-08-08`
+	// - `agentic`: `2026-07-24`
 	// - `agentic_plus`: `2026-07-08`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
@@ -3991,12 +4404,26 @@ const (
 	ParsingListParamsStatusRunning   ParsingListParamsStatus = "RUNNING"
 )
 
+type ParsingCancelParams struct {
+	OrganizationID param.Opt[string] `query:"organization_id,omitzero" format:"uuid" json:"-"`
+	ProjectID      param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
+	paramObj
+}
+
+// URLQuery serializes [ParsingCancelParams]'s query parameters as `url.Values`.
+func (r ParsingCancelParams) URLQuery() (v url.Values, err error) {
+	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
+		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
+		NestedFormat: apiquery.NestedQueryFormatBrackets,
+	})
+}
+
 type ParsingGetParams struct {
 	// Filter to specific image filenames (optional). Example: image_0.png,image_1.jpg
 	ImageFilenames param.Opt[string] `query:"image_filenames,omitzero" json:"-"`
 	OrganizationID param.Opt[string] `query:"organization_id,omitzero" format:"uuid" json:"-"`
 	ProjectID      param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
-	// Fields to include: text, markdown, items, metadata, forms, job_metadata,
+	// Fields to include: text, markdown, items, metadata, forms, job_metadata, usage,
 	// text_content_metadata, markdown_content_metadata, items_content_metadata,
 	// metadata_content_metadata, forms_content_metadata, raw_words_content_metadata,
 	// xlsx_content_metadata, output_pdf_content_metadata, images_content_metadata.

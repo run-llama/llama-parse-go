@@ -13,7 +13,7 @@ import (
 	"github.com/run-llama/llama-parse-go/option"
 )
 
-func TestBetaBatchJobItemListWithOptionalParams(t *testing.T) {
+func TestV2ProjectListWithOptionalParams(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
@@ -26,17 +26,12 @@ func TestBetaBatchJobItemListWithOptionalParams(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Beta.Batch.JobItems.List(
-		context.TODO(),
-		"job_id",
-		llamacloud.BetaBatchJobItemListParams{
-			Limit:          llamacloud.Int(1),
-			Offset:         llamacloud.Int(0),
-			OrganizationID: llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-			ProjectID:      llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-			Status:         llamacloud.BetaBatchJobItemListParamsStatusCancelled,
-		},
-	)
+	_, err := client.V2Projects.List(context.TODO(), llamacloud.V2ProjectListParams{
+		Name:           llamacloud.String("name"),
+		OrganizationID: llamacloud.String("organization_id"),
+		PageSize:       llamacloud.Int(0),
+		PageToken:      llamacloud.String("page_token"),
+	})
 	if err != nil {
 		var apierr *llamacloud.Error
 		if errors.As(err, &apierr) {
@@ -46,7 +41,7 @@ func TestBetaBatchJobItemListWithOptionalParams(t *testing.T) {
 	}
 }
 
-func TestBetaBatchJobItemGetProcessingResultsWithOptionalParams(t *testing.T) {
+func TestV2ProjectGetWithOptionalParams(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
@@ -59,13 +54,11 @@ func TestBetaBatchJobItemGetProcessingResultsWithOptionalParams(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Beta.Batch.JobItems.GetProcessingResults(
+	_, err := client.V2Projects.Get(
 		context.TODO(),
-		"item_id",
-		llamacloud.BetaBatchJobItemGetProcessingResultsParams{
-			JobType:        llamacloud.BetaBatchJobItemGetProcessingResultsParamsJobTypeClassify,
+		"182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+		llamacloud.V2ProjectGetParams{
 			OrganizationID: llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-			ProjectID:      llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		},
 	)
 	if err != nil {

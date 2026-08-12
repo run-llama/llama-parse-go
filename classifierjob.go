@@ -219,15 +219,6 @@ func (r *ClassifyJob) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-// ToParam converts this ClassifyJob to a ClassifyJobParam.
-//
-// Warning: the fields of the param type will not be present. ToParam should only
-// be used at the last possible moment before sending a request. Test for this with
-// ClassifyJobParam.Overrides()
-func (r ClassifyJob) ToParam() ClassifyJobParam {
-	return param.Override[ClassifyJobParam](json.RawMessage(r.RawJSON()))
-}
-
 // The classification mode to use
 type ClassifyJobMode string
 
@@ -235,48 +226,6 @@ const (
 	ClassifyJobModeFast       ClassifyJobMode = "FAST"
 	ClassifyJobModeMultimodal ClassifyJobMode = "MULTIMODAL"
 )
-
-// A classify job.
-//
-// The properties ID, ProjectID, Rules, Status, UserID are required.
-type ClassifyJobParam struct {
-	// Unique identifier
-	ID string `json:"id" api:"required" format:"uuid"`
-	// The ID of the project
-	ProjectID string `json:"project_id" api:"required" format:"uuid"`
-	// The rules to classify the files
-	Rules []ClassifierRuleParam `json:"rules,omitzero" api:"required"`
-	// The status of the classify job
-	//
-	// Any of "CANCELLED", "ERROR", "PARTIAL_SUCCESS", "PENDING", "SUCCESS".
-	Status StatusEnum `json:"status,omitzero" api:"required"`
-	// The ID of the user
-	UserID string `json:"user_id" api:"required"`
-	// Creation datetime
-	CreatedAt param.Opt[time.Time] `json:"created_at,omitzero" format:"date-time"`
-	// Error message for the latest job attempt, if any.
-	ErrorMessage param.Opt[string] `json:"error_message,omitzero"`
-	// The job record ID associated with this status, if any.
-	JobRecordID param.Opt[string] `json:"job_record_id,omitzero"`
-	// Update datetime
-	UpdatedAt   param.Opt[time.Time] `json:"updated_at,omitzero" format:"date-time"`
-	EffectiveAt param.Opt[time.Time] `json:"effective_at,omitzero" format:"date-time"`
-	// The classification mode to use
-	//
-	// Any of "FAST", "MULTIMODAL".
-	Mode ClassifyJobMode `json:"mode,omitzero"`
-	// The configuration for the parsing job
-	ParsingConfiguration ClassifyParsingConfigurationParam `json:"parsing_configuration,omitzero"`
-	paramObj
-}
-
-func (r ClassifyJobParam) MarshalJSON() (data []byte, err error) {
-	type shadow ClassifyJobParam
-	return param.MarshalObject(r, (*shadow)(&r))
-}
-func (r *ClassifyJobParam) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
 
 // Parsing configuration for a classify job.
 type ClassifyParsingConfiguration struct {

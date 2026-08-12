@@ -323,6 +323,7 @@ type ConfigurationCreateParametersUnion struct {
 	CiteSources bool `json:"cite_sources"`
 	// This field is from variant [ExtractV2ParametersResp].
 	ConfidenceScores bool `json:"confidence_scores"`
+	DisableCache     bool `json:"disable_cache"`
 	// This field is from variant [ExtractV2ParametersResp].
 	ExtractionTarget ExtractV2ParametersExtractionTarget `json:"extraction_target"`
 	// This field is from variant [ExtractV2ParametersResp].
@@ -330,7 +331,10 @@ type ConfigurationCreateParametersUnion struct {
 	// This field is from variant [ExtractV2ParametersResp].
 	ParseConfigID string `json:"parse_config_id"`
 	// This field is from variant [ExtractV2ParametersResp].
-	ParseTier string `json:"parse_tier"`
+	ParseTier  string   `json:"parse_tier"`
+	SheetNames []string `json:"sheet_names"`
+	// This field is from variant [ExtractV2ParametersResp].
+	SpreadsheetMode bool `json:"spreadsheet_mode"`
 	// This field is from variant [ExtractV2ParametersResp].
 	SystemPrompt string `json:"system_prompt"`
 	// This field is from variant [ExtractV2ParametersResp].
@@ -343,8 +347,6 @@ type ConfigurationCreateParametersUnion struct {
 	ClientName string `json:"client_name"`
 	// This field is from variant [ParseV2ParametersResp].
 	CropBox ParseV2ParametersCropBoxResp `json:"crop_box"`
-	// This field is from variant [ParseV2ParametersResp].
-	DisableCache bool `json:"disable_cache"`
 	// This field is from variant [ParseV2ParametersResp].
 	FastOptions any `json:"fast_options"`
 	// This field is from variant [ParseV2ParametersResp].
@@ -374,8 +376,6 @@ type ConfigurationCreateParametersUnion struct {
 	// This field is from variant [ConfigurationCreateParametersSpreadsheetV1].
 	IncludeHiddenCells bool `json:"include_hidden_cells"`
 	// This field is from variant [ConfigurationCreateParametersSpreadsheetV1].
-	SheetNames []string `json:"sheet_names"`
-	// This field is from variant [ConfigurationCreateParametersSpreadsheetV1].
 	Specialization string `json:"specialization"`
 	// This field is from variant [ConfigurationCreateParametersSpreadsheetV1].
 	TableMergeSensitivity string `json:"table_merge_sensitivity"`
@@ -389,10 +389,13 @@ type ConfigurationCreateParametersUnion struct {
 		DataSchema                 respjson.Field
 		CiteSources                respjson.Field
 		ConfidenceScores           respjson.Field
+		DisableCache               respjson.Field
 		ExtractionTarget           respjson.Field
 		MaxPages                   respjson.Field
 		ParseConfigID              respjson.Field
 		ParseTier                  respjson.Field
+		SheetNames                 respjson.Field
+		SpreadsheetMode            respjson.Field
 		SystemPrompt               respjson.Field
 		TargetPages                respjson.Field
 		Tier                       respjson.Field
@@ -400,7 +403,6 @@ type ConfigurationCreateParametersUnion struct {
 		AgenticOptions             respjson.Field
 		ClientName                 respjson.Field
 		CropBox                    respjson.Field
-		DisableCache               respjson.Field
 		FastOptions                respjson.Field
 		InputOptions               respjson.Field
 		OutputOptions              respjson.Field
@@ -415,7 +417,6 @@ type ConfigurationCreateParametersUnion struct {
 		FlattenHierarchicalTables  respjson.Field
 		GenerateAdditionalMetadata respjson.Field
 		IncludeHiddenCells         respjson.Field
-		SheetNames                 respjson.Field
 		Specialization             respjson.Field
 		TableMergeSensitivity      respjson.Field
 		UseExperimentalProcessing  respjson.Field
@@ -743,6 +744,7 @@ type ConfigurationResponseParametersUnion struct {
 	CiteSources bool `json:"cite_sources"`
 	// This field is from variant [ExtractV2ParametersResp].
 	ConfidenceScores bool `json:"confidence_scores"`
+	DisableCache     bool `json:"disable_cache"`
 	// This field is from variant [ExtractV2ParametersResp].
 	ExtractionTarget ExtractV2ParametersExtractionTarget `json:"extraction_target"`
 	// This field is from variant [ExtractV2ParametersResp].
@@ -750,7 +752,10 @@ type ConfigurationResponseParametersUnion struct {
 	// This field is from variant [ExtractV2ParametersResp].
 	ParseConfigID string `json:"parse_config_id"`
 	// This field is from variant [ExtractV2ParametersResp].
-	ParseTier string `json:"parse_tier"`
+	ParseTier  string   `json:"parse_tier"`
+	SheetNames []string `json:"sheet_names"`
+	// This field is from variant [ExtractV2ParametersResp].
+	SpreadsheetMode bool `json:"spreadsheet_mode"`
 	// This field is from variant [ExtractV2ParametersResp].
 	SystemPrompt string `json:"system_prompt"`
 	// This field is from variant [ExtractV2ParametersResp].
@@ -763,8 +768,6 @@ type ConfigurationResponseParametersUnion struct {
 	ClientName string `json:"client_name"`
 	// This field is from variant [ParseV2ParametersResp].
 	CropBox ParseV2ParametersCropBoxResp `json:"crop_box"`
-	// This field is from variant [ParseV2ParametersResp].
-	DisableCache bool `json:"disable_cache"`
 	// This field is from variant [ParseV2ParametersResp].
 	FastOptions any `json:"fast_options"`
 	// This field is from variant [ParseV2ParametersResp].
@@ -794,8 +797,6 @@ type ConfigurationResponseParametersUnion struct {
 	// This field is from variant [ConfigurationResponseParametersSpreadsheetV1].
 	IncludeHiddenCells bool `json:"include_hidden_cells"`
 	// This field is from variant [ConfigurationResponseParametersSpreadsheetV1].
-	SheetNames []string `json:"sheet_names"`
-	// This field is from variant [ConfigurationResponseParametersSpreadsheetV1].
 	Specialization string `json:"specialization"`
 	// This field is from variant [ConfigurationResponseParametersSpreadsheetV1].
 	TableMergeSensitivity string `json:"table_merge_sensitivity"`
@@ -809,10 +810,13 @@ type ConfigurationResponseParametersUnion struct {
 		DataSchema                 respjson.Field
 		CiteSources                respjson.Field
 		ConfidenceScores           respjson.Field
+		DisableCache               respjson.Field
 		ExtractionTarget           respjson.Field
 		MaxPages                   respjson.Field
 		ParseConfigID              respjson.Field
 		ParseTier                  respjson.Field
+		SheetNames                 respjson.Field
+		SpreadsheetMode            respjson.Field
 		SystemPrompt               respjson.Field
 		TargetPages                respjson.Field
 		Tier                       respjson.Field
@@ -820,7 +824,6 @@ type ConfigurationResponseParametersUnion struct {
 		AgenticOptions             respjson.Field
 		ClientName                 respjson.Field
 		CropBox                    respjson.Field
-		DisableCache               respjson.Field
 		FastOptions                respjson.Field
 		InputOptions               respjson.Field
 		OutputOptions              respjson.Field
@@ -835,7 +838,6 @@ type ConfigurationResponseParametersUnion struct {
 		FlattenHierarchicalTables  respjson.Field
 		GenerateAdditionalMetadata respjson.Field
 		IncludeHiddenCells         respjson.Field
-		SheetNames                 respjson.Field
 		Specialization             respjson.Field
 		TableMergeSensitivity      respjson.Field
 		UseExperimentalProcessing  respjson.Field
@@ -1002,10 +1004,14 @@ type ExtractV2ParametersResp struct {
 	DataSchema map[string]*ExtractV2ParametersDataSchemaUnionResp `json:"data_schema" api:"required"`
 	// Product type.
 	ProductType constant.ExtractV2 `json:"product_type" default:"extract_v2"`
-	// Include citations in results
+	// Include citations in results. Returned under `extract_metadata` (auto-included
+	// when set). Text-level on `turbo` (no bounding boxes).
 	CiteSources bool `json:"cite_sources"`
-	// Include confidence scores in results
+	// Include confidence scores in results. Returned under `extract_metadata`
+	// (auto-included when set).
 	ConfidenceScores bool `json:"confidence_scores"`
+	// Disable reuse and storage of Extract results
+	DisableCache bool `json:"disable_cache"`
 	// Granularity of extraction: per_doc returns one object per document, per_page
 	// returns one object per page, per_table_row returns one object per table row
 	//
@@ -1014,11 +1020,24 @@ type ExtractV2ParametersResp struct {
 	// Maximum number of pages to process. Omit for no limit.
 	MaxPages int64 `json:"max_pages" api:"nullable"`
 	// Saved parse configuration ID to control how the document is parsed before
-	// extraction
+	// extraction. Turbo extract does not support parse configuration or produce a
+	// parse output; use another tier if your workflow requires parsed text.
 	ParseConfigID string `json:"parse_config_id" api:"nullable"`
 	// Parse tier to use before extraction. Defaults to the extract tier if not
-	// specified.
+	// specified. Turbo extract does not support parse configuration or produce a parse
+	// output; use another tier if your workflow requires parsed text.
 	ParseTier string `json:"parse_tier" api:"nullable"`
+	// Optional worksheet names to extract when spreadsheet_mode is on. Overrides
+	// target_pages for spreadsheets; omit to extract every sheet. Names are matched
+	// exactly (case-sensitive) — pass them as a list, e.g. ["Sheet 1", "My Sheet"].
+	SheetNames []string `json:"sheet_names" api:"nullable"`
+	// Beta. When true, extract structured data directly from a spreadsheet workbook
+	// (.xlsx/.xls/.csv) — the agent reads cells straight from the workbook instead of
+	// the standard document path. Off by default (spreadsheets keep the standard
+	// path). Requires the agentic_plus tier. Billed on the standard per-page extract
+	// rate, against a page count derived from workbook size. Citations and confidence
+	// scores are not available in this mode.
+	SpreadsheetMode bool `json:"spreadsheet_mode"`
 	// Custom system prompt to guide extraction behavior
 	SystemPrompt string `json:"system_prompt" api:"nullable"`
 	// Comma-separated page numbers or ranges to process (1-based). Omit to process all
@@ -1040,10 +1059,13 @@ type ExtractV2ParametersResp struct {
 		ProductType      respjson.Field
 		CiteSources      respjson.Field
 		ConfidenceScores respjson.Field
+		DisableCache     respjson.Field
 		ExtractionTarget respjson.Field
 		MaxPages         respjson.Field
 		ParseConfigID    respjson.Field
 		ParseTier        respjson.Field
+		SheetNames       respjson.Field
+		SpreadsheetMode  respjson.Field
 		SystemPrompt     respjson.Field
 		TargetPages      respjson.Field
 		Tier             respjson.Field
@@ -1159,25 +1181,42 @@ type ExtractV2Parameters struct {
 	// Maximum number of pages to process. Omit for no limit.
 	MaxPages param.Opt[int64] `json:"max_pages,omitzero"`
 	// Saved parse configuration ID to control how the document is parsed before
-	// extraction
+	// extraction. Turbo extract does not support parse configuration or produce a
+	// parse output; use another tier if your workflow requires parsed text.
 	ParseConfigID param.Opt[string] `json:"parse_config_id,omitzero"`
 	// Parse tier to use before extraction. Defaults to the extract tier if not
-	// specified.
+	// specified. Turbo extract does not support parse configuration or produce a parse
+	// output; use another tier if your workflow requires parsed text.
 	ParseTier param.Opt[string] `json:"parse_tier,omitzero"`
 	// Custom system prompt to guide extraction behavior
 	SystemPrompt param.Opt[string] `json:"system_prompt,omitzero"`
 	// Comma-separated page numbers or ranges to process (1-based). Omit to process all
 	// pages.
 	TargetPages param.Opt[string] `json:"target_pages,omitzero"`
-	// Include citations in results
+	// Include citations in results. Returned under `extract_metadata` (auto-included
+	// when set). Text-level on `turbo` (no bounding boxes).
 	CiteSources param.Opt[bool] `json:"cite_sources,omitzero"`
-	// Include confidence scores in results
+	// Include confidence scores in results. Returned under `extract_metadata`
+	// (auto-included when set).
 	ConfidenceScores param.Opt[bool] `json:"confidence_scores,omitzero"`
+	// Disable reuse and storage of Extract results
+	DisableCache param.Opt[bool] `json:"disable_cache,omitzero"`
+	// Beta. When true, extract structured data directly from a spreadsheet workbook
+	// (.xlsx/.xls/.csv) — the agent reads cells straight from the workbook instead of
+	// the standard document path. Off by default (spreadsheets keep the standard
+	// path). Requires the agentic_plus tier. Billed on the standard per-page extract
+	// rate, against a page count derived from workbook size. Citations and confidence
+	// scores are not available in this mode.
+	SpreadsheetMode param.Opt[bool] `json:"spreadsheet_mode,omitzero"`
 	// Use 'latest' for the latest release for the selected tier or a date string
 	// (YYYY-MM-DD format) to pin to the nearest release at or before that date. Job
 	// responses always report the concrete resolved version the job runs, fixed at job
 	// creation; saved configurations keep the value as provided.
 	Version param.Opt[string] `json:"version,omitzero"`
+	// Optional worksheet names to extract when spreadsheet_mode is on. Overrides
+	// target_pages for spreadsheets; omit to extract every sheet. Names are matched
+	// exactly (case-sensitive) — pass them as a list, e.g. ["Sheet 1", "My Sheet"].
+	SheetNames []string `json:"sheet_names,omitzero"`
 	// Granularity of extraction: per_doc returns one object per document, per_page
 	// returns one object per page, per_table_row returns one object per table row
 	//
@@ -1246,8 +1285,8 @@ type ParseV2ParametersResp struct {
 	// Current `latest` by tier:
 	//
 	// - `fast`: `2026-06-15`
-	// - `cost_effective`: `2026-06-26`
-	// - `agentic`: `2026-07-15`
+	// - `cost_effective`: `2026-08-08`
+	// - `agentic`: `2026-07-24`
 	// - `agentic_plus`: `2026-07-08`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
@@ -1344,8 +1383,8 @@ const (
 // Current `latest` by tier:
 //
 // - `fast`: `2026-06-15`
-// - `cost_effective`: `2026-06-26`
-// - `agentic`: `2026-07-15`
+// - `cost_effective`: `2026-08-08`
+// - `agentic`: `2026-07-24`
 // - `agentic_plus`: `2026-07-08`
 //
 // Full list: `GET /api/v2/parse/versions`.
@@ -1353,9 +1392,9 @@ type ParseV2ParametersVersion string
 
 const (
 	ParseV2ParametersVersionLatest     ParseV2ParametersVersion = "latest"
-	ParseV2ParametersVersion2026_07_15 ParseV2ParametersVersion = "2026-07-15"
+	ParseV2ParametersVersion2026_08_08 ParseV2ParametersVersion = "2026-08-08"
+	ParseV2ParametersVersion2026_07_24 ParseV2ParametersVersion = "2026-07-24"
 	ParseV2ParametersVersion2026_07_08 ParseV2ParametersVersion = "2026-07-08"
-	ParseV2ParametersVersion2026_06_26 ParseV2ParametersVersion = "2026-06-26"
 	ParseV2ParametersVersion2026_06_15 ParseV2ParametersVersion = "2026-06-15"
 )
 
@@ -1575,15 +1614,18 @@ type ParseV2ParametersOutputOptionsResp struct {
 	//
 	// Any of "cell", "line", "word".
 	GranularBboxes []string `json:"granular_bboxes"`
-	// Image categories to extract and save. Options: 'screenshot' (full page renders
-	// useful for visual QA), 'embedded' (images found within the document), 'layout'
-	// (cropped regions from layout detection like figures and diagrams). Empty list
-	// saves no images
+	// Image categories to save: 'screenshot' (full page renders), 'embedded' (images
+	// found within the document), 'layout' (cropped figures and diagrams). Defaults to
+	// saving 'layout' when the output links to cropped images; pass [] to save none
 	//
 	// Any of "embedded", "layout", "screenshot".
-	ImagesToSave []string `json:"images_to_save"`
+	ImagesToSave []string `json:"images_to_save" api:"nullable"`
 	// Markdown formatting options including table styles and link annotations
 	Markdown ParseV2ParametersOutputOptionsMarkdownResp `json:"markdown"`
+	// Save a PDF copy of the parsed document, retrievable via
+	// `expand=output_pdf_content_metadata`. Not produced for spreadsheet, plain-text,
+	// or audio inputs
+	SaveOutputPdf bool `json:"save_output_pdf" api:"nullable"`
 	// Spatial text output options for preserving document layout structure
 	SpatialText ParseV2ParametersOutputOptionsSpatialTextResp `json:"spatial_text"`
 	// Options for exporting tables as XLSX spreadsheets
@@ -1595,6 +1637,7 @@ type ParseV2ParametersOutputOptionsResp struct {
 		GranularBboxes           respjson.Field
 		ImagesToSave             respjson.Field
 		Markdown                 respjson.Field
+		SaveOutputPdf            respjson.Field
 		SpatialText              respjson.Field
 		TablesAsSpreadsheet      respjson.Field
 		ExtraFields              map[string]respjson.Field
@@ -1613,6 +1656,8 @@ type ParseV2ParametersOutputOptionsMarkdownResp struct {
 	// Add link annotations to markdown output in the format [text](url). When false,
 	// only the link text is included
 	AnnotateLinks bool `json:"annotate_links" api:"nullable"`
+	// Extract Word-style revisions and comments into structured page output
+	AnnotateRevisions bool `json:"annotate_revisions" api:"nullable"`
 	// Embed images directly in markdown as base64 data URIs instead of extracting them
 	// as separate files. Useful for self-contained markdown output
 	InlineImages bool `json:"inline_images" api:"nullable"`
@@ -1620,11 +1665,12 @@ type ParseV2ParametersOutputOptionsMarkdownResp struct {
 	Tables ParseV2ParametersOutputOptionsMarkdownTablesResp `json:"tables"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
-		AnnotateLinks respjson.Field
-		InlineImages  respjson.Field
-		Tables        respjson.Field
-		ExtraFields   map[string]respjson.Field
-		raw           string
+		AnnotateLinks     respjson.Field
+		AnnotateRevisions respjson.Field
+		InlineImages      respjson.Field
+		Tables            respjson.Field
+		ExtraFields       map[string]respjson.Field
+		raw               string
 	} `json:"-"`
 }
 
@@ -2055,8 +2101,8 @@ type ParseV2ParametersProcessingOptionsAutoModeConfigurationParsingConfResp stru
 	// Current `latest` by tier:
 	//
 	// - `fast`: `2026-06-15`
-	// - `cost_effective`: `2026-06-26`
-	// - `agentic`: `2026-07-15`
+	// - `cost_effective`: `2026-08-08`
+	// - `agentic`: `2026-07-24`
 	// - `agentic_plus`: `2026-07-08`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
@@ -3161,8 +3207,8 @@ type ParseV2Parameters struct {
 	// Current `latest` by tier:
 	//
 	// - `fast`: `2026-06-15`
-	// - `cost_effective`: `2026-06-26`
-	// - `agentic`: `2026-07-15`
+	// - `cost_effective`: `2026-08-08`
+	// - `agentic`: `2026-07-24`
 	// - `agentic_plus`: `2026-07-08`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
@@ -3375,6 +3421,16 @@ type ParseV2ParametersOutputOptions struct {
 	// Extract the printed page number as it appears in the document (e.g., 'Page 5 of
 	// 10', 'v', 'A-3'). Useful for referencing original page numbers
 	ExtractPrintedPageNumber param.Opt[bool] `json:"extract_printed_page_number,omitzero"`
+	// Save a PDF copy of the parsed document, retrievable via
+	// `expand=output_pdf_content_metadata`. Not produced for spreadsheet, plain-text,
+	// or audio inputs
+	SaveOutputPdf param.Opt[bool] `json:"save_output_pdf,omitzero"`
+	// Image categories to save: 'screenshot' (full page renders), 'embedded' (images
+	// found within the document), 'layout' (cropped figures and diagrams). Defaults to
+	// saving 'layout' when the output links to cropped images; pass [] to save none
+	//
+	// Any of "embedded", "layout", "screenshot".
+	ImagesToSave []string `json:"images_to_save,omitzero"`
 	// Optional additional output artifacts to save alongside the primary parse output.
 	// Each value opts in to generating and persisting one extra file; the empty list
 	// (default) saves none. The three accepted values are: 'stripped_md' — per-page
@@ -3402,13 +3458,6 @@ type ParseV2ParametersOutputOptions struct {
 	//
 	// Any of "cell", "line", "word".
 	GranularBboxes []string `json:"granular_bboxes,omitzero"`
-	// Image categories to extract and save. Options: 'screenshot' (full page renders
-	// useful for visual QA), 'embedded' (images found within the document), 'layout'
-	// (cropped regions from layout detection like figures and diagrams). Empty list
-	// saves no images
-	//
-	// Any of "embedded", "layout", "screenshot".
-	ImagesToSave []string `json:"images_to_save,omitzero"`
 	// Markdown formatting options including table styles and link annotations
 	Markdown ParseV2ParametersOutputOptionsMarkdown `json:"markdown,omitzero"`
 	// Spatial text output options for preserving document layout structure
@@ -3431,6 +3480,8 @@ type ParseV2ParametersOutputOptionsMarkdown struct {
 	// Add link annotations to markdown output in the format [text](url). When false,
 	// only the link text is included
 	AnnotateLinks param.Opt[bool] `json:"annotate_links,omitzero"`
+	// Extract Word-style revisions and comments into structured page output
+	AnnotateRevisions param.Opt[bool] `json:"annotate_revisions,omitzero"`
 	// Embed images directly in markdown as base64 data URIs instead of extracting them
 	// as separate files. Useful for self-contained markdown output
 	InlineImages param.Opt[bool] `json:"inline_images,omitzero"`
@@ -3795,8 +3846,8 @@ type ParseV2ParametersProcessingOptionsAutoModeConfigurationParsingConf struct {
 	// Current `latest` by tier:
 	//
 	// - `fast`: `2026-06-15`
-	// - `cost_effective`: `2026-06-26`
-	// - `agentic`: `2026-07-15`
+	// - `cost_effective`: `2026-08-08`
+	// - `agentic`: `2026-07-24`
 	// - `agentic_plus`: `2026-07-08`
 	//
 	// Full list: `GET /api/v2/parse/versions`.

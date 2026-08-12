@@ -20,7 +20,6 @@ type BetaService struct {
 	AgentData   BetaAgentDataService
 	Sheets      BetaSheetService
 	Directories BetaDirectoryService
-	Batch       BetaBatchService
 	Split       BetaSplitService
 }
 
@@ -36,7 +35,6 @@ func NewBetaService(opts ...option.RequestOption) (r BetaService) {
 	r.AgentData = NewBetaAgentDataService(opts...)
 	r.Sheets = NewBetaSheetService(opts...)
 	r.Directories = NewBetaDirectoryService(opts...)
-	r.Batch = NewBetaBatchService(opts...)
 	r.Split = NewBetaSplitService(opts...)
 	return
 }

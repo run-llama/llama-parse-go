@@ -117,6 +117,9 @@ type BetaDirectoryNewResponse struct {
 	Name string `json:"name" api:"required"`
 	// Project the directory belongs to.
 	ProjectID string `json:"project_id" api:"required"`
+	// Connector Subscription whose files sync into this directory. Null for a
+	// directory populated by manual uploads.
+	ConnectorSubscriptionID string `json:"connector_subscription_id" api:"nullable"`
 	// Creation datetime
 	CreatedAt time.Time `json:"created_at" api:"nullable" format:"date-time"`
 	// Optional timestamp of when the directory was deleted. Null if not deleted.
@@ -135,18 +138,19 @@ type BetaDirectoryNewResponse struct {
 	UpdatedAt time.Time `json:"updated_at" api:"nullable" format:"date-time"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
-		ID             respjson.Field
-		Name           respjson.Field
-		ProjectID      respjson.Field
-		CreatedAt      respjson.Field
-		DeletedAt      respjson.Field
-		Description    respjson.Field
-		ExpiresAt      respjson.Field
-		SystemMetadata respjson.Field
-		Type           respjson.Field
-		UpdatedAt      respjson.Field
-		ExtraFields    map[string]respjson.Field
-		raw            string
+		ID                      respjson.Field
+		Name                    respjson.Field
+		ProjectID               respjson.Field
+		ConnectorSubscriptionID respjson.Field
+		CreatedAt               respjson.Field
+		DeletedAt               respjson.Field
+		Description             respjson.Field
+		ExpiresAt               respjson.Field
+		SystemMetadata          respjson.Field
+		Type                    respjson.Field
+		UpdatedAt               respjson.Field
+		ExtraFields             map[string]respjson.Field
+		raw                     string
 	} `json:"-"`
 }
 
@@ -173,6 +177,9 @@ type BetaDirectoryUpdateResponse struct {
 	Name string `json:"name" api:"required"`
 	// Project the directory belongs to.
 	ProjectID string `json:"project_id" api:"required"`
+	// Connector Subscription whose files sync into this directory. Null for a
+	// directory populated by manual uploads.
+	ConnectorSubscriptionID string `json:"connector_subscription_id" api:"nullable"`
 	// Creation datetime
 	CreatedAt time.Time `json:"created_at" api:"nullable" format:"date-time"`
 	// Optional timestamp of when the directory was deleted. Null if not deleted.
@@ -191,18 +198,19 @@ type BetaDirectoryUpdateResponse struct {
 	UpdatedAt time.Time `json:"updated_at" api:"nullable" format:"date-time"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
-		ID             respjson.Field
-		Name           respjson.Field
-		ProjectID      respjson.Field
-		CreatedAt      respjson.Field
-		DeletedAt      respjson.Field
-		Description    respjson.Field
-		ExpiresAt      respjson.Field
-		SystemMetadata respjson.Field
-		Type           respjson.Field
-		UpdatedAt      respjson.Field
-		ExtraFields    map[string]respjson.Field
-		raw            string
+		ID                      respjson.Field
+		Name                    respjson.Field
+		ProjectID               respjson.Field
+		ConnectorSubscriptionID respjson.Field
+		CreatedAt               respjson.Field
+		DeletedAt               respjson.Field
+		Description             respjson.Field
+		ExpiresAt               respjson.Field
+		SystemMetadata          respjson.Field
+		Type                    respjson.Field
+		UpdatedAt               respjson.Field
+		ExtraFields             map[string]respjson.Field
+		raw                     string
 	} `json:"-"`
 }
 
@@ -229,6 +237,9 @@ type BetaDirectoryListResponse struct {
 	Name string `json:"name" api:"required"`
 	// Project the directory belongs to.
 	ProjectID string `json:"project_id" api:"required"`
+	// Connector Subscription whose files sync into this directory. Null for a
+	// directory populated by manual uploads.
+	ConnectorSubscriptionID string `json:"connector_subscription_id" api:"nullable"`
 	// Creation datetime
 	CreatedAt time.Time `json:"created_at" api:"nullable" format:"date-time"`
 	// Optional timestamp of when the directory was deleted. Null if not deleted.
@@ -247,18 +258,19 @@ type BetaDirectoryListResponse struct {
 	UpdatedAt time.Time `json:"updated_at" api:"nullable" format:"date-time"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
-		ID             respjson.Field
-		Name           respjson.Field
-		ProjectID      respjson.Field
-		CreatedAt      respjson.Field
-		DeletedAt      respjson.Field
-		Description    respjson.Field
-		ExpiresAt      respjson.Field
-		SystemMetadata respjson.Field
-		Type           respjson.Field
-		UpdatedAt      respjson.Field
-		ExtraFields    map[string]respjson.Field
-		raw            string
+		ID                      respjson.Field
+		Name                    respjson.Field
+		ProjectID               respjson.Field
+		ConnectorSubscriptionID respjson.Field
+		CreatedAt               respjson.Field
+		DeletedAt               respjson.Field
+		Description             respjson.Field
+		ExpiresAt               respjson.Field
+		SystemMetadata          respjson.Field
+		Type                    respjson.Field
+		UpdatedAt               respjson.Field
+		ExtraFields             map[string]respjson.Field
+		raw                     string
 	} `json:"-"`
 }
 
@@ -285,6 +297,9 @@ type BetaDirectoryGetResponse struct {
 	Name string `json:"name" api:"required"`
 	// Project the directory belongs to.
 	ProjectID string `json:"project_id" api:"required"`
+	// Connector Subscription whose files sync into this directory. Null for a
+	// directory populated by manual uploads.
+	ConnectorSubscriptionID string `json:"connector_subscription_id" api:"nullable"`
 	// Creation datetime
 	CreatedAt time.Time `json:"created_at" api:"nullable" format:"date-time"`
 	// Optional timestamp of when the directory was deleted. Null if not deleted.
@@ -303,18 +318,19 @@ type BetaDirectoryGetResponse struct {
 	UpdatedAt time.Time `json:"updated_at" api:"nullable" format:"date-time"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
-		ID             respjson.Field
-		Name           respjson.Field
-		ProjectID      respjson.Field
-		CreatedAt      respjson.Field
-		DeletedAt      respjson.Field
-		Description    respjson.Field
-		ExpiresAt      respjson.Field
-		SystemMetadata respjson.Field
-		Type           respjson.Field
-		UpdatedAt      respjson.Field
-		ExtraFields    map[string]respjson.Field
-		raw            string
+		ID                      respjson.Field
+		Name                    respjson.Field
+		ProjectID               respjson.Field
+		ConnectorSubscriptionID respjson.Field
+		CreatedAt               respjson.Field
+		DeletedAt               respjson.Field
+		Description             respjson.Field
+		ExpiresAt               respjson.Field
+		SystemMetadata          respjson.Field
+		Type                    respjson.Field
+		UpdatedAt               respjson.Field
+		ExtraFields             map[string]respjson.Field
+		raw                     string
 	} `json:"-"`
 }
 
@@ -338,6 +354,9 @@ type BetaDirectoryNewParams struct {
 	Name           string            `json:"name" api:"required"`
 	OrganizationID param.Opt[string] `query:"organization_id,omitzero" format:"uuid" json:"-"`
 	ProjectID      param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
+	// Connector Subscription whose files sync into this directory. Omit for manual
+	// uploads.
+	ConnectorSubscriptionID param.Opt[string] `json:"connector_subscription_id,omitzero"`
 	// Optional description shown to users.
 	Description param.Opt[string] `json:"description,omitzero"`
 	// Reserved system-managed metadata.

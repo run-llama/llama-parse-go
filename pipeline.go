@@ -1670,6 +1670,7 @@ type LlamaParseParametersResp struct {
 	AdaptiveLongTable                        bool    `json:"adaptive_long_table" api:"nullable"`
 	AggressiveTableExtraction                bool    `json:"aggressive_table_extraction" api:"nullable"`
 	AnnotateLinks                            bool    `json:"annotate_links" api:"nullable"`
+	AnnotateRevisions                        bool    `json:"annotate_revisions" api:"nullable"`
 	AutoMode                                 bool    `json:"auto_mode" api:"nullable"`
 	AutoModeConfigurationJson                string  `json:"auto_mode_configuration_json" api:"nullable"`
 	AutoModeTriggerOnImageInPage             bool    `json:"auto_mode_trigger_on_image_in_page" api:"nullable"`
@@ -1807,6 +1808,7 @@ type LlamaParseParametersResp struct {
 		AdaptiveLongTable                        respjson.Field
 		AggressiveTableExtraction                respjson.Field
 		AnnotateLinks                            respjson.Field
+		AnnotateRevisions                        respjson.Field
 		AutoMode                                 respjson.Field
 		AutoModeConfigurationJson                respjson.Field
 		AutoModeTriggerOnImageInPage             respjson.Field
@@ -1960,14 +1962,16 @@ type LlamaParseParametersWebhookConfigurationResp struct {
 	// Events to subscribe to (e.g. 'parse.success', 'extract.error'). If null, all
 	// events are delivered.
 	//
-	// Any of "classify.cancelled", "classify.error", "classify.partial_success",
-	// "classify.pending", "classify.running", "classify.success", "extract.cancelled",
-	// "extract.error", "extract.partial_success", "extract.pending",
-	// "extract.success", "parse.cancelled", "parse.error", "parse.partial_success",
-	// "parse.pending", "parse.running", "parse.success", "sheets.cancelled",
-	// "sheets.error", "sheets.partial_success", "sheets.pending", "sheets.success",
-	// "split.cancelled", "split.error", "split.pending", "split.processing",
-	// "split.success", "unmapped_event".
+	// Any of "batch.cancelled", "batch.error", "batch.pending", "batch.running",
+	// "batch.success", "classify.cancelled", "classify.error",
+	// "classify.partial_success", "classify.pending", "classify.running",
+	// "classify.success", "extract.cancelled", "extract.error",
+	// "extract.partial_success", "extract.pending", "extract.success",
+	// "parse.cancelled", "parse.error", "parse.partial_success", "parse.pending",
+	// "parse.running", "parse.success", "sheets.cancelled", "sheets.error",
+	// "sheets.partial_success", "sheets.pending", "sheets.success", "split.cancelled",
+	// "split.error", "split.pending", "split.processing", "split.success",
+	// "unmapped_event".
 	WebhookEvents []string `json:"webhook_events" api:"nullable"`
 	// Custom HTTP headers sent with each webhook request (e.g. auth tokens)
 	WebhookHeaders map[string]string `json:"webhook_headers" api:"nullable"`
@@ -2002,6 +2006,7 @@ type LlamaParseParameters struct {
 	AdaptiveLongTable                        param.Opt[bool]    `json:"adaptive_long_table,omitzero"`
 	AggressiveTableExtraction                param.Opt[bool]    `json:"aggressive_table_extraction,omitzero"`
 	AnnotateLinks                            param.Opt[bool]    `json:"annotate_links,omitzero"`
+	AnnotateRevisions                        param.Opt[bool]    `json:"annotate_revisions,omitzero"`
 	AutoMode                                 param.Opt[bool]    `json:"auto_mode,omitzero"`
 	AutoModeConfigurationJson                param.Opt[string]  `json:"auto_mode_configuration_json,omitzero"`
 	AutoModeTriggerOnImageInPage             param.Opt[bool]    `json:"auto_mode_trigger_on_image_in_page,omitzero"`
@@ -2159,14 +2164,16 @@ type LlamaParseParametersWebhookConfiguration struct {
 	// Events to subscribe to (e.g. 'parse.success', 'extract.error'). If null, all
 	// events are delivered.
 	//
-	// Any of "classify.cancelled", "classify.error", "classify.partial_success",
-	// "classify.pending", "classify.running", "classify.success", "extract.cancelled",
-	// "extract.error", "extract.partial_success", "extract.pending",
-	// "extract.success", "parse.cancelled", "parse.error", "parse.partial_success",
-	// "parse.pending", "parse.running", "parse.success", "sheets.cancelled",
-	// "sheets.error", "sheets.partial_success", "sheets.pending", "sheets.success",
-	// "split.cancelled", "split.error", "split.pending", "split.processing",
-	// "split.success", "unmapped_event".
+	// Any of "batch.cancelled", "batch.error", "batch.pending", "batch.running",
+	// "batch.success", "classify.cancelled", "classify.error",
+	// "classify.partial_success", "classify.pending", "classify.running",
+	// "classify.success", "extract.cancelled", "extract.error",
+	// "extract.partial_success", "extract.pending", "extract.success",
+	// "parse.cancelled", "parse.error", "parse.partial_success", "parse.pending",
+	// "parse.running", "parse.success", "sheets.cancelled", "sheets.error",
+	// "sheets.partial_success", "sheets.pending", "sheets.success", "split.cancelled",
+	// "split.error", "split.pending", "split.processing", "split.success",
+	// "unmapped_event".
 	WebhookEvents []string `json:"webhook_events,omitzero"`
 	// Custom HTTP headers sent with each webhook request (e.g. auth tokens)
 	WebhookHeaders map[string]string `json:"webhook_headers,omitzero"`

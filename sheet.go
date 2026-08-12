@@ -125,6 +125,8 @@ type SheetNewParams struct {
 	ProjectID      param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
 	// Saved configuration ID
 	ConfigurationID param.Opt[string] `json:"configuration_id,omitzero"`
+	// IDs of saved webhook configurations to notify for this job.
+	WebhookConfigurationIDs []string `json:"webhook_configuration_ids,omitzero"`
 	// Outbound webhook endpoints to notify on job status changes
 	WebhookConfigurations []SheetNewParamsWebhookConfiguration `json:"webhook_configurations,omitzero"`
 	// Configuration for spreadsheet parsing and region extraction
@@ -164,14 +166,16 @@ type SheetNewParamsWebhookConfiguration struct {
 	// Events to subscribe to (e.g. 'parse.success', 'extract.error'). If null, all
 	// events are delivered.
 	//
-	// Any of "classify.cancelled", "classify.error", "classify.partial_success",
-	// "classify.pending", "classify.running", "classify.success", "extract.cancelled",
-	// "extract.error", "extract.partial_success", "extract.pending",
-	// "extract.success", "parse.cancelled", "parse.error", "parse.partial_success",
-	// "parse.pending", "parse.running", "parse.success", "sheets.cancelled",
-	// "sheets.error", "sheets.partial_success", "sheets.pending", "sheets.success",
-	// "split.cancelled", "split.error", "split.pending", "split.processing",
-	// "split.success", "unmapped_event".
+	// Any of "batch.cancelled", "batch.error", "batch.pending", "batch.running",
+	// "batch.success", "classify.cancelled", "classify.error",
+	// "classify.partial_success", "classify.pending", "classify.running",
+	// "classify.success", "extract.cancelled", "extract.error",
+	// "extract.partial_success", "extract.pending", "extract.success",
+	// "parse.cancelled", "parse.error", "parse.partial_success", "parse.pending",
+	// "parse.running", "parse.success", "sheets.cancelled", "sheets.error",
+	// "sheets.partial_success", "sheets.pending", "sheets.success", "split.cancelled",
+	// "split.error", "split.pending", "split.processing", "split.success",
+	// "unmapped_event".
 	WebhookEvents []string `json:"webhook_events,omitzero"`
 	// Custom HTTP headers sent with each webhook request (e.g. auth tokens)
 	WebhookHeaders map[string]string `json:"webhook_headers,omitzero"`

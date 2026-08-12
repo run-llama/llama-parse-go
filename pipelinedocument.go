@@ -159,6 +159,26 @@ func (r *PipelineDocumentService) GetStatus(ctx context.Context, documentID stri
 	return res, err
 }
 
+// Count the documents in a pipeline, grouped by ingestion status.
+//
+// Counts reflect each document's last recorded status rather than a freshly
+// computed one, so a document that changed status in the last few moments may
+// still be counted under its previous one. Use
+// `GET /pipelines/{pipeline_id}/documents/{document_id}/status` when a single
+// document's status has to be up to the moment.
+//
+// Deprecated: deprecated
+func (r *PipelineDocumentService) GetStatusCounts(ctx context.Context, pipelineID string, query PipelineDocumentGetStatusCountsParams, opts ...option.RequestOption) (res *PipelineDocumentGetStatusCountsResponse, err error) {
+	opts = slices.Concat(r.options, opts)
+	if pipelineID == "" {
+		err = errors.New("missing required pipeline_id parameter")
+		return nil, err
+	}
+	path := fmt.Sprintf("api/v1/pipelines/%s/documents/status-counts", pipelineID)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, query, &res, opts...)
+	return res, err
+}
+
 // Sync a specific document for a pipeline.
 //
 // Deprecated: deprecated
@@ -399,6 +419,39 @@ func (r *TextNodeRelationshipArrayItem) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
+// Counts of the documents in a pipeline, grouped by ingestion status.
+type PipelineDocumentGetStatusCountsResponse struct {
+	// Number of documents per ingestion status; every status is present.
+	Counts map[string]int64 `json:"counts" api:"required"`
+	// ID of the pipeline the documents belong to.
+	PipelineID string `json:"pipeline_id" api:"required" format:"uuid"`
+	// Total number of documents counted.
+	TotalCount int64 `json:"total_count" api:"required"`
+	// Data source the counts were restricted to.
+	DataSourceID string `json:"data_source_id" api:"nullable" format:"uuid"`
+	// File the counts were restricted to.
+	FileID string `json:"file_id" api:"nullable" format:"uuid"`
+	// Whether only directly uploaded documents were counted.
+	OnlyDirectUpload bool `json:"only_direct_upload"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Counts           respjson.Field
+		PipelineID       respjson.Field
+		TotalCount       respjson.Field
+		DataSourceID     respjson.Field
+		FileID           respjson.Field
+		OnlyDirectUpload respjson.Field
+		ExtraFields      map[string]respjson.Field
+		raw              string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r PipelineDocumentGetStatusCountsResponse) RawJSON() string { return r.JSON.raw }
+func (r *PipelineDocumentGetStatusCountsResponse) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
 type PipelineDocumentSyncResponse = any
 
 type PipelineDocumentNewParams struct {
@@ -458,6 +511,22 @@ type PipelineDocumentGetChunksParams struct {
 type PipelineDocumentGetStatusParams struct {
 	PipelineID string `path:"pipeline_id" api:"required" format:"uuid" json:"-"`
 	paramObj
+}
+
+type PipelineDocumentGetStatusCountsParams struct {
+	DataSourceID     param.Opt[string] `query:"data_source_id,omitzero" format:"uuid" json:"-"`
+	FileID           param.Opt[string] `query:"file_id,omitzero" format:"uuid" json:"-"`
+	OnlyDirectUpload param.Opt[bool]   `query:"only_direct_upload,omitzero" json:"-"`
+	paramObj
+}
+
+// URLQuery serializes [PipelineDocumentGetStatusCountsParams]'s query parameters
+// as `url.Values`.
+func (r PipelineDocumentGetStatusCountsParams) URLQuery() (v url.Values, err error) {
+	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
+		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
+		NestedFormat: apiquery.NestedQueryFormatBrackets,
+	})
 }
 
 type PipelineDocumentSyncParams struct {

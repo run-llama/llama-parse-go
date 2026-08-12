@@ -110,6 +110,21 @@ func (r *ExtractService) Delete(ctx context.Context, jobID string, body ExtractD
 	return res, err
 }
 
+// Cancel a running extraction job.
+//
+// Stops processing and marks the job as CANCELLED. Returns the updated job. Jobs
+// already in a terminal state (COMPLETED, FAILED, CANCELLED) cannot be cancelled.
+func (r *ExtractService) Cancel(ctx context.Context, jobID string, body ExtractCancelParams, opts ...option.RequestOption) (res *ExtractV2Job, err error) {
+	opts = slices.Concat(r.options, opts)
+	if jobID == "" {
+		err = errors.New("missing required job_id parameter")
+		return nil, err
+	}
+	path := fmt.Sprintf("api/v2/extract/%s/cancel", url.PathEscape(jobID))
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, body, &res, opts...)
+	return res, err
+}
+
 // Generate a JSON schema and return a product configuration request.
 func (r *ExtractService) GenerateSchema(ctx context.Context, params ExtractGenerateSchemaParams, opts ...option.RequestOption) (res *ConfigurationCreate, err error) {
 	opts = slices.Concat(r.options, opts)
@@ -121,8 +136,8 @@ func (r *ExtractService) GenerateSchema(ctx context.Context, params ExtractGener
 // Get a single extraction job by ID.
 //
 // Returns the job status and results when complete. Use `expand=configuration` to
-// include the full configuration used, and `expand=extract_metadata` for per-field
-// metadata.
+// include the full configuration used, `expand=extract_metadata` for per-field
+// metadata, and `expand=usage` for credits billed against the job.
 func (r *ExtractService) Get(ctx context.Context, jobID string, query ExtractGetParams, opts ...option.RequestOption) (res *ExtractV2Job, err error) {
 	opts = slices.Concat(r.options, opts)
 	if jobID == "" {
@@ -147,10 +162,14 @@ type ExtractConfiguration struct {
 	// JSON Schema defining the fields to extract. Validate with the /schema/validate
 	// endpoint first.
 	DataSchema map[string]*ExtractConfigurationDataSchemaUnion `json:"data_schema" api:"required"`
-	// Include citations in results
+	// Include citations in results. Returned under `extract_metadata` (auto-included
+	// when set). Text-level on `turbo` (no bounding boxes).
 	CiteSources bool `json:"cite_sources"`
-	// Include confidence scores in results
+	// Include confidence scores in results. Returned under `extract_metadata`
+	// (auto-included when set).
 	ConfidenceScores bool `json:"confidence_scores"`
+	// Disable reuse and storage of Extract results
+	DisableCache bool `json:"disable_cache"`
 	// Granularity of extraction: per_doc returns one object per document, per_page
 	// returns one object per page, per_table_row returns one object per table row
 	//
@@ -159,11 +178,24 @@ type ExtractConfiguration struct {
 	// Maximum number of pages to process. Omit for no limit.
 	MaxPages int64 `json:"max_pages" api:"nullable"`
 	// Saved parse configuration ID to control how the document is parsed before
-	// extraction
+	// extraction. Turbo extract does not support parse configuration or produce a
+	// parse output; use another tier if your workflow requires parsed text.
 	ParseConfigID string `json:"parse_config_id" api:"nullable"`
 	// Parse tier to use before extraction. Defaults to the extract tier if not
-	// specified.
+	// specified. Turbo extract does not support parse configuration or produce a parse
+	// output; use another tier if your workflow requires parsed text.
 	ParseTier string `json:"parse_tier" api:"nullable"`
+	// Optional worksheet names to extract when spreadsheet_mode is on. Overrides
+	// target_pages for spreadsheets; omit to extract every sheet. Names are matched
+	// exactly (case-sensitive) — pass them as a list, e.g. ["Sheet 1", "My Sheet"].
+	SheetNames []string `json:"sheet_names" api:"nullable"`
+	// Beta. When true, extract structured data directly from a spreadsheet workbook
+	// (.xlsx/.xls/.csv) — the agent reads cells straight from the workbook instead of
+	// the standard document path. Off by default (spreadsheets keep the standard
+	// path). Requires the agentic_plus tier. Billed on the standard per-page extract
+	// rate, against a page count derived from workbook size. Citations and confidence
+	// scores are not available in this mode.
+	SpreadsheetMode bool `json:"spreadsheet_mode"`
 	// Custom system prompt to guide extraction behavior
 	SystemPrompt string `json:"system_prompt" api:"nullable"`
 	// Comma-separated page numbers or ranges to process (1-based). Omit to process all
@@ -184,10 +216,13 @@ type ExtractConfiguration struct {
 		DataSchema       respjson.Field
 		CiteSources      respjson.Field
 		ConfidenceScores respjson.Field
+		DisableCache     respjson.Field
 		ExtractionTarget respjson.Field
 		MaxPages         respjson.Field
 		ParseConfigID    respjson.Field
 		ParseTier        respjson.Field
+		SheetNames       respjson.Field
+		SpreadsheetMode  respjson.Field
 		SystemPrompt     respjson.Field
 		TargetPages      respjson.Field
 		Tier             respjson.Field
@@ -303,25 +338,42 @@ type ExtractConfigurationParam struct {
 	// Maximum number of pages to process. Omit for no limit.
 	MaxPages param.Opt[int64] `json:"max_pages,omitzero"`
 	// Saved parse configuration ID to control how the document is parsed before
-	// extraction
+	// extraction. Turbo extract does not support parse configuration or produce a
+	// parse output; use another tier if your workflow requires parsed text.
 	ParseConfigID param.Opt[string] `json:"parse_config_id,omitzero"`
 	// Parse tier to use before extraction. Defaults to the extract tier if not
-	// specified.
+	// specified. Turbo extract does not support parse configuration or produce a parse
+	// output; use another tier if your workflow requires parsed text.
 	ParseTier param.Opt[string] `json:"parse_tier,omitzero"`
 	// Custom system prompt to guide extraction behavior
 	SystemPrompt param.Opt[string] `json:"system_prompt,omitzero"`
 	// Comma-separated page numbers or ranges to process (1-based). Omit to process all
 	// pages.
 	TargetPages param.Opt[string] `json:"target_pages,omitzero"`
-	// Include citations in results
+	// Include citations in results. Returned under `extract_metadata` (auto-included
+	// when set). Text-level on `turbo` (no bounding boxes).
 	CiteSources param.Opt[bool] `json:"cite_sources,omitzero"`
-	// Include confidence scores in results
+	// Include confidence scores in results. Returned under `extract_metadata`
+	// (auto-included when set).
 	ConfidenceScores param.Opt[bool] `json:"confidence_scores,omitzero"`
+	// Disable reuse and storage of Extract results
+	DisableCache param.Opt[bool] `json:"disable_cache,omitzero"`
+	// Beta. When true, extract structured data directly from a spreadsheet workbook
+	// (.xlsx/.xls/.csv) — the agent reads cells straight from the workbook instead of
+	// the standard document path. Off by default (spreadsheets keep the standard
+	// path). Requires the agentic_plus tier. Billed on the standard per-page extract
+	// rate, against a page count derived from workbook size. Citations and confidence
+	// scores are not available in this mode.
+	SpreadsheetMode param.Opt[bool] `json:"spreadsheet_mode,omitzero"`
 	// Use 'latest' for the latest release for the selected tier or a date string
 	// (YYYY-MM-DD format) to pin to the nearest release at or before that date. Job
 	// responses always report the concrete resolved version the job runs, fixed at job
 	// creation; saved configurations keep the value as provided.
 	Version param.Opt[string] `json:"version,omitzero"`
+	// Optional worksheet names to extract when spreadsheet_mode is on. Overrides
+	// target_pages for spreadsheets; omit to extract every sheet. Names are matched
+	// exactly (case-sensitive) — pass them as a list, e.g. ["Sheet 1", "My Sheet"].
+	SheetNames []string `json:"sheet_names,omitzero"`
 	// Granularity of extraction: per_doc returns one object per document, per_page
 	// returns one object per page, per_table_row returns one object per table row
 	//
@@ -444,6 +496,11 @@ type ExtractV2Job struct {
 	ExtractResult ExtractV2JobExtractResultUnion `json:"extract_result" api:"nullable"`
 	// Job-level metadata.
 	Metadata ExtractV2JobMetadata `json:"metadata" api:"nullable"`
+	// Usage recorded against an extract job.
+	//
+	// A parse job can back several extract jobs, so each of them reports that same
+	// parse cost in its total.
+	Usage ExtractV2JobUsage `json:"usage" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		ID              respjson.Field
@@ -458,6 +515,7 @@ type ExtractV2Job struct {
 		ExtractMetadata respjson.Field
 		ExtractResult   respjson.Field
 		Metadata        respjson.Field
+		Usage           respjson.Field
 		ExtraFields     map[string]respjson.Field
 		raw             string
 	} `json:"-"`
@@ -661,6 +719,33 @@ func (r *ExtractV2JobMetadata) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
+// Usage recorded against an extract job.
+//
+// A parse job can back several extract jobs, so each of them reports that same
+// parse cost in its total.
+type ExtractV2JobUsage struct {
+	// Total credits billed against this job. Null until billing has recorded it.
+	Credits float64 `json:"credits" api:"nullable"`
+	// Credits billed for the extraction itself
+	ExtractCredits float64 `json:"extract_credits" api:"nullable"`
+	// Credits billed against the parse job backing this extract job
+	ParseCredits float64 `json:"parse_credits" api:"nullable"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Credits        respjson.Field
+		ExtractCredits respjson.Field
+		ParseCredits   respjson.Field
+		ExtraFields    map[string]respjson.Field
+		raw            string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r ExtractV2JobUsage) RawJSON() string { return r.JSON.raw }
+func (r *ExtractV2JobUsage) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
 // Request to create an extraction job. Provide configuration_id or inline
 // configuration.
 //
@@ -670,6 +755,8 @@ type ExtractV2JobCreateParam struct {
 	FileInput string `json:"file_input" api:"required"`
 	// Saved configuration ID
 	ConfigurationID param.Opt[string] `json:"configuration_id,omitzero"`
+	// IDs of saved webhook configurations to notify for this job.
+	WebhookConfigurationIDs []string `json:"webhook_configuration_ids,omitzero"`
 	// Outbound webhook endpoints to notify on job status changes
 	WebhookConfigurations []ExtractV2JobCreateWebhookConfigurationParam `json:"webhook_configurations,omitzero"`
 	// Extract configuration combining parse and extract settings.
@@ -699,14 +786,16 @@ type ExtractV2JobCreateWebhookConfigurationParam struct {
 	// Events to subscribe to (e.g. 'parse.success', 'extract.error'). If null, all
 	// events are delivered.
 	//
-	// Any of "classify.cancelled", "classify.error", "classify.partial_success",
-	// "classify.pending", "classify.running", "classify.success", "extract.cancelled",
-	// "extract.error", "extract.partial_success", "extract.pending",
-	// "extract.success", "parse.cancelled", "parse.error", "parse.partial_success",
-	// "parse.pending", "parse.running", "parse.success", "sheets.cancelled",
-	// "sheets.error", "sheets.partial_success", "sheets.pending", "sheets.success",
-	// "split.cancelled", "split.error", "split.pending", "split.processing",
-	// "split.success", "unmapped_event".
+	// Any of "batch.cancelled", "batch.error", "batch.pending", "batch.running",
+	// "batch.success", "classify.cancelled", "classify.error",
+	// "classify.partial_success", "classify.pending", "classify.running",
+	// "classify.success", "extract.cancelled", "extract.error",
+	// "extract.partial_success", "extract.pending", "extract.success",
+	// "parse.cancelled", "parse.error", "parse.partial_success", "parse.pending",
+	// "parse.running", "parse.success", "sheets.cancelled", "sheets.error",
+	// "sheets.partial_success", "sheets.pending", "sheets.success", "split.cancelled",
+	// "split.error", "split.pending", "split.processing", "split.success",
+	// "unmapped_event".
 	WebhookEvents []string `json:"webhook_events,omitzero"`
 	// Custom HTTP headers sent with each webhook request (e.g. auth tokens)
 	WebhookHeaders map[string]string `json:"webhook_headers,omitzero"`
@@ -1212,6 +1301,20 @@ func (r ExtractDeleteParams) URLQuery() (v url.Values, err error) {
 	})
 }
 
+type ExtractCancelParams struct {
+	OrganizationID param.Opt[string] `query:"organization_id,omitzero" format:"uuid" json:"-"`
+	ProjectID      param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
+	paramObj
+}
+
+// URLQuery serializes [ExtractCancelParams]'s query parameters as `url.Values`.
+func (r ExtractCancelParams) URLQuery() (v url.Values, err error) {
+	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
+		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
+		NestedFormat: apiquery.NestedQueryFormatBrackets,
+	})
+}
+
 type ExtractGenerateSchemaParams struct {
 	// Request schema for generating an extraction schema.
 	ExtractV2SchemaGenerateRequest ExtractV2SchemaGenerateRequestParam
@@ -1239,7 +1342,7 @@ func (r ExtractGenerateSchemaParams) URLQuery() (v url.Values, err error) {
 type ExtractGetParams struct {
 	OrganizationID param.Opt[string] `query:"organization_id,omitzero" format:"uuid" json:"-"`
 	ProjectID      param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
-	// Additional fields to include: configuration, extract_metadata
+	// Additional fields to include: configuration, extract_metadata, usage
 	Expand []string `query:"expand,omitzero" json:"-"`
 	paramObj
 }

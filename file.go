@@ -58,6 +58,18 @@ func (r *FileService) New(ctx context.Context, params FileNewParams, opts ...opt
 	return res, err
 }
 
+// Get file metadata by ID.
+func (r *FileService) Get(ctx context.Context, fileID string, query FileGetParams, opts ...option.RequestOption) (res *FileGetResponse, err error) {
+	opts = slices.Concat(r.options, opts)
+	if fileID == "" {
+		err = errors.New("missing required file_id parameter")
+		return nil, err
+	}
+	path := fmt.Sprintf("api/v1/beta/files/%s", fileID)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, query, &res, opts...)
+	return res, err
+}
+
 // List files with optional filtering and pagination.
 //
 // Filter by `file_name`, `file_ids`, or `external_file_id`. Supports cursor-based
@@ -101,7 +113,7 @@ func (r *FileService) Delete(ctx context.Context, fileID string, body FileDelete
 }
 
 // Get a presigned URL to download the file content.
-func (r *FileService) Get(ctx context.Context, fileID string, query FileGetParams, opts ...option.RequestOption) (res *PresignedURL, err error) {
+func (r *FileService) Content(ctx context.Context, fileID string, query FileContentParams, opts ...option.RequestOption) (res *PresignedURL, err error) {
 	opts = slices.Concat(r.options, opts)
 	if fileID == "" {
 		err = errors.New("missing required file_id parameter")
@@ -368,6 +380,50 @@ func (r *FileNewResponse) UnmarshalJSON(data []byte) error {
 }
 
 // An uploaded file.
+type FileGetResponse struct {
+	// Unique file identifier
+	ID string `json:"id" api:"required"`
+	// File name including extension
+	Name string `json:"name" api:"required"`
+	// Project this file belongs to
+	ProjectID string `json:"project_id" api:"required" format:"uuid"`
+	// Schema for a presigned URL.
+	DownloadURL PresignedURL `json:"download_url" api:"nullable"`
+	// When the file expires and may be automatically removed. Null means no
+	// expiration.
+	ExpiresAt time.Time `json:"expires_at" api:"nullable" format:"date-time"`
+	// Optional ID for correlating with an external system
+	ExternalFileID string `json:"external_file_id" api:"nullable"`
+	// File extension (pdf, docx, png, etc.)
+	FileType string `json:"file_type" api:"nullable"`
+	// When the file was last modified (ISO 8601)
+	LastModifiedAt time.Time `json:"last_modified_at" api:"nullable" format:"date-time"`
+	// How the file will be used: user_data, parse, extract, classify, split, sheet, or
+	// agent_app
+	Purpose string `json:"purpose" api:"nullable"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		ID             respjson.Field
+		Name           respjson.Field
+		ProjectID      respjson.Field
+		DownloadURL    respjson.Field
+		ExpiresAt      respjson.Field
+		ExternalFileID respjson.Field
+		FileType       respjson.Field
+		LastModifiedAt respjson.Field
+		Purpose        respjson.Field
+		ExtraFields    map[string]respjson.Field
+		raw            string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r FileGetResponse) RawJSON() string { return r.JSON.raw }
+func (r *FileGetResponse) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// An uploaded file.
 type FileListResponse struct {
 	// Unique file identifier
 	ID string `json:"id" api:"required"`
@@ -522,6 +578,22 @@ func (r FileNewParams) URLQuery() (v url.Values, err error) {
 	})
 }
 
+type FileGetParams struct {
+	OrganizationID param.Opt[string] `query:"organization_id,omitzero" format:"uuid" json:"-"`
+	ProjectID      param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
+	// Fields to expand.
+	Expand []string `query:"expand,omitzero" json:"-"`
+	paramObj
+}
+
+// URLQuery serializes [FileGetParams]'s query parameters as `url.Values`.
+func (r FileGetParams) URLQuery() (v url.Values, err error) {
+	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
+		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
+		NestedFormat: apiquery.NestedQueryFormatBrackets,
+	})
+}
+
 type FileListParams struct {
 	// Filter by external file ID.
 	ExternalFileID param.Opt[string] `query:"external_file_id,omitzero" json:"-"`
@@ -566,15 +638,15 @@ func (r FileDeleteParams) URLQuery() (v url.Values, err error) {
 	})
 }
 
-type FileGetParams struct {
+type FileContentParams struct {
 	ExpiresAtSeconds param.Opt[int64]  `query:"expires_at_seconds,omitzero" json:"-"`
 	OrganizationID   param.Opt[string] `query:"organization_id,omitzero" format:"uuid" json:"-"`
 	ProjectID        param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
 	paramObj
 }
 
-// URLQuery serializes [FileGetParams]'s query parameters as `url.Values`.
-func (r FileGetParams) URLQuery() (v url.Values, err error) {
+// URLQuery serializes [FileContentParams]'s query parameters as `url.Values`.
+func (r FileContentParams) URLQuery() (v url.Values, err error) {
 	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
 		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
 		NestedFormat: apiquery.NestedQueryFormatBrackets,

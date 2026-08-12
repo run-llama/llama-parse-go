@@ -41,11 +41,12 @@ func TestClassifyNewWithOptionalParams(t *testing.T) {
 					TargetPages: llamacloud.String("1,3,5-7"),
 				},
 			},
-			ConfigurationID: llamacloud.String("cfg-11111111-2222-3333-4444-555555555555"),
-			FileID:          llamacloud.String("dfl-aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"),
-			FileInput:       llamacloud.String("dfl-aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"),
-			ParseJobID:      llamacloud.String("pjb-aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"),
-			TransactionID:   llamacloud.String("tx-unique-idempotency-key"),
+			ConfigurationID:         llamacloud.String("cfg-11111111-2222-3333-4444-555555555555"),
+			FileID:                  llamacloud.String("dfl-aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"),
+			FileInput:               llamacloud.String("dfl-aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"),
+			ParseJobID:              llamacloud.String("pjb-aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"),
+			TransactionID:           llamacloud.String("tx-unique-idempotency-key"),
+			WebhookConfigurationIDs: []string{"whc-...", "whc-..."},
 			WebhookConfigurations: []llamacloud.ClassifyCreateRequestWebhookConfigurationParam{{
 				WebhookEvents: []string{"parse.success", "parse.error"},
 				WebhookHeaders: map[string]string{
@@ -92,6 +93,36 @@ func TestClassifyListWithOptionalParams(t *testing.T) {
 		ProjectID:           llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		Status:              llamacloud.ClassifyListParamsStatusCompleted,
 	})
+	if err != nil {
+		var apierr *llamacloud.Error
+		if errors.As(err, &apierr) {
+			t.Log(string(apierr.DumpRequest(true)))
+		}
+		t.Fatalf("err should be nil: %s", err.Error())
+	}
+}
+
+func TestClassifyCancelWithOptionalParams(t *testing.T) {
+	t.Skip("Mock server tests are disabled")
+	baseURL := "http://localhost:4010"
+	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
+		baseURL = envURL
+	}
+	if !testutil.CheckTestServer(t, baseURL) {
+		return
+	}
+	client := llamacloud.NewClient(
+		option.WithBaseURL(baseURL),
+		option.WithAPIKey("My API Key"),
+	)
+	_, err := client.Classify.Cancel(
+		context.TODO(),
+		"job_id",
+		llamacloud.ClassifyCancelParams{
+			OrganizationID: llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+			ProjectID:      llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		},
+	)
 	if err != nil {
 		var apierr *llamacloud.Error
 		if errors.As(err, &apierr) {

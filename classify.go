@@ -89,6 +89,21 @@ func (r *ClassifyService) ListAutoPaging(ctx context.Context, query ClassifyList
 	return pagination.NewPaginatedCursorAutoPager(r.List(ctx, query, opts...))
 }
 
+// Cancel a running classify job.
+//
+// Stops processing and marks the job as CANCELLED. Returns the updated job. Jobs
+// already in a terminal state (COMPLETED, FAILED, CANCELLED) cannot be cancelled.
+func (r *ClassifyService) Cancel(ctx context.Context, jobID string, body ClassifyCancelParams, opts ...option.RequestOption) (res *ClassifyCancelResponse, err error) {
+	opts = slices.Concat(r.options, opts)
+	if jobID == "" {
+		err = errors.New("missing required job_id parameter")
+		return nil, err
+	}
+	path := fmt.Sprintf("api/v2/classify/%s/cancel", url.PathEscape(jobID))
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, body, &res, opts...)
+	return res, err
+}
+
 // Get a classify job by ID.
 //
 // Returns the job status, configuration, and classify result when complete. The
@@ -271,6 +286,8 @@ type ClassifyCreateRequestParam struct {
 	// Idempotency key scoped to the project. Reusing a key returns the original job;
 	// the new request body is ignored.
 	TransactionID param.Opt[string] `json:"transaction_id,omitzero"`
+	// IDs of saved webhook configurations to notify for this job.
+	WebhookConfigurationIDs []string `json:"webhook_configuration_ids,omitzero"`
 	// Outbound webhook endpoints to notify on job status changes
 	WebhookConfigurations []ClassifyCreateRequestWebhookConfigurationParam `json:"webhook_configurations,omitzero"`
 	// Configuration for a classify job.
@@ -300,14 +317,16 @@ type ClassifyCreateRequestWebhookConfigurationParam struct {
 	// Events to subscribe to (e.g. 'parse.success', 'extract.error'). If null, all
 	// events are delivered.
 	//
-	// Any of "classify.cancelled", "classify.error", "classify.partial_success",
-	// "classify.pending", "classify.running", "classify.success", "extract.cancelled",
-	// "extract.error", "extract.partial_success", "extract.pending",
-	// "extract.success", "parse.cancelled", "parse.error", "parse.partial_success",
-	// "parse.pending", "parse.running", "parse.success", "sheets.cancelled",
-	// "sheets.error", "sheets.partial_success", "sheets.pending", "sheets.success",
-	// "split.cancelled", "split.error", "split.pending", "split.processing",
-	// "split.success", "unmapped_event".
+	// Any of "batch.cancelled", "batch.error", "batch.pending", "batch.running",
+	// "batch.success", "classify.cancelled", "classify.error",
+	// "classify.partial_success", "classify.pending", "classify.running",
+	// "classify.success", "extract.cancelled", "extract.error",
+	// "extract.partial_success", "extract.pending", "extract.success",
+	// "parse.cancelled", "parse.error", "parse.partial_success", "parse.pending",
+	// "parse.running", "parse.success", "sheets.cancelled", "sheets.error",
+	// "sheets.partial_success", "sheets.pending", "sheets.success", "split.cancelled",
+	// "split.error", "split.pending", "split.processing", "split.success",
+	// "unmapped_event".
 	WebhookEvents []string `json:"webhook_events,omitzero"`
 	// Custom HTTP headers sent with each webhook request (e.g. auth tokens)
 	WebhookHeaders map[string]string `json:"webhook_headers,omitzero"`
@@ -507,6 +526,86 @@ const (
 )
 
 // Response for a classify job.
+type ClassifyCancelResponse struct {
+	// Unique identifier
+	ID string `json:"id" api:"required"`
+	// Classify configuration used for this job
+	Configuration ClassifyConfiguration `json:"configuration" api:"required"`
+	// Whether the input was a file or parse job (FILE or PARSE_JOB)
+	//
+	// Any of "file_id", "parse_job_id", "url".
+	DocumentInputType ClassifyCancelResponseDocumentInputType `json:"document_input_type" api:"required"`
+	// ID of the input file or parse job
+	FileInput string `json:"file_input" api:"required"`
+	// Project this job belongs to
+	ProjectID string `json:"project_id" api:"required"`
+	// Current job status: PENDING, RUNNING, COMPLETED, or FAILED
+	//
+	// Any of "COMPLETED", "FAILED", "PENDING", "RUNNING".
+	Status ClassifyCancelResponseStatus `json:"status" api:"required"`
+	// User who created this job
+	UserID string `json:"user_id" api:"required"`
+	// Product configuration ID
+	ConfigurationID string `json:"configuration_id" api:"nullable"`
+	// Creation datetime
+	CreatedAt time.Time `json:"created_at" api:"nullable" format:"date-time"`
+	// Error message if job failed
+	ErrorMessage string `json:"error_message" api:"nullable"`
+	// Associated parse job ID
+	ParseJobID string `json:"parse_job_id" api:"nullable"`
+	// Result of classifying a document.
+	Result ClassifyResult `json:"result" api:"nullable"`
+	// Idempotency key
+	TransactionID string `json:"transaction_id" api:"nullable"`
+	// Update datetime
+	UpdatedAt time.Time `json:"updated_at" api:"nullable" format:"date-time"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		ID                respjson.Field
+		Configuration     respjson.Field
+		DocumentInputType respjson.Field
+		FileInput         respjson.Field
+		ProjectID         respjson.Field
+		Status            respjson.Field
+		UserID            respjson.Field
+		ConfigurationID   respjson.Field
+		CreatedAt         respjson.Field
+		ErrorMessage      respjson.Field
+		ParseJobID        respjson.Field
+		Result            respjson.Field
+		TransactionID     respjson.Field
+		UpdatedAt         respjson.Field
+		ExtraFields       map[string]respjson.Field
+		raw               string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r ClassifyCancelResponse) RawJSON() string { return r.JSON.raw }
+func (r *ClassifyCancelResponse) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Whether the input was a file or parse job (FILE or PARSE_JOB)
+type ClassifyCancelResponseDocumentInputType string
+
+const (
+	ClassifyCancelResponseDocumentInputTypeFileID     ClassifyCancelResponseDocumentInputType = "file_id"
+	ClassifyCancelResponseDocumentInputTypeParseJobID ClassifyCancelResponseDocumentInputType = "parse_job_id"
+	ClassifyCancelResponseDocumentInputTypeURL        ClassifyCancelResponseDocumentInputType = "url"
+)
+
+// Current job status: PENDING, RUNNING, COMPLETED, or FAILED
+type ClassifyCancelResponseStatus string
+
+const (
+	ClassifyCancelResponseStatusCompleted ClassifyCancelResponseStatus = "COMPLETED"
+	ClassifyCancelResponseStatusFailed    ClassifyCancelResponseStatus = "FAILED"
+	ClassifyCancelResponseStatusPending   ClassifyCancelResponseStatus = "PENDING"
+	ClassifyCancelResponseStatusRunning   ClassifyCancelResponseStatus = "RUNNING"
+)
+
+// Response for a classify job.
 type ClassifyGetResponse struct {
 	// Unique identifier
 	ID string `json:"id" api:"required"`
@@ -648,6 +747,20 @@ const (
 	ClassifyListParamsStatusPending   ClassifyListParamsStatus = "PENDING"
 	ClassifyListParamsStatusRunning   ClassifyListParamsStatus = "RUNNING"
 )
+
+type ClassifyCancelParams struct {
+	OrganizationID param.Opt[string] `query:"organization_id,omitzero" format:"uuid" json:"-"`
+	ProjectID      param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
+	paramObj
+}
+
+// URLQuery serializes [ClassifyCancelParams]'s query parameters as `url.Values`.
+func (r ClassifyCancelParams) URLQuery() (v url.Values, err error) {
+	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
+		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
+		NestedFormat: apiquery.NestedQueryFormatBrackets,
+	})
+}
 
 type ClassifyGetParams struct {
 	OrganizationID param.Opt[string] `query:"organization_id,omitzero" format:"uuid" json:"-"`

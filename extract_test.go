@@ -47,16 +47,20 @@ func TestExtractNewWithOptionalParams(t *testing.T) {
 				},
 				CiteSources:      llamacloud.Bool(true),
 				ConfidenceScores: llamacloud.Bool(true),
+				DisableCache:     llamacloud.Bool(true),
 				ExtractionTarget: llamacloud.ExtractConfigurationExtractionTargetPerDoc,
 				MaxPages:         llamacloud.Int(10),
 				ParseConfigID:    llamacloud.String("cfg-11111111-2222-3333-4444-555555555555"),
 				ParseTier:        llamacloud.String("fast"),
+				SheetNames:       []string{"Sheet 1", "Q4 Summary"},
+				SpreadsheetMode:  llamacloud.Bool(true),
 				SystemPrompt:     llamacloud.String("Extract all monetary values in USD. If a currency is not specified, assume USD."),
 				TargetPages:      llamacloud.String("1,3,5-7"),
 				Tier:             llamacloud.ExtractConfigurationTierCostEffective,
 				Version:          llamacloud.String("latest"),
 			},
-			ConfigurationID: llamacloud.String("cfg-11111111-2222-3333-4444-555555555555"),
+			ConfigurationID:         llamacloud.String("cfg-11111111-2222-3333-4444-555555555555"),
+			WebhookConfigurationIDs: []string{"whc-...", "whc-..."},
 			WebhookConfigurations: []llamacloud.ExtractV2JobCreateWebhookConfigurationParam{{
 				WebhookEvents: []string{"parse.success", "parse.error"},
 				WebhookHeaders: map[string]string{
@@ -133,6 +137,36 @@ func TestExtractDeleteWithOptionalParams(t *testing.T) {
 		context.TODO(),
 		"job_id",
 		llamacloud.ExtractDeleteParams{
+			OrganizationID: llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+			ProjectID:      llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		},
+	)
+	if err != nil {
+		var apierr *llamacloud.Error
+		if errors.As(err, &apierr) {
+			t.Log(string(apierr.DumpRequest(true)))
+		}
+		t.Fatalf("err should be nil: %s", err.Error())
+	}
+}
+
+func TestExtractCancelWithOptionalParams(t *testing.T) {
+	t.Skip("Mock server tests are disabled")
+	baseURL := "http://localhost:4010"
+	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
+		baseURL = envURL
+	}
+	if !testutil.CheckTestServer(t, baseURL) {
+		return
+	}
+	client := llamacloud.NewClient(
+		option.WithBaseURL(baseURL),
+		option.WithAPIKey("My API Key"),
+	)
+	_, err := client.Extract.Cancel(
+		context.TODO(),
+		"job_id",
+		llamacloud.ExtractCancelParams{
 			OrganizationID: llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 			ProjectID:      llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		},
