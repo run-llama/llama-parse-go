@@ -113,7 +113,7 @@ func (r *FileService) Delete(ctx context.Context, fileID string, body FileDelete
 }
 
 // Get a presigned URL to download the file content.
-func (r *FileService) Get(ctx context.Context, fileID string, query FileGetParams, opts ...option.RequestOption) (res *PresignedURL, err error) {
+func (r *FileService) Content(ctx context.Context, fileID string, query FileContentParams, opts ...option.RequestOption) (res *PresignedURL, err error) {
 	opts = slices.Concat(r.options, opts)
 	if fileID == "" {
 		err = errors.New("missing required file_id parameter")
@@ -638,15 +638,15 @@ func (r FileDeleteParams) URLQuery() (v url.Values, err error) {
 	})
 }
 
-type FileGetParams struct {
+type FileContentParams struct {
 	ExpiresAtSeconds param.Opt[int64]  `query:"expires_at_seconds,omitzero" json:"-"`
 	OrganizationID   param.Opt[string] `query:"organization_id,omitzero" format:"uuid" json:"-"`
 	ProjectID        param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
 	paramObj
 }
 
-// URLQuery serializes [FileGetParams]'s query parameters as `url.Values`.
-func (r FileGetParams) URLQuery() (v url.Values, err error) {
+// URLQuery serializes [FileContentParams]'s query parameters as `url.Values`.
+func (r FileContentParams) URLQuery() (v url.Values, err error) {
 	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
 		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
 		NestedFormat: apiquery.NestedQueryFormatBrackets,

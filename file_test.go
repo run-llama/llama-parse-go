@@ -138,7 +138,7 @@ func TestFileDeleteWithOptionalParams(t *testing.T) {
 	}
 }
 
-func TestFileGetWithOptionalParams(t *testing.T) {
+func TestFileContentWithOptionalParams(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
@@ -151,10 +151,10 @@ func TestFileGetWithOptionalParams(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Files.Get(
+	_, err := client.Files.Content(
 		context.TODO(),
 		"182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-		llamacloud.FileGetParams{
+		llamacloud.FileContentParams{
 			ExpiresAtSeconds: llamacloud.Int(0),
 			OrganizationID:   llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 			ProjectID:        llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
