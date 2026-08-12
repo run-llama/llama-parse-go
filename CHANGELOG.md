@@ -2,6 +2,11 @@
 
 ## [1.5.0](https://github.com/run-llama/llama-parse-go/compare/v1.4.0...v1.5.0) (2026-08-12)
 
+> [!WARNING]
+> **Breaking change:** `FileService.Get` is renamed to `FileService.Content`; it still returns `*PresignedURL`.
+> `FileService.Get` now returns `*FileGetResponse` (the file resource), so existing `client.Files.Get(...)` calls fail to compile rather than misbehave silently. Replace them with `client.Files.Content(...)`.
+> Released as a minor, not a major, to avoid forcing the module path to `github.com/run-llama/llama-parse-go/v2`.
+
 
 ### Features
 
