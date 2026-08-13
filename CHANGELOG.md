@@ -1,51 +1,5 @@
 # Changelog
 
-## [1.5.0](https://github.com/run-llama/llama-parse-go/compare/v1.4.0...v1.5.0) (2026-08-12)
-
-> [!WARNING]
-> **Breaking change:** `FileService.Get` is renamed to `FileService.Content`; it still returns `*PresignedURL`.
-> `FileService.Get` now returns `*FileGetResponse` (the file resource), so existing `client.Files.Get(...)` calls fail to compile rather than misbehave silently. Replace them with `client.Files.Content(...)`.
-> Released as a minor, not a major, to avoid forcing the module path to `github.com/run-llama/llama-parse-go/v2`.
-
-
-### Features
-
-* **batches:** webhooks for /api/v2/batches ([#23148](https://github.com/run-llama/llama-parse-go/issues/23148)) ([4a35d5d](https://github.com/run-llama/llama-parse-go/commit/4a35d5d95a92571e8f1db859cbe6883784142050))
-* **classify:** accept webhook_configuration_ids on classify job create (LI-8138) ([#22943](https://github.com/run-llama/llama-parse-go/issues/22943)) ([e86755e](https://github.com/run-llama/llama-parse-go/commit/e86755e508a479c6be4dfc0384edc65b0482d530))
-* **connector:** API + service layer for attaching a subscription to a directory ([#23502](https://github.com/run-llama/llama-parse-go/issues/23502)) ([c5b77e8](https://github.com/run-llama/llama-parse-go/commit/c5b77e81d77a069a93675864cff14b1c85e81e57))
-* **connectors:** expose a directory's connector subscription, and resolve connected accounts ([#23831](https://github.com/run-llama/llama-parse-go/issues/23831)) ([60882f3](https://github.com/run-llama/llama-parse-go/commit/60882f3b0604b67d6f95b017e714030852e833ad))
-* **extract:** accept webhook_configuration_ids on extract job create (LI-8138) ([#22907](https://github.com/run-llama/llama-parse-go/issues/22907)) ([b344911](https://github.com/run-llama/llama-parse-go/commit/b344911cd20dbafac08e16903ccda830c408888a))
-* **extract:** opt-in spreadsheet mode for agentic_plus ([#22958](https://github.com/run-llama/llama-parse-go/issues/22958)) ([4cc2e32](https://github.com/run-llama/llama-parse-go/commit/4cc2e32c38528daf7d2153b56118973f9f8f4613))
-* **extract:** pin turbo to a stable dated version; accept citations+confidence, reject only granular bboxes ([#22965](https://github.com/run-llama/llama-parse-go/issues/22965)) ([9e67e18](https://github.com/run-llama/llama-parse-go/commit/9e67e186abac557a9a074bf4d9d8080418ebe257))
-* **extract:** reject parse_tier for parse-free tiers + pin turbo fallback to fast ([#22919](https://github.com/run-llama/llama-parse-go/issues/22919)) ([dd435a1](https://github.com/run-llama/llama-parse-go/commit/dd435a17357972965c33385186ec6f65342b60fe))
-* **files:** rename files.get to files.content and restore files.retrieve ([96cd0ff](https://github.com/run-llama/llama-parse-go/commit/96cd0ff1de81cf09eb6fdbf0ef1995bcba83c993))
-* **forms:** emit bboxes in v2 forms output ([#23974](https://github.com/run-llama/llama-parse-go/issues/23974)) ([6ad27a9](https://github.com/run-llama/llama-parse-go/commit/6ad27a93ecd40dddcbc6d6ca7a2db220c0227be0))
-* **parse,extract:** add expand=usage returning credits billed per job ([#23709](https://github.com/run-llama/llama-parse-go/issues/23709)) ([c230b00](https://github.com/run-llama/llama-parse-go/commit/c230b009630d04f13ab21bc01f5ad8996ed477a3))
-* **parse:** extract Word revision annotations ([#23152](https://github.com/run-llama/llama-parse-go/issues/23152)) ([e553748](https://github.com/run-llama/llama-parse-go/commit/e5537487cfa2bda274348e673f87d0dab4f085b2))
-* **parse:** make the output.pdf artifact opt-in on Parse v2 (output_options.save_output_pdf) ([#23510](https://github.com/run-llama/llama-parse-go/issues/23510)) ([392f917](https://github.com/run-llama/llama-parse-go/commit/392f917b68502a67d7168b85d800893095e538b1))
-* **split:** accept webhook_configuration_ids on split job create (LI-8138) ([#22940](https://github.com/run-llama/llama-parse-go/issues/22940)) ([22839b9](https://github.com/run-llama/llama-parse-go/commit/22839b9a0fe1d5ec577f30e724e59ebc5547e137))
-
-
-### Bug Fixes
-
-* **api:** name paginated + filter schemas instead of leaking generic parametrizations ([#23120](https://github.com/run-llama/llama-parse-go/issues/23120)) ([5e1fb23](https://github.com/run-llama/llama-parse-go/commit/5e1fb2349f19708c46730335a2b066db78e16612))
-* **llamaparse:** retry qwen context-overflow 400s with a shrinking OCR anchor ([#23817](https://github.com/run-llama/llama-parse-go/issues/23817)) ([c93c062](https://github.com/run-llama/llama-parse-go/commit/c93c0629c2290f5b94e6874443d611277222c644))
-
-
-### Chores
-
-* **api:** regenerate OpenAPI specs for new agentic parse version ([#22763](https://github.com/run-llama/llama-parse-go/issues/22763)) ([ea16a62](https://github.com/run-llama/llama-parse-go/commit/ea16a621051b3abebfc50c1f106918f2a235b7e5))
-
-
-### Documentation
-
-* **parse:** shorten the images_to_save field description ([#23807](https://github.com/run-llama/llama-parse-go/issues/23807)) ([9733f82](https://github.com/run-llama/llama-parse-go/commit/9733f826e9d5a0d517dac9bec9f0e8e7245910b7))
-
-
-### Refactors
-
-* remove Depends(get_db) from permissions endpoints ([#22635](https://github.com/run-llama/llama-parse-go/issues/22635)) ([c917909](https://github.com/run-llama/llama-parse-go/commit/c9179090d4d78128e6d93d13b0974518a5cd18a9))
-
 ## [1.4.0](https://github.com/run-llama/llama-parse-go/compare/v1.3.0...v1.4.0) (2026-07-22)
 
 
