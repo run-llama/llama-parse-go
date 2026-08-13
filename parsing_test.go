@@ -98,7 +98,6 @@ func TestParsingNewWithOptionalParams(t *testing.T) {
 			MaxPages:    llamacloud.Int(1),
 			TargetPages: llamacloud.String("target_pages"),
 		},
-		Preset: llamacloud.String("preset"),
 		ProcessingControl: llamacloud.ParsingNewParamsProcessingControl{
 			JobFailureConditions: llamacloud.ParsingNewParamsProcessingControlJobFailureConditions{
 				AllowedPageFailureRatio:           llamacloud.Float(1),

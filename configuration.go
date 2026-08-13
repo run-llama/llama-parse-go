@@ -356,8 +356,6 @@ type ConfigurationCreateParametersUnion struct {
 	// This field is from variant [ParseV2ParametersResp].
 	PageRanges ParseV2ParametersPageRangesResp `json:"page_ranges"`
 	// This field is from variant [ParseV2ParametersResp].
-	Preset string `json:"preset"`
-	// This field is from variant [ParseV2ParametersResp].
 	ProcessingControl ParseV2ParametersProcessingControlResp `json:"processing_control"`
 	// This field is from variant [ParseV2ParametersResp].
 	ProcessingOptions ParseV2ParametersProcessingOptionsResp `json:"processing_options"`
@@ -409,7 +407,6 @@ type ConfigurationCreateParametersUnion struct {
 		InputOptions               respjson.Field
 		OutputOptions              respjson.Field
 		PageRanges                 respjson.Field
-		Preset                     respjson.Field
 		ProcessingControl          respjson.Field
 		ProcessingOptions          respjson.Field
 		WebhookConfigurationIDs    respjson.Field
@@ -780,8 +777,6 @@ type ConfigurationResponseParametersUnion struct {
 	// This field is from variant [ParseV2ParametersResp].
 	PageRanges ParseV2ParametersPageRangesResp `json:"page_ranges"`
 	// This field is from variant [ParseV2ParametersResp].
-	Preset string `json:"preset"`
-	// This field is from variant [ParseV2ParametersResp].
 	ProcessingControl ParseV2ParametersProcessingControlResp `json:"processing_control"`
 	// This field is from variant [ParseV2ParametersResp].
 	ProcessingOptions ParseV2ParametersProcessingOptionsResp `json:"processing_options"`
@@ -833,7 +828,6 @@ type ConfigurationResponseParametersUnion struct {
 		InputOptions               respjson.Field
 		OutputOptions              respjson.Field
 		PageRanges                 respjson.Field
-		Preset                     respjson.Field
 		ProcessingControl          respjson.Field
 		ProcessingOptions          respjson.Field
 		WebhookConfigurationIDs    respjson.Field
@@ -1325,8 +1319,6 @@ type ParseV2ParametersResp struct {
 	OutputOptions ParseV2ParametersOutputOptionsResp `json:"output_options"`
 	// Page selection: limit total pages or specify exact pages to process
 	PageRanges ParseV2ParametersPageRangesResp `json:"page_ranges"`
-	// Named preset for specialized document parsing
-	Preset string `json:"preset" api:"nullable"`
 	// Job execution controls including timeouts and failure thresholds
 	ProcessingControl ParseV2ParametersProcessingControlResp `json:"processing_control"`
 	// Document processing options including OCR, table extraction, and chart parsing
@@ -1349,7 +1341,6 @@ type ParseV2ParametersResp struct {
 		InputOptions            respjson.Field
 		OutputOptions           respjson.Field
 		PageRanges              respjson.Field
-		Preset                  respjson.Field
 		ProcessingControl       respjson.Field
 		ProcessingOptions       respjson.Field
 		WebhookConfigurationIDs respjson.Field
@@ -3228,8 +3219,6 @@ type ParseV2Parameters struct {
 	// Bypass result caching and force re-parsing. Use when document content may have
 	// changed or you need fresh results
 	DisableCache param.Opt[bool] `json:"disable_cache,omitzero"`
-	// Named preset for specialized document parsing
-	Preset param.Opt[string] `json:"preset,omitzero"`
 	// Options for AI-powered parsing tiers (cost_effective, agentic, agentic_plus).
 	//
 	// These options customize how the AI processes and interprets document content.
