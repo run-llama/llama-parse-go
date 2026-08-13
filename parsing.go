@@ -3141,8 +3141,6 @@ type ParsingNewParams struct {
 	FileID param.Opt[string] `json:"file_id,omitzero"`
 	// HTTP/HTTPS proxy for fetching source_url. Ignored if using file_id
 	HTTPProxy param.Opt[string] `json:"http_proxy,omitzero"`
-	// Named preset for specialized document parsing
-	Preset param.Opt[string] `json:"preset,omitzero"`
 	// Public URL of the document to parse. Mutually exclusive with file_id
 	SourceURL param.Opt[string] `json:"source_url,omitzero"`
 	// Options for AI-powered parsing tiers (cost_effective, agentic, agentic_plus).

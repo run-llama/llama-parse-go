@@ -147,8 +147,8 @@ These methods return a mutable pointer to the underlying data, if present.
 ```go
 // Only one field can be non-zero, use param.IsOmitted() to check if a field is set
 type AnimalUnionParam struct {
-	OfCat *Cat `json:",omitzero,inline`
-	OfDog *Dog `json:",omitzero,inline`
+	OfCat *Cat `json:",omitzero,inline"`
+	OfDog *Dog `json:",omitzero,inline"`
 }
 
 animal := AnimalUnionParam{
@@ -179,7 +179,7 @@ type Animal struct {
 	Age    int    `json:"age"`
 	JSON   struct {
 		Name        respjson.Field
-		Owner       respjson.Field
+		Owners      respjson.Field
 		Age         respjson.Field
 		ExtraFields map[string]respjson.Field
 	} `json:"-"`
@@ -311,8 +311,8 @@ if err := iter.Err(); err != nil {
 }
 ```
 
-Or you can use simple `.List()` methods to fetch a single page and receive a standard response object
-with additional helper methods like `.GetNextPage()`, e.g.:
+Paginated endpoints also expose a simple `.List()` method that fetches a single page and returns a
+response object with additional helper methods like `.GetNextPage()`, e.g.:
 
 ```go
 page, err := client.Extract.List(context.TODO(), llamacloud.ExtractListParams{
@@ -486,7 +486,7 @@ if err != nil {
 
 #### Undocumented request params
 
-To make requests using undocumented parameters, you may use either the `option.WithQuerySet()`
+To make requests using undocumented parameters, you may use either the `option.WithQuery()`
 or the `option.WithJSONSet()` methods.
 
 ```go
@@ -502,10 +502,10 @@ client.Foo.New(context.Background(), params, option.WithJSONSet("data.last_name"
 #### Undocumented response properties
 
 To access undocumented response properties, you may either access the raw JSON of the response as a string
-with `result.JSON.RawJSON()`, or get the raw JSON of a particular field on the result with
+with `result.RawJSON()`, or get the raw JSON of a particular field on the result with
 `result.JSON.Foo.Raw()`.
 
-Any fields that are not present on the response struct will be saved and can be accessed by `result.JSON.ExtraFields()` which returns the extra fields as a `map[string]Field`.
+Any fields that are not present on the response struct will be saved and can be accessed by `result.JSON.ExtraFields`, which holds the extra fields as a `map[string]respjson.Field`.
 
 ### Middleware
 
@@ -523,7 +523,7 @@ func Logger(req *http.Request, next option.MiddlewareNext) (res *http.Response, 
 
 	// Handle stuff after the request
 	end := time.Now()
-	LogRes(res, err, start - end)
+	LogRes(res, err, end.Sub(start))
 
     return res, err
 }
