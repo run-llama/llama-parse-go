@@ -379,9 +379,9 @@ type ClassifyNewResponse struct {
 	FileInput string `json:"file_input" api:"required"`
 	// Project this job belongs to
 	ProjectID string `json:"project_id" api:"required"`
-	// Current job status: PENDING, RUNNING, COMPLETED, or FAILED
+	// Current job status: PENDING, RUNNING, COMPLETED, FAILED, or CANCELLED
 	//
-	// Any of "COMPLETED", "FAILED", "PENDING", "RUNNING".
+	// Any of "CANCELLED", "COMPLETED", "FAILED", "PENDING", "RUNNING".
 	Status ClassifyNewResponseStatus `json:"status" api:"required"`
 	// User who created this job
 	UserID string `json:"user_id" api:"required"`
@@ -435,10 +435,11 @@ const (
 	ClassifyNewResponseDocumentInputTypeURL        ClassifyNewResponseDocumentInputType = "url"
 )
 
-// Current job status: PENDING, RUNNING, COMPLETED, or FAILED
+// Current job status: PENDING, RUNNING, COMPLETED, FAILED, or CANCELLED
 type ClassifyNewResponseStatus string
 
 const (
+	ClassifyNewResponseStatusCancelled ClassifyNewResponseStatus = "CANCELLED"
 	ClassifyNewResponseStatusCompleted ClassifyNewResponseStatus = "COMPLETED"
 	ClassifyNewResponseStatusFailed    ClassifyNewResponseStatus = "FAILED"
 	ClassifyNewResponseStatusPending   ClassifyNewResponseStatus = "PENDING"
@@ -459,9 +460,9 @@ type ClassifyListResponse struct {
 	FileInput string `json:"file_input" api:"required"`
 	// Project this job belongs to
 	ProjectID string `json:"project_id" api:"required"`
-	// Current job status: PENDING, RUNNING, COMPLETED, or FAILED
+	// Current job status: PENDING, RUNNING, COMPLETED, FAILED, or CANCELLED
 	//
-	// Any of "COMPLETED", "FAILED", "PENDING", "RUNNING".
+	// Any of "CANCELLED", "COMPLETED", "FAILED", "PENDING", "RUNNING".
 	Status ClassifyListResponseStatus `json:"status" api:"required"`
 	// User who created this job
 	UserID string `json:"user_id" api:"required"`
@@ -515,10 +516,11 @@ const (
 	ClassifyListResponseDocumentInputTypeURL        ClassifyListResponseDocumentInputType = "url"
 )
 
-// Current job status: PENDING, RUNNING, COMPLETED, or FAILED
+// Current job status: PENDING, RUNNING, COMPLETED, FAILED, or CANCELLED
 type ClassifyListResponseStatus string
 
 const (
+	ClassifyListResponseStatusCancelled ClassifyListResponseStatus = "CANCELLED"
 	ClassifyListResponseStatusCompleted ClassifyListResponseStatus = "COMPLETED"
 	ClassifyListResponseStatusFailed    ClassifyListResponseStatus = "FAILED"
 	ClassifyListResponseStatusPending   ClassifyListResponseStatus = "PENDING"
@@ -539,9 +541,9 @@ type ClassifyCancelResponse struct {
 	FileInput string `json:"file_input" api:"required"`
 	// Project this job belongs to
 	ProjectID string `json:"project_id" api:"required"`
-	// Current job status: PENDING, RUNNING, COMPLETED, or FAILED
+	// Current job status: PENDING, RUNNING, COMPLETED, FAILED, or CANCELLED
 	//
-	// Any of "COMPLETED", "FAILED", "PENDING", "RUNNING".
+	// Any of "CANCELLED", "COMPLETED", "FAILED", "PENDING", "RUNNING".
 	Status ClassifyCancelResponseStatus `json:"status" api:"required"`
 	// User who created this job
 	UserID string `json:"user_id" api:"required"`
@@ -595,10 +597,11 @@ const (
 	ClassifyCancelResponseDocumentInputTypeURL        ClassifyCancelResponseDocumentInputType = "url"
 )
 
-// Current job status: PENDING, RUNNING, COMPLETED, or FAILED
+// Current job status: PENDING, RUNNING, COMPLETED, FAILED, or CANCELLED
 type ClassifyCancelResponseStatus string
 
 const (
+	ClassifyCancelResponseStatusCancelled ClassifyCancelResponseStatus = "CANCELLED"
 	ClassifyCancelResponseStatusCompleted ClassifyCancelResponseStatus = "COMPLETED"
 	ClassifyCancelResponseStatusFailed    ClassifyCancelResponseStatus = "FAILED"
 	ClassifyCancelResponseStatusPending   ClassifyCancelResponseStatus = "PENDING"
@@ -619,9 +622,9 @@ type ClassifyGetResponse struct {
 	FileInput string `json:"file_input" api:"required"`
 	// Project this job belongs to
 	ProjectID string `json:"project_id" api:"required"`
-	// Current job status: PENDING, RUNNING, COMPLETED, or FAILED
+	// Current job status: PENDING, RUNNING, COMPLETED, FAILED, or CANCELLED
 	//
-	// Any of "COMPLETED", "FAILED", "PENDING", "RUNNING".
+	// Any of "CANCELLED", "COMPLETED", "FAILED", "PENDING", "RUNNING".
 	Status ClassifyGetResponseStatus `json:"status" api:"required"`
 	// User who created this job
 	UserID string `json:"user_id" api:"required"`
@@ -675,10 +678,11 @@ const (
 	ClassifyGetResponseDocumentInputTypeURL        ClassifyGetResponseDocumentInputType = "url"
 )
 
-// Current job status: PENDING, RUNNING, COMPLETED, or FAILED
+// Current job status: PENDING, RUNNING, COMPLETED, FAILED, or CANCELLED
 type ClassifyGetResponseStatus string
 
 const (
+	ClassifyGetResponseStatusCancelled ClassifyGetResponseStatus = "CANCELLED"
 	ClassifyGetResponseStatusCompleted ClassifyGetResponseStatus = "COMPLETED"
 	ClassifyGetResponseStatusFailed    ClassifyGetResponseStatus = "FAILED"
 	ClassifyGetResponseStatusPending   ClassifyGetResponseStatus = "PENDING"
@@ -725,7 +729,7 @@ type ClassifyListParams struct {
 	JobIDs []string `query:"job_ids,omitzero" json:"-"`
 	// Filter by job status
 	//
-	// Any of "COMPLETED", "FAILED", "PENDING", "RUNNING".
+	// Any of "CANCELLED", "COMPLETED", "FAILED", "PENDING", "RUNNING".
 	Status ClassifyListParamsStatus `query:"status,omitzero" json:"-"`
 	paramObj
 }
@@ -742,6 +746,7 @@ func (r ClassifyListParams) URLQuery() (v url.Values, err error) {
 type ClassifyListParamsStatus string
 
 const (
+	ClassifyListParamsStatusCancelled ClassifyListParamsStatus = "CANCELLED"
 	ClassifyListParamsStatusCompleted ClassifyListParamsStatus = "COMPLETED"
 	ClassifyListParamsStatusFailed    ClassifyListParamsStatus = "FAILED"
 	ClassifyListParamsStatusPending   ClassifyListParamsStatus = "PENDING"
