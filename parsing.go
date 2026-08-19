@@ -3072,14 +3072,14 @@ type ParsingListVersionsResponse struct {
 	Agentic []string `json:"agentic" api:"required"`
 	// Versions for the agentic_plus tier
 	//
-	// Any of "2026-07-08", "2026-06-18", "2026-06-11", "2026-06-04", "2026-06-01",
-	// "2026-05-26", "2026-05-21", "2026-05-20", "2026-05-19", "2026-05-11",
-	// "2026-05-06", "2026-05-04", "2026-05-01", "2026-04-27", "2026-04-19",
-	// "2026-04-14", "2026-04-09", "2026-04-02", "2026-03-31", "2026-03-26",
-	// "2026-03-25", "2026-03-22", "2026-03-20", "2026-03-17", "2026-03-12",
-	// "2026-03-10", "2026-03-09", "2026-03-02", "2026-02-26", "2026-02-24",
-	// "2026-01-30", "2026-01-29", "2026-01-24", "2026-01-22", "2026-01-21",
-	// "2026-01-16", "2025-12-31", "2025-12-18", "2025-12-11".
+	// Any of "2026-08-19", "2026-07-08", "2026-06-18", "2026-06-11", "2026-06-04",
+	// "2026-06-01", "2026-05-26", "2026-05-21", "2026-05-20", "2026-05-19",
+	// "2026-05-11", "2026-05-06", "2026-05-04", "2026-05-01", "2026-04-27",
+	// "2026-04-19", "2026-04-14", "2026-04-09", "2026-04-02", "2026-03-31",
+	// "2026-03-26", "2026-03-25", "2026-03-22", "2026-03-20", "2026-03-17",
+	// "2026-03-12", "2026-03-10", "2026-03-09", "2026-03-02", "2026-02-26",
+	// "2026-02-24", "2026-01-30", "2026-01-29", "2026-01-24", "2026-01-22",
+	// "2026-01-21", "2026-01-16", "2025-12-31", "2025-12-18", "2025-12-11".
 	AgenticPlus []string `json:"agentic_plus" api:"required"`
 	// Versions for the cost_effective tier
 	//
@@ -3121,7 +3121,7 @@ type ParsingNewParams struct {
 	// - `fast`: `2026-06-15`
 	// - `cost_effective`: `2026-08-19`
 	// - `agentic`: `2026-08-19`
-	// - `agentic_plus`: `2026-07-08`
+	// - `agentic_plus`: `2026-08-19`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
 	Version        ParsingNewParamsVersion `json:"version,omitzero" api:"required"`
@@ -3217,7 +3217,7 @@ const (
 // - `fast`: `2026-06-15`
 // - `cost_effective`: `2026-08-19`
 // - `agentic`: `2026-08-19`
-// - `agentic_plus`: `2026-07-08`
+// - `agentic_plus`: `2026-08-19`
 //
 // Full list: `GET /api/v2/parse/versions`.
 type ParsingNewParamsVersion string
@@ -3225,7 +3225,6 @@ type ParsingNewParamsVersion string
 const (
 	ParsingNewParamsVersionLatest     ParsingNewParamsVersion = "latest"
 	ParsingNewParamsVersion2026_08_19 ParsingNewParamsVersion = "2026-08-19"
-	ParsingNewParamsVersion2026_07_08 ParsingNewParamsVersion = "2026-07-08"
 	ParsingNewParamsVersion2026_06_15 ParsingNewParamsVersion = "2026-06-15"
 )
 
@@ -3812,7 +3811,7 @@ type ParsingNewParamsProcessingOptionsAutoModeConfigurationParsingConf struct {
 	// - `fast`: `2026-06-15`
 	// - `cost_effective`: `2026-08-19`
 	// - `agentic`: `2026-08-19`
-	// - `agentic_plus`: `2026-07-08`
+	// - `agentic_plus`: `2026-08-19`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
 	Version string `json:"version,omitzero"`
