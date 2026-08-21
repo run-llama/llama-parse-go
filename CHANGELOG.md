@@ -1,5 +1,28 @@
 # Changelog
 
+## [1.5.1](https://github.com/run-llama/llama-parse-go/compare/v1.5.0...v1.5.1) (2026-08-20)
+
+
+### Features
+
+* **parse:** expose legal-document preset in v2 ([#24192](https://github.com/run-llama/llama-parse-go/issues/24192)) ([2aaaa66](https://github.com/run-llama/llama-parse-go/commit/2aaaa661e3bbb3520fca278b1327c63d96c0379b))
+
+
+### Bug Fixes
+
+* **parse:** restore inline_images on cost_effective (new version 2026-08-11) ([#23804](https://github.com/run-llama/llama-parse-go/issues/23804)) ([cc98935](https://github.com/run-llama/llama-parse-go/commit/cc989353443e89144174b5ed89de3b7e566f7d4d))
+* route security reports to support@runllama.ai; name LlamaIndex, Inc. in LICENSE ([#8](https://github.com/run-llama/llama-parse-go/issues/8)) ([5c12dc2](https://github.com/run-llama/llama-parse-go/commit/5c12dc2ec4717ae0da6d294814c1d7d895512f52))
+
+
+### Reverts
+
+* expose legal-document preset in v2 ([a55c266](https://github.com/run-llama/llama-parse-go/commit/a55c266de1491c3661c1887b55dd4a599fdd6469))
+
+
+### Documentation
+
+* fix non-compiling README examples (LI-8881) ([3970b7f](https://github.com/run-llama/llama-parse-go/commit/3970b7f8c412a3e4dacb052b22ebed4bc9af81f0))
+
 ## [1.4.0](https://github.com/run-llama/llama-parse-go/compare/v1.3.0...v1.4.0) (2026-07-22)
 
 
