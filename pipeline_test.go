@@ -69,6 +69,7 @@ func TestPipelineNewWithOptionalParams(t *testing.T) {
 			LlamaParseParameters: llamacloud.LlamaParseParameters{
 				AdaptiveLongTable:                        llamacloud.Bool(true),
 				AggressiveTableExtraction:                llamacloud.Bool(true),
+				AnnotateLineNumbers:                      llamacloud.Bool(true),
 				AnnotateLinks:                            llamacloud.Bool(true),
 				AnnotateRevisions:                        llamacloud.Bool(true),
 				AutoMode:                                 llamacloud.Bool(true),
@@ -318,6 +319,7 @@ func TestPipelineUpdateWithOptionalParams(t *testing.T) {
 			LlamaParseParameters: llamacloud.LlamaParseParameters{
 				AdaptiveLongTable:                        llamacloud.Bool(true),
 				AggressiveTableExtraction:                llamacloud.Bool(true),
+				AnnotateLineNumbers:                      llamacloud.Bool(true),
 				AnnotateLinks:                            llamacloud.Bool(true),
 				AnnotateRevisions:                        llamacloud.Bool(true),
 				AutoMode:                                 llamacloud.Bool(true),
@@ -730,6 +732,7 @@ func TestPipelineUpsertWithOptionalParams(t *testing.T) {
 			LlamaParseParameters: llamacloud.LlamaParseParameters{
 				AdaptiveLongTable:                        llamacloud.Bool(true),
 				AggressiveTableExtraction:                llamacloud.Bool(true),
+				AnnotateLineNumbers:                      llamacloud.Bool(true),
 				AnnotateLinks:                            llamacloud.Bool(true),
 				AnnotateRevisions:                        llamacloud.Bool(true),
 				AutoMode:                                 llamacloud.Bool(true),

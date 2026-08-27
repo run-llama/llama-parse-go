@@ -1669,6 +1669,7 @@ func (r *HuggingFaceInferenceAPIEmbeddingConfigParam) UnmarshalJSON(data []byte)
 type LlamaParseParametersResp struct {
 	AdaptiveLongTable                        bool    `json:"adaptive_long_table" api:"nullable"`
 	AggressiveTableExtraction                bool    `json:"aggressive_table_extraction" api:"nullable"`
+	AnnotateLineNumbers                      bool    `json:"annotate_line_numbers" api:"nullable"`
 	AnnotateLinks                            bool    `json:"annotate_links" api:"nullable"`
 	AnnotateRevisions                        bool    `json:"annotate_revisions" api:"nullable"`
 	AutoMode                                 bool    `json:"auto_mode" api:"nullable"`
@@ -1807,6 +1808,7 @@ type LlamaParseParametersResp struct {
 	JSON struct {
 		AdaptiveLongTable                        respjson.Field
 		AggressiveTableExtraction                respjson.Field
+		AnnotateLineNumbers                      respjson.Field
 		AnnotateLinks                            respjson.Field
 		AnnotateRevisions                        respjson.Field
 		AutoMode                                 respjson.Field
@@ -2005,6 +2007,7 @@ func (r *LlamaParseParametersWebhookConfigurationResp) UnmarshalJSON(data []byte
 type LlamaParseParameters struct {
 	AdaptiveLongTable                        param.Opt[bool]    `json:"adaptive_long_table,omitzero"`
 	AggressiveTableExtraction                param.Opt[bool]    `json:"aggressive_table_extraction,omitzero"`
+	AnnotateLineNumbers                      param.Opt[bool]    `json:"annotate_line_numbers,omitzero"`
 	AnnotateLinks                            param.Opt[bool]    `json:"annotate_links,omitzero"`
 	AnnotateRevisions                        param.Opt[bool]    `json:"annotate_revisions,omitzero"`
 	AutoMode                                 param.Opt[bool]    `json:"auto_mode,omitzero"`

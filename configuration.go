@@ -1043,10 +1043,10 @@ type ExtractV2ParametersResp struct {
 	// Comma-separated page numbers or ranges to process (1-based). Omit to process all
 	// pages.
 	TargetPages string `json:"target_pages" api:"nullable"`
-	// Extract tier: cost_effective (5 credits/page), agentic (15 credits/page), or
-	// agentic_plus (50 credits/page)
+	// Extract tier: cost_effective (5 credits/page), agentic (15 credits/page),
+	// agentic_plus (50 credits/page), or turbo (35 credits/page, experimental)
 	//
-	// Any of "agentic", "agentic_plus", "cost_effective".
+	// Any of "agentic", "agentic_plus", "cost_effective", "turbo".
 	Tier ExtractV2ParametersTier `json:"tier"`
 	// Use 'latest' for the latest release for the selected tier or a date string
 	// (YYYY-MM-DD format) to pin to the nearest release at or before that date. Job
@@ -1161,14 +1161,15 @@ const (
 	ExtractV2ParametersExtractionTargetPerTableRow ExtractV2ParametersExtractionTarget = "per_table_row"
 )
 
-// Extract tier: cost_effective (5 credits/page), agentic (15 credits/page), or
-// agentic_plus (50 credits/page)
+// Extract tier: cost_effective (5 credits/page), agentic (15 credits/page),
+// agentic_plus (50 credits/page), or turbo (35 credits/page, experimental)
 type ExtractV2ParametersTier string
 
 const (
 	ExtractV2ParametersTierAgentic       ExtractV2ParametersTier = "agentic"
 	ExtractV2ParametersTierAgenticPlus   ExtractV2ParametersTier = "agentic_plus"
 	ExtractV2ParametersTierCostEffective ExtractV2ParametersTier = "cost_effective"
+	ExtractV2ParametersTierTurbo         ExtractV2ParametersTier = "turbo"
 )
 
 // Typed parameters for an _extract v2_ product configuration.
@@ -1222,10 +1223,10 @@ type ExtractV2Parameters struct {
 	//
 	// Any of "per_doc", "per_page", "per_table_row".
 	ExtractionTarget ExtractV2ParametersExtractionTarget `json:"extraction_target,omitzero"`
-	// Extract tier: cost_effective (5 credits/page), agentic (15 credits/page), or
-	// agentic_plus (50 credits/page)
+	// Extract tier: cost_effective (5 credits/page), agentic (15 credits/page),
+	// agentic_plus (50 credits/page), or turbo (35 credits/page, experimental)
 	//
-	// Any of "agentic", "agentic_plus", "cost_effective".
+	// Any of "agentic", "agentic_plus", "cost_effective", "turbo".
 	Tier ExtractV2ParametersTier `json:"tier,omitzero"`
 	// Product type.
 	//
@@ -1651,6 +1652,8 @@ func (r *ParseV2ParametersOutputOptionsResp) UnmarshalJSON(data []byte) error {
 
 // Markdown formatting options including table styles and link annotations
 type ParseV2ParametersOutputOptionsMarkdownResp struct {
+	// Detect printed gutter line numbers and return their Markdown offsets
+	AnnotateLineNumbers bool `json:"annotate_line_numbers" api:"nullable"`
 	// Add link annotations to markdown output in the format [text](url). When false,
 	// only the link text is included
 	AnnotateLinks bool `json:"annotate_links" api:"nullable"`
@@ -1663,12 +1666,13 @@ type ParseV2ParametersOutputOptionsMarkdownResp struct {
 	Tables ParseV2ParametersOutputOptionsMarkdownTablesResp `json:"tables"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
-		AnnotateLinks     respjson.Field
-		AnnotateRevisions respjson.Field
-		InlineImages      respjson.Field
-		Tables            respjson.Field
-		ExtraFields       map[string]respjson.Field
-		raw               string
+		AnnotateLineNumbers respjson.Field
+		AnnotateLinks       respjson.Field
+		AnnotateRevisions   respjson.Field
+		InlineImages        respjson.Field
+		Tables              respjson.Field
+		ExtraFields         map[string]respjson.Field
+		raw                 string
 	} `json:"-"`
 }
 
@@ -3475,6 +3479,8 @@ func (r *ParseV2ParametersOutputOptions) UnmarshalJSON(data []byte) error {
 
 // Markdown formatting options including table styles and link annotations
 type ParseV2ParametersOutputOptionsMarkdown struct {
+	// Detect printed gutter line numbers and return their Markdown offsets
+	AnnotateLineNumbers param.Opt[bool] `json:"annotate_line_numbers,omitzero"`
 	// Add link annotations to markdown output in the format [text](url). When false,
 	// only the link text is included
 	AnnotateLinks param.Opt[bool] `json:"annotate_links,omitzero"`
