@@ -201,10 +201,10 @@ type ExtractConfiguration struct {
 	// Comma-separated page numbers or ranges to process (1-based). Omit to process all
 	// pages.
 	TargetPages string `json:"target_pages" api:"nullable"`
-	// Extract tier: cost_effective (5 credits/page), agentic (15 credits/page), or
-	// agentic_plus (50 credits/page)
+	// Extract tier: cost_effective (5 credits/page), agentic (15 credits/page),
+	// agentic_plus (50 credits/page), or turbo (35 credits/page, experimental)
 	//
-	// Any of "agentic", "agentic_plus", "cost_effective".
+	// Any of "agentic", "agentic_plus", "cost_effective", "turbo".
 	Tier ExtractConfigurationTier `json:"tier"`
 	// Use 'latest' for the latest release for the selected tier or a date string
 	// (YYYY-MM-DD format) to pin to the nearest release at or before that date. Job
@@ -318,14 +318,15 @@ const (
 	ExtractConfigurationExtractionTargetPerTableRow ExtractConfigurationExtractionTarget = "per_table_row"
 )
 
-// Extract tier: cost_effective (5 credits/page), agentic (15 credits/page), or
-// agentic_plus (50 credits/page)
+// Extract tier: cost_effective (5 credits/page), agentic (15 credits/page),
+// agentic_plus (50 credits/page), or turbo (35 credits/page, experimental)
 type ExtractConfigurationTier string
 
 const (
 	ExtractConfigurationTierAgentic       ExtractConfigurationTier = "agentic"
 	ExtractConfigurationTierAgenticPlus   ExtractConfigurationTier = "agentic_plus"
 	ExtractConfigurationTierCostEffective ExtractConfigurationTier = "cost_effective"
+	ExtractConfigurationTierTurbo         ExtractConfigurationTier = "turbo"
 )
 
 // Extract configuration combining parse and extract settings.
@@ -379,10 +380,10 @@ type ExtractConfigurationParam struct {
 	//
 	// Any of "per_doc", "per_page", "per_table_row".
 	ExtractionTarget ExtractConfigurationExtractionTarget `json:"extraction_target,omitzero"`
-	// Extract tier: cost_effective (5 credits/page), agentic (15 credits/page), or
-	// agentic_plus (50 credits/page)
+	// Extract tier: cost_effective (5 credits/page), agentic (15 credits/page),
+	// agentic_plus (50 credits/page), or turbo (35 credits/page, experimental)
 	//
-	// Any of "agentic", "agentic_plus", "cost_effective".
+	// Any of "agentic", "agentic_plus", "cost_effective", "turbo".
 	Tier ExtractConfigurationTier `json:"tier,omitzero"`
 	paramObj
 }

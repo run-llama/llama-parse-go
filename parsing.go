@@ -2855,16 +2855,19 @@ type ParsingGetResponseMarkdownPageUnion struct {
 	Footer string `json:"footer"`
 	// This field is from variant [ParsingGetResponseMarkdownPageMarkdownResultPage].
 	Header string `json:"header"`
+	// This field is from variant [ParsingGetResponseMarkdownPageMarkdownResultPage].
+	LineNumbers []ParsingGetResponseMarkdownPageMarkdownResultPageLineNumber `json:"line_numbers"`
 	// This field is from variant [ParsingGetResponseMarkdownPageFailedMarkdownPage].
 	Error string `json:"error"`
 	JSON  struct {
-		Markdown   respjson.Field
-		PageNumber respjson.Field
-		Success    respjson.Field
-		Footer     respjson.Field
-		Header     respjson.Field
-		Error      respjson.Field
-		raw        string
+		Markdown    respjson.Field
+		PageNumber  respjson.Field
+		Success     respjson.Field
+		Footer      respjson.Field
+		Header      respjson.Field
+		LineNumbers respjson.Field
+		Error       respjson.Field
+		raw         string
 	} `json:"-"`
 }
 
@@ -2896,6 +2899,8 @@ type ParsingGetResponseMarkdownPageMarkdownResultPage struct {
 	Footer string `json:"footer" api:"nullable"`
 	// Header of the page in markdown
 	Header string `json:"header" api:"nullable"`
+	// Printed line numbers linked to final page markdown
+	LineNumbers []ParsingGetResponseMarkdownPageMarkdownResultPageLineNumber `json:"line_numbers" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Markdown    respjson.Field
@@ -2903,6 +2908,7 @@ type ParsingGetResponseMarkdownPageMarkdownResultPage struct {
 		Success     respjson.Field
 		Footer      respjson.Field
 		Header      respjson.Field
+		LineNumbers respjson.Field
 		ExtraFields map[string]respjson.Field
 		raw         string
 	} `json:"-"`
@@ -2911,6 +2917,32 @@ type ParsingGetResponseMarkdownPageMarkdownResultPage struct {
 // Returns the unmodified JSON received from the API
 func (r ParsingGetResponseMarkdownPageMarkdownResultPage) RawJSON() string { return r.JSON.raw }
 func (r *ParsingGetResponseMarkdownPageMarkdownResultPage) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Source line number linked to final page markdown.
+type ParsingGetResponseMarkdownPageMarkdownResultPageLineNumber struct {
+	// Zero-based exclusive UTF-16 code-unit offset in final page markdown
+	EndIndex int64 `json:"end_index" api:"required"`
+	// Printed source line number
+	LineNumber string `json:"line_number" api:"required"`
+	// Zero-based inclusive UTF-16 code-unit offset in final page markdown
+	StartIndex int64 `json:"start_index" api:"required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		EndIndex    respjson.Field
+		LineNumber  respjson.Field
+		StartIndex  respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r ParsingGetResponseMarkdownPageMarkdownResultPageLineNumber) RawJSON() string {
+	return r.JSON.raw
+}
+func (r *ParsingGetResponseMarkdownPageMarkdownResultPageLineNumber) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
@@ -2941,9 +2973,12 @@ func (r *ParsingGetResponseMarkdownPageFailedMarkdownPage) UnmarshalJSON(data []
 type ParsingGetResponseMetadata struct {
 	// List of page metadata entries
 	Pages []ParsingGetResponseMetadataPage `json:"pages" api:"required"`
+	// Document-level metadata information.
+	Document ParsingGetResponseMetadataDocument `json:"document" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Pages       respjson.Field
+		Document    respjson.Field
 		ExtraFields map[string]respjson.Field
 		raw         string
 	} `json:"-"`
@@ -2991,6 +3026,52 @@ type ParsingGetResponseMetadataPage struct {
 // Returns the unmodified JSON received from the API
 func (r ParsingGetResponseMetadataPage) RawJSON() string { return r.JSON.raw }
 func (r *ParsingGetResponseMetadataPage) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Document-level metadata information.
+type ParsingGetResponseMetadataDocument struct {
+	// Mean confidence score across pages scored by the high-effort confidence judge
+	// (0-1)
+	Confidence float64 `json:"confidence" api:"nullable"`
+	// Coverage and worst-page details for document confidence.
+	ConfidenceBreakdown ParsingGetResponseMetadataDocumentConfidenceBreakdown `json:"confidence_breakdown" api:"nullable"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Confidence          respjson.Field
+		ConfidenceBreakdown respjson.Field
+		ExtraFields         map[string]respjson.Field
+		raw                 string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r ParsingGetResponseMetadataDocument) RawJSON() string { return r.JSON.raw }
+func (r *ParsingGetResponseMetadataDocument) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Coverage and worst-page details for document confidence.
+type ParsingGetResponseMetadataDocumentConfidenceBreakdown struct {
+	// Lowest confidence score among pages scored by the high-effort confidence judge
+	MinPageScore float64 `json:"min_page_score" api:"required"`
+	// Number of pages successfully scored by the high-effort confidence judge
+	ScoredPages int64 `json:"scored_pages" api:"required"`
+	// Total number of pages in the parsed document
+	TotalPages int64 `json:"total_pages" api:"required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		MinPageScore respjson.Field
+		ScoredPages  respjson.Field
+		TotalPages   respjson.Field
+		ExtraFields  map[string]respjson.Field
+		raw          string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r ParsingGetResponseMetadataDocumentConfidenceBreakdown) RawJSON() string { return r.JSON.raw }
+func (r *ParsingGetResponseMetadataDocumentConfidenceBreakdown) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
@@ -3440,6 +3521,8 @@ func (r *ParsingNewParamsOutputOptions) UnmarshalJSON(data []byte) error {
 
 // Markdown formatting options including table styles and link annotations
 type ParsingNewParamsOutputOptionsMarkdown struct {
+	// Detect printed gutter line numbers and return their Markdown offsets
+	AnnotateLineNumbers param.Opt[bool] `json:"annotate_line_numbers,omitzero"`
 	// Add link annotations to markdown output in the format [text](url). When false,
 	// only the link text is included
 	AnnotateLinks param.Opt[bool] `json:"annotate_links,omitzero"`
