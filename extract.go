@@ -202,7 +202,7 @@ type ExtractConfiguration struct {
 	// pages.
 	TargetPages string `json:"target_pages" api:"nullable"`
 	// Extract tier: cost_effective (5 credits/page), agentic (15 credits/page),
-	// agentic_plus (50 credits/page), or turbo (35 credits/page, experimental)
+	// agentic_plus (50 credits/page), or turbo (35 credits/page)
 	//
 	// Any of "agentic", "agentic_plus", "cost_effective", "turbo".
 	Tier ExtractConfigurationTier `json:"tier"`
@@ -319,7 +319,7 @@ const (
 )
 
 // Extract tier: cost_effective (5 credits/page), agentic (15 credits/page),
-// agentic_plus (50 credits/page), or turbo (35 credits/page, experimental)
+// agentic_plus (50 credits/page), or turbo (35 credits/page)
 type ExtractConfigurationTier string
 
 const (
@@ -381,7 +381,7 @@ type ExtractConfigurationParam struct {
 	// Any of "per_doc", "per_page", "per_table_row".
 	ExtractionTarget ExtractConfigurationExtractionTarget `json:"extraction_target,omitzero"`
 	// Extract tier: cost_effective (5 credits/page), agentic (15 credits/page),
-	// agentic_plus (50 credits/page), or turbo (35 credits/page, experimental)
+	// agentic_plus (50 credits/page), or turbo (35 credits/page)
 	//
 	// Any of "agentic", "agentic_plus", "cost_effective", "turbo".
 	Tier ExtractConfigurationTier `json:"tier,omitzero"`
