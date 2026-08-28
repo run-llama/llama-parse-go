@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.0](https://github.com/run-llama/llama-parse-go/compare/v1.5.1...v1.6.0) (2026-08-28)
+
+
+### Features
+
+* **extract:** publish the turbo tier on the public API surface (LI-8873) ([#25281](https://github.com/run-llama/llama-parse-go/issues/25281)) ([7c844ea](https://github.com/run-llama/llama-parse-go/commit/7c844ea6098e1887720a1c1b7a84b98a52cebde1))
+
 ## [1.5.1](https://github.com/run-llama/llama-parse-go/compare/v1.5.0...v1.5.1) (2026-08-20)
 
 
