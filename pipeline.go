@@ -82,6 +82,8 @@ func (r *PipelineService) Update(ctx context.Context, pipelineID string, body Pi
 
 // Search for pipelines by name, type, or project.
 //
+// Deprecated: use `GET /api/v2/pipelines`, which is paginated.
+//
 // Deprecated: deprecated
 func (r *PipelineService) List(ctx context.Context, query PipelineListParams, opts ...option.RequestOption) (res *[]Pipeline, err error) {
 	opts = slices.Concat(r.options, opts)
