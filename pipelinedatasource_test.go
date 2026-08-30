@@ -31,6 +31,7 @@ func TestPipelineDataSourceUpdateWithOptionalParams(t *testing.T) {
 		"182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
 		llamacloud.PipelineDataSourceUpdateParams{
 			PipelineID:   "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+			ProjectID:    llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 			SyncInterval: llamacloud.Float(0),
 		},
 	)
@@ -43,7 +44,7 @@ func TestPipelineDataSourceUpdateWithOptionalParams(t *testing.T) {
 	}
 }
 
-func TestPipelineDataSourceGetDataSources(t *testing.T) {
+func TestPipelineDataSourceGetDataSourcesWithOptionalParams(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
@@ -56,7 +57,13 @@ func TestPipelineDataSourceGetDataSources(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Pipelines.DataSources.GetDataSources(context.TODO(), "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
+	_, err := client.Pipelines.DataSources.GetDataSources(
+		context.TODO(),
+		"182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+		llamacloud.PipelineDataSourceGetDataSourcesParams{
+			ProjectID: llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		},
+	)
 	if err != nil {
 		var apierr *llamacloud.Error
 		if errors.As(err, &apierr) {
@@ -66,7 +73,7 @@ func TestPipelineDataSourceGetDataSources(t *testing.T) {
 	}
 }
 
-func TestPipelineDataSourceGetStatus(t *testing.T) {
+func TestPipelineDataSourceGetStatusWithOptionalParams(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
@@ -84,6 +91,7 @@ func TestPipelineDataSourceGetStatus(t *testing.T) {
 		"182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
 		llamacloud.PipelineDataSourceGetStatusParams{
 			PipelineID: "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+			ProjectID:  llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		},
 	)
 	if err != nil {
@@ -113,6 +121,7 @@ func TestPipelineDataSourceSyncWithOptionalParams(t *testing.T) {
 		"182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
 		llamacloud.PipelineDataSourceSyncParams{
 			PipelineID:      "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+			ProjectID:       llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 			PipelineFileIDs: []string{"182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"},
 		},
 	)
@@ -125,7 +134,7 @@ func TestPipelineDataSourceSyncWithOptionalParams(t *testing.T) {
 	}
 }
 
-func TestPipelineDataSourceUpdateDataSources(t *testing.T) {
+func TestPipelineDataSourceUpdateDataSourcesWithOptionalParams(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
@@ -146,6 +155,7 @@ func TestPipelineDataSourceUpdateDataSources(t *testing.T) {
 				DataSourceID: "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
 				SyncInterval: llamacloud.Float(0),
 			}},
+			ProjectID: llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		},
 	)
 	if err != nil {

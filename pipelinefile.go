@@ -44,14 +44,14 @@ func NewPipelineFileService(opts ...option.RequestOption) (r PipelineFileService
 // Add files to a pipeline.
 //
 // Deprecated: deprecated
-func (r *PipelineFileService) New(ctx context.Context, pipelineID string, body PipelineFileNewParams, opts ...option.RequestOption) (res *[]PipelineFile, err error) {
+func (r *PipelineFileService) New(ctx context.Context, pipelineID string, params PipelineFileNewParams, opts ...option.RequestOption) (res *[]PipelineFile, err error) {
 	opts = slices.Concat(r.options, opts)
 	if pipelineID == "" {
 		err = errors.New("missing required pipeline_id parameter")
 		return nil, err
 	}
 	path := fmt.Sprintf("api/v1/pipelines/%s/files", pipelineID)
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPut, path, body, &res, opts...)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPut, path, params, &res, opts...)
 	return res, err
 }
 
@@ -107,10 +107,10 @@ func (r *PipelineFileService) ListAutoPaging(ctx context.Context, pipelineID str
 // Delete a file from a pipeline.
 //
 // Deprecated: deprecated
-func (r *PipelineFileService) Delete(ctx context.Context, fileID string, body PipelineFileDeleteParams, opts ...option.RequestOption) (err error) {
+func (r *PipelineFileService) Delete(ctx context.Context, fileID string, params PipelineFileDeleteParams, opts ...option.RequestOption) (err error) {
 	opts = slices.Concat(r.options, opts)
 	opts = append([]option.RequestOption{option.WithHeader("Accept", "*/*")}, opts...)
-	if body.PipelineID == "" {
+	if params.PipelineID == "" {
 		err = errors.New("missing required pipeline_id parameter")
 		return err
 	}
@@ -118,17 +118,17 @@ func (r *PipelineFileService) Delete(ctx context.Context, fileID string, body Pi
 		err = errors.New("missing required file_id parameter")
 		return err
 	}
-	path := fmt.Sprintf("api/v1/pipelines/%s/files/%s", body.PipelineID, fileID)
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodDelete, path, nil, nil, opts...)
+	path := fmt.Sprintf("api/v1/pipelines/%s/files/%s", params.PipelineID, fileID)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodDelete, path, params, nil, opts...)
 	return err
 }
 
 // Get status of a file for a pipeline.
 //
 // Deprecated: deprecated
-func (r *PipelineFileService) GetStatus(ctx context.Context, fileID string, query PipelineFileGetStatusParams, opts ...option.RequestOption) (res *ManagedIngestionStatusResponse, err error) {
+func (r *PipelineFileService) GetStatus(ctx context.Context, fileID string, params PipelineFileGetStatusParams, opts ...option.RequestOption) (res *ManagedIngestionStatusResponse, err error) {
 	opts = slices.Concat(r.options, opts)
-	if query.PipelineID == "" {
+	if params.PipelineID == "" {
 		err = errors.New("missing required pipeline_id parameter")
 		return nil, err
 	}
@@ -136,8 +136,8 @@ func (r *PipelineFileService) GetStatus(ctx context.Context, fileID string, quer
 		err = errors.New("missing required file_id parameter")
 		return nil, err
 	}
-	path := fmt.Sprintf("api/v1/pipelines/%s/files/%s/status", query.PipelineID, fileID)
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, nil, &res, opts...)
+	path := fmt.Sprintf("api/v1/pipelines/%s/files/%s/status", params.PipelineID, fileID)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, params, &res, opts...)
 	return res, err
 }
 
@@ -514,7 +514,8 @@ func (r *PipelineFileGetStatusCountsResponse) UnmarshalJSON(data []byte) error {
 }
 
 type PipelineFileNewParams struct {
-	Body []PipelineFileNewParamsBody
+	Body      []PipelineFileNewParamsBody
+	ProjectID param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
 	paramObj
 }
 
@@ -523,6 +524,14 @@ func (r PipelineFileNewParams) MarshalJSON() (data []byte, err error) {
 }
 func (r *PipelineFileNewParams) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
+}
+
+// URLQuery serializes [PipelineFileNewParams]'s query parameters as `url.Values`.
+func (r PipelineFileNewParams) URLQuery() (v url.Values, err error) {
+	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
+		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
+		NestedFormat: apiquery.NestedQueryFormatBrackets,
+	})
 }
 
 // Schema for creating a file that is associated with a pipeline.
@@ -568,7 +577,8 @@ func (u *PipelineFileNewParamsBodyCustomMetadataUnion) UnmarshalJSON(data []byte
 }
 
 type PipelineFileUpdateParams struct {
-	PipelineID string `path:"pipeline_id" api:"required" format:"uuid" json:"-"`
+	PipelineID string            `path:"pipeline_id" api:"required" format:"uuid" json:"-"`
+	ProjectID  param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
 	// Custom metadata for the file
 	CustomMetadata map[string]*PipelineFileUpdateParamsCustomMetadataUnion `json:"custom_metadata,omitzero"`
 	paramObj
@@ -580,6 +590,15 @@ func (r PipelineFileUpdateParams) MarshalJSON() (data []byte, err error) {
 }
 func (r *PipelineFileUpdateParams) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
+}
+
+// URLQuery serializes [PipelineFileUpdateParams]'s query parameters as
+// `url.Values`.
+func (r PipelineFileUpdateParams) URLQuery() (v url.Values, err error) {
+	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
+		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
+		NestedFormat: apiquery.NestedQueryFormatBrackets,
+	})
 }
 
 // Only one field can be non-zero.
@@ -611,6 +630,7 @@ type PipelineFileListParams struct {
 	Limit                param.Opt[int64]  `query:"limit,omitzero" json:"-"`
 	Offset               param.Opt[int64]  `query:"offset,omitzero" json:"-"`
 	OrderBy              param.Opt[string] `query:"order_by,omitzero" json:"-"`
+	ProjectID            param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
 	OnlyManuallyUploaded param.Opt[bool]   `query:"only_manually_uploaded,omitzero" json:"-"`
 	// Filter by file statuses
 	//
@@ -628,17 +648,38 @@ func (r PipelineFileListParams) URLQuery() (v url.Values, err error) {
 }
 
 type PipelineFileDeleteParams struct {
-	PipelineID string `path:"pipeline_id" api:"required" format:"uuid" json:"-"`
+	PipelineID string            `path:"pipeline_id" api:"required" format:"uuid" json:"-"`
+	ProjectID  param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
 	paramObj
 }
 
+// URLQuery serializes [PipelineFileDeleteParams]'s query parameters as
+// `url.Values`.
+func (r PipelineFileDeleteParams) URLQuery() (v url.Values, err error) {
+	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
+		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
+		NestedFormat: apiquery.NestedQueryFormatBrackets,
+	})
+}
+
 type PipelineFileGetStatusParams struct {
-	PipelineID string `path:"pipeline_id" api:"required" format:"uuid" json:"-"`
+	PipelineID string            `path:"pipeline_id" api:"required" format:"uuid" json:"-"`
+	ProjectID  param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
 	paramObj
+}
+
+// URLQuery serializes [PipelineFileGetStatusParams]'s query parameters as
+// `url.Values`.
+func (r PipelineFileGetStatusParams) URLQuery() (v url.Values, err error) {
+	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
+		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
+		NestedFormat: apiquery.NestedQueryFormatBrackets,
+	})
 }
 
 type PipelineFileGetStatusCountsParams struct {
 	DataSourceID         param.Opt[string] `query:"data_source_id,omitzero" format:"uuid" json:"-"`
+	ProjectID            param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
 	OnlyManuallyUploaded param.Opt[bool]   `query:"only_manually_uploaded,omitzero" json:"-"`
 	paramObj
 }

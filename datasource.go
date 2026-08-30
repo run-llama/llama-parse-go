@@ -49,14 +49,14 @@ func (r *DataSourceService) New(ctx context.Context, params DataSourceNewParams,
 }
 
 // Update a data source by ID.
-func (r *DataSourceService) Update(ctx context.Context, dataSourceID string, body DataSourceUpdateParams, opts ...option.RequestOption) (res *DataSource, err error) {
+func (r *DataSourceService) Update(ctx context.Context, dataSourceID string, params DataSourceUpdateParams, opts ...option.RequestOption) (res *DataSource, err error) {
 	opts = slices.Concat(r.options, opts)
 	if dataSourceID == "" {
 		err = errors.New("missing required data_source_id parameter")
 		return nil, err
 	}
 	path := fmt.Sprintf("api/v1/data-sources/%s", dataSourceID)
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPut, path, body, &res, opts...)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPut, path, params, &res, opts...)
 	return res, err
 }
 
@@ -70,7 +70,7 @@ func (r *DataSourceService) List(ctx context.Context, query DataSourceListParams
 }
 
 // Delete a data source by ID.
-func (r *DataSourceService) Delete(ctx context.Context, dataSourceID string, opts ...option.RequestOption) (err error) {
+func (r *DataSourceService) Delete(ctx context.Context, dataSourceID string, body DataSourceDeleteParams, opts ...option.RequestOption) (err error) {
 	opts = slices.Concat(r.options, opts)
 	opts = append([]option.RequestOption{option.WithHeader("Accept", "*/*")}, opts...)
 	if dataSourceID == "" {
@@ -78,19 +78,19 @@ func (r *DataSourceService) Delete(ctx context.Context, dataSourceID string, opt
 		return err
 	}
 	path := fmt.Sprintf("api/v1/data-sources/%s", dataSourceID)
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodDelete, path, nil, nil, opts...)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodDelete, path, body, nil, opts...)
 	return err
 }
 
 // Get a data source by ID.
-func (r *DataSourceService) Get(ctx context.Context, dataSourceID string, opts ...option.RequestOption) (res *DataSource, err error) {
+func (r *DataSourceService) Get(ctx context.Context, dataSourceID string, query DataSourceGetParams, opts ...option.RequestOption) (res *DataSource, err error) {
 	opts = slices.Concat(r.options, opts)
 	if dataSourceID == "" {
 		err = errors.New("missing required data_source_id parameter")
 		return nil, err
 	}
 	path := fmt.Sprintf("api/v1/data-sources/%s", dataSourceID)
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, nil, &res, opts...)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, query, &res, opts...)
 	return res, err
 }
 
@@ -603,6 +603,7 @@ type DataSourceUpdateParams struct {
 	// "JIRA_V2", "MICROSOFT_ONEDRIVE", "MICROSOFT_SHAREPOINT", "NOTION_PAGE", "S3",
 	// "SLACK".
 	SourceType DataSourceUpdateParamsSourceType `json:"source_type,omitzero" api:"required"`
+	ProjectID  param.Opt[string]                `query:"project_id,omitzero" format:"uuid" json:"-"`
 	// The name of the data source.
 	Name param.Opt[string] `json:"name,omitzero"`
 	// Component that implements the data source
@@ -618,6 +619,14 @@ func (r DataSourceUpdateParams) MarshalJSON() (data []byte, err error) {
 }
 func (r *DataSourceUpdateParams) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
+}
+
+// URLQuery serializes [DataSourceUpdateParams]'s query parameters as `url.Values`.
+func (r DataSourceUpdateParams) URLQuery() (v url.Values, err error) {
+	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
+		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
+		NestedFormat: apiquery.NestedQueryFormatBrackets,
+	})
 }
 
 type DataSourceUpdateParamsSourceType string
@@ -704,6 +713,32 @@ type DataSourceListParams struct {
 
 // URLQuery serializes [DataSourceListParams]'s query parameters as `url.Values`.
 func (r DataSourceListParams) URLQuery() (v url.Values, err error) {
+	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
+		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
+		NestedFormat: apiquery.NestedQueryFormatBrackets,
+	})
+}
+
+type DataSourceDeleteParams struct {
+	ProjectID param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
+	paramObj
+}
+
+// URLQuery serializes [DataSourceDeleteParams]'s query parameters as `url.Values`.
+func (r DataSourceDeleteParams) URLQuery() (v url.Values, err error) {
+	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
+		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
+		NestedFormat: apiquery.NestedQueryFormatBrackets,
+	})
+}
+
+type DataSourceGetParams struct {
+	ProjectID param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
+	paramObj
+}
+
+// URLQuery serializes [DataSourceGetParams]'s query parameters as `url.Values`.
+func (r DataSourceGetParams) URLQuery() (v url.Values, err error) {
 	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
 		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
 		NestedFormat: apiquery.NestedQueryFormatBrackets,

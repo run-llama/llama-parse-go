@@ -65,7 +65,8 @@ func TestDataSinkUpdateWithOptionalParams(t *testing.T) {
 		context.TODO(),
 		"182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
 		llamacloud.DataSinkUpdateParams{
-			SinkType: llamacloud.DataSinkUpdateParamsSinkTypeAstraDB,
+			SinkType:  llamacloud.DataSinkUpdateParamsSinkTypeAstraDB,
+			ProjectID: llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 			Component: llamacloud.DataSinkUpdateParamsComponentUnion{
 				OfAnyMap: map[string]any{
 					"foo": "bar",
@@ -109,7 +110,7 @@ func TestDataSinkListWithOptionalParams(t *testing.T) {
 	}
 }
 
-func TestDataSinkDelete(t *testing.T) {
+func TestDataSinkDeleteWithOptionalParams(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
@@ -122,7 +123,13 @@ func TestDataSinkDelete(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	err := client.DataSinks.Delete(context.TODO(), "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
+	err := client.DataSinks.Delete(
+		context.TODO(),
+		"182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+		llamacloud.DataSinkDeleteParams{
+			ProjectID: llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		},
+	)
 	if err != nil {
 		var apierr *llamacloud.Error
 		if errors.As(err, &apierr) {
@@ -132,7 +139,7 @@ func TestDataSinkDelete(t *testing.T) {
 	}
 }
 
-func TestDataSinkGet(t *testing.T) {
+func TestDataSinkGetWithOptionalParams(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
@@ -145,7 +152,13 @@ func TestDataSinkGet(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.DataSinks.Get(context.TODO(), "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
+	_, err := client.DataSinks.Get(
+		context.TODO(),
+		"182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+		llamacloud.DataSinkGetParams{
+			ProjectID: llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		},
+	)
 	if err != nil {
 		var apierr *llamacloud.Error
 		if errors.As(err, &apierr) {

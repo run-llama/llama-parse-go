@@ -43,14 +43,14 @@ func NewPipelineDocumentService(opts ...option.RequestOption) (r PipelineDocumen
 // Batch create documents for a pipeline.
 //
 // Deprecated: deprecated
-func (r *PipelineDocumentService) New(ctx context.Context, pipelineID string, body PipelineDocumentNewParams, opts ...option.RequestOption) (res *[]CloudDocument, err error) {
+func (r *PipelineDocumentService) New(ctx context.Context, pipelineID string, params PipelineDocumentNewParams, opts ...option.RequestOption) (res *[]CloudDocument, err error) {
 	opts = slices.Concat(r.options, opts)
 	if pipelineID == "" {
 		err = errors.New("missing required pipeline_id parameter")
 		return nil, err
 	}
 	path := fmt.Sprintf("api/v1/pipelines/%s/documents", pipelineID)
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, body, &res, opts...)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, params, &res, opts...)
 	return res, err
 }
 
@@ -89,10 +89,10 @@ func (r *PipelineDocumentService) ListAutoPaging(ctx context.Context, pipelineID
 // record).
 //
 // Deprecated: deprecated
-func (r *PipelineDocumentService) Delete(ctx context.Context, documentID string, body PipelineDocumentDeleteParams, opts ...option.RequestOption) (err error) {
+func (r *PipelineDocumentService) Delete(ctx context.Context, documentID string, params PipelineDocumentDeleteParams, opts ...option.RequestOption) (err error) {
 	opts = slices.Concat(r.options, opts)
 	opts = append([]option.RequestOption{option.WithHeader("Accept", "*/*")}, opts...)
-	if body.PipelineID == "" {
+	if params.PipelineID == "" {
 		err = errors.New("missing required pipeline_id parameter")
 		return err
 	}
@@ -100,17 +100,17 @@ func (r *PipelineDocumentService) Delete(ctx context.Context, documentID string,
 		err = errors.New("missing required document_id parameter")
 		return err
 	}
-	path := fmt.Sprintf("api/v1/pipelines/%s/documents/%s", body.PipelineID, url.PathEscape(documentID))
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodDelete, path, nil, nil, opts...)
+	path := fmt.Sprintf("api/v1/pipelines/%s/documents/%s", params.PipelineID, url.PathEscape(documentID))
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodDelete, path, params, nil, opts...)
 	return err
 }
 
 // Return a single document for a pipeline.
 //
 // Deprecated: deprecated
-func (r *PipelineDocumentService) Get(ctx context.Context, documentID string, query PipelineDocumentGetParams, opts ...option.RequestOption) (res *CloudDocument, err error) {
+func (r *PipelineDocumentService) Get(ctx context.Context, documentID string, params PipelineDocumentGetParams, opts ...option.RequestOption) (res *CloudDocument, err error) {
 	opts = slices.Concat(r.options, opts)
-	if query.PipelineID == "" {
+	if params.PipelineID == "" {
 		err = errors.New("missing required pipeline_id parameter")
 		return nil, err
 	}
@@ -118,17 +118,17 @@ func (r *PipelineDocumentService) Get(ctx context.Context, documentID string, qu
 		err = errors.New("missing required document_id parameter")
 		return nil, err
 	}
-	path := fmt.Sprintf("api/v1/pipelines/%s/documents/%s", query.PipelineID, url.PathEscape(documentID))
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, nil, &res, opts...)
+	path := fmt.Sprintf("api/v1/pipelines/%s/documents/%s", params.PipelineID, url.PathEscape(documentID))
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, params, &res, opts...)
 	return res, err
 }
 
 // Return a list of chunks for a pipeline document.
 //
 // Deprecated: deprecated
-func (r *PipelineDocumentService) GetChunks(ctx context.Context, documentID string, query PipelineDocumentGetChunksParams, opts ...option.RequestOption) (res *[]TextNode, err error) {
+func (r *PipelineDocumentService) GetChunks(ctx context.Context, documentID string, params PipelineDocumentGetChunksParams, opts ...option.RequestOption) (res *[]TextNode, err error) {
 	opts = slices.Concat(r.options, opts)
-	if query.PipelineID == "" {
+	if params.PipelineID == "" {
 		err = errors.New("missing required pipeline_id parameter")
 		return nil, err
 	}
@@ -136,17 +136,17 @@ func (r *PipelineDocumentService) GetChunks(ctx context.Context, documentID stri
 		err = errors.New("missing required document_id parameter")
 		return nil, err
 	}
-	path := fmt.Sprintf("api/v1/pipelines/%s/documents/%s/chunks", query.PipelineID, url.PathEscape(documentID))
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, nil, &res, opts...)
+	path := fmt.Sprintf("api/v1/pipelines/%s/documents/%s/chunks", params.PipelineID, url.PathEscape(documentID))
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, params, &res, opts...)
 	return res, err
 }
 
 // Return a single document for a pipeline.
 //
 // Deprecated: deprecated
-func (r *PipelineDocumentService) GetStatus(ctx context.Context, documentID string, query PipelineDocumentGetStatusParams, opts ...option.RequestOption) (res *ManagedIngestionStatusResponse, err error) {
+func (r *PipelineDocumentService) GetStatus(ctx context.Context, documentID string, params PipelineDocumentGetStatusParams, opts ...option.RequestOption) (res *ManagedIngestionStatusResponse, err error) {
 	opts = slices.Concat(r.options, opts)
-	if query.PipelineID == "" {
+	if params.PipelineID == "" {
 		err = errors.New("missing required pipeline_id parameter")
 		return nil, err
 	}
@@ -154,8 +154,8 @@ func (r *PipelineDocumentService) GetStatus(ctx context.Context, documentID stri
 		err = errors.New("missing required document_id parameter")
 		return nil, err
 	}
-	path := fmt.Sprintf("api/v1/pipelines/%s/documents/%s/status", query.PipelineID, url.PathEscape(documentID))
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, nil, &res, opts...)
+	path := fmt.Sprintf("api/v1/pipelines/%s/documents/%s/status", params.PipelineID, url.PathEscape(documentID))
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, params, &res, opts...)
 	return res, err
 }
 
@@ -182,9 +182,9 @@ func (r *PipelineDocumentService) GetStatusCounts(ctx context.Context, pipelineI
 // Sync a specific document for a pipeline.
 //
 // Deprecated: deprecated
-func (r *PipelineDocumentService) Sync(ctx context.Context, documentID string, body PipelineDocumentSyncParams, opts ...option.RequestOption) (res *PipelineDocumentSyncResponse, err error) {
+func (r *PipelineDocumentService) Sync(ctx context.Context, documentID string, params PipelineDocumentSyncParams, opts ...option.RequestOption) (res *PipelineDocumentSyncResponse, err error) {
 	opts = slices.Concat(r.options, opts)
-	if body.PipelineID == "" {
+	if params.PipelineID == "" {
 		err = errors.New("missing required pipeline_id parameter")
 		return nil, err
 	}
@@ -192,22 +192,22 @@ func (r *PipelineDocumentService) Sync(ctx context.Context, documentID string, b
 		err = errors.New("missing required document_id parameter")
 		return nil, err
 	}
-	path := fmt.Sprintf("api/v1/pipelines/%s/documents/%s/sync", body.PipelineID, url.PathEscape(documentID))
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, nil, &res, opts...)
+	path := fmt.Sprintf("api/v1/pipelines/%s/documents/%s/sync", params.PipelineID, url.PathEscape(documentID))
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, params, &res, opts...)
 	return res, err
 }
 
 // Batch create or update a document for a pipeline.
 //
 // Deprecated: deprecated
-func (r *PipelineDocumentService) Upsert(ctx context.Context, pipelineID string, body PipelineDocumentUpsertParams, opts ...option.RequestOption) (res *[]CloudDocument, err error) {
+func (r *PipelineDocumentService) Upsert(ctx context.Context, pipelineID string, params PipelineDocumentUpsertParams, opts ...option.RequestOption) (res *[]CloudDocument, err error) {
 	opts = slices.Concat(r.options, opts)
 	if pipelineID == "" {
 		err = errors.New("missing required pipeline_id parameter")
 		return nil, err
 	}
 	path := fmt.Sprintf("api/v1/pipelines/%s/documents", pipelineID)
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPut, path, body, &res, opts...)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPut, path, params, &res, opts...)
 	return res, err
 }
 
@@ -455,7 +455,8 @@ func (r *PipelineDocumentGetStatusCountsResponse) UnmarshalJSON(data []byte) err
 type PipelineDocumentSyncResponse = any
 
 type PipelineDocumentNewParams struct {
-	Body []CloudDocumentCreateParam
+	Body      []CloudDocumentCreateParam
+	ProjectID param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
 	paramObj
 }
 
@@ -466,10 +467,20 @@ func (r *PipelineDocumentNewParams) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
+// URLQuery serializes [PipelineDocumentNewParams]'s query parameters as
+// `url.Values`.
+func (r PipelineDocumentNewParams) URLQuery() (v url.Values, err error) {
+	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
+		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
+		NestedFormat: apiquery.NestedQueryFormatBrackets,
+	})
+}
+
 type PipelineDocumentListParams struct {
 	FileID                     param.Opt[string] `query:"file_id,omitzero" format:"uuid" json:"-"`
 	OnlyAPIDataSourceDocuments param.Opt[bool]   `query:"only_api_data_source_documents,omitzero" json:"-"`
 	OnlyDirectUpload           param.Opt[bool]   `query:"only_direct_upload,omitzero" json:"-"`
+	ProjectID                  param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
 	Limit                      param.Opt[int64]  `query:"limit,omitzero" json:"-"`
 	Skip                       param.Opt[int64]  `query:"skip,omitzero" json:"-"`
 	// Any of "cached", "ttl".
@@ -494,28 +505,69 @@ const (
 )
 
 type PipelineDocumentDeleteParams struct {
-	PipelineID string `path:"pipeline_id" api:"required" format:"uuid" json:"-"`
+	PipelineID string            `path:"pipeline_id" api:"required" format:"uuid" json:"-"`
+	ProjectID  param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
 	paramObj
+}
+
+// URLQuery serializes [PipelineDocumentDeleteParams]'s query parameters as
+// `url.Values`.
+func (r PipelineDocumentDeleteParams) URLQuery() (v url.Values, err error) {
+	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
+		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
+		NestedFormat: apiquery.NestedQueryFormatBrackets,
+	})
 }
 
 type PipelineDocumentGetParams struct {
-	PipelineID string `path:"pipeline_id" api:"required" format:"uuid" json:"-"`
+	PipelineID string            `path:"pipeline_id" api:"required" format:"uuid" json:"-"`
+	ProjectID  param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
 	paramObj
+}
+
+// URLQuery serializes [PipelineDocumentGetParams]'s query parameters as
+// `url.Values`.
+func (r PipelineDocumentGetParams) URLQuery() (v url.Values, err error) {
+	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
+		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
+		NestedFormat: apiquery.NestedQueryFormatBrackets,
+	})
 }
 
 type PipelineDocumentGetChunksParams struct {
-	PipelineID string `path:"pipeline_id" api:"required" format:"uuid" json:"-"`
+	PipelineID string            `path:"pipeline_id" api:"required" format:"uuid" json:"-"`
+	ProjectID  param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
 	paramObj
 }
 
+// URLQuery serializes [PipelineDocumentGetChunksParams]'s query parameters as
+// `url.Values`.
+func (r PipelineDocumentGetChunksParams) URLQuery() (v url.Values, err error) {
+	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
+		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
+		NestedFormat: apiquery.NestedQueryFormatBrackets,
+	})
+}
+
 type PipelineDocumentGetStatusParams struct {
-	PipelineID string `path:"pipeline_id" api:"required" format:"uuid" json:"-"`
+	PipelineID string            `path:"pipeline_id" api:"required" format:"uuid" json:"-"`
+	ProjectID  param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
 	paramObj
+}
+
+// URLQuery serializes [PipelineDocumentGetStatusParams]'s query parameters as
+// `url.Values`.
+func (r PipelineDocumentGetStatusParams) URLQuery() (v url.Values, err error) {
+	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
+		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
+		NestedFormat: apiquery.NestedQueryFormatBrackets,
+	})
 }
 
 type PipelineDocumentGetStatusCountsParams struct {
 	DataSourceID     param.Opt[string] `query:"data_source_id,omitzero" format:"uuid" json:"-"`
 	FileID           param.Opt[string] `query:"file_id,omitzero" format:"uuid" json:"-"`
+	ProjectID        param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
 	OnlyDirectUpload param.Opt[bool]   `query:"only_direct_upload,omitzero" json:"-"`
 	paramObj
 }
@@ -530,12 +582,23 @@ func (r PipelineDocumentGetStatusCountsParams) URLQuery() (v url.Values, err err
 }
 
 type PipelineDocumentSyncParams struct {
-	PipelineID string `path:"pipeline_id" api:"required" format:"uuid" json:"-"`
+	PipelineID string            `path:"pipeline_id" api:"required" format:"uuid" json:"-"`
+	ProjectID  param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
 	paramObj
 }
 
+// URLQuery serializes [PipelineDocumentSyncParams]'s query parameters as
+// `url.Values`.
+func (r PipelineDocumentSyncParams) URLQuery() (v url.Values, err error) {
+	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
+		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
+		NestedFormat: apiquery.NestedQueryFormatBrackets,
+	})
+}
+
 type PipelineDocumentUpsertParams struct {
-	Body []CloudDocumentCreateParam
+	Body      []CloudDocumentCreateParam
+	ProjectID param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
 	paramObj
 }
 
@@ -544,4 +607,13 @@ func (r PipelineDocumentUpsertParams) MarshalJSON() (data []byte, err error) {
 }
 func (r *PipelineDocumentUpsertParams) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
+}
+
+// URLQuery serializes [PipelineDocumentUpsertParams]'s query parameters as
+// `url.Values`.
+func (r PipelineDocumentUpsertParams) URLQuery() (v url.Values, err error) {
+	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
+		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
+		NestedFormat: apiquery.NestedQueryFormatBrackets,
+	})
 }
