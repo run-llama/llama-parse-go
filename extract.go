@@ -184,7 +184,9 @@ type ExtractConfiguration struct {
 	// Parse tier to use before extraction. Defaults to the extract tier if not
 	// specified. Turbo extract does not support parse configuration or produce a parse
 	// output; use another tier if your workflow requires parsed text.
-	ParseTier string `json:"parse_tier" api:"nullable"`
+	//
+	// Any of "agentic", "agentic_plus", "cost_effective", "fast".
+	ParseTier ExtractConfigurationParseTier `json:"parse_tier" api:"nullable"`
 	// Optional worksheet names to extract when spreadsheet_mode is on. Overrides
 	// target_pages for spreadsheets; omit to extract every sheet. Names are matched
 	// exactly (case-sensitive) — pass them as a list, e.g. ["Sheet 1", "My Sheet"].
@@ -318,6 +320,18 @@ const (
 	ExtractConfigurationExtractionTargetPerTableRow ExtractConfigurationExtractionTarget = "per_table_row"
 )
 
+// Parse tier to use before extraction. Defaults to the extract tier if not
+// specified. Turbo extract does not support parse configuration or produce a parse
+// output; use another tier if your workflow requires parsed text.
+type ExtractConfigurationParseTier string
+
+const (
+	ExtractConfigurationParseTierAgentic       ExtractConfigurationParseTier = "agentic"
+	ExtractConfigurationParseTierAgenticPlus   ExtractConfigurationParseTier = "agentic_plus"
+	ExtractConfigurationParseTierCostEffective ExtractConfigurationParseTier = "cost_effective"
+	ExtractConfigurationParseTierFast          ExtractConfigurationParseTier = "fast"
+)
+
 // Extract tier: cost_effective (5 credits/page), agentic (15 credits/page),
 // agentic_plus (50 credits/page), or turbo (35 credits/page)
 type ExtractConfigurationTier string
@@ -342,10 +356,6 @@ type ExtractConfigurationParam struct {
 	// extraction. Turbo extract does not support parse configuration or produce a
 	// parse output; use another tier if your workflow requires parsed text.
 	ParseConfigID param.Opt[string] `json:"parse_config_id,omitzero"`
-	// Parse tier to use before extraction. Defaults to the extract tier if not
-	// specified. Turbo extract does not support parse configuration or produce a parse
-	// output; use another tier if your workflow requires parsed text.
-	ParseTier param.Opt[string] `json:"parse_tier,omitzero"`
 	// Custom system prompt to guide extraction behavior
 	SystemPrompt param.Opt[string] `json:"system_prompt,omitzero"`
 	// Comma-separated page numbers or ranges to process (1-based). Omit to process all
@@ -371,6 +381,12 @@ type ExtractConfigurationParam struct {
 	// responses always report the concrete resolved version the job runs, fixed at job
 	// creation; saved configurations keep the value as provided.
 	Version param.Opt[string] `json:"version,omitzero"`
+	// Parse tier to use before extraction. Defaults to the extract tier if not
+	// specified. Turbo extract does not support parse configuration or produce a parse
+	// output; use another tier if your workflow requires parsed text.
+	//
+	// Any of "agentic", "agentic_plus", "cost_effective", "fast".
+	ParseTier ExtractConfigurationParseTier `json:"parse_tier,omitzero"`
 	// Optional worksheet names to extract when spreadsheet_mode is on. Overrides
 	// target_pages for spreadsheets; omit to extract every sheet. Names are matched
 	// exactly (case-sensitive) — pass them as a list, e.g. ["Sheet 1", "My Sheet"].
