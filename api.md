@@ -111,7 +111,6 @@ Response Types:
 - <a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go">llamacloud</a>.<a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go#ListItem">ListItem</a>
 - <a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go">llamacloud</a>.<a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go#ParsingLanguages">ParsingLanguages</a>
 - <a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go">llamacloud</a>.<a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go#ParsingMode">ParsingMode</a>
-- <a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go">llamacloud</a>.<a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go#StatusEnum">StatusEnum</a>
 - <a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go">llamacloud</a>.<a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go#TableItem">TableItem</a>
 - <a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go">llamacloud</a>.<a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go#TextItem">TextItem</a>
 - <a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go">llamacloud</a>.<a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go#ParsingNewResponse">ParsingNewResponse</a>
@@ -161,25 +160,6 @@ Methods:
 # Classifier
 
 ## Jobs
-
-Params Types:
-
-- <a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go">llamacloud</a>.<a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go#ClassifierRuleParam">ClassifierRuleParam</a>
-- <a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go">llamacloud</a>.<a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go#ClassifyParsingConfigurationParam">ClassifyParsingConfigurationParam</a>
-
-Response Types:
-
-- <a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go">llamacloud</a>.<a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go#ClassifierRule">ClassifierRule</a>
-- <a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go">llamacloud</a>.<a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go#ClassifyJob">ClassifyJob</a>
-- <a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go">llamacloud</a>.<a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go#ClassifyParsingConfiguration">ClassifyParsingConfiguration</a>
-- <a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go">llamacloud</a>.<a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go#ClassifierJobGetResultsResponse">ClassifierJobGetResultsResponse</a>
-
-Methods:
-
-- <code title="post /api/v1/classifier/jobs">client.Classifier.Jobs.<a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go#ClassifierJobService.New">New</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, params <a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go">llamacloud</a>.<a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go#ClassifierJobNewParams">ClassifierJobNewParams</a>) (\*<a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go">llamacloud</a>.<a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go#ClassifyJob">ClassifyJob</a>, <a href="https://pkg.go.dev/builtin#error">error</a>)</code>
-- <code title="get /api/v1/classifier/jobs">client.Classifier.Jobs.<a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go#ClassifierJobService.List">List</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, query <a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go">llamacloud</a>.<a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go#ClassifierJobListParams">ClassifierJobListParams</a>) (\*<a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go/packages/pagination">pagination</a>.<a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go/packages/pagination#PaginatedCursor">PaginatedCursor</a>[<a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go">llamacloud</a>.<a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go#ClassifyJob">ClassifyJob</a>], <a href="https://pkg.go.dev/builtin#error">error</a>)</code>
-- <code title="get /api/v1/classifier/jobs/{classify_job_id}">client.Classifier.Jobs.<a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go#ClassifierJobService.Get">Get</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, classifyJobID <a href="https://pkg.go.dev/builtin#string">string</a>, query <a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go">llamacloud</a>.<a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go#ClassifierJobGetParams">ClassifierJobGetParams</a>) (\*<a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go">llamacloud</a>.<a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go#ClassifyJob">ClassifyJob</a>, <a href="https://pkg.go.dev/builtin#error">error</a>)</code>
-- <code title="get /api/v1/classifier/jobs/{classify_job_id}/results">client.Classifier.Jobs.<a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go#ClassifierJobService.GetResults">GetResults</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, classifyJobID <a href="https://pkg.go.dev/builtin#string">string</a>, query <a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go">llamacloud</a>.<a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go#ClassifierJobGetResultsParams">ClassifierJobGetResultsParams</a>) (\*<a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go">llamacloud</a>.<a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go#ClassifierJobGetResultsResponse">ClassifierJobGetResultsResponse</a>, <a href="https://pkg.go.dev/builtin#error">error</a>)</code>
 
 # Batches
 

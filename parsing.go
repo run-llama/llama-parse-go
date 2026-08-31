@@ -1639,17 +1639,6 @@ const (
 	ParsingModeParsePageWithoutLlm      ParsingMode = "parse_page_without_llm"
 )
 
-// Enum for representing the status of a job
-type StatusEnum string
-
-const (
-	StatusEnumCancelled      StatusEnum = "CANCELLED"
-	StatusEnumError          StatusEnum = "ERROR"
-	StatusEnumPartialSuccess StatusEnum = "PARTIAL_SUCCESS"
-	StatusEnumPending        StatusEnum = "PENDING"
-	StatusEnumSuccess        StatusEnum = "SUCCESS"
-)
-
 type TableItem struct {
 	// CSV representation of the table
 	Csv string `json:"csv" api:"required"`
