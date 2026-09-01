@@ -19,7 +19,6 @@ import (
 type Client struct {
 	options        []option.RequestOption
 	Files          FileService
-	Sheets         SheetService
 	Split          SplitService
 	Parsing        ParsingService
 	Extract        ExtractService
@@ -69,7 +68,6 @@ func NewClient(opts ...option.RequestOption) (r Client) {
 	r = Client{options: opts}
 
 	r.Files = NewFileService(opts...)
-	r.Sheets = NewSheetService(opts...)
 	r.Split = NewSplitService(opts...)
 	r.Parsing = NewParsingService(opts...)
 	r.Extract = NewExtractService(opts...)
