@@ -38,6 +38,7 @@ func TestSplitNewWithOptionalParams(t *testing.T) {
 			}},
 			SplittingStrategy: llamacloud.SplitNewParamsConfigurationSplittingStrategy{
 				AllowUncategorized: "forbid",
+				MinPagesPerSplit:   llamacloud.Int(1),
 			},
 		},
 		ConfigurationID:         llamacloud.String("cfg-11111111-2222-3333-4444-555555555555"),

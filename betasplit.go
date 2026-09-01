@@ -419,6 +419,9 @@ func (r *BetaSplitNewParamsConfiguration) UnmarshalJSON(data []byte) error {
 
 // Strategy for splitting documents.
 type BetaSplitNewParamsConfigurationSplittingStrategy struct {
+	// Minimum pages per segment. Shorter segments are merged into an adjacent segment;
+	// 1 disables merging.
+	MinPagesPerSplit param.Opt[int64] `json:"min_pages_per_split,omitzero"`
 	// Controls handling of pages that don't match any category. 'include': pages can
 	// be grouped as 'uncategorized' and included in results. 'forbid': all pages must
 	// be assigned to a defined category. 'omit': pages can be classified as
