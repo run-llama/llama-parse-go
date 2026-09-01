@@ -189,12 +189,15 @@ type SplitNewResponseSplittingStrategy struct {
 	//
 	// Any of "forbid", "include", "omit".
 	AllowUncategorized string `json:"allow_uncategorized"`
+	// Free-form guidance for where segment boundaries are placed.
+	CustomInstructions string `json:"custom_instructions" api:"nullable"`
 	// Minimum pages per segment. Shorter segments are merged into an adjacent segment;
 	// 1 disables merging.
 	MinPagesPerSplit int64 `json:"min_pages_per_split"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		AllowUncategorized respjson.Field
+		CustomInstructions respjson.Field
 		MinPagesPerSplit   respjson.Field
 		ExtraFields        map[string]respjson.Field
 		raw                string
@@ -285,12 +288,15 @@ type SplitListResponseSplittingStrategy struct {
 	//
 	// Any of "forbid", "include", "omit".
 	AllowUncategorized string `json:"allow_uncategorized"`
+	// Free-form guidance for where segment boundaries are placed.
+	CustomInstructions string `json:"custom_instructions" api:"nullable"`
 	// Minimum pages per segment. Shorter segments are merged into an adjacent segment;
 	// 1 disables merging.
 	MinPagesPerSplit int64 `json:"min_pages_per_split"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		AllowUncategorized respjson.Field
+		CustomInstructions respjson.Field
 		MinPagesPerSplit   respjson.Field
 		ExtraFields        map[string]respjson.Field
 		raw                string
@@ -383,12 +389,15 @@ type SplitCancelResponseSplittingStrategy struct {
 	//
 	// Any of "forbid", "include", "omit".
 	AllowUncategorized string `json:"allow_uncategorized"`
+	// Free-form guidance for where segment boundaries are placed.
+	CustomInstructions string `json:"custom_instructions" api:"nullable"`
 	// Minimum pages per segment. Shorter segments are merged into an adjacent segment;
 	// 1 disables merging.
 	MinPagesPerSplit int64 `json:"min_pages_per_split"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		AllowUncategorized respjson.Field
+		CustomInstructions respjson.Field
 		MinPagesPerSplit   respjson.Field
 		ExtraFields        map[string]respjson.Field
 		raw                string
@@ -479,12 +488,15 @@ type SplitGetResponseSplittingStrategy struct {
 	//
 	// Any of "forbid", "include", "omit".
 	AllowUncategorized string `json:"allow_uncategorized"`
+	// Free-form guidance for where segment boundaries are placed.
+	CustomInstructions string `json:"custom_instructions" api:"nullable"`
 	// Minimum pages per segment. Shorter segments are merged into an adjacent segment;
 	// 1 disables merging.
 	MinPagesPerSplit int64 `json:"min_pages_per_split"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		AllowUncategorized respjson.Field
+		CustomInstructions respjson.Field
 		MinPagesPerSplit   respjson.Field
 		ExtraFields        map[string]respjson.Field
 		raw                string
@@ -553,6 +565,8 @@ func (r *SplitNewParamsConfiguration) UnmarshalJSON(data []byte) error {
 
 // Strategy for splitting documents.
 type SplitNewParamsConfigurationSplittingStrategy struct {
+	// Free-form guidance for where segment boundaries are placed.
+	CustomInstructions param.Opt[string] `json:"custom_instructions,omitzero"`
 	// Minimum pages per segment. Shorter segments are merged into an adjacent segment;
 	// 1 disables merging.
 	MinPagesPerSplit param.Opt[int64] `json:"min_pages_per_split,omitzero"`

@@ -419,6 +419,8 @@ func (r *BetaSplitNewParamsConfiguration) UnmarshalJSON(data []byte) error {
 
 // Strategy for splitting documents.
 type BetaSplitNewParamsConfigurationSplittingStrategy struct {
+	// Free-form guidance for where segment boundaries are placed.
+	CustomInstructions param.Opt[string] `json:"custom_instructions,omitzero"`
 	// Minimum pages per segment. Shorter segments are merged into an adjacent segment;
 	// 1 disables merging.
 	MinPagesPerSplit param.Opt[int64] `json:"min_pages_per_split,omitzero"`
