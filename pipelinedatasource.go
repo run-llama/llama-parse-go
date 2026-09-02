@@ -8,10 +8,12 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"net/url"
 	"slices"
 	"time"
 
 	"github.com/run-llama/llama-parse-go/internal/apijson"
+	"github.com/run-llama/llama-parse-go/internal/apiquery"
 	shimjson "github.com/run-llama/llama-parse-go/internal/encoding/json"
 	"github.com/run-llama/llama-parse-go/internal/requestconfig"
 	"github.com/run-llama/llama-parse-go/option"
@@ -60,23 +62,23 @@ func (r *PipelineDataSourceService) Update(ctx context.Context, dataSourceID str
 // Get data sources for a pipeline.
 //
 // Deprecated: deprecated
-func (r *PipelineDataSourceService) GetDataSources(ctx context.Context, pipelineID string, opts ...option.RequestOption) (res *[]PipelineDataSource, err error) {
+func (r *PipelineDataSourceService) GetDataSources(ctx context.Context, pipelineID string, query PipelineDataSourceGetDataSourcesParams, opts ...option.RequestOption) (res *[]PipelineDataSource, err error) {
 	opts = slices.Concat(r.options, opts)
 	if pipelineID == "" {
 		err = errors.New("missing required pipeline_id parameter")
 		return nil, err
 	}
 	path := fmt.Sprintf("api/v1/pipelines/%s/data-sources", pipelineID)
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, nil, &res, opts...)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, query, &res, opts...)
 	return res, err
 }
 
 // Get the status of a data source for a pipeline.
 //
 // Deprecated: deprecated
-func (r *PipelineDataSourceService) GetStatus(ctx context.Context, dataSourceID string, query PipelineDataSourceGetStatusParams, opts ...option.RequestOption) (res *ManagedIngestionStatusResponse, err error) {
+func (r *PipelineDataSourceService) GetStatus(ctx context.Context, dataSourceID string, params PipelineDataSourceGetStatusParams, opts ...option.RequestOption) (res *ManagedIngestionStatusResponse, err error) {
 	opts = slices.Concat(r.options, opts)
-	if query.PipelineID == "" {
+	if params.PipelineID == "" {
 		err = errors.New("missing required pipeline_id parameter")
 		return nil, err
 	}
@@ -84,8 +86,8 @@ func (r *PipelineDataSourceService) GetStatus(ctx context.Context, dataSourceID 
 		err = errors.New("missing required data_source_id parameter")
 		return nil, err
 	}
-	path := fmt.Sprintf("api/v1/pipelines/%s/data-sources/%s/status", query.PipelineID, dataSourceID)
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, nil, &res, opts...)
+	path := fmt.Sprintf("api/v1/pipelines/%s/data-sources/%s/status", params.PipelineID, dataSourceID)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, params, &res, opts...)
 	return res, err
 }
 
@@ -111,14 +113,14 @@ func (r *PipelineDataSourceService) Sync(ctx context.Context, dataSourceID strin
 // Add data sources to a pipeline.
 //
 // Deprecated: deprecated
-func (r *PipelineDataSourceService) UpdateDataSources(ctx context.Context, pipelineID string, body PipelineDataSourceUpdateDataSourcesParams, opts ...option.RequestOption) (res *[]PipelineDataSource, err error) {
+func (r *PipelineDataSourceService) UpdateDataSources(ctx context.Context, pipelineID string, params PipelineDataSourceUpdateDataSourcesParams, opts ...option.RequestOption) (res *[]PipelineDataSource, err error) {
 	opts = slices.Concat(r.options, opts)
 	if pipelineID == "" {
 		err = errors.New("missing required pipeline_id parameter")
 		return nil, err
 	}
 	path := fmt.Sprintf("api/v1/pipelines/%s/data-sources", pipelineID)
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPut, path, body, &res, opts...)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPut, path, params, &res, opts...)
 	return res, err
 }
 
@@ -525,7 +527,8 @@ const (
 )
 
 type PipelineDataSourceUpdateParams struct {
-	PipelineID string `path:"pipeline_id" api:"required" format:"uuid" json:"-"`
+	PipelineID string            `path:"pipeline_id" api:"required" format:"uuid" json:"-"`
+	ProjectID  param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
 	// The interval at which the data source should be synced.
 	SyncInterval param.Opt[float64] `json:"sync_interval,omitzero"`
 	paramObj
@@ -539,14 +542,48 @@ func (r *PipelineDataSourceUpdateParams) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-type PipelineDataSourceGetStatusParams struct {
-	PipelineID string `path:"pipeline_id" api:"required" format:"uuid" json:"-"`
+// URLQuery serializes [PipelineDataSourceUpdateParams]'s query parameters as
+// `url.Values`.
+func (r PipelineDataSourceUpdateParams) URLQuery() (v url.Values, err error) {
+	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
+		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
+		NestedFormat: apiquery.NestedQueryFormatBrackets,
+	})
+}
+
+type PipelineDataSourceGetDataSourcesParams struct {
+	ProjectID param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
 	paramObj
 }
 
+// URLQuery serializes [PipelineDataSourceGetDataSourcesParams]'s query parameters
+// as `url.Values`.
+func (r PipelineDataSourceGetDataSourcesParams) URLQuery() (v url.Values, err error) {
+	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
+		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
+		NestedFormat: apiquery.NestedQueryFormatBrackets,
+	})
+}
+
+type PipelineDataSourceGetStatusParams struct {
+	PipelineID string            `path:"pipeline_id" api:"required" format:"uuid" json:"-"`
+	ProjectID  param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
+	paramObj
+}
+
+// URLQuery serializes [PipelineDataSourceGetStatusParams]'s query parameters as
+// `url.Values`.
+func (r PipelineDataSourceGetStatusParams) URLQuery() (v url.Values, err error) {
+	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
+		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
+		NestedFormat: apiquery.NestedQueryFormatBrackets,
+	})
+}
+
 type PipelineDataSourceSyncParams struct {
-	PipelineID      string   `path:"pipeline_id" api:"required" format:"uuid" json:"-"`
-	PipelineFileIDs []string `json:"pipeline_file_ids,omitzero" format:"uuid"`
+	PipelineID      string            `path:"pipeline_id" api:"required" format:"uuid" json:"-"`
+	ProjectID       param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
+	PipelineFileIDs []string          `json:"pipeline_file_ids,omitzero" format:"uuid"`
 	paramObj
 }
 
@@ -558,8 +595,18 @@ func (r *PipelineDataSourceSyncParams) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
+// URLQuery serializes [PipelineDataSourceSyncParams]'s query parameters as
+// `url.Values`.
+func (r PipelineDataSourceSyncParams) URLQuery() (v url.Values, err error) {
+	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
+		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
+		NestedFormat: apiquery.NestedQueryFormatBrackets,
+	})
+}
+
 type PipelineDataSourceUpdateDataSourcesParams struct {
-	Body []PipelineDataSourceUpdateDataSourcesParamsBody
+	Body      []PipelineDataSourceUpdateDataSourcesParamsBody
+	ProjectID param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
 	paramObj
 }
 
@@ -568,6 +615,15 @@ func (r PipelineDataSourceUpdateDataSourcesParams) MarshalJSON() (data []byte, e
 }
 func (r *PipelineDataSourceUpdateDataSourcesParams) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
+}
+
+// URLQuery serializes [PipelineDataSourceUpdateDataSourcesParams]'s query
+// parameters as `url.Values`.
+func (r PipelineDataSourceUpdateDataSourcesParams) URLQuery() (v url.Values, err error) {
+	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
+		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
+		NestedFormat: apiquery.NestedQueryFormatBrackets,
+	})
 }
 
 // Schema for creating an association between a data source and a pipeline.

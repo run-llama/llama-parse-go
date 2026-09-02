@@ -331,8 +331,8 @@ type ConfigurationCreateParametersUnion struct {
 	// This field is from variant [ExtractV2ParametersResp].
 	ParseConfigID string `json:"parse_config_id"`
 	// This field is from variant [ExtractV2ParametersResp].
-	ParseTier  string   `json:"parse_tier"`
-	SheetNames []string `json:"sheet_names"`
+	ParseTier  ExtractV2ParametersParseTier `json:"parse_tier"`
+	SheetNames []string                     `json:"sheet_names"`
 	// This field is from variant [ExtractV2ParametersResp].
 	SpreadsheetMode bool `json:"spreadsheet_mode"`
 	// This field is from variant [ExtractV2ParametersResp].
@@ -752,8 +752,8 @@ type ConfigurationResponseParametersUnion struct {
 	// This field is from variant [ExtractV2ParametersResp].
 	ParseConfigID string `json:"parse_config_id"`
 	// This field is from variant [ExtractV2ParametersResp].
-	ParseTier  string   `json:"parse_tier"`
-	SheetNames []string `json:"sheet_names"`
+	ParseTier  ExtractV2ParametersParseTier `json:"parse_tier"`
+	SheetNames []string                     `json:"sheet_names"`
 	// This field is from variant [ExtractV2ParametersResp].
 	SpreadsheetMode bool `json:"spreadsheet_mode"`
 	// This field is from variant [ExtractV2ParametersResp].
@@ -1026,7 +1026,9 @@ type ExtractV2ParametersResp struct {
 	// Parse tier to use before extraction. Defaults to the extract tier if not
 	// specified. Turbo extract does not support parse configuration or produce a parse
 	// output; use another tier if your workflow requires parsed text.
-	ParseTier string `json:"parse_tier" api:"nullable"`
+	//
+	// Any of "agentic", "agentic_plus", "cost_effective", "fast".
+	ParseTier ExtractV2ParametersParseTier `json:"parse_tier" api:"nullable"`
 	// Optional worksheet names to extract when spreadsheet_mode is on. Overrides
 	// target_pages for spreadsheets; omit to extract every sheet. Names are matched
 	// exactly (case-sensitive) — pass them as a list, e.g. ["Sheet 1", "My Sheet"].
@@ -1044,7 +1046,7 @@ type ExtractV2ParametersResp struct {
 	// pages.
 	TargetPages string `json:"target_pages" api:"nullable"`
 	// Extract tier: cost_effective (5 credits/page), agentic (15 credits/page),
-	// agentic_plus (50 credits/page), or turbo (35 credits/page, experimental)
+	// agentic_plus (50 credits/page), or turbo (35 credits/page)
 	//
 	// Any of "agentic", "agentic_plus", "cost_effective", "turbo".
 	Tier ExtractV2ParametersTier `json:"tier"`
@@ -1161,8 +1163,20 @@ const (
 	ExtractV2ParametersExtractionTargetPerTableRow ExtractV2ParametersExtractionTarget = "per_table_row"
 )
 
+// Parse tier to use before extraction. Defaults to the extract tier if not
+// specified. Turbo extract does not support parse configuration or produce a parse
+// output; use another tier if your workflow requires parsed text.
+type ExtractV2ParametersParseTier string
+
+const (
+	ExtractV2ParametersParseTierAgentic       ExtractV2ParametersParseTier = "agentic"
+	ExtractV2ParametersParseTierAgenticPlus   ExtractV2ParametersParseTier = "agentic_plus"
+	ExtractV2ParametersParseTierCostEffective ExtractV2ParametersParseTier = "cost_effective"
+	ExtractV2ParametersParseTierFast          ExtractV2ParametersParseTier = "fast"
+)
+
 // Extract tier: cost_effective (5 credits/page), agentic (15 credits/page),
-// agentic_plus (50 credits/page), or turbo (35 credits/page, experimental)
+// agentic_plus (50 credits/page), or turbo (35 credits/page)
 type ExtractV2ParametersTier string
 
 const (
@@ -1185,10 +1199,6 @@ type ExtractV2Parameters struct {
 	// extraction. Turbo extract does not support parse configuration or produce a
 	// parse output; use another tier if your workflow requires parsed text.
 	ParseConfigID param.Opt[string] `json:"parse_config_id,omitzero"`
-	// Parse tier to use before extraction. Defaults to the extract tier if not
-	// specified. Turbo extract does not support parse configuration or produce a parse
-	// output; use another tier if your workflow requires parsed text.
-	ParseTier param.Opt[string] `json:"parse_tier,omitzero"`
 	// Custom system prompt to guide extraction behavior
 	SystemPrompt param.Opt[string] `json:"system_prompt,omitzero"`
 	// Comma-separated page numbers or ranges to process (1-based). Omit to process all
@@ -1214,6 +1224,12 @@ type ExtractV2Parameters struct {
 	// responses always report the concrete resolved version the job runs, fixed at job
 	// creation; saved configurations keep the value as provided.
 	Version param.Opt[string] `json:"version,omitzero"`
+	// Parse tier to use before extraction. Defaults to the extract tier if not
+	// specified. Turbo extract does not support parse configuration or produce a parse
+	// output; use another tier if your workflow requires parsed text.
+	//
+	// Any of "agentic", "agentic_plus", "cost_effective", "fast".
+	ParseTier ExtractV2ParametersParseTier `json:"parse_tier,omitzero"`
 	// Optional worksheet names to extract when spreadsheet_mode is on. Overrides
 	// target_pages for spreadsheets; omit to extract every sheet. Names are matched
 	// exactly (case-sensitive) — pass them as a list, e.g. ["Sheet 1", "My Sheet"].
@@ -1224,7 +1240,7 @@ type ExtractV2Parameters struct {
 	// Any of "per_doc", "per_page", "per_table_row".
 	ExtractionTarget ExtractV2ParametersExtractionTarget `json:"extraction_target,omitzero"`
 	// Extract tier: cost_effective (5 credits/page), agentic (15 credits/page),
-	// agentic_plus (50 credits/page), or turbo (35 credits/page, experimental)
+	// agentic_plus (50 credits/page), or turbo (35 credits/page)
 	//
 	// Any of "agentic", "agentic_plus", "cost_effective", "turbo".
 	Tier ExtractV2ParametersTier `json:"tier,omitzero"`
@@ -4446,9 +4462,16 @@ type SplitV1ParametersSplittingStrategyResp struct {
 	//
 	// Any of "forbid", "include", "omit".
 	AllowUncategorized string `json:"allow_uncategorized"`
+	// Free-form guidance for where segment boundaries are placed.
+	CustomInstructions string `json:"custom_instructions" api:"nullable"`
+	// Minimum pages per segment. Shorter segments are merged into an adjacent segment;
+	// 1 disables merging.
+	MinPagesPerSplit int64 `json:"min_pages_per_split"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		AllowUncategorized respjson.Field
+		CustomInstructions respjson.Field
+		MinPagesPerSplit   respjson.Field
 		ExtraFields        map[string]respjson.Field
 		raw                string
 	} `json:"-"`
@@ -4485,6 +4508,11 @@ func (r *SplitV1Parameters) UnmarshalJSON(data []byte) error {
 
 // Strategy for splitting documents.
 type SplitV1ParametersSplittingStrategy struct {
+	// Free-form guidance for where segment boundaries are placed.
+	CustomInstructions param.Opt[string] `json:"custom_instructions,omitzero"`
+	// Minimum pages per segment. Shorter segments are merged into an adjacent segment;
+	// 1 disables merging.
+	MinPagesPerSplit param.Opt[int64] `json:"min_pages_per_split,omitzero"`
 	// Controls handling of pages that don't match any category. 'include': pages can
 	// be grouped as 'uncategorized' and included in results. 'forbid': all pages must
 	// be assigned to a defined category. 'omit': pages can be classified as

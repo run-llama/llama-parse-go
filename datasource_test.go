@@ -71,6 +71,7 @@ func TestDataSourceUpdateWithOptionalParams(t *testing.T) {
 		"182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
 		llamacloud.DataSourceUpdateParams{
 			SourceType: llamacloud.DataSourceUpdateParamsSourceTypeAzureStorageBlob,
+			ProjectID:  llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 			Component: llamacloud.DataSourceUpdateParamsComponentUnion{
 				OfAnyMap: map[string]any{
 					"foo": "bar",
@@ -121,7 +122,7 @@ func TestDataSourceListWithOptionalParams(t *testing.T) {
 	}
 }
 
-func TestDataSourceDelete(t *testing.T) {
+func TestDataSourceDeleteWithOptionalParams(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
@@ -134,7 +135,13 @@ func TestDataSourceDelete(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	err := client.DataSources.Delete(context.TODO(), "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
+	err := client.DataSources.Delete(
+		context.TODO(),
+		"182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+		llamacloud.DataSourceDeleteParams{
+			ProjectID: llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		},
+	)
 	if err != nil {
 		var apierr *llamacloud.Error
 		if errors.As(err, &apierr) {
@@ -144,7 +151,7 @@ func TestDataSourceDelete(t *testing.T) {
 	}
 }
 
-func TestDataSourceGet(t *testing.T) {
+func TestDataSourceGetWithOptionalParams(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
@@ -157,7 +164,13 @@ func TestDataSourceGet(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.DataSources.Get(context.TODO(), "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
+	_, err := client.DataSources.Get(
+		context.TODO(),
+		"182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+		llamacloud.DataSourceGetParams{
+			ProjectID: llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		},
+	)
 	if err != nil {
 		var apierr *llamacloud.Error
 		if errors.As(err, &apierr) {

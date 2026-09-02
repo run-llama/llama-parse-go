@@ -10,11 +10,14 @@ import (
 	"io"
 	"mime/multipart"
 	"net/http"
+	"net/url"
 	"slices"
 
 	"github.com/run-llama/llama-parse-go/internal/apiform"
+	"github.com/run-llama/llama-parse-go/internal/apiquery"
 	"github.com/run-llama/llama-parse-go/internal/requestconfig"
 	"github.com/run-llama/llama-parse-go/option"
+	"github.com/run-llama/llama-parse-go/packages/param"
 )
 
 // PipelineMetadataService contains methods and other services that help with
@@ -39,21 +42,21 @@ func NewPipelineMetadataService(opts ...option.RequestOption) (r PipelineMetadat
 // Import metadata for a pipeline.
 //
 // Deprecated: deprecated
-func (r *PipelineMetadataService) New(ctx context.Context, pipelineID string, body PipelineMetadataNewParams, opts ...option.RequestOption) (res *PipelineMetadataNewResponse, err error) {
+func (r *PipelineMetadataService) New(ctx context.Context, pipelineID string, params PipelineMetadataNewParams, opts ...option.RequestOption) (res *PipelineMetadataNewResponse, err error) {
 	opts = slices.Concat(r.options, opts)
 	if pipelineID == "" {
 		err = errors.New("missing required pipeline_id parameter")
 		return nil, err
 	}
 	path := fmt.Sprintf("api/v1/pipelines/%s/metadata", pipelineID)
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPut, path, body, &res, opts...)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPut, path, params, &res, opts...)
 	return res, err
 }
 
 // Delete metadata for all files in a pipeline.
 //
 // Deprecated: deprecated
-func (r *PipelineMetadataService) DeleteAll(ctx context.Context, pipelineID string, opts ...option.RequestOption) (err error) {
+func (r *PipelineMetadataService) DeleteAll(ctx context.Context, pipelineID string, body PipelineMetadataDeleteAllParams, opts ...option.RequestOption) (err error) {
 	opts = slices.Concat(r.options, opts)
 	opts = append([]option.RequestOption{option.WithHeader("Accept", "*/*")}, opts...)
 	if pipelineID == "" {
@@ -61,14 +64,15 @@ func (r *PipelineMetadataService) DeleteAll(ctx context.Context, pipelineID stri
 		return err
 	}
 	path := fmt.Sprintf("api/v1/pipelines/%s/metadata", pipelineID)
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodDelete, path, nil, nil, opts...)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodDelete, path, body, nil, opts...)
 	return err
 }
 
 type PipelineMetadataNewResponse map[string]string
 
 type PipelineMetadataNewParams struct {
-	UploadFile io.Reader `json:"upload_file,omitzero" api:"required" format:"binary"`
+	UploadFile io.Reader         `json:"upload_file,omitzero" api:"required" format:"binary"`
+	ProjectID  param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
 	paramObj
 }
 
@@ -88,4 +92,27 @@ func (r PipelineMetadataNewParams) MarshalMultipart() (data []byte, contentType 
 		return nil, "", err
 	}
 	return buf.Bytes(), writer.FormDataContentType(), nil
+}
+
+// URLQuery serializes [PipelineMetadataNewParams]'s query parameters as
+// `url.Values`.
+func (r PipelineMetadataNewParams) URLQuery() (v url.Values, err error) {
+	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
+		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
+		NestedFormat: apiquery.NestedQueryFormatBrackets,
+	})
+}
+
+type PipelineMetadataDeleteAllParams struct {
+	ProjectID param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
+	paramObj
+}
+
+// URLQuery serializes [PipelineMetadataDeleteAllParams]'s query parameters as
+// `url.Values`.
+func (r PipelineMetadataDeleteAllParams) URLQuery() (v url.Values, err error) {
+	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
+		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
+		NestedFormat: apiquery.NestedQueryFormatBrackets,
+	})
 }

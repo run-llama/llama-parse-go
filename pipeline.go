@@ -69,18 +69,20 @@ func (r *PipelineService) New(ctx context.Context, params PipelineNewParams, opt
 // Update an existing pipeline's configuration.
 //
 // Deprecated: deprecated
-func (r *PipelineService) Update(ctx context.Context, pipelineID string, body PipelineUpdateParams, opts ...option.RequestOption) (res *Pipeline, err error) {
+func (r *PipelineService) Update(ctx context.Context, pipelineID string, params PipelineUpdateParams, opts ...option.RequestOption) (res *Pipeline, err error) {
 	opts = slices.Concat(r.options, opts)
 	if pipelineID == "" {
 		err = errors.New("missing required pipeline_id parameter")
 		return nil, err
 	}
 	path := fmt.Sprintf("api/v1/pipelines/%s", pipelineID)
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPut, path, body, &res, opts...)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPut, path, params, &res, opts...)
 	return res, err
 }
 
 // Search for pipelines by name, type, or project.
+//
+// Deprecated: use `GET /api/v2/pipelines`, which is paginated.
 //
 // Deprecated: deprecated
 func (r *PipelineService) List(ctx context.Context, query PipelineListParams, opts ...option.RequestOption) (res *[]Pipeline, err error) {
@@ -96,7 +98,7 @@ func (r *PipelineService) List(ctx context.Context, query PipelineListParams, op
 // irreversible.
 //
 // Deprecated: deprecated
-func (r *PipelineService) Delete(ctx context.Context, pipelineID string, opts ...option.RequestOption) (err error) {
+func (r *PipelineService) Delete(ctx context.Context, pipelineID string, body PipelineDeleteParams, opts ...option.RequestOption) (err error) {
 	opts = slices.Concat(r.options, opts)
 	opts = append([]option.RequestOption{option.WithHeader("Accept", "*/*")}, opts...)
 	if pipelineID == "" {
@@ -104,21 +106,21 @@ func (r *PipelineService) Delete(ctx context.Context, pipelineID string, opts ..
 		return err
 	}
 	path := fmt.Sprintf("api/v1/pipelines/%s", pipelineID)
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodDelete, path, nil, nil, opts...)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodDelete, path, body, nil, opts...)
 	return err
 }
 
 // Get a pipeline by ID.
 //
 // Deprecated: deprecated
-func (r *PipelineService) Get(ctx context.Context, pipelineID string, opts ...option.RequestOption) (res *Pipeline, err error) {
+func (r *PipelineService) Get(ctx context.Context, pipelineID string, query PipelineGetParams, opts ...option.RequestOption) (res *Pipeline, err error) {
 	opts = slices.Concat(r.options, opts)
 	if pipelineID == "" {
 		err = errors.New("missing required pipeline_id parameter")
 		return nil, err
 	}
 	path := fmt.Sprintf("api/v1/pipelines/%s", pipelineID)
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, nil, &res, opts...)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, query, &res, opts...)
 	return res, err
 }
 
@@ -4209,6 +4211,7 @@ func (r PipelineNewParams) URLQuery() (v url.Values, err error) {
 }
 
 type PipelineUpdateParams struct {
+	ProjectID param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
 	// Data sink ID. When provided instead of data_sink, the data sink will be looked
 	// up by ID.
 	DataSinkID param.Opt[string] `json:"data_sink_id,omitzero" format:"uuid"`
@@ -4247,6 +4250,14 @@ func (r PipelineUpdateParams) MarshalJSON() (data []byte, err error) {
 }
 func (r *PipelineUpdateParams) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
+}
+
+// URLQuery serializes [PipelineUpdateParams]'s query parameters as `url.Values`.
+func (r PipelineUpdateParams) URLQuery() (v url.Values, err error) {
+	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
+		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
+		NestedFormat: apiquery.NestedQueryFormatBrackets,
+	})
 }
 
 // Only one field can be non-zero.
@@ -4325,8 +4336,35 @@ func (r PipelineListParams) URLQuery() (v url.Values, err error) {
 	})
 }
 
+type PipelineDeleteParams struct {
+	ProjectID param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
+	paramObj
+}
+
+// URLQuery serializes [PipelineDeleteParams]'s query parameters as `url.Values`.
+func (r PipelineDeleteParams) URLQuery() (v url.Values, err error) {
+	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
+		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
+		NestedFormat: apiquery.NestedQueryFormatBrackets,
+	})
+}
+
+type PipelineGetParams struct {
+	ProjectID param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
+	paramObj
+}
+
+// URLQuery serializes [PipelineGetParams]'s query parameters as `url.Values`.
+func (r PipelineGetParams) URLQuery() (v url.Values, err error) {
+	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
+		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
+		NestedFormat: apiquery.NestedQueryFormatBrackets,
+	})
+}
+
 type PipelineGetStatusParams struct {
-	FullDetails param.Opt[bool] `query:"full_details,omitzero" json:"-"`
+	FullDetails param.Opt[bool]   `query:"full_details,omitzero" json:"-"`
+	ProjectID   param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
 	paramObj
 }
 
