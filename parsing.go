@@ -129,7 +129,7 @@ func (r *ParsingService) Get(ctx context.Context, jobID string, query ParsingGet
 	return res, err
 }
 
-// List the parse versions accepted by each tier.
+// List the parse versions accepted by each tier and what `latest` resolves to.
 func (r *ParsingService) ListVersions(ctx context.Context, opts ...option.RequestOption) (res *ParsingListVersionsResponse, err error) {
 	opts = slices.Concat(r.options, opts)
 	path := "api/v2/parse/versions"
@@ -3161,6 +3161,36 @@ type ParsingListVersionsResponse struct {
 	//
 	// Any of "2026-06-15", "2025-12-11".
 	Fast []string `json:"fast" api:"required"`
+	// Version `latest` currently resolves to, per tier
+	Latest ParsingListVersionsResponseLatest `json:"latest" api:"required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Agentic       respjson.Field
+		AgenticPlus   respjson.Field
+		CostEffective respjson.Field
+		Fast          respjson.Field
+		Latest        respjson.Field
+		ExtraFields   map[string]respjson.Field
+		raw           string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r ParsingListVersionsResponse) RawJSON() string { return r.JSON.raw }
+func (r *ParsingListVersionsResponse) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Version `latest` currently resolves to, per tier
+type ParsingListVersionsResponseLatest struct {
+	// Version `latest` resolves to for the agentic tier
+	Agentic string `json:"agentic" api:"required"`
+	// Version `latest` resolves to for the agentic_plus tier
+	AgenticPlus string `json:"agentic_plus" api:"required"`
+	// Version `latest` resolves to for the cost_effective tier
+	CostEffective string `json:"cost_effective" api:"required"`
+	// Version `latest` resolves to for the fast tier
+	Fast string `json:"fast" api:"required"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Agentic       respjson.Field
@@ -3173,8 +3203,8 @@ type ParsingListVersionsResponse struct {
 }
 
 // Returns the unmodified JSON received from the API
-func (r ParsingListVersionsResponse) RawJSON() string { return r.JSON.raw }
-func (r *ParsingListVersionsResponse) UnmarshalJSON(data []byte) error {
+func (r ParsingListVersionsResponseLatest) RawJSON() string { return r.JSON.raw }
+func (r *ParsingListVersionsResponseLatest) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
