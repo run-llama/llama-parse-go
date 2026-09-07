@@ -1303,7 +1303,7 @@ type ParseV2ParametersResp struct {
 	//
 	// - `fast`: `2026-06-15`
 	// - `cost_effective`: `2026-08-19`
-	// - `agentic`: `2026-08-19`
+	// - `agentic`: `2026-09-07`
 	// - `agentic_plus`: `2026-08-19`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
@@ -1401,7 +1401,7 @@ const (
 //
 // - `fast`: `2026-06-15`
 // - `cost_effective`: `2026-08-19`
-// - `agentic`: `2026-08-19`
+// - `agentic`: `2026-09-07`
 // - `agentic_plus`: `2026-08-19`
 //
 // Full list: `GET /api/v2/parse/versions`.
@@ -1409,6 +1409,7 @@ type ParseV2ParametersVersion string
 
 const (
 	ParseV2ParametersVersionLatest     ParseV2ParametersVersion = "latest"
+	ParseV2ParametersVersion2026_09_07 ParseV2ParametersVersion = "2026-09-07"
 	ParseV2ParametersVersion2026_08_19 ParseV2ParametersVersion = "2026-08-19"
 	ParseV2ParametersVersion2026_06_15 ParseV2ParametersVersion = "2026-06-15"
 )
@@ -2120,7 +2121,7 @@ type ParseV2ParametersProcessingOptionsAutoModeConfigurationParsingConfResp stru
 	//
 	// - `fast`: `2026-06-15`
 	// - `cost_effective`: `2026-08-19`
-	// - `agentic`: `2026-08-19`
+	// - `agentic`: `2026-09-07`
 	// - `agentic_plus`: `2026-08-19`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
@@ -3226,7 +3227,7 @@ type ParseV2Parameters struct {
 	//
 	// - `fast`: `2026-06-15`
 	// - `cost_effective`: `2026-08-19`
-	// - `agentic`: `2026-08-19`
+	// - `agentic`: `2026-09-07`
 	// - `agentic_plus`: `2026-08-19`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
@@ -3867,7 +3868,7 @@ type ParseV2ParametersProcessingOptionsAutoModeConfigurationParsingConf struct {
 	//
 	// - `fast`: `2026-06-15`
 	// - `cost_effective`: `2026-08-19`
-	// - `agentic`: `2026-08-19`
+	// - `agentic`: `2026-09-07`
 	// - `agentic_plus`: `2026-08-19`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
