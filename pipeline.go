@@ -17,6 +17,7 @@ import (
 	shimjson "github.com/run-llama/llama-parse-go/internal/encoding/json"
 	"github.com/run-llama/llama-parse-go/internal/requestconfig"
 	"github.com/run-llama/llama-parse-go/option"
+	"github.com/run-llama/llama-parse-go/packages/pagination"
 	"github.com/run-llama/llama-parse-go/packages/param"
 	"github.com/run-llama/llama-parse-go/packages/respjson"
 	"github.com/run-llama/llama-parse-go/shared"
@@ -139,6 +140,29 @@ func (r *PipelineService) GetStatus(ctx context.Context, pipelineID string, quer
 	path := fmt.Sprintf("api/v1/pipelines/%s/status", pipelineID)
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, query, &res, opts...)
 	return res, err
+}
+
+// List the pipelines in a project, newest first.
+func (r *PipelineService) ListPaginated(ctx context.Context, query PipelineListPaginatedParams, opts ...option.RequestOption) (res *pagination.PaginatedCursor[PipelineListPaginatedResponse], err error) {
+	var raw *http.Response
+	opts = slices.Concat(r.options, opts)
+	opts = append([]option.RequestOption{option.WithResponseInto(&raw)}, opts...)
+	path := "api/v2/pipelines"
+	cfg, err := requestconfig.NewRequestConfig(ctx, http.MethodGet, path, query, &res, opts...)
+	if err != nil {
+		return nil, err
+	}
+	err = cfg.Execute()
+	if err != nil {
+		return nil, err
+	}
+	res.SetPageConfig(cfg, raw)
+	return res, nil
+}
+
+// List the pipelines in a project, newest first.
+func (r *PipelineService) ListPaginatedAutoPaging(ctx context.Context, query PipelineListPaginatedParams, opts ...option.RequestOption) *pagination.PaginatedCursorAutoPager[PipelineListPaginatedResponse] {
+	return pagination.NewPaginatedCursorAutoPager(r.ListPaginated(ctx, query, opts...))
 }
 
 // Run a retrieval query against a managed pipeline.
@@ -4123,6 +4147,62 @@ func (r *VertexTextEmbeddingParam) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
+// A pipeline in a project.
+type PipelineListPaginatedResponse struct {
+	// The pipeline's unique identifier.
+	ID string `json:"id" api:"required"`
+	// The pipeline's display name.
+	Name string `json:"name" api:"required"`
+	// The pipeline's type.
+	//
+	// Any of "MANAGED", "PLAYGROUND".
+	PipelineType PipelineListPaginatedResponsePipelineType `json:"pipeline_type" api:"required"`
+	// The project the pipeline belongs to.
+	ProjectID string `json:"project_id" api:"required"`
+	// Creation datetime
+	CreatedAt time.Time `json:"created_at" api:"nullable" format:"date-time"`
+	// The pipeline's current status.
+	//
+	// Any of "CREATED", "DELETING".
+	Status PipelineListPaginatedResponseStatus `json:"status" api:"nullable"`
+	// Update datetime
+	UpdatedAt time.Time `json:"updated_at" api:"nullable" format:"date-time"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		ID           respjson.Field
+		Name         respjson.Field
+		PipelineType respjson.Field
+		ProjectID    respjson.Field
+		CreatedAt    respjson.Field
+		Status       respjson.Field
+		UpdatedAt    respjson.Field
+		ExtraFields  map[string]respjson.Field
+		raw          string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r PipelineListPaginatedResponse) RawJSON() string { return r.JSON.raw }
+func (r *PipelineListPaginatedResponse) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// The pipeline's type.
+type PipelineListPaginatedResponsePipelineType string
+
+const (
+	PipelineListPaginatedResponsePipelineTypeManaged    PipelineListPaginatedResponsePipelineType = "MANAGED"
+	PipelineListPaginatedResponsePipelineTypePlayground PipelineListPaginatedResponsePipelineType = "PLAYGROUND"
+)
+
+// The pipeline's current status.
+type PipelineListPaginatedResponseStatus string
+
+const (
+	PipelineListPaginatedResponseStatusCreated  PipelineListPaginatedResponseStatus = "CREATED"
+	PipelineListPaginatedResponseStatusDeleting PipelineListPaginatedResponseStatus = "DELETING"
+)
+
 // Schema for the result of an retrieval execution.
 type PipelineRunSearchResponse struct {
 	// The ID of the pipeline that the query was retrieved against.
@@ -4376,6 +4456,33 @@ func (r PipelineGetStatusParams) URLQuery() (v url.Values, err error) {
 		NestedFormat: apiquery.NestedQueryFormatBrackets,
 	})
 }
+
+type PipelineListPaginatedParams struct {
+	Name           param.Opt[string] `query:"name,omitzero" json:"-"`
+	OrganizationID param.Opt[string] `query:"organization_id,omitzero" format:"uuid" json:"-"`
+	PageSize       param.Opt[int64]  `query:"page_size,omitzero" json:"-"`
+	PageToken      param.Opt[string] `query:"page_token,omitzero" json:"-"`
+	ProjectID      param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
+	// Any of "MANAGED", "PLAYGROUND".
+	PipelineType PipelineListPaginatedParamsPipelineType `query:"pipeline_type,omitzero" json:"-"`
+	paramObj
+}
+
+// URLQuery serializes [PipelineListPaginatedParams]'s query parameters as
+// `url.Values`.
+func (r PipelineListPaginatedParams) URLQuery() (v url.Values, err error) {
+	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
+		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
+		NestedFormat: apiquery.NestedQueryFormatBrackets,
+	})
+}
+
+type PipelineListPaginatedParamsPipelineType string
+
+const (
+	PipelineListPaginatedParamsPipelineTypeManaged    PipelineListPaginatedParamsPipelineType = "MANAGED"
+	PipelineListPaginatedParamsPipelineTypePlayground PipelineListPaginatedParamsPipelineType = "PLAYGROUND"
+)
 
 type PipelineRunSearchParams struct {
 	// The query to retrieve against.
