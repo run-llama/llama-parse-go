@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.7.1](https://github.com/run-llama/llama-parse-go/compare/v1.7.0...v1.7.1) (2026-09-08)
+
+
+### Documentation
+
+* **changelog:** correct the shipped 1.7.0 changelog ([5ef4cf0](https://github.com/run-llama/llama-parse-go/commit/5ef4cf052a7a5a63b1215ef5853155a98b5d5482))
+* **changelog:** correct the shipped 1.7.0 changelog ([62c99a3](https://github.com/run-llama/llama-parse-go/commit/62c99a3952fbd27de8b66b67b9786edc9305bd5d))
+* **changelog:** match release-please's two-blank-line heading spacing ([a4ac555](https://github.com/run-llama/llama-parse-go/commit/a4ac555c760c2e0b37fb4195beb0a9a4faa8e9c2))
+
 ## [1.7.0](https://github.com/run-llama/llama-parse-go/compare/v1.6.0...v1.7.0) (2026-09-08)
 
 
