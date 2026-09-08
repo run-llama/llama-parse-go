@@ -348,7 +348,7 @@ type BetaRetrievalGetParams struct {
 	NumCandidates param.Opt[int64] `json:"num_candidates,omitzero"`
 	// Minimum score threshold for returned results.
 	ScoreThreshold param.Opt[float64] `json:"score_threshold,omitzero"`
-	// Maximum number of results to return.
+	// Maximum number of results to return. Values above 500 are capped at 500.
 	TopK param.Opt[int64] `json:"top_k,omitzero"`
 	// Weight of the vector search pipeline (0-1).
 	VectorPipelineWeight param.Opt[float64] `json:"vector_pipeline_weight,omitzero"`

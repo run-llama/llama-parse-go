@@ -279,6 +279,7 @@ func TestPipelineUpdateWithOptionalParams(t *testing.T) {
 		context.TODO(),
 		"182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
 		llamacloud.PipelineUpdateParams{
+			ProjectID: llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 			DataSink: llamacloud.DataSinkCreateParam{
 				Component: llamacloud.DataSinkCreateComponentUnionParam{
 					OfAnyMap: map[string]any{
@@ -539,7 +540,7 @@ func TestPipelineListWithOptionalParams(t *testing.T) {
 	}
 }
 
-func TestPipelineDelete(t *testing.T) {
+func TestPipelineDeleteWithOptionalParams(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
@@ -552,7 +553,13 @@ func TestPipelineDelete(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	err := client.Pipelines.Delete(context.TODO(), "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
+	err := client.Pipelines.Delete(
+		context.TODO(),
+		"182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+		llamacloud.PipelineDeleteParams{
+			ProjectID: llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		},
+	)
 	if err != nil {
 		var apierr *llamacloud.Error
 		if errors.As(err, &apierr) {
@@ -562,7 +569,7 @@ func TestPipelineDelete(t *testing.T) {
 	}
 }
 
-func TestPipelineGet(t *testing.T) {
+func TestPipelineGetWithOptionalParams(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
@@ -575,7 +582,13 @@ func TestPipelineGet(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Pipelines.Get(context.TODO(), "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
+	_, err := client.Pipelines.Get(
+		context.TODO(),
+		"182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+		llamacloud.PipelineGetParams{
+			ProjectID: llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		},
+	)
 	if err != nil {
 		var apierr *llamacloud.Error
 		if errors.As(err, &apierr) {
@@ -603,8 +616,39 @@ func TestPipelineGetStatusWithOptionalParams(t *testing.T) {
 		"182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
 		llamacloud.PipelineGetStatusParams{
 			FullDetails: llamacloud.Bool(true),
+			ProjectID:   llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		},
 	)
+	if err != nil {
+		var apierr *llamacloud.Error
+		if errors.As(err, &apierr) {
+			t.Log(string(apierr.DumpRequest(true)))
+		}
+		t.Fatalf("err should be nil: %s", err.Error())
+	}
+}
+
+func TestPipelineListPaginatedWithOptionalParams(t *testing.T) {
+	t.Skip("Mock server tests are disabled")
+	baseURL := "http://localhost:4010"
+	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
+		baseURL = envURL
+	}
+	if !testutil.CheckTestServer(t, baseURL) {
+		return
+	}
+	client := llamacloud.NewClient(
+		option.WithBaseURL(baseURL),
+		option.WithAPIKey("My API Key"),
+	)
+	_, err := client.Pipelines.ListPaginated(context.TODO(), llamacloud.PipelineListPaginatedParams{
+		Name:           llamacloud.String("name"),
+		OrganizationID: llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		PageSize:       llamacloud.Int(0),
+		PageToken:      llamacloud.String("page_token"),
+		PipelineType:   llamacloud.PipelineListPaginatedParamsPipelineTypeManaged,
+		ProjectID:      llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+	})
 	if err != nil {
 		var apierr *llamacloud.Error
 		if errors.As(err, &apierr) {

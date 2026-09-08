@@ -50,14 +50,14 @@ func (r *DataSinkService) New(ctx context.Context, params DataSinkNewParams, opt
 }
 
 // Update a data sink by ID.
-func (r *DataSinkService) Update(ctx context.Context, dataSinkID string, body DataSinkUpdateParams, opts ...option.RequestOption) (res *DataSink, err error) {
+func (r *DataSinkService) Update(ctx context.Context, dataSinkID string, params DataSinkUpdateParams, opts ...option.RequestOption) (res *DataSink, err error) {
 	opts = slices.Concat(r.options, opts)
 	if dataSinkID == "" {
 		err = errors.New("missing required data_sink_id parameter")
 		return nil, err
 	}
 	path := fmt.Sprintf("api/v1/data-sinks/%s", dataSinkID)
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPut, path, body, &res, opts...)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPut, path, params, &res, opts...)
 	return res, err
 }
 
@@ -70,7 +70,7 @@ func (r *DataSinkService) List(ctx context.Context, query DataSinkListParams, op
 }
 
 // Delete a data sink by ID.
-func (r *DataSinkService) Delete(ctx context.Context, dataSinkID string, opts ...option.RequestOption) (err error) {
+func (r *DataSinkService) Delete(ctx context.Context, dataSinkID string, body DataSinkDeleteParams, opts ...option.RequestOption) (err error) {
 	opts = slices.Concat(r.options, opts)
 	opts = append([]option.RequestOption{option.WithHeader("Accept", "*/*")}, opts...)
 	if dataSinkID == "" {
@@ -78,19 +78,19 @@ func (r *DataSinkService) Delete(ctx context.Context, dataSinkID string, opts ..
 		return err
 	}
 	path := fmt.Sprintf("api/v1/data-sinks/%s", dataSinkID)
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodDelete, path, nil, nil, opts...)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodDelete, path, body, nil, opts...)
 	return err
 }
 
 // Get a data sink by ID.
-func (r *DataSinkService) Get(ctx context.Context, dataSinkID string, opts ...option.RequestOption) (res *DataSink, err error) {
+func (r *DataSinkService) Get(ctx context.Context, dataSinkID string, query DataSinkGetParams, opts ...option.RequestOption) (res *DataSink, err error) {
 	opts = slices.Concat(r.options, opts)
 	if dataSinkID == "" {
 		err = errors.New("missing required data_sink_id parameter")
 		return nil, err
 	}
 	path := fmt.Sprintf("api/v1/data-sinks/%s", dataSinkID)
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, nil, &res, opts...)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, query, &res, opts...)
 	return res, err
 }
 
@@ -338,7 +338,8 @@ func (r DataSinkNewParams) URLQuery() (v url.Values, err error) {
 type DataSinkUpdateParams struct {
 	// Any of "ASTRA_DB", "AZUREAI_SEARCH", "MILVUS", "MONGODB_ATLAS", "PINECONE",
 	// "POSTGRES", "QDRANT".
-	SinkType DataSinkUpdateParamsSinkType `json:"sink_type,omitzero" api:"required"`
+	SinkType  DataSinkUpdateParamsSinkType `json:"sink_type,omitzero" api:"required"`
+	ProjectID param.Opt[string]            `query:"project_id,omitzero" format:"uuid" json:"-"`
 	// The name of the data sink.
 	Name param.Opt[string] `json:"name,omitzero"`
 	// Component that implements the data sink
@@ -352,6 +353,14 @@ func (r DataSinkUpdateParams) MarshalJSON() (data []byte, err error) {
 }
 func (r *DataSinkUpdateParams) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
+}
+
+// URLQuery serializes [DataSinkUpdateParams]'s query parameters as `url.Values`.
+func (r DataSinkUpdateParams) URLQuery() (v url.Values, err error) {
+	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
+		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
+		NestedFormat: apiquery.NestedQueryFormatBrackets,
+	})
 }
 
 type DataSinkUpdateParamsSinkType string
@@ -403,6 +412,32 @@ type DataSinkListParams struct {
 
 // URLQuery serializes [DataSinkListParams]'s query parameters as `url.Values`.
 func (r DataSinkListParams) URLQuery() (v url.Values, err error) {
+	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
+		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
+		NestedFormat: apiquery.NestedQueryFormatBrackets,
+	})
+}
+
+type DataSinkDeleteParams struct {
+	ProjectID param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
+	paramObj
+}
+
+// URLQuery serializes [DataSinkDeleteParams]'s query parameters as `url.Values`.
+func (r DataSinkDeleteParams) URLQuery() (v url.Values, err error) {
+	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
+		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
+		NestedFormat: apiquery.NestedQueryFormatBrackets,
+	})
+}
+
+type DataSinkGetParams struct {
+	ProjectID param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
+	paramObj
+}
+
+// URLQuery serializes [DataSinkGetParams]'s query parameters as `url.Values`.
+func (r DataSinkGetParams) URLQuery() (v url.Values, err error) {
 	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
 		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
 		NestedFormat: apiquery.NestedQueryFormatBrackets,

@@ -421,8 +421,9 @@ type FileListParams struct {
 	ExternalFileID param.Opt[string] `query:"external_file_id,omitzero" json:"-"`
 	// Filter by file name (exact match).
 	FileName param.Opt[string] `query:"file_name,omitzero" json:"-"`
-	// A comma-separated list of fields to order by, sorted in ascending order. Use
-	// 'field_name desc' to specify descending order.
+	// Order the results. One of 'name' (ascending), 'id' (ascending) or 'created_at'
+	// (descending). An explicit asc/desc modifier and multi-field ordering are not
+	// supported; anything else is rejected.
 	OrderBy        param.Opt[string] `query:"order_by,omitzero" json:"-"`
 	OrganizationID param.Opt[string] `query:"organization_id,omitzero" format:"uuid" json:"-"`
 	// The maximum number of items to return. Defaults to 50, maximum is 1000.

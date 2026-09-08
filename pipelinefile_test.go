@@ -13,7 +13,7 @@ import (
 	"github.com/run-llama/llama-parse-go/option"
 )
 
-func TestPipelineFileNew(t *testing.T) {
+func TestPipelineFileNewWithOptionalParams(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
@@ -40,6 +40,7 @@ func TestPipelineFileNew(t *testing.T) {
 					},
 				},
 			}},
+			ProjectID: llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		},
 	)
 	if err != nil {
@@ -69,6 +70,7 @@ func TestPipelineFileUpdateWithOptionalParams(t *testing.T) {
 		"182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
 		llamacloud.PipelineFileUpdateParams{
 			PipelineID: "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+			ProjectID:  llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 			CustomMetadata: map[string]*llamacloud.PipelineFileUpdateParamsCustomMetadataUnion{
 				"foo": {
 					OfAnyMap: map[string]any{
@@ -110,6 +112,7 @@ func TestPipelineFileListWithOptionalParams(t *testing.T) {
 			Offset:               llamacloud.Int(0),
 			OnlyManuallyUploaded: llamacloud.Bool(true),
 			OrderBy:              llamacloud.String("order_by"),
+			ProjectID:            llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 			Statuses:             []string{"CANCELLED", "ERROR"},
 		},
 	)
@@ -122,7 +125,7 @@ func TestPipelineFileListWithOptionalParams(t *testing.T) {
 	}
 }
 
-func TestPipelineFileDelete(t *testing.T) {
+func TestPipelineFileDeleteWithOptionalParams(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
@@ -140,6 +143,7 @@ func TestPipelineFileDelete(t *testing.T) {
 		"182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
 		llamacloud.PipelineFileDeleteParams{
 			PipelineID: "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+			ProjectID:  llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		},
 	)
 	if err != nil {
@@ -151,7 +155,7 @@ func TestPipelineFileDelete(t *testing.T) {
 	}
 }
 
-func TestPipelineFileGetStatus(t *testing.T) {
+func TestPipelineFileGetStatusWithOptionalParams(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
@@ -169,6 +173,7 @@ func TestPipelineFileGetStatus(t *testing.T) {
 		"182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
 		llamacloud.PipelineFileGetStatusParams{
 			PipelineID: "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+			ProjectID:  llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		},
 	)
 	if err != nil {
@@ -199,6 +204,7 @@ func TestPipelineFileGetStatusCountsWithOptionalParams(t *testing.T) {
 		llamacloud.PipelineFileGetStatusCountsParams{
 			DataSourceID:         llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 			OnlyManuallyUploaded: llamacloud.Bool(true),
+			ProjectID:            llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		},
 	)
 	if err != nil {

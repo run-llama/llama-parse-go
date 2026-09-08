@@ -42,7 +42,7 @@ func TestBetaRetrievalGetWithOptionalParams(t *testing.T) {
 			},
 		},
 		FullTextPipelineWeight: llamacloud.Float(0),
-		NumCandidates:          llamacloud.Int(0),
+		NumCandidates:          llamacloud.Int(1),
 		Rerank: llamacloud.BetaRetrievalGetParamsRerank{
 			Enabled: llamacloud.Bool(true),
 			TopN:    llamacloud.Int(5),

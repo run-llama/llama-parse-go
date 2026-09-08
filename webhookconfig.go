@@ -105,7 +105,8 @@ type WebhookConfigCreateParam struct {
 	// Shared secret used to sign deliveries to this endpoint. Write-only: it is never
 	// returned in responses.
 	WebhookSigningSecret param.Opt[string] `json:"webhook_signing_secret,omitzero"`
-	// Events to subscribe to. If null, all events are delivered.
+	// Events to subscribe to. If null, all events are delivered. An empty list
+	// subscribes to nothing and is rejected.
 	//
 	// Any of "batch.cancelled", "batch.error", "batch.pending", "batch.running",
 	// "batch.success", "classify.cancelled", "classify.error",
@@ -256,7 +257,7 @@ type WebhookConfigUpdateParams struct {
 	WebhookSigningSecret param.Opt[string] `json:"webhook_signing_secret,omitzero"`
 	// Updated webhook URL.
 	WebhookURL param.Opt[string] `json:"webhook_url,omitzero"`
-	// Updated event subscriptions.
+	// Updated event subscriptions. Omit to leave unchanged; [] is rejected.
 	//
 	// Any of "batch.cancelled", "batch.error", "batch.pending", "batch.running",
 	// "batch.success", "classify.cancelled", "classify.error",

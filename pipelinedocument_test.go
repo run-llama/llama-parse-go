@@ -13,7 +13,7 @@ import (
 	"github.com/run-llama/llama-parse-go/option"
 )
 
-func TestPipelineDocumentNew(t *testing.T) {
+func TestPipelineDocumentNewWithOptionalParams(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
@@ -40,6 +40,7 @@ func TestPipelineDocumentNew(t *testing.T) {
 				ExcludedLlmMetadataKeys:   []string{"string"},
 				PagePositions:             []int64{0},
 			}},
+			ProjectID: llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		},
 	)
 	if err != nil {
@@ -72,6 +73,7 @@ func TestPipelineDocumentListWithOptionalParams(t *testing.T) {
 			Limit:                      llamacloud.Int(0),
 			OnlyAPIDataSourceDocuments: llamacloud.Bool(true),
 			OnlyDirectUpload:           llamacloud.Bool(true),
+			ProjectID:                  llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 			Skip:                       llamacloud.Int(0),
 			StatusRefreshPolicy:        llamacloud.PipelineDocumentListParamsStatusRefreshPolicyCached,
 		},
@@ -85,7 +87,7 @@ func TestPipelineDocumentListWithOptionalParams(t *testing.T) {
 	}
 }
 
-func TestPipelineDocumentDelete(t *testing.T) {
+func TestPipelineDocumentDeleteWithOptionalParams(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
@@ -103,6 +105,7 @@ func TestPipelineDocumentDelete(t *testing.T) {
 		"document_id",
 		llamacloud.PipelineDocumentDeleteParams{
 			PipelineID: "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+			ProjectID:  llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		},
 	)
 	if err != nil {
@@ -114,7 +117,7 @@ func TestPipelineDocumentDelete(t *testing.T) {
 	}
 }
 
-func TestPipelineDocumentGet(t *testing.T) {
+func TestPipelineDocumentGetWithOptionalParams(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
@@ -132,6 +135,7 @@ func TestPipelineDocumentGet(t *testing.T) {
 		"document_id",
 		llamacloud.PipelineDocumentGetParams{
 			PipelineID: "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+			ProjectID:  llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		},
 	)
 	if err != nil {
@@ -143,7 +147,7 @@ func TestPipelineDocumentGet(t *testing.T) {
 	}
 }
 
-func TestPipelineDocumentGetChunks(t *testing.T) {
+func TestPipelineDocumentGetChunksWithOptionalParams(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
@@ -161,6 +165,7 @@ func TestPipelineDocumentGetChunks(t *testing.T) {
 		"document_id",
 		llamacloud.PipelineDocumentGetChunksParams{
 			PipelineID: "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+			ProjectID:  llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		},
 	)
 	if err != nil {
@@ -172,7 +177,7 @@ func TestPipelineDocumentGetChunks(t *testing.T) {
 	}
 }
 
-func TestPipelineDocumentGetStatus(t *testing.T) {
+func TestPipelineDocumentGetStatusWithOptionalParams(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
@@ -190,6 +195,7 @@ func TestPipelineDocumentGetStatus(t *testing.T) {
 		"document_id",
 		llamacloud.PipelineDocumentGetStatusParams{
 			PipelineID: "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+			ProjectID:  llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		},
 	)
 	if err != nil {
@@ -221,6 +227,7 @@ func TestPipelineDocumentGetStatusCountsWithOptionalParams(t *testing.T) {
 			DataSourceID:     llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 			FileID:           llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 			OnlyDirectUpload: llamacloud.Bool(true),
+			ProjectID:        llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		},
 	)
 	if err != nil {
@@ -232,7 +239,7 @@ func TestPipelineDocumentGetStatusCountsWithOptionalParams(t *testing.T) {
 	}
 }
 
-func TestPipelineDocumentSync(t *testing.T) {
+func TestPipelineDocumentSyncWithOptionalParams(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
@@ -250,6 +257,7 @@ func TestPipelineDocumentSync(t *testing.T) {
 		"document_id",
 		llamacloud.PipelineDocumentSyncParams{
 			PipelineID: "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+			ProjectID:  llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		},
 	)
 	if err != nil {
@@ -261,7 +269,7 @@ func TestPipelineDocumentSync(t *testing.T) {
 	}
 }
 
-func TestPipelineDocumentUpsert(t *testing.T) {
+func TestPipelineDocumentUpsertWithOptionalParams(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
@@ -288,6 +296,7 @@ func TestPipelineDocumentUpsert(t *testing.T) {
 				ExcludedLlmMetadataKeys:   []string{"string"},
 				PagePositions:             []int64{0},
 			}},
+			ProjectID: llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		},
 	)
 	if err != nil {

@@ -15,7 +15,7 @@ import (
 	"github.com/run-llama/llama-parse-go/option"
 )
 
-func TestPipelineMetadataNew(t *testing.T) {
+func TestPipelineMetadataNewWithOptionalParams(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
@@ -33,6 +33,7 @@ func TestPipelineMetadataNew(t *testing.T) {
 		"182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
 		llamacloud.PipelineMetadataNewParams{
 			UploadFile: io.Reader(bytes.NewBuffer([]byte("Example data"))),
+			ProjectID:  llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		},
 	)
 	if err != nil {
@@ -44,7 +45,7 @@ func TestPipelineMetadataNew(t *testing.T) {
 	}
 }
 
-func TestPipelineMetadataDeleteAll(t *testing.T) {
+func TestPipelineMetadataDeleteAllWithOptionalParams(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
@@ -57,7 +58,13 @@ func TestPipelineMetadataDeleteAll(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	err := client.Pipelines.Metadata.DeleteAll(context.TODO(), "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
+	err := client.Pipelines.Metadata.DeleteAll(
+		context.TODO(),
+		"182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+		llamacloud.PipelineMetadataDeleteAllParams{
+			ProjectID: llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		},
+	)
 	if err != nil {
 		var apierr *llamacloud.Error
 		if errors.As(err, &apierr) {

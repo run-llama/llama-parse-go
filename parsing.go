@@ -91,6 +91,23 @@ func (r *ParsingService) ListAutoPaging(ctx context.Context, query ParsingListPa
 	return pagination.NewPaginatedCursorAutoPager(r.List(ctx, query, opts...))
 }
 
+// Delete a parse job and its results.
+//
+// The job must be in a terminal state (COMPLETED, FAILED, CANCELLED). Cancel a job
+// that is still running before deleting it.
+//
+// Returns the identifiers of the deleted job.
+func (r *ParsingService) Delete(ctx context.Context, jobID string, body ParsingDeleteParams, opts ...option.RequestOption) (res *ParsingDeleteResponse, err error) {
+	opts = slices.Concat(r.options, opts)
+	if jobID == "" {
+		err = errors.New("missing required job_id parameter")
+		return nil, err
+	}
+	path := fmt.Sprintf("api/v2/parse/%s", url.PathEscape(jobID))
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodDelete, path, body, &res, opts...)
+	return res, err
+}
+
 // Cancel a running parse job.
 //
 // Stops processing and marks the job as CANCELLED. Returns the updated job. Jobs
@@ -129,7 +146,7 @@ func (r *ParsingService) Get(ctx context.Context, jobID string, query ParsingGet
 	return res, err
 }
 
-// List the parse versions accepted by each tier.
+// List the parse versions accepted by each tier and what `latest` resolves to.
 func (r *ParsingService) ListVersions(ctx context.Context, opts ...option.RequestOption) (res *ParsingListVersionsResponse, err error) {
 	opts = slices.Concat(r.options, opts)
 	path := "api/v2/parse/versions"
@@ -1639,17 +1656,6 @@ const (
 	ParsingModeParsePageWithoutLlm      ParsingMode = "parse_page_without_llm"
 )
 
-// Enum for representing the status of a job
-type StatusEnum string
-
-const (
-	StatusEnumCancelled      StatusEnum = "CANCELLED"
-	StatusEnumError          StatusEnum = "ERROR"
-	StatusEnumPartialSuccess StatusEnum = "PARTIAL_SUCCESS"
-	StatusEnumPending        StatusEnum = "PENDING"
-	StatusEnumSuccess        StatusEnum = "SUCCESS"
-)
-
 type TableItem struct {
 	// CSV representation of the table
 	Csv string `json:"csv" api:"required"`
@@ -1944,6 +1950,31 @@ type ParsingListResponseUsage struct {
 // Returns the unmodified JSON received from the API
 func (r ParsingListResponseUsage) RawJSON() string { return r.JSON.raw }
 func (r *ParsingListResponseUsage) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Confirmation that a parse job was deleted.
+//
+// A deleted job can no longer be fetched, so the response echoes back what it was
+// rather than pointing at it. Returning the identifiers instead of an empty body
+// lets a caller assert on the delete it just made without a follow-up request.
+type ParsingDeleteResponse struct {
+	// Identifier of the deleted parse job
+	ID string `json:"id" api:"required"`
+	// Project the deleted job belonged to
+	ProjectID string `json:"project_id" api:"required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		ID          respjson.Field
+		ProjectID   respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r ParsingDeleteResponse) RawJSON() string { return r.JSON.raw }
+func (r *ParsingDeleteResponse) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
@@ -3141,15 +3172,15 @@ func (r *ParsingGetResponseTextPage) UnmarshalJSON(data []byte) error {
 type ParsingListVersionsResponse struct {
 	// Versions for the agentic tier
 	//
-	// Any of "2026-08-19", "2026-07-24", "2026-07-23", "2026-07-15", "2026-06-18",
-	// "2026-06-11", "2026-06-04", "2026-06-01", "2026-05-26", "2026-05-21",
-	// "2026-05-20", "2026-05-19", "2026-05-13", "2026-05-11", "2026-05-06",
-	// "2026-05-04", "2026-04-27", "2026-04-22", "2026-04-09", "2026-04-06",
-	// "2026-04-02", "2026-03-31", "2026-03-30", "2026-03-27", "2026-03-25",
-	// "2026-03-23", "2026-03-22", "2026-03-20", "2026-03-11", "2026-03-10",
-	// "2026-03-09", "2026-03-03", "2026-03-02", "2026-02-26", "2026-02-24",
-	// "2026-01-30", "2026-01-22", "2026-01-21", "2026-01-16", "2026-01-08",
-	// "2025-12-31", "2025-12-18", "2025-12-11".
+	// Any of "2026-09-07", "2026-08-19", "2026-07-24", "2026-07-23", "2026-07-15",
+	// "2026-06-18", "2026-06-11", "2026-06-04", "2026-06-01", "2026-05-26",
+	// "2026-05-21", "2026-05-20", "2026-05-19", "2026-05-13", "2026-05-11",
+	// "2026-05-06", "2026-05-04", "2026-04-27", "2026-04-22", "2026-04-09",
+	// "2026-04-06", "2026-04-02", "2026-03-31", "2026-03-30", "2026-03-27",
+	// "2026-03-25", "2026-03-23", "2026-03-22", "2026-03-20", "2026-03-11",
+	// "2026-03-10", "2026-03-09", "2026-03-03", "2026-03-02", "2026-02-26",
+	// "2026-02-24", "2026-01-30", "2026-01-22", "2026-01-21", "2026-01-16",
+	// "2026-01-08", "2025-12-31", "2025-12-18", "2025-12-11".
 	Agentic []string `json:"agentic" api:"required"`
 	// Versions for the agentic_plus tier
 	//
@@ -3172,6 +3203,36 @@ type ParsingListVersionsResponse struct {
 	//
 	// Any of "2026-06-15", "2025-12-11".
 	Fast []string `json:"fast" api:"required"`
+	// Version `latest` currently resolves to, per tier
+	Latest ParsingListVersionsResponseLatest `json:"latest" api:"required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Agentic       respjson.Field
+		AgenticPlus   respjson.Field
+		CostEffective respjson.Field
+		Fast          respjson.Field
+		Latest        respjson.Field
+		ExtraFields   map[string]respjson.Field
+		raw           string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r ParsingListVersionsResponse) RawJSON() string { return r.JSON.raw }
+func (r *ParsingListVersionsResponse) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Version `latest` currently resolves to, per tier
+type ParsingListVersionsResponseLatest struct {
+	// Version `latest` resolves to for the agentic tier
+	Agentic string `json:"agentic" api:"required"`
+	// Version `latest` resolves to for the agentic_plus tier
+	AgenticPlus string `json:"agentic_plus" api:"required"`
+	// Version `latest` resolves to for the cost_effective tier
+	CostEffective string `json:"cost_effective" api:"required"`
+	// Version `latest` resolves to for the fast tier
+	Fast string `json:"fast" api:"required"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Agentic       respjson.Field
@@ -3184,8 +3245,8 @@ type ParsingListVersionsResponse struct {
 }
 
 // Returns the unmodified JSON received from the API
-func (r ParsingListVersionsResponse) RawJSON() string { return r.JSON.raw }
-func (r *ParsingListVersionsResponse) UnmarshalJSON(data []byte) error {
+func (r ParsingListVersionsResponseLatest) RawJSON() string { return r.JSON.raw }
+func (r *ParsingListVersionsResponseLatest) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
@@ -3201,7 +3262,7 @@ type ParsingNewParams struct {
 	//
 	// - `fast`: `2026-06-15`
 	// - `cost_effective`: `2026-08-19`
-	// - `agentic`: `2026-08-19`
+	// - `agentic`: `2026-09-07`
 	// - `agentic_plus`: `2026-08-19`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
@@ -3297,7 +3358,7 @@ const (
 //
 // - `fast`: `2026-06-15`
 // - `cost_effective`: `2026-08-19`
-// - `agentic`: `2026-08-19`
+// - `agentic`: `2026-09-07`
 // - `agentic_plus`: `2026-08-19`
 //
 // Full list: `GET /api/v2/parse/versions`.
@@ -3305,6 +3366,7 @@ type ParsingNewParamsVersion string
 
 const (
 	ParsingNewParamsVersionLatest     ParsingNewParamsVersion = "latest"
+	ParsingNewParamsVersion2026_09_07 ParsingNewParamsVersion = "2026-09-07"
 	ParsingNewParamsVersion2026_08_19 ParsingNewParamsVersion = "2026-08-19"
 	ParsingNewParamsVersion2026_06_15 ParsingNewParamsVersion = "2026-06-15"
 )
@@ -3893,7 +3955,7 @@ type ParsingNewParamsProcessingOptionsAutoModeConfigurationParsingConf struct {
 	//
 	// - `fast`: `2026-06-15`
 	// - `cost_effective`: `2026-08-19`
-	// - `agentic`: `2026-08-19`
+	// - `agentic`: `2026-09-07`
 	// - `agentic_plus`: `2026-08-19`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
@@ -4484,6 +4546,20 @@ const (
 	ParsingListParamsStatusPending   ParsingListParamsStatus = "PENDING"
 	ParsingListParamsStatusRunning   ParsingListParamsStatus = "RUNNING"
 )
+
+type ParsingDeleteParams struct {
+	OrganizationID param.Opt[string] `query:"organization_id,omitzero" format:"uuid" json:"-"`
+	ProjectID      param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
+	paramObj
+}
+
+// URLQuery serializes [ParsingDeleteParams]'s query parameters as `url.Values`.
+func (r ParsingDeleteParams) URLQuery() (v url.Values, err error) {
+	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
+		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
+		NestedFormat: apiquery.NestedQueryFormatBrackets,
+	})
+}
 
 type ParsingCancelParams struct {
 	OrganizationID param.Opt[string] `query:"organization_id,omitzero" format:"uuid" json:"-"`

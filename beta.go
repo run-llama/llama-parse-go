@@ -18,7 +18,6 @@ type BetaService struct {
 	Retrieval   BetaRetrievalService
 	Chat        BetaChatService
 	AgentData   BetaAgentDataService
-	Sheets      BetaSheetService
 	Directories BetaDirectoryService
 	Split       BetaSplitService
 }
@@ -33,7 +32,6 @@ func NewBetaService(opts ...option.RequestOption) (r BetaService) {
 	r.Retrieval = NewBetaRetrievalService(opts...)
 	r.Chat = NewBetaChatService(opts...)
 	r.AgentData = NewBetaAgentDataService(opts...)
-	r.Sheets = NewBetaSheetService(opts...)
 	r.Directories = NewBetaDirectoryService(opts...)
 	r.Split = NewBetaSplitService(opts...)
 	return
