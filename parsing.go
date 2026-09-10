@@ -2201,19 +2201,22 @@ type ParsingGetResponseFormsPageUnion struct {
 	PageNumber int64  `json:"page_number"`
 	Success    bool   `json:"success"`
 	// This field is from variant [ParsingGetResponseFormsPageFormsResultPage].
+	DetectedFormTypes []string `json:"detected_form_types"`
+	// This field is from variant [ParsingGetResponseFormsPageFormsResultPage].
 	PageHeight float64 `json:"page_height"`
 	// This field is from variant [ParsingGetResponseFormsPageFormsResultPage].
 	PageWidth float64 `json:"page_width"`
 	// This field is from variant [ParsingGetResponseFormsPageFailedFormsPage].
 	Error string `json:"error"`
 	JSON  struct {
-		Forms      respjson.Field
-		PageNumber respjson.Field
-		Success    respjson.Field
-		PageHeight respjson.Field
-		PageWidth  respjson.Field
-		Error      respjson.Field
-		raw        string
+		Forms             respjson.Field
+		PageNumber        respjson.Field
+		Success           respjson.Field
+		DetectedFormTypes respjson.Field
+		PageHeight        respjson.Field
+		PageWidth         respjson.Field
+		Error             respjson.Field
+		raw               string
 	} `json:"-"`
 }
 
@@ -2242,19 +2245,22 @@ type ParsingGetResponseFormsPageFormsResultPage struct {
 	PageNumber int64 `json:"page_number" api:"required"`
 	// Success indicator
 	Success bool `json:"success" api:"required"`
+	// Form types detected on the page (e.g. 'w2', 'other'), or null if not a form
+	DetectedFormTypes []string `json:"detected_form_types" api:"nullable"`
 	// Height of the page in points
 	PageHeight float64 `json:"page_height" api:"nullable"`
 	// Width of the page in points
 	PageWidth float64 `json:"page_width" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
-		Forms       respjson.Field
-		PageNumber  respjson.Field
-		Success     respjson.Field
-		PageHeight  respjson.Field
-		PageWidth   respjson.Field
-		ExtraFields map[string]respjson.Field
-		raw         string
+		Forms             respjson.Field
+		PageNumber        respjson.Field
+		Success           respjson.Field
+		DetectedFormTypes respjson.Field
+		PageHeight        respjson.Field
+		PageWidth         respjson.Field
+		ExtraFields       map[string]respjson.Field
+		raw               string
 	} `json:"-"`
 }
 
