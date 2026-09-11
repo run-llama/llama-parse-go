@@ -73,6 +73,8 @@ func (r *WebhookConfigService) Update(ctx context.Context, configID string, para
 }
 
 // List the webhook configurations for the current project, newest first.
+//
+// Deprecated: deprecated
 func (r *WebhookConfigService) List(ctx context.Context, query WebhookConfigListParams, opts ...option.RequestOption) (res *[]WebhookConfigResponse, err error) {
 	opts = slices.Concat(r.options, opts)
 	path := "api/v1/beta/webhook-configs"
