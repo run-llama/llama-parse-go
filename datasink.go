@@ -17,6 +17,7 @@ import (
 	shimjson "github.com/run-llama/llama-parse-go/internal/encoding/json"
 	"github.com/run-llama/llama-parse-go/internal/requestconfig"
 	"github.com/run-llama/llama-parse-go/option"
+	"github.com/run-llama/llama-parse-go/packages/pagination"
 	"github.com/run-llama/llama-parse-go/packages/param"
 	"github.com/run-llama/llama-parse-go/packages/respjson"
 	"github.com/run-llama/llama-parse-go/shared"
@@ -96,6 +97,29 @@ func (r *DataSinkService) Get(ctx context.Context, dataSinkID string, query Data
 	path := fmt.Sprintf("api/v1/data-sinks/%s", dataSinkID)
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, query, &res, opts...)
 	return res, err
+}
+
+// List the data sinks in a project, newest first.
+func (r *DataSinkService) ListPaginated(ctx context.Context, query DataSinkListPaginatedParams, opts ...option.RequestOption) (res *pagination.PaginatedCursor[DataSink], err error) {
+	var raw *http.Response
+	opts = slices.Concat(r.options, opts)
+	opts = append([]option.RequestOption{option.WithResponseInto(&raw)}, opts...)
+	path := "api/v1/beta/data-sinks"
+	cfg, err := requestconfig.NewRequestConfig(ctx, http.MethodGet, path, query, &res, opts...)
+	if err != nil {
+		return nil, err
+	}
+	err = cfg.Execute()
+	if err != nil {
+		return nil, err
+	}
+	res.SetPageConfig(cfg, raw)
+	return res, nil
+}
+
+// List the data sinks in a project, newest first.
+func (r *DataSinkService) ListPaginatedAutoPaging(ctx context.Context, query DataSinkListPaginatedParams, opts ...option.RequestOption) *pagination.PaginatedCursorAutoPager[DataSink] {
+	return pagination.NewPaginatedCursorAutoPager(r.ListPaginated(ctx, query, opts...))
 }
 
 // Schema for a data sink.
@@ -442,6 +466,28 @@ type DataSinkGetParams struct {
 
 // URLQuery serializes [DataSinkGetParams]'s query parameters as `url.Values`.
 func (r DataSinkGetParams) URLQuery() (v url.Values, err error) {
+	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
+		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
+		NestedFormat: apiquery.NestedQueryFormatBrackets,
+	})
+}
+
+type DataSinkListPaginatedParams struct {
+	OrganizationID param.Opt[string] `query:"organization_id,omitzero" format:"uuid" json:"-"`
+	// Cursor from the previous page's `next_page_token`.
+	PageToken param.Opt[string] `query:"page_token,omitzero" json:"-"`
+	ProjectID param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
+	// Return `total_size`, a count of every row matching the filter. It is a second
+	// query on every page, so it is off unless asked for.
+	IncludeTotal param.Opt[bool] `query:"include_total,omitzero" json:"-"`
+	// Number of items per page
+	PageSize param.Opt[int64] `query:"page_size,omitzero" json:"-"`
+	paramObj
+}
+
+// URLQuery serializes [DataSinkListPaginatedParams]'s query parameters as
+// `url.Values`.
+func (r DataSinkListPaginatedParams) URLQuery() (v url.Values, err error) {
 	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
 		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
 		NestedFormat: apiquery.NestedQueryFormatBrackets,

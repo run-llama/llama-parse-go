@@ -17,24 +17,25 @@ import (
 // interacting with the llama-cloud API. You should not instantiate this client
 // directly, and instead use the [NewClient] method instead.
 type Client struct {
-	options        []option.RequestOption
-	Files          FileService
-	Split          SplitService
-	Parsing        ParsingService
-	Extract        ExtractService
-	Classifier     ClassifierService
-	Batches        BatchService
-	Classify       ClassifyService
-	Configurations ConfigurationService
-	WebhookConfigs WebhookConfigService
-	Projects       ProjectService
-	V2Projects     V2ProjectService
-	JobDataPoints  JobDataPointService
-	DataSinks      DataSinkService
-	DataSources    DataSourceService
-	Pipelines      PipelineService
-	Retrievers     RetrieverService
-	Beta           BetaService
+	options          []option.RequestOption
+	Files            FileService
+	Split            SplitService
+	Parsing          ParsingService
+	Extract          ExtractService
+	Classifier       ClassifierService
+	Batches          BatchService
+	Classify         ClassifyService
+	Configurations   ConfigurationService
+	WebhookConfigs   WebhookConfigService
+	Projects         ProjectService
+	V2Projects       V2ProjectService
+	JobDataPoints    JobDataPointService
+	DataSinks        DataSinkService
+	ExtractionAgents ExtractionAgentService
+	DataSources      DataSourceService
+	Pipelines        PipelineService
+	Retrievers       RetrieverService
+	Beta             BetaService
 }
 
 // DefaultClientOptions read from the environment (LLAMA_CLOUD_API_KEY,
@@ -80,6 +81,7 @@ func NewClient(opts ...option.RequestOption) (r Client) {
 	r.V2Projects = NewV2ProjectService(opts...)
 	r.JobDataPoints = NewJobDataPointService(opts...)
 	r.DataSinks = NewDataSinkService(opts...)
+	r.ExtractionAgents = NewExtractionAgentService(opts...)
 	r.DataSources = NewDataSourceService(opts...)
 	r.Pipelines = NewPipelineService(opts...)
 	r.Retrievers = NewRetrieverService(opts...)
