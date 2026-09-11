@@ -61,7 +61,11 @@ func (r *DataSinkService) Update(ctx context.Context, dataSinkID string, params 
 	return res, err
 }
 
-// List data sinks for a given project.
+// List a project's data sinks. Returns at most the first 50.
+//
+// Deprecated: use `GET /api/v1/beta/data-sinks`, which is paginated.
+//
+// Deprecated: deprecated
 func (r *DataSinkService) List(ctx context.Context, query DataSinkListParams, opts ...option.RequestOption) (res *[]DataSink, err error) {
 	opts = slices.Concat(r.options, opts)
 	path := "api/v1/data-sinks"
