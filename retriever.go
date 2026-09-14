@@ -63,6 +63,8 @@ func (r *RetrieverService) Update(ctx context.Context, retrieverID string, param
 }
 
 // List Retrievers for a project.
+//
+// Deprecated: deprecated
 func (r *RetrieverService) List(ctx context.Context, query RetrieverListParams, opts ...option.RequestOption) (res *[]Retriever, err error) {
 	opts = slices.Concat(r.options, opts)
 	path := "api/v1/retrievers"
