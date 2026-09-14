@@ -272,14 +272,6 @@ Methods:
 
 # JobDataPoints
 
-Response Types:
-
-- <a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go">llamacloud</a>.<a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go#JobDataPoint">JobDataPoint</a>
-
-Methods:
-
-- <code title="get /api/v1/job-data-points">client.JobDataPoints.<a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go#JobDataPointService.List">List</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, query <a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go">llamacloud</a>.<a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go#JobDataPointListParams">JobDataPointListParams</a>) (\*<a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go/packages/pagination">pagination</a>.<a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go/packages/pagination#PaginatedCursor">PaginatedCursor</a>[<a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go">llamacloud</a>.<a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go#JobDataPoint">JobDataPoint</a>], <a href="https://pkg.go.dev/builtin#error">error</a>)</code>
-
 # DataSinks
 
 Response Types:
