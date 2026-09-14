@@ -36,6 +36,8 @@ func TestSplitNewWithOptionalParams(t *testing.T) {
 				Name:        "x",
 				Description: llamacloud.String("x"),
 			}},
+			ParseConfigID: llamacloud.String("cfg-11111111-2222-3333-4444-555555555555"),
+			ParseTier:     "fast",
 			SplittingStrategy: llamacloud.SplitNewParamsConfigurationSplittingStrategy{
 				AllowUncategorized: "forbid",
 				CustomInstructions: llamacloud.String("Start a new segment at every signature page."),

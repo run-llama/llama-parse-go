@@ -39,7 +39,23 @@ func NewSplitService(opts ...option.RequestOption) (r SplitService) {
 	return
 }
 
-// Create a document split job.
+// Create a split job.
+//
+// ## Document input
+//
+// Set `file_input` to a file ID or a completed parse job ID (`pjb-...`). Supplying
+// a parse job reuses its output instead of reading the document again.
+//
+// ## Parse settings
+//
+// `configuration.parse_tier` and `configuration.parse_config_id` control how the
+// document is read before splitting; both are ignored when a parse job is
+// supplied. A parse configuration restricted to a page subset (`target_pages` or
+// `max_pages`) is rejected, since split results always number pages relative to
+// the full document.
+//
+// The job runs asynchronously. Poll `GET /split/jobs/{split_job_id}` or register a
+// webhook to monitor completion.
 func (r *SplitService) New(ctx context.Context, params SplitNewParams, opts ...option.RequestOption) (res *SplitNewResponse, err error) {
 	opts = slices.Concat(r.options, opts)
 	path := "api/v1/split/jobs"
@@ -136,6 +152,10 @@ type SplitNewResponse struct {
 	CreatedAt time.Time `json:"created_at" api:"nullable" format:"date-time"`
 	// Error message if the job failed.
 	ErrorMessage string `json:"error_message" api:"nullable"`
+	// Saved parse configuration ID requested for this job, if any.
+	ParseConfigID string `json:"parse_config_id" api:"nullable"`
+	// Parse tier requested for this job, if any.
+	ParseTier string `json:"parse_tier" api:"nullable"`
 	// Result of a completed split job.
 	Result SplitResultResponse `json:"result" api:"nullable"`
 	// Strategy used for splitting.
@@ -156,6 +176,8 @@ type SplitNewResponse struct {
 		ConfigurationID   respjson.Field
 		CreatedAt         respjson.Field
 		ErrorMessage      respjson.Field
+		ParseConfigID     respjson.Field
+		ParseTier         respjson.Field
 		Result            respjson.Field
 		SplittingStrategy respjson.Field
 		TransactionID     respjson.Field
@@ -235,6 +257,10 @@ type SplitListResponse struct {
 	CreatedAt time.Time `json:"created_at" api:"nullable" format:"date-time"`
 	// Error message if the job failed.
 	ErrorMessage string `json:"error_message" api:"nullable"`
+	// Saved parse configuration ID requested for this job, if any.
+	ParseConfigID string `json:"parse_config_id" api:"nullable"`
+	// Parse tier requested for this job, if any.
+	ParseTier string `json:"parse_tier" api:"nullable"`
 	// Result of a completed split job.
 	Result SplitResultResponse `json:"result" api:"nullable"`
 	// Strategy used for splitting.
@@ -255,6 +281,8 @@ type SplitListResponse struct {
 		ConfigurationID   respjson.Field
 		CreatedAt         respjson.Field
 		ErrorMessage      respjson.Field
+		ParseConfigID     respjson.Field
+		ParseTier         respjson.Field
 		Result            respjson.Field
 		SplittingStrategy respjson.Field
 		TransactionID     respjson.Field
@@ -336,6 +364,10 @@ type SplitCancelResponse struct {
 	CreatedAt time.Time `json:"created_at" api:"nullable" format:"date-time"`
 	// Error message if the job failed.
 	ErrorMessage string `json:"error_message" api:"nullable"`
+	// Saved parse configuration ID requested for this job, if any.
+	ParseConfigID string `json:"parse_config_id" api:"nullable"`
+	// Parse tier requested for this job, if any.
+	ParseTier string `json:"parse_tier" api:"nullable"`
 	// Result of a completed split job.
 	Result SplitResultResponse `json:"result" api:"nullable"`
 	// Strategy used for splitting.
@@ -356,6 +388,8 @@ type SplitCancelResponse struct {
 		ConfigurationID   respjson.Field
 		CreatedAt         respjson.Field
 		ErrorMessage      respjson.Field
+		ParseConfigID     respjson.Field
+		ParseTier         respjson.Field
 		Result            respjson.Field
 		SplittingStrategy respjson.Field
 		TransactionID     respjson.Field
@@ -435,6 +469,10 @@ type SplitGetResponse struct {
 	CreatedAt time.Time `json:"created_at" api:"nullable" format:"date-time"`
 	// Error message if the job failed.
 	ErrorMessage string `json:"error_message" api:"nullable"`
+	// Saved parse configuration ID requested for this job, if any.
+	ParseConfigID string `json:"parse_config_id" api:"nullable"`
+	// Parse tier requested for this job, if any.
+	ParseTier string `json:"parse_tier" api:"nullable"`
 	// Result of a completed split job.
 	Result SplitResultResponse `json:"result" api:"nullable"`
 	// Strategy used for splitting.
@@ -455,6 +493,8 @@ type SplitGetResponse struct {
 		ConfigurationID   respjson.Field
 		CreatedAt         respjson.Field
 		ErrorMessage      respjson.Field
+		ParseConfigID     respjson.Field
+		ParseTier         respjson.Field
 		Result            respjson.Field
 		SplittingStrategy respjson.Field
 		TransactionID     respjson.Field
@@ -550,6 +590,17 @@ func (r SplitNewParams) URLQuery() (v url.Values, err error) {
 type SplitNewParamsConfiguration struct {
 	// Categories to split documents into.
 	Categories []SplitCategoryParam `json:"categories,omitzero" api:"required"`
+	// Saved parse configuration ID controlling how the document is read before
+	// splitting. Takes precedence over parse_tier. Configurations restricted to a page
+	// subset (target_pages or max_pages) are rejected, since split results always
+	// number pages relative to the full document. Ignored when a completed parse job
+	// is supplied as file_input.
+	ParseConfigID param.Opt[string] `json:"parse_config_id,omitzero"`
+	// Parse tier used to read the document before splitting. Defaults to fast. Ignored
+	// when a completed parse job is supplied as file_input.
+	//
+	// Any of "agentic", "agentic_plus", "cost_effective", "fast".
+	ParseTier string `json:"parse_tier,omitzero"`
 	// Strategy for splitting documents.
 	SplittingStrategy SplitNewParamsConfigurationSplittingStrategy `json:"splitting_strategy,omitzero"`
 	paramObj
@@ -561,6 +612,12 @@ func (r SplitNewParamsConfiguration) MarshalJSON() (data []byte, err error) {
 }
 func (r *SplitNewParamsConfiguration) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
+}
+
+func init() {
+	apijson.RegisterFieldValidator[SplitNewParamsConfiguration](
+		"parse_tier", "agentic", "agentic_plus", "cost_effective", "fast",
+	)
 }
 
 // Strategy for splitting documents.

@@ -134,7 +134,9 @@ func (r *SplitCategoryParam) UnmarshalJSON(data []byte) error {
 
 // Document input specification for beta API.
 type SplitDocumentInput struct {
-	// Type of document input. Valid values are: file_id
+	// The beta `POST /api/v1/beta/split/jobs` endpoint accepts only `file_id`. To use
+	// a Parse job as input, call `POST /api/v1/split/jobs` instead, where you can pass
+	// the Parse job ID as `file_input`.
 	Type string `json:"type" api:"required"`
 	// Document identifier.
 	Value string `json:"value" api:"required"`
@@ -166,7 +168,9 @@ func (r SplitDocumentInput) ToParam() SplitDocumentInputParam {
 //
 // The properties Type, Value are required.
 type SplitDocumentInputParam struct {
-	// Type of document input. Valid values are: file_id
+	// The beta `POST /api/v1/beta/split/jobs` endpoint accepts only `file_id`. To use
+	// a Parse job as input, call `POST /api/v1/split/jobs` instead, where you can pass
+	// the Parse job ID as `file_input`.
 	Type string `json:"type" api:"required"`
 	// Document identifier.
 	Value string `json:"value" api:"required"`

@@ -327,12 +327,10 @@ type ConfigurationCreateParametersUnion struct {
 	// This field is from variant [ExtractV2ParametersResp].
 	ExtractionTarget ExtractV2ParametersExtractionTarget `json:"extraction_target"`
 	// This field is from variant [ExtractV2ParametersResp].
-	MaxPages int64 `json:"max_pages"`
-	// This field is from variant [ExtractV2ParametersResp].
-	ParseConfigID string `json:"parse_config_id"`
-	// This field is from variant [ExtractV2ParametersResp].
-	ParseTier  ExtractV2ParametersParseTier `json:"parse_tier"`
-	SheetNames []string                     `json:"sheet_names"`
+	MaxPages      int64    `json:"max_pages"`
+	ParseConfigID string   `json:"parse_config_id"`
+	ParseTier     string   `json:"parse_tier"`
+	SheetNames    []string `json:"sheet_names"`
 	// This field is from variant [ExtractV2ParametersResp].
 	SpreadsheetMode bool `json:"spreadsheet_mode"`
 	// This field is from variant [ExtractV2ParametersResp].
@@ -748,12 +746,10 @@ type ConfigurationResponseParametersUnion struct {
 	// This field is from variant [ExtractV2ParametersResp].
 	ExtractionTarget ExtractV2ParametersExtractionTarget `json:"extraction_target"`
 	// This field is from variant [ExtractV2ParametersResp].
-	MaxPages int64 `json:"max_pages"`
-	// This field is from variant [ExtractV2ParametersResp].
-	ParseConfigID string `json:"parse_config_id"`
-	// This field is from variant [ExtractV2ParametersResp].
-	ParseTier  ExtractV2ParametersParseTier `json:"parse_tier"`
-	SheetNames []string                     `json:"sheet_names"`
+	MaxPages      int64    `json:"max_pages"`
+	ParseConfigID string   `json:"parse_config_id"`
+	ParseTier     string   `json:"parse_tier"`
+	SheetNames    []string `json:"sheet_names"`
 	// This field is from variant [ExtractV2ParametersResp].
 	SpreadsheetMode bool `json:"spreadsheet_mode"`
 	// This field is from variant [ExtractV2ParametersResp].
@@ -4428,12 +4424,25 @@ type SplitV1ParametersResp struct {
 	Categories []SplitCategory `json:"categories" api:"required"`
 	// Product type.
 	ProductType constant.SplitV1 `json:"product_type" default:"split_v1"`
+	// Saved parse configuration ID controlling how the document is read before
+	// splitting. Takes precedence over parse_tier. Configurations restricted to a page
+	// subset (target_pages or max_pages) are rejected, since split results always
+	// number pages relative to the full document. Ignored when a completed parse job
+	// is supplied as file_input.
+	ParseConfigID string `json:"parse_config_id" api:"nullable"`
+	// Parse tier used to read the document before splitting. Defaults to fast. Ignored
+	// when a completed parse job is supplied as file_input.
+	//
+	// Any of "agentic", "agentic_plus", "cost_effective", "fast".
+	ParseTier SplitV1ParametersParseTier `json:"parse_tier" api:"nullable"`
 	// Strategy for splitting documents.
 	SplittingStrategy SplitV1ParametersSplittingStrategyResp `json:"splitting_strategy"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Categories        respjson.Field
 		ProductType       respjson.Field
+		ParseConfigID     respjson.Field
+		ParseTier         respjson.Field
 		SplittingStrategy respjson.Field
 		ExtraFields       map[string]respjson.Field
 		raw               string
@@ -4454,6 +4463,17 @@ func (r *SplitV1ParametersResp) UnmarshalJSON(data []byte) error {
 func (r SplitV1ParametersResp) ToParam() SplitV1Parameters {
 	return param.Override[SplitV1Parameters](json.RawMessage(r.RawJSON()))
 }
+
+// Parse tier used to read the document before splitting. Defaults to fast. Ignored
+// when a completed parse job is supplied as file_input.
+type SplitV1ParametersParseTier string
+
+const (
+	SplitV1ParametersParseTierAgentic       SplitV1ParametersParseTier = "agentic"
+	SplitV1ParametersParseTierAgenticPlus   SplitV1ParametersParseTier = "agentic_plus"
+	SplitV1ParametersParseTierCostEffective SplitV1ParametersParseTier = "cost_effective"
+	SplitV1ParametersParseTierFast          SplitV1ParametersParseTier = "fast"
+)
 
 // Strategy for splitting documents.
 type SplitV1ParametersSplittingStrategyResp struct {
@@ -4491,6 +4511,17 @@ func (r *SplitV1ParametersSplittingStrategyResp) UnmarshalJSON(data []byte) erro
 type SplitV1Parameters struct {
 	// Categories to split documents into.
 	Categories []SplitCategoryParam `json:"categories,omitzero" api:"required"`
+	// Saved parse configuration ID controlling how the document is read before
+	// splitting. Takes precedence over parse_tier. Configurations restricted to a page
+	// subset (target_pages or max_pages) are rejected, since split results always
+	// number pages relative to the full document. Ignored when a completed parse job
+	// is supplied as file_input.
+	ParseConfigID param.Opt[string] `json:"parse_config_id,omitzero"`
+	// Parse tier used to read the document before splitting. Defaults to fast. Ignored
+	// when a completed parse job is supplied as file_input.
+	//
+	// Any of "agentic", "agentic_plus", "cost_effective", "fast".
+	ParseTier SplitV1ParametersParseTier `json:"parse_tier,omitzero"`
 	// Strategy for splitting documents.
 	SplittingStrategy SplitV1ParametersSplittingStrategy `json:"splitting_strategy,omitzero"`
 	// Product type.
