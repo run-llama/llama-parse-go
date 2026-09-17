@@ -29,7 +29,6 @@ type Client struct {
 	WebhookConfigs   WebhookConfigService
 	Projects         ProjectService
 	V2Projects       V2ProjectService
-	JobDataPoints    JobDataPointService
 	DataSinks        DataSinkService
 	ExtractionAgents ExtractionAgentService
 	DataSources      DataSourceService
@@ -79,7 +78,6 @@ func NewClient(opts ...option.RequestOption) (r Client) {
 	r.WebhookConfigs = NewWebhookConfigService(opts...)
 	r.Projects = NewProjectService(opts...)
 	r.V2Projects = NewV2ProjectService(opts...)
-	r.JobDataPoints = NewJobDataPointService(opts...)
 	r.DataSinks = NewDataSinkService(opts...)
 	r.ExtractionAgents = NewExtractionAgentService(opts...)
 	r.DataSources = NewDataSourceService(opts...)
