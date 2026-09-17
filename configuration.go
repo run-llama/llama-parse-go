@@ -335,10 +335,9 @@ type ConfigurationCreateParametersUnion struct {
 	SpreadsheetMode bool `json:"spreadsheet_mode"`
 	// This field is from variant [ExtractV2ParametersResp].
 	SystemPrompt string `json:"system_prompt"`
-	// This field is from variant [ExtractV2ParametersResp].
-	TargetPages string `json:"target_pages"`
-	Tier        string `json:"tier"`
-	Version     string `json:"version"`
+	TargetPages  string `json:"target_pages"`
+	Tier         string `json:"tier"`
+	Version      string `json:"version"`
 	// This field is from variant [ParseV2ParametersResp].
 	AgenticOptions ParseV2ParametersAgenticOptionsResp `json:"agentic_options"`
 	// This field is from variant [ParseV2ParametersResp].
@@ -754,10 +753,9 @@ type ConfigurationResponseParametersUnion struct {
 	SpreadsheetMode bool `json:"spreadsheet_mode"`
 	// This field is from variant [ExtractV2ParametersResp].
 	SystemPrompt string `json:"system_prompt"`
-	// This field is from variant [ExtractV2ParametersResp].
-	TargetPages string `json:"target_pages"`
-	Tier        string `json:"tier"`
-	Version     string `json:"version"`
+	TargetPages  string `json:"target_pages"`
+	Tier         string `json:"tier"`
+	Version      string `json:"version"`
 	// This field is from variant [ParseV2ParametersResp].
 	AgenticOptions ParseV2ParametersAgenticOptionsResp `json:"agentic_options"`
 	// This field is from variant [ParseV2ParametersResp].
@@ -4424,11 +4422,11 @@ type SplitV1ParametersResp struct {
 	Categories []SplitCategory `json:"categories" api:"required"`
 	// Product type.
 	ProductType constant.SplitV1 `json:"product_type" default:"split_v1"`
-	// Saved parse configuration ID controlling how the document is read before
-	// splitting. Takes precedence over parse_tier. Configurations restricted to a page
-	// subset (target_pages or max_pages) are rejected, since split results always
-	// number pages relative to the full document. Ignored when a completed parse job
-	// is supplied as file_input.
+	// Saved parse configuration ID to control how the document is parsed before
+	// splitting. Takes precedence over parse_tier. Configurations that restrict pages
+	// (`target_pages` or `max_pages` on the parse configuration) are rejected: split
+	// results number pages relative to the full document. Ignored when a completed
+	// parse job is supplied as file_input.
 	ParseConfigID string `json:"parse_config_id" api:"nullable"`
 	// Parse tier used to read the document before splitting. Defaults to fast. Ignored
 	// when a completed parse job is supplied as file_input.
@@ -4437,6 +4435,9 @@ type SplitV1ParametersResp struct {
 	ParseTier SplitV1ParametersParseTier `json:"parse_tier" api:"nullable"`
 	// Strategy for splitting documents.
 	SplittingStrategy SplitV1ParametersSplittingStrategyResp `json:"splitting_strategy"`
+	// Comma-separated page numbers or ranges to split (1-based). Omit to split all
+	// pages. Requires a completed parse job as file_input.
+	TargetPages string `json:"target_pages" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Categories        respjson.Field
@@ -4444,6 +4445,7 @@ type SplitV1ParametersResp struct {
 		ParseConfigID     respjson.Field
 		ParseTier         respjson.Field
 		SplittingStrategy respjson.Field
+		TargetPages       respjson.Field
 		ExtraFields       map[string]respjson.Field
 		raw               string
 	} `json:"-"`
@@ -4511,12 +4513,15 @@ func (r *SplitV1ParametersSplittingStrategyResp) UnmarshalJSON(data []byte) erro
 type SplitV1Parameters struct {
 	// Categories to split documents into.
 	Categories []SplitCategoryParam `json:"categories,omitzero" api:"required"`
-	// Saved parse configuration ID controlling how the document is read before
-	// splitting. Takes precedence over parse_tier. Configurations restricted to a page
-	// subset (target_pages or max_pages) are rejected, since split results always
-	// number pages relative to the full document. Ignored when a completed parse job
-	// is supplied as file_input.
+	// Saved parse configuration ID to control how the document is parsed before
+	// splitting. Takes precedence over parse_tier. Configurations that restrict pages
+	// (`target_pages` or `max_pages` on the parse configuration) are rejected: split
+	// results number pages relative to the full document. Ignored when a completed
+	// parse job is supplied as file_input.
 	ParseConfigID param.Opt[string] `json:"parse_config_id,omitzero"`
+	// Comma-separated page numbers or ranges to split (1-based). Omit to split all
+	// pages. Requires a completed parse job as file_input.
+	TargetPages param.Opt[string] `json:"target_pages,omitzero"`
 	// Parse tier used to read the document before splitting. Defaults to fast. Ignored
 	// when a completed parse job is supplied as file_input.
 	//

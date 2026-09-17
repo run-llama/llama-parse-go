@@ -209,7 +209,7 @@ type SplitSegmentResponse struct {
 	Category string `json:"category" api:"required"`
 	// Categorical confidence level. Valid values are: high, medium, low.
 	ConfidenceCategory string `json:"confidence_category" api:"required"`
-	// 1-indexed page numbers in this split.
+	// Page numbers in this segment, as numbered by the input document.
 	Pages []int64 `json:"pages" api:"required"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
