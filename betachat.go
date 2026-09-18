@@ -231,6 +231,8 @@ type BetaChatGetResponseEventUnion struct {
 	IsError bool `json:"is_error"`
 	// This field is from variant [BetaChatGetResponseEventStop].
 	Usage BetaChatGetResponseEventStopUsage `json:"usage"`
+	// This field is from variant [BetaChatGetResponseEventStop].
+	SkippedIndexIDs []string `json:"skipped_index_ids"`
 	// Any of "stop", "text_delta", "text", "thinking_delta", "thinking", "tool_call",
 	// "tool_result", "user_input".
 	Type    string `json:"type"`
@@ -247,6 +249,7 @@ type BetaChatGetResponseEventUnion struct {
 		Error           respjson.Field
 		IsError         respjson.Field
 		Usage           respjson.Field
+		SkippedIndexIDs respjson.Field
 		Type            respjson.Field
 		Content         respjson.Field
 		Arguments       respjson.Field
@@ -361,16 +364,19 @@ type BetaChatGetResponseEventStop struct {
 	Error   string                            `json:"error" api:"required"`
 	IsError bool                              `json:"is_error" api:"required"`
 	Usage   BetaChatGetResponseEventStopUsage `json:"usage" api:"required"`
+	// Requested indexes this turn could not query.
+	SkippedIndexIDs []string `json:"skipped_index_ids"`
 	// Any of "stop".
 	Type string `json:"type"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
-		Error       respjson.Field
-		IsError     respjson.Field
-		Usage       respjson.Field
-		Type        respjson.Field
-		ExtraFields map[string]respjson.Field
-		raw         string
+		Error           respjson.Field
+		IsError         respjson.Field
+		Usage           respjson.Field
+		SkippedIndexIDs respjson.Field
+		Type            respjson.Field
+		ExtraFields     map[string]respjson.Field
+		raw             string
 	} `json:"-"`
 }
 
@@ -811,6 +817,8 @@ type BetaChatStreamParams struct {
 	Prompt         string            `json:"prompt" api:"required"`
 	OrganizationID param.Opt[string] `query:"organization_id,omitzero" format:"uuid" json:"-"`
 	ProjectID      param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
+	// Fail the turn if any requested index cannot be queried.
+	RequireAllIndexes param.Opt[bool] `json:"require_all_indexes,omitzero"`
 	paramObj
 }
 
