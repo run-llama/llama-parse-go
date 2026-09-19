@@ -17,6 +17,7 @@ import (
 	shimjson "github.com/run-llama/llama-parse-go/internal/encoding/json"
 	"github.com/run-llama/llama-parse-go/internal/requestconfig"
 	"github.com/run-llama/llama-parse-go/option"
+	"github.com/run-llama/llama-parse-go/packages/pagination"
 	"github.com/run-llama/llama-parse-go/packages/param"
 	"github.com/run-llama/llama-parse-go/packages/respjson"
 )
@@ -63,6 +64,8 @@ func (r *RetrieverService) Update(ctx context.Context, retrieverID string, param
 }
 
 // List Retrievers for a project.
+//
+// Deprecated: deprecated
 func (r *RetrieverService) List(ctx context.Context, query RetrieverListParams, opts ...option.RequestOption) (res *[]Retriever, err error) {
 	opts = slices.Concat(r.options, opts)
 	path := "api/v1/retrievers"
@@ -93,6 +96,29 @@ func (r *RetrieverService) Get(ctx context.Context, retrieverID string, query Re
 	path := fmt.Sprintf("api/v1/retrievers/%s", retrieverID)
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, query, &res, opts...)
 	return res, err
+}
+
+// List the retrievers in a project, newest first.
+func (r *RetrieverService) ListPaginated(ctx context.Context, query RetrieverListPaginatedParams, opts ...option.RequestOption) (res *pagination.PaginatedCursor[Retriever], err error) {
+	var raw *http.Response
+	opts = slices.Concat(r.options, opts)
+	opts = append([]option.RequestOption{option.WithResponseInto(&raw)}, opts...)
+	path := "api/v1/beta/retrievers"
+	cfg, err := requestconfig.NewRequestConfig(ctx, http.MethodGet, path, query, &res, opts...)
+	if err != nil {
+		return nil, err
+	}
+	err = cfg.Execute()
+	if err != nil {
+		return nil, err
+	}
+	res.SetPageConfig(cfg, raw)
+	return res, nil
+}
+
+// List the retrievers in a project, newest first.
+func (r *RetrieverService) ListPaginatedAutoPaging(ctx context.Context, query RetrieverListPaginatedParams, opts ...option.RequestOption) *pagination.PaginatedCursorAutoPager[Retriever] {
+	return pagination.NewPaginatedCursorAutoPager(r.ListPaginated(ctx, query, opts...))
 }
 
 // Retrieve data using specified pipelines without creating a persistent retriever.
@@ -429,6 +455,29 @@ type RetrieverGetParams struct {
 
 // URLQuery serializes [RetrieverGetParams]'s query parameters as `url.Values`.
 func (r RetrieverGetParams) URLQuery() (v url.Values, err error) {
+	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
+		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
+		NestedFormat: apiquery.NestedQueryFormatBrackets,
+	})
+}
+
+type RetrieverListPaginatedParams struct {
+	Name           param.Opt[string] `query:"name,omitzero" json:"-"`
+	OrganizationID param.Opt[string] `query:"organization_id,omitzero" format:"uuid" json:"-"`
+	// Cursor from the previous page's `next_page_token`.
+	PageToken param.Opt[string] `query:"page_token,omitzero" json:"-"`
+	ProjectID param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
+	// Return `total_size`, a count of every row matching the filter. It is a second
+	// query on every page, so it is off unless asked for.
+	IncludeTotal param.Opt[bool] `query:"include_total,omitzero" json:"-"`
+	// Number of items per page
+	PageSize param.Opt[int64] `query:"page_size,omitzero" json:"-"`
+	paramObj
+}
+
+// URLQuery serializes [RetrieverListPaginatedParams]'s query parameters as
+// `url.Values`.
+func (r RetrieverListPaginatedParams) URLQuery() (v url.Values, err error) {
 	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
 		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
 		NestedFormat: apiquery.NestedQueryFormatBrackets,

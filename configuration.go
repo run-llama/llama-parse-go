@@ -327,20 +327,17 @@ type ConfigurationCreateParametersUnion struct {
 	// This field is from variant [ExtractV2ParametersResp].
 	ExtractionTarget ExtractV2ParametersExtractionTarget `json:"extraction_target"`
 	// This field is from variant [ExtractV2ParametersResp].
-	MaxPages int64 `json:"max_pages"`
-	// This field is from variant [ExtractV2ParametersResp].
-	ParseConfigID string `json:"parse_config_id"`
-	// This field is from variant [ExtractV2ParametersResp].
-	ParseTier  ExtractV2ParametersParseTier `json:"parse_tier"`
-	SheetNames []string                     `json:"sheet_names"`
+	MaxPages      int64    `json:"max_pages"`
+	ParseConfigID string   `json:"parse_config_id"`
+	ParseTier     string   `json:"parse_tier"`
+	SheetNames    []string `json:"sheet_names"`
 	// This field is from variant [ExtractV2ParametersResp].
 	SpreadsheetMode bool `json:"spreadsheet_mode"`
 	// This field is from variant [ExtractV2ParametersResp].
 	SystemPrompt string `json:"system_prompt"`
-	// This field is from variant [ExtractV2ParametersResp].
-	TargetPages string `json:"target_pages"`
-	Tier        string `json:"tier"`
-	Version     string `json:"version"`
+	TargetPages  string `json:"target_pages"`
+	Tier         string `json:"tier"`
+	Version      string `json:"version"`
 	// This field is from variant [ParseV2ParametersResp].
 	AgenticOptions ParseV2ParametersAgenticOptionsResp `json:"agentic_options"`
 	// This field is from variant [ParseV2ParametersResp].
@@ -748,20 +745,17 @@ type ConfigurationResponseParametersUnion struct {
 	// This field is from variant [ExtractV2ParametersResp].
 	ExtractionTarget ExtractV2ParametersExtractionTarget `json:"extraction_target"`
 	// This field is from variant [ExtractV2ParametersResp].
-	MaxPages int64 `json:"max_pages"`
-	// This field is from variant [ExtractV2ParametersResp].
-	ParseConfigID string `json:"parse_config_id"`
-	// This field is from variant [ExtractV2ParametersResp].
-	ParseTier  ExtractV2ParametersParseTier `json:"parse_tier"`
-	SheetNames []string                     `json:"sheet_names"`
+	MaxPages      int64    `json:"max_pages"`
+	ParseConfigID string   `json:"parse_config_id"`
+	ParseTier     string   `json:"parse_tier"`
+	SheetNames    []string `json:"sheet_names"`
 	// This field is from variant [ExtractV2ParametersResp].
 	SpreadsheetMode bool `json:"spreadsheet_mode"`
 	// This field is from variant [ExtractV2ParametersResp].
 	SystemPrompt string `json:"system_prompt"`
-	// This field is from variant [ExtractV2ParametersResp].
-	TargetPages string `json:"target_pages"`
-	Tier        string `json:"tier"`
-	Version     string `json:"version"`
+	TargetPages  string `json:"target_pages"`
+	Tier         string `json:"tier"`
+	Version      string `json:"version"`
 	// This field is from variant [ParseV2ParametersResp].
 	AgenticOptions ParseV2ParametersAgenticOptionsResp `json:"agentic_options"`
 	// This field is from variant [ParseV2ParametersResp].
@@ -1303,8 +1297,8 @@ type ParseV2ParametersResp struct {
 	//
 	// - `fast`: `2026-06-15`
 	// - `cost_effective`: `2026-08-19`
-	// - `agentic`: `2026-09-07`
-	// - `agentic_plus`: `2026-08-19`
+	// - `agentic`: `2026-09-13`
+	// - `agentic_plus`: `2026-09-11`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
 	Version ParseV2ParametersVersion `json:"version" api:"required"`
@@ -1401,15 +1395,16 @@ const (
 //
 // - `fast`: `2026-06-15`
 // - `cost_effective`: `2026-08-19`
-// - `agentic`: `2026-09-07`
-// - `agentic_plus`: `2026-08-19`
+// - `agentic`: `2026-09-13`
+// - `agentic_plus`: `2026-09-11`
 //
 // Full list: `GET /api/v2/parse/versions`.
 type ParseV2ParametersVersion string
 
 const (
 	ParseV2ParametersVersionLatest     ParseV2ParametersVersion = "latest"
-	ParseV2ParametersVersion2026_09_07 ParseV2ParametersVersion = "2026-09-07"
+	ParseV2ParametersVersion2026_09_13 ParseV2ParametersVersion = "2026-09-13"
+	ParseV2ParametersVersion2026_09_11 ParseV2ParametersVersion = "2026-09-11"
 	ParseV2ParametersVersion2026_08_19 ParseV2ParametersVersion = "2026-08-19"
 	ParseV2ParametersVersion2026_06_15 ParseV2ParametersVersion = "2026-06-15"
 )
@@ -2121,8 +2116,8 @@ type ParseV2ParametersProcessingOptionsAutoModeConfigurationParsingConfResp stru
 	//
 	// - `fast`: `2026-06-15`
 	// - `cost_effective`: `2026-08-19`
-	// - `agentic`: `2026-09-07`
-	// - `agentic_plus`: `2026-08-19`
+	// - `agentic`: `2026-09-13`
+	// - `agentic_plus`: `2026-09-11`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
 	Version string `json:"version" api:"nullable"`
@@ -3227,8 +3222,8 @@ type ParseV2Parameters struct {
 	//
 	// - `fast`: `2026-06-15`
 	// - `cost_effective`: `2026-08-19`
-	// - `agentic`: `2026-09-07`
-	// - `agentic_plus`: `2026-08-19`
+	// - `agentic`: `2026-09-13`
+	// - `agentic_plus`: `2026-09-11`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
 	Version ParseV2ParametersVersion `json:"version,omitzero" api:"required"`
@@ -3868,8 +3863,8 @@ type ParseV2ParametersProcessingOptionsAutoModeConfigurationParsingConf struct {
 	//
 	// - `fast`: `2026-06-15`
 	// - `cost_effective`: `2026-08-19`
-	// - `agentic`: `2026-09-07`
-	// - `agentic_plus`: `2026-08-19`
+	// - `agentic`: `2026-09-13`
+	// - `agentic_plus`: `2026-09-11`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
 	Version string `json:"version,omitzero"`
@@ -4427,13 +4422,34 @@ type SplitV1ParametersResp struct {
 	Categories []SplitCategory `json:"categories" api:"required"`
 	// Product type.
 	ProductType constant.SplitV1 `json:"product_type" default:"split_v1"`
+	// Saved parse configuration ID to control how the document is parsed before
+	// splitting. Takes precedence over parse_tier. Configurations that restrict pages
+	// (`target_pages` or `max_pages` on the parse configuration) are rejected: split
+	// results number pages relative to the full document. Ignored when a completed
+	// parse job is supplied as file_input.
+	ParseConfigID string `json:"parse_config_id" api:"nullable"`
+	// Parse tier used to read the document before splitting. Defaults to fast. Ignored
+	// when a completed parse job is supplied as file_input.
+	//
+	// Any of "agentic", "agentic_plus", "cost_effective", "fast".
+	ParseTier SplitV1ParametersParseTier `json:"parse_tier" api:"nullable"`
 	// Strategy for splitting documents.
 	SplittingStrategy SplitV1ParametersSplittingStrategyResp `json:"splitting_strategy"`
+	// Comma-separated page numbers or ranges to split (1-based). Omit to split all
+	// pages. Requires a completed parse job as file_input.
+	TargetPages string `json:"target_pages" api:"nullable"`
+	// Split version to run. Omit for the current release. Preview versions are
+	// selectable by name and never resolved automatically.
+	Version string `json:"version" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Categories        respjson.Field
 		ProductType       respjson.Field
+		ParseConfigID     respjson.Field
+		ParseTier         respjson.Field
 		SplittingStrategy respjson.Field
+		TargetPages       respjson.Field
+		Version           respjson.Field
 		ExtraFields       map[string]respjson.Field
 		raw               string
 	} `json:"-"`
@@ -4453,6 +4469,17 @@ func (r *SplitV1ParametersResp) UnmarshalJSON(data []byte) error {
 func (r SplitV1ParametersResp) ToParam() SplitV1Parameters {
 	return param.Override[SplitV1Parameters](json.RawMessage(r.RawJSON()))
 }
+
+// Parse tier used to read the document before splitting. Defaults to fast. Ignored
+// when a completed parse job is supplied as file_input.
+type SplitV1ParametersParseTier string
+
+const (
+	SplitV1ParametersParseTierAgentic       SplitV1ParametersParseTier = "agentic"
+	SplitV1ParametersParseTierAgenticPlus   SplitV1ParametersParseTier = "agentic_plus"
+	SplitV1ParametersParseTierCostEffective SplitV1ParametersParseTier = "cost_effective"
+	SplitV1ParametersParseTierFast          SplitV1ParametersParseTier = "fast"
+)
 
 // Strategy for splitting documents.
 type SplitV1ParametersSplittingStrategyResp struct {
@@ -4490,6 +4517,23 @@ func (r *SplitV1ParametersSplittingStrategyResp) UnmarshalJSON(data []byte) erro
 type SplitV1Parameters struct {
 	// Categories to split documents into.
 	Categories []SplitCategoryParam `json:"categories,omitzero" api:"required"`
+	// Saved parse configuration ID to control how the document is parsed before
+	// splitting. Takes precedence over parse_tier. Configurations that restrict pages
+	// (`target_pages` or `max_pages` on the parse configuration) are rejected: split
+	// results number pages relative to the full document. Ignored when a completed
+	// parse job is supplied as file_input.
+	ParseConfigID param.Opt[string] `json:"parse_config_id,omitzero"`
+	// Comma-separated page numbers or ranges to split (1-based). Omit to split all
+	// pages. Requires a completed parse job as file_input.
+	TargetPages param.Opt[string] `json:"target_pages,omitzero"`
+	// Split version to run. Omit for the current release. Preview versions are
+	// selectable by name and never resolved automatically.
+	Version param.Opt[string] `json:"version,omitzero"`
+	// Parse tier used to read the document before splitting. Defaults to fast. Ignored
+	// when a completed parse job is supplied as file_input.
+	//
+	// Any of "agentic", "agentic_plus", "cost_effective", "fast".
+	ParseTier SplitV1ParametersParseTier `json:"parse_tier,omitzero"`
 	// Strategy for splitting documents.
 	SplittingStrategy SplitV1ParametersSplittingStrategy `json:"splitting_strategy,omitzero"`
 	// Product type.

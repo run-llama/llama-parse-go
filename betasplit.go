@@ -134,7 +134,9 @@ func (r *SplitCategoryParam) UnmarshalJSON(data []byte) error {
 
 // Document input specification for beta API.
 type SplitDocumentInput struct {
-	// Type of document input. Valid values are: file_id
+	// The beta `POST /api/v1/beta/split/jobs` endpoint accepts only `file_id`. To use
+	// a Parse job as input, call `POST /api/v1/split/jobs` instead, where you can pass
+	// the Parse job ID as `file_input`.
 	Type string `json:"type" api:"required"`
 	// Document identifier.
 	Value string `json:"value" api:"required"`
@@ -166,7 +168,9 @@ func (r SplitDocumentInput) ToParam() SplitDocumentInputParam {
 //
 // The properties Type, Value are required.
 type SplitDocumentInputParam struct {
-	// Type of document input. Valid values are: file_id
+	// The beta `POST /api/v1/beta/split/jobs` endpoint accepts only `file_id`. To use
+	// a Parse job as input, call `POST /api/v1/split/jobs` instead, where you can pass
+	// the Parse job ID as `file_input`.
 	Type string `json:"type" api:"required"`
 	// Document identifier.
 	Value string `json:"value" api:"required"`
@@ -205,7 +209,7 @@ type SplitSegmentResponse struct {
 	Category string `json:"category" api:"required"`
 	// Categorical confidence level. Valid values are: high, medium, low.
 	ConfidenceCategory string `json:"confidence_category" api:"required"`
-	// 1-indexed page numbers in this split.
+	// Page numbers in this segment, as numbered by the input document.
 	Pages []int64 `json:"pages" api:"required"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
@@ -404,6 +408,9 @@ func (r BetaSplitNewParams) URLQuery() (v url.Values, err error) {
 type BetaSplitNewParamsConfiguration struct {
 	// Categories to split documents into.
 	Categories []SplitCategoryParam `json:"categories,omitzero" api:"required"`
+	// Split version to run. Omit for the current release. Preview versions are
+	// selectable by name and never resolved automatically.
+	Version param.Opt[string] `json:"version,omitzero"`
 	// Strategy for splitting documents.
 	SplittingStrategy BetaSplitNewParamsConfigurationSplittingStrategy `json:"splitting_strategy,omitzero"`
 	paramObj
