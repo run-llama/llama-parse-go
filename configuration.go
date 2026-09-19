@@ -4438,6 +4438,9 @@ type SplitV1ParametersResp struct {
 	// Comma-separated page numbers or ranges to split (1-based). Omit to split all
 	// pages. Requires a completed parse job as file_input.
 	TargetPages string `json:"target_pages" api:"nullable"`
+	// Split version to run. Omit for the current release. Preview versions are
+	// selectable by name and never resolved automatically.
+	Version string `json:"version" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Categories        respjson.Field
@@ -4446,6 +4449,7 @@ type SplitV1ParametersResp struct {
 		ParseTier         respjson.Field
 		SplittingStrategy respjson.Field
 		TargetPages       respjson.Field
+		Version           respjson.Field
 		ExtraFields       map[string]respjson.Field
 		raw               string
 	} `json:"-"`
@@ -4522,6 +4526,9 @@ type SplitV1Parameters struct {
 	// Comma-separated page numbers or ranges to split (1-based). Omit to split all
 	// pages. Requires a completed parse job as file_input.
 	TargetPages param.Opt[string] `json:"target_pages,omitzero"`
+	// Split version to run. Omit for the current release. Preview versions are
+	// selectable by name and never resolved automatically.
+	Version param.Opt[string] `json:"version,omitzero"`
 	// Parse tier used to read the document before splitting. Defaults to fast. Ignored
 	// when a completed parse job is supplied as file_input.
 	//

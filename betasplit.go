@@ -408,6 +408,9 @@ func (r BetaSplitNewParams) URLQuery() (v url.Values, err error) {
 type BetaSplitNewParamsConfiguration struct {
 	// Categories to split documents into.
 	Categories []SplitCategoryParam `json:"categories,omitzero" api:"required"`
+	// Split version to run. Omit for the current release. Preview versions are
+	// selectable by name and never resolved automatically.
+	Version param.Opt[string] `json:"version,omitzero"`
 	// Strategy for splitting documents.
 	SplittingStrategy BetaSplitNewParamsConfigurationSplittingStrategy `json:"splitting_strategy,omitzero"`
 	paramObj

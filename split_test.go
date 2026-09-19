@@ -44,6 +44,7 @@ func TestSplitNewWithOptionalParams(t *testing.T) {
 				MinPagesPerSplit:   llamacloud.Int(1),
 			},
 			TargetPages: llamacloud.String("1,3,5-7"),
+			Version:     llamacloud.String("latest"),
 		},
 		ConfigurationID:         llamacloud.String("cfg-11111111-2222-3333-4444-555555555555"),
 		TransactionID:           llamacloud.String("tx-unique-idempotency-key"),
