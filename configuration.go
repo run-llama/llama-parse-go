@@ -1297,8 +1297,8 @@ type ParseV2ParametersResp struct {
 	//
 	// - `fast`: `2026-06-15`
 	// - `cost_effective`: `2026-08-19`
-	// - `agentic`: `2026-09-13`
-	// - `agentic_plus`: `2026-09-11`
+	// - `agentic`: `2026-09-24`
+	// - `agentic_plus`: `2026-09-24`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
 	Version ParseV2ParametersVersion `json:"version" api:"required"`
@@ -1395,16 +1395,15 @@ const (
 //
 // - `fast`: `2026-06-15`
 // - `cost_effective`: `2026-08-19`
-// - `agentic`: `2026-09-13`
-// - `agentic_plus`: `2026-09-11`
+// - `agentic`: `2026-09-24`
+// - `agentic_plus`: `2026-09-24`
 //
 // Full list: `GET /api/v2/parse/versions`.
 type ParseV2ParametersVersion string
 
 const (
 	ParseV2ParametersVersionLatest     ParseV2ParametersVersion = "latest"
-	ParseV2ParametersVersion2026_09_13 ParseV2ParametersVersion = "2026-09-13"
-	ParseV2ParametersVersion2026_09_11 ParseV2ParametersVersion = "2026-09-11"
+	ParseV2ParametersVersion2026_09_24 ParseV2ParametersVersion = "2026-09-24"
 	ParseV2ParametersVersion2026_08_19 ParseV2ParametersVersion = "2026-08-19"
 	ParseV2ParametersVersion2026_06_15 ParseV2ParametersVersion = "2026-06-15"
 )
@@ -2116,8 +2115,8 @@ type ParseV2ParametersProcessingOptionsAutoModeConfigurationParsingConfResp stru
 	//
 	// - `fast`: `2026-06-15`
 	// - `cost_effective`: `2026-08-19`
-	// - `agentic`: `2026-09-13`
-	// - `agentic_plus`: `2026-09-11`
+	// - `agentic`: `2026-09-24`
+	// - `agentic_plus`: `2026-09-24`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
 	Version string `json:"version" api:"nullable"`
@@ -3222,8 +3221,8 @@ type ParseV2Parameters struct {
 	//
 	// - `fast`: `2026-06-15`
 	// - `cost_effective`: `2026-08-19`
-	// - `agentic`: `2026-09-13`
-	// - `agentic_plus`: `2026-09-11`
+	// - `agentic`: `2026-09-24`
+	// - `agentic_plus`: `2026-09-24`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
 	Version ParseV2ParametersVersion `json:"version,omitzero" api:"required"`
@@ -3863,8 +3862,8 @@ type ParseV2ParametersProcessingOptionsAutoModeConfigurationParsingConf struct {
 	//
 	// - `fast`: `2026-06-15`
 	// - `cost_effective`: `2026-08-19`
-	// - `agentic`: `2026-09-13`
-	// - `agentic_plus`: `2026-09-11`
+	// - `agentic`: `2026-09-24`
+	// - `agentic_plus`: `2026-09-24`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
 	Version string `json:"version,omitzero"`
