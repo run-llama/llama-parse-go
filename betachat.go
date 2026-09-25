@@ -126,6 +126,11 @@ type BetaChatNewResponse struct {
 	LastUpdatedAt string `json:"last_updated_at" api:"required"`
 	// Unique session identifier.
 	SessionID string `json:"session_id" api:"required"`
+	// What this chat's share link grants: read_only (transcript only) or query
+	// (viewers may ask new questions).
+	//
+	// Any of "query", "read_only".
+	SharedAccess BetaChatNewResponseSharedAccess `json:"shared_access" api:"required"`
 	// Auto-generated title derived from the first user message.
 	GeneratedTitle string `json:"generated_title" api:"nullable"`
 	// Indexes this session is bound to. Null on unbound sessions.
@@ -137,6 +142,7 @@ type BetaChatNewResponse struct {
 	JSON struct {
 		LastUpdatedAt  respjson.Field
 		SessionID      respjson.Field
+		SharedAccess   respjson.Field
 		GeneratedTitle respjson.Field
 		IndexIDs       respjson.Field
 		JobMetadata    respjson.Field
@@ -150,6 +156,15 @@ func (r BetaChatNewResponse) RawJSON() string { return r.JSON.raw }
 func (r *BetaChatNewResponse) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
+
+// What this chat's share link grants: read_only (transcript only) or query
+// (viewers may ask new questions).
+type BetaChatNewResponseSharedAccess string
+
+const (
+	BetaChatNewResponseSharedAccessQuery    BetaChatNewResponseSharedAccess = "query"
+	BetaChatNewResponseSharedAccessReadOnly BetaChatNewResponseSharedAccess = "read_only"
+)
 
 // Token usage and status from the most recent run. Null if the session has not
 // been run yet.
@@ -189,6 +204,11 @@ type BetaChatGetResponse struct {
 	LastUpdatedAt string `json:"last_updated_at" api:"required"`
 	// Unique session identifier.
 	SessionID string `json:"session_id" api:"required"`
+	// What this chat's share link grants: read_only (transcript only) or query
+	// (viewers may ask new questions).
+	//
+	// Any of "query", "read_only".
+	SharedAccess BetaChatGetResponseSharedAccess `json:"shared_access" api:"required"`
 	// Auto-generated title derived from the first user message.
 	GeneratedTitle string `json:"generated_title" api:"nullable"`
 	// Indexes this session is bound to. Null on unbound sessions.
@@ -201,6 +221,7 @@ type BetaChatGetResponse struct {
 		Events         respjson.Field
 		LastUpdatedAt  respjson.Field
 		SessionID      respjson.Field
+		SharedAccess   respjson.Field
 		GeneratedTitle respjson.Field
 		IndexIDs       respjson.Field
 		JobMetadata    respjson.Field
@@ -231,6 +252,8 @@ type BetaChatGetResponseEventUnion struct {
 	IsError bool `json:"is_error"`
 	// This field is from variant [BetaChatGetResponseEventStop].
 	Usage BetaChatGetResponseEventStopUsage `json:"usage"`
+	// This field is from variant [BetaChatGetResponseEventStop].
+	SkippedIndexIDs []string `json:"skipped_index_ids"`
 	// Any of "stop", "text_delta", "text", "thinking_delta", "thinking", "tool_call",
 	// "tool_result", "user_input".
 	Type    string `json:"type"`
@@ -247,6 +270,7 @@ type BetaChatGetResponseEventUnion struct {
 		Error           respjson.Field
 		IsError         respjson.Field
 		Usage           respjson.Field
+		SkippedIndexIDs respjson.Field
 		Type            respjson.Field
 		Content         respjson.Field
 		Arguments       respjson.Field
@@ -361,16 +385,19 @@ type BetaChatGetResponseEventStop struct {
 	Error   string                            `json:"error" api:"required"`
 	IsError bool                              `json:"is_error" api:"required"`
 	Usage   BetaChatGetResponseEventStopUsage `json:"usage" api:"required"`
+	// Requested indexes this turn could not query.
+	SkippedIndexIDs []string `json:"skipped_index_ids"`
 	// Any of "stop".
 	Type string `json:"type"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
-		Error       respjson.Field
-		IsError     respjson.Field
-		Usage       respjson.Field
-		Type        respjson.Field
-		ExtraFields map[string]respjson.Field
-		raw         string
+		Error           respjson.Field
+		IsError         respjson.Field
+		Usage           respjson.Field
+		SkippedIndexIDs respjson.Field
+		Type            respjson.Field
+		ExtraFields     map[string]respjson.Field
+		raw             string
 	} `json:"-"`
 }
 
@@ -565,6 +592,15 @@ func (r *BetaChatGetResponseEventUserInput) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
+// What this chat's share link grants: read_only (transcript only) or query
+// (viewers may ask new questions).
+type BetaChatGetResponseSharedAccess string
+
+const (
+	BetaChatGetResponseSharedAccessQuery    BetaChatGetResponseSharedAccess = "query"
+	BetaChatGetResponseSharedAccessReadOnly BetaChatGetResponseSharedAccess = "read_only"
+)
+
 // Token usage and status from the most recent run. Null if the session has not
 // been run yet.
 type BetaChatGetResponseJobMetadata struct {
@@ -601,6 +637,11 @@ type BetaChatListResponse struct {
 	LastUpdatedAt string `json:"last_updated_at" api:"required"`
 	// Unique session identifier.
 	SessionID string `json:"session_id" api:"required"`
+	// What this chat's share link grants: read_only (transcript only) or query
+	// (viewers may ask new questions).
+	//
+	// Any of "query", "read_only".
+	SharedAccess BetaChatListResponseSharedAccess `json:"shared_access" api:"required"`
 	// Auto-generated title derived from the first user message.
 	GeneratedTitle string `json:"generated_title" api:"nullable"`
 	// Indexes this session is bound to. Null on unbound sessions.
@@ -612,6 +653,7 @@ type BetaChatListResponse struct {
 	JSON struct {
 		LastUpdatedAt  respjson.Field
 		SessionID      respjson.Field
+		SharedAccess   respjson.Field
 		GeneratedTitle respjson.Field
 		IndexIDs       respjson.Field
 		JobMetadata    respjson.Field
@@ -625,6 +667,15 @@ func (r BetaChatListResponse) RawJSON() string { return r.JSON.raw }
 func (r *BetaChatListResponse) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
+
+// What this chat's share link grants: read_only (transcript only) or query
+// (viewers may ask new questions).
+type BetaChatListResponseSharedAccess string
+
+const (
+	BetaChatListResponseSharedAccessQuery    BetaChatListResponseSharedAccess = "query"
+	BetaChatListResponseSharedAccessReadOnly BetaChatListResponseSharedAccess = "read_only"
+)
 
 // Token usage and status from the most recent run. Null if the session has not
 // been run yet.
@@ -662,6 +713,11 @@ type BetaChatGetSummaryResponse struct {
 	LastUpdatedAt string `json:"last_updated_at" api:"required"`
 	// Unique session identifier.
 	SessionID string `json:"session_id" api:"required"`
+	// What this chat's share link grants: read_only (transcript only) or query
+	// (viewers may ask new questions).
+	//
+	// Any of "query", "read_only".
+	SharedAccess BetaChatGetSummaryResponseSharedAccess `json:"shared_access" api:"required"`
 	// Auto-generated title derived from the first user message.
 	GeneratedTitle string `json:"generated_title" api:"nullable"`
 	// Indexes this session is bound to. Null on unbound sessions.
@@ -673,6 +729,7 @@ type BetaChatGetSummaryResponse struct {
 	JSON struct {
 		LastUpdatedAt  respjson.Field
 		SessionID      respjson.Field
+		SharedAccess   respjson.Field
 		GeneratedTitle respjson.Field
 		IndexIDs       respjson.Field
 		JobMetadata    respjson.Field
@@ -686,6 +743,15 @@ func (r BetaChatGetSummaryResponse) RawJSON() string { return r.JSON.raw }
 func (r *BetaChatGetSummaryResponse) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
+
+// What this chat's share link grants: read_only (transcript only) or query
+// (viewers may ask new questions).
+type BetaChatGetSummaryResponseSharedAccess string
+
+const (
+	BetaChatGetSummaryResponseSharedAccessQuery    BetaChatGetSummaryResponseSharedAccess = "query"
+	BetaChatGetSummaryResponseSharedAccessReadOnly BetaChatGetSummaryResponseSharedAccess = "read_only"
+)
 
 // Token usage and status from the most recent run. Null if the session has not
 // been run yet.
@@ -726,6 +792,11 @@ type BetaChatNewParams struct {
 	// sent, the source set is locked for the session's lifetime. Leave null to create
 	// an unbound session.
 	IndexIDs []string `json:"index_ids,omitzero"`
+	// What this chat's share link grants: read_only (transcript only) or query
+	// (viewers may ask new questions). Null follows the deployment default.
+	//
+	// Any of "query", "read_only".
+	SharedAccess BetaChatNewParamsSharedAccess `json:"shared_access,omitzero"`
 	paramObj
 }
 
@@ -744,6 +815,15 @@ func (r BetaChatNewParams) URLQuery() (v url.Values, err error) {
 		NestedFormat: apiquery.NestedQueryFormatBrackets,
 	})
 }
+
+// What this chat's share link grants: read_only (transcript only) or query
+// (viewers may ask new questions). Null follows the deployment default.
+type BetaChatNewParamsSharedAccess string
+
+const (
+	BetaChatNewParamsSharedAccessQuery    BetaChatNewParamsSharedAccess = "query"
+	BetaChatNewParamsSharedAccessReadOnly BetaChatNewParamsSharedAccess = "read_only"
+)
 
 type BetaChatGetParams struct {
 	OrganizationID param.Opt[string] `query:"organization_id,omitzero" format:"uuid" json:"-"`
@@ -811,6 +891,8 @@ type BetaChatStreamParams struct {
 	Prompt         string            `json:"prompt" api:"required"`
 	OrganizationID param.Opt[string] `query:"organization_id,omitzero" format:"uuid" json:"-"`
 	ProjectID      param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
+	// Fail the turn if any requested index cannot be queried.
+	RequireAllIndexes param.Opt[bool] `json:"require_all_indexes,omitzero"`
 	paramObj
 }
 
