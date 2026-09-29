@@ -4213,6 +4213,10 @@ type ParsingGetResponseMetadataPage struct {
 	SpeakerNotes string `json:"speaker_notes" api:"nullable"`
 	// Whether auto mode was triggered for the page
 	TriggeredAutoMode bool `json:"triggered_auto_mode" api:"nullable"`
+	// Watermark text detected on the page (e.g., 'CONFIDENTIAL'). Only reported on
+	// version 2026-09-28 or later of the cost_effective, agentic, and agentic_plus
+	// tiers
+	Watermark string `json:"watermark" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		PageNumber               respjson.Field
@@ -4223,6 +4227,7 @@ type ParsingGetResponseMetadataPage struct {
 		SlideSectionName         respjson.Field
 		SpeakerNotes             respjson.Field
 		TriggeredAutoMode        respjson.Field
+		Watermark                respjson.Field
 		ExtraFields              map[string]respjson.Field
 		raw                      string
 	} `json:"-"`
@@ -4346,34 +4351,35 @@ func (r *ParsingGetResponseTextPage) UnmarshalJSON(data []byte) error {
 type ParsingListVersionsResponse struct {
 	// Versions for the agentic tier
 	//
-	// Any of "2026-09-24", "2026-09-13", "2026-09-09", "2026-09-07", "2026-08-19",
-	// "2026-07-24", "2026-07-23", "2026-07-15", "2026-06-18", "2026-06-11",
-	// "2026-06-04", "2026-06-01", "2026-05-26", "2026-05-21", "2026-05-20",
-	// "2026-05-19", "2026-05-13", "2026-05-11", "2026-05-06", "2026-05-04",
-	// "2026-04-27", "2026-04-22", "2026-04-09", "2026-04-06", "2026-04-02",
-	// "2026-03-31", "2026-03-30", "2026-03-27", "2026-03-25", "2026-03-23",
-	// "2026-03-22", "2026-03-20", "2026-03-11", "2026-03-10", "2026-03-09",
-	// "2026-03-03", "2026-03-02", "2026-02-26", "2026-02-24", "2026-01-30",
-	// "2026-01-22", "2026-01-21", "2026-01-16", "2026-01-08", "2025-12-31",
-	// "2025-12-18", "2025-12-11".
+	// Any of "2026-09-28", "2026-09-24", "2026-09-13", "2026-09-09", "2026-09-07",
+	// "2026-08-19", "2026-07-24", "2026-07-23", "2026-07-15", "2026-06-18",
+	// "2026-06-11", "2026-06-04", "2026-06-01", "2026-05-26", "2026-05-21",
+	// "2026-05-20", "2026-05-19", "2026-05-13", "2026-05-11", "2026-05-06",
+	// "2026-05-04", "2026-04-27", "2026-04-22", "2026-04-09", "2026-04-06",
+	// "2026-04-02", "2026-03-31", "2026-03-30", "2026-03-27", "2026-03-25",
+	// "2026-03-23", "2026-03-22", "2026-03-20", "2026-03-11", "2026-03-10",
+	// "2026-03-09", "2026-03-03", "2026-03-02", "2026-02-26", "2026-02-24",
+	// "2026-01-30", "2026-01-22", "2026-01-21", "2026-01-16", "2026-01-08",
+	// "2025-12-31", "2025-12-18", "2025-12-11".
 	Agentic []string `json:"agentic" api:"required"`
 	// Versions for the agentic_plus tier
 	//
-	// Any of "2026-09-24", "2026-09-11", "2026-08-19", "2026-07-08", "2026-06-18",
-	// "2026-06-11", "2026-06-04", "2026-06-01", "2026-05-26", "2026-05-21",
-	// "2026-05-20", "2026-05-19", "2026-05-11", "2026-05-06", "2026-05-04",
-	// "2026-05-01", "2026-04-27", "2026-04-19", "2026-04-14", "2026-04-09",
-	// "2026-04-02", "2026-03-31", "2026-03-26", "2026-03-25", "2026-03-22",
-	// "2026-03-20", "2026-03-17", "2026-03-12", "2026-03-10", "2026-03-09",
-	// "2026-03-02", "2026-02-26", "2026-02-24", "2026-01-30", "2026-01-29",
-	// "2026-01-24", "2026-01-22", "2026-01-21", "2026-01-16", "2025-12-31",
-	// "2025-12-18", "2025-12-11".
+	// Any of "2026-09-28", "2026-09-24", "2026-09-11", "2026-08-19", "2026-07-08",
+	// "2026-06-18", "2026-06-11", "2026-06-04", "2026-06-01", "2026-05-26",
+	// "2026-05-21", "2026-05-20", "2026-05-19", "2026-05-11", "2026-05-06",
+	// "2026-05-04", "2026-05-01", "2026-04-27", "2026-04-19", "2026-04-14",
+	// "2026-04-09", "2026-04-02", "2026-03-31", "2026-03-26", "2026-03-25",
+	// "2026-03-22", "2026-03-20", "2026-03-17", "2026-03-12", "2026-03-10",
+	// "2026-03-09", "2026-03-02", "2026-02-26", "2026-02-24", "2026-01-30",
+	// "2026-01-29", "2026-01-24", "2026-01-22", "2026-01-21", "2026-01-16",
+	// "2025-12-31", "2025-12-18", "2025-12-11".
 	AgenticPlus []string `json:"agentic_plus" api:"required"`
 	// Versions for the cost_effective tier
 	//
-	// Any of "2026-08-19", "2026-08-11", "2026-08-08", "2026-07-23", "2026-06-26",
-	// "2026-06-18", "2026-06-17", "2026-06-11", "2026-06-08", "2026-06-05",
-	// "2026-05-28", "2026-04-09", "2026-03-31", "2026-03-27", "2026-03-25".
+	// Any of "2026-09-28", "2026-08-19", "2026-08-11", "2026-08-08", "2026-07-23",
+	// "2026-06-26", "2026-06-18", "2026-06-17", "2026-06-11", "2026-06-08",
+	// "2026-06-05", "2026-05-28", "2026-04-09", "2026-03-31", "2026-03-27",
+	// "2026-03-25".
 	CostEffective []string `json:"cost_effective" api:"required"`
 	// Versions for the fast tier
 	//
@@ -4437,9 +4443,9 @@ type ParsingNewParams struct {
 	// Current `latest` by tier:
 	//
 	// - `fast`: `2026-06-15`
-	// - `cost_effective`: `2026-08-19`
-	// - `agentic`: `2026-09-24`
-	// - `agentic_plus`: `2026-09-24`
+	// - `cost_effective`: `2026-09-28`
+	// - `agentic`: `2026-09-28`
+	// - `agentic_plus`: `2026-09-28`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
 	Version        ParsingNewParamsVersion `json:"version,omitzero" api:"required"`
@@ -4533,17 +4539,16 @@ const (
 // Current `latest` by tier:
 //
 // - `fast`: `2026-06-15`
-// - `cost_effective`: `2026-08-19`
-// - `agentic`: `2026-09-24`
-// - `agentic_plus`: `2026-09-24`
+// - `cost_effective`: `2026-09-28`
+// - `agentic`: `2026-09-28`
+// - `agentic_plus`: `2026-09-28`
 //
 // Full list: `GET /api/v2/parse/versions`.
 type ParsingNewParamsVersion string
 
 const (
 	ParsingNewParamsVersionLatest     ParsingNewParamsVersion = "latest"
-	ParsingNewParamsVersion2026_09_24 ParsingNewParamsVersion = "2026-09-24"
-	ParsingNewParamsVersion2026_08_19 ParsingNewParamsVersion = "2026-08-19"
+	ParsingNewParamsVersion2026_09_28 ParsingNewParamsVersion = "2026-09-28"
 	ParsingNewParamsVersion2026_06_15 ParsingNewParamsVersion = "2026-06-15"
 )
 
@@ -4713,6 +4718,15 @@ type ParsingNewParamsOutputOptions struct {
 	//
 	// Any of "embedded", "layout", "screenshot".
 	ImagesToSave []string `json:"images_to_save,omitzero"`
+	// What to do with watermark text stamped across the page (e.g., 'CONFIDENTIAL',
+	// 'DRAFT'): 'move_to_end' (default) keeps it as the last block of the page's
+	// markdown and text output, 'move_to_start' as the first block, and 'remove' drops
+	// it. In every mode the detected text is reported in the page's `watermark`
+	// metadata. Requires version 2026-09-28 or later on the cost_effective, agentic,
+	// and agentic_plus tiers; ignored otherwise
+	//
+	// Any of "move_to_end", "move_to_start", "remove".
+	WatermarkHandling string `json:"watermark_handling,omitzero"`
 	// Optional additional output artifacts to save alongside the primary parse output.
 	// Each value opts in to generating and persisting one extra file; the empty list
 	// (default) saves none. The three accepted values are: 'stripped_md' — per-page
@@ -4755,6 +4769,12 @@ func (r ParsingNewParamsOutputOptions) MarshalJSON() (data []byte, err error) {
 }
 func (r *ParsingNewParamsOutputOptions) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
+}
+
+func init() {
+	apijson.RegisterFieldValidator[ParsingNewParamsOutputOptions](
+		"watermark_handling", "move_to_end", "move_to_start", "remove",
+	)
 }
 
 // Markdown formatting options including table styles and link annotations
@@ -5130,9 +5150,9 @@ type ParsingNewParamsProcessingOptionsAutoModeConfigurationParsingConf struct {
 	// Current `latest` by tier:
 	//
 	// - `fast`: `2026-06-15`
-	// - `cost_effective`: `2026-08-19`
-	// - `agentic`: `2026-09-24`
-	// - `agentic_plus`: `2026-09-24`
+	// - `cost_effective`: `2026-09-28`
+	// - `agentic`: `2026-09-28`
+	// - `agentic_plus`: `2026-09-28`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
 	Version string `json:"version,omitzero"`

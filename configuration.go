@@ -1296,9 +1296,9 @@ type ParseV2ParametersResp struct {
 	// Current `latest` by tier:
 	//
 	// - `fast`: `2026-06-15`
-	// - `cost_effective`: `2026-08-19`
-	// - `agentic`: `2026-09-24`
-	// - `agentic_plus`: `2026-09-24`
+	// - `cost_effective`: `2026-09-28`
+	// - `agentic`: `2026-09-28`
+	// - `agentic_plus`: `2026-09-28`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
 	Version ParseV2ParametersVersion `json:"version" api:"required"`
@@ -1394,17 +1394,16 @@ const (
 // Current `latest` by tier:
 //
 // - `fast`: `2026-06-15`
-// - `cost_effective`: `2026-08-19`
-// - `agentic`: `2026-09-24`
-// - `agentic_plus`: `2026-09-24`
+// - `cost_effective`: `2026-09-28`
+// - `agentic`: `2026-09-28`
+// - `agentic_plus`: `2026-09-28`
 //
 // Full list: `GET /api/v2/parse/versions`.
 type ParseV2ParametersVersion string
 
 const (
 	ParseV2ParametersVersionLatest     ParseV2ParametersVersion = "latest"
-	ParseV2ParametersVersion2026_09_24 ParseV2ParametersVersion = "2026-09-24"
-	ParseV2ParametersVersion2026_08_19 ParseV2ParametersVersion = "2026-08-19"
+	ParseV2ParametersVersion2026_09_28 ParseV2ParametersVersion = "2026-09-28"
 	ParseV2ParametersVersion2026_06_15 ParseV2ParametersVersion = "2026-06-15"
 )
 
@@ -1640,6 +1639,15 @@ type ParseV2ParametersOutputOptionsResp struct {
 	SpatialText ParseV2ParametersOutputOptionsSpatialTextResp `json:"spatial_text"`
 	// Options for exporting tables as XLSX spreadsheets
 	TablesAsSpreadsheet ParseV2ParametersOutputOptionsTablesAsSpreadsheetResp `json:"tables_as_spreadsheet"`
+	// What to do with watermark text stamped across the page (e.g., 'CONFIDENTIAL',
+	// 'DRAFT'): 'move_to_end' (default) keeps it as the last block of the page's
+	// markdown and text output, 'move_to_start' as the first block, and 'remove' drops
+	// it. In every mode the detected text is reported in the page's `watermark`
+	// metadata. Requires version 2026-09-28 or later on the cost_effective, agentic,
+	// and agentic_plus tiers; ignored otherwise
+	//
+	// Any of "move_to_end", "move_to_start", "remove".
+	WatermarkHandling string `json:"watermark_handling" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		AdditionalOutputs        respjson.Field
@@ -1650,6 +1658,7 @@ type ParseV2ParametersOutputOptionsResp struct {
 		SaveOutputPdf            respjson.Field
 		SpatialText              respjson.Field
 		TablesAsSpreadsheet      respjson.Field
+		WatermarkHandling        respjson.Field
 		ExtraFields              map[string]respjson.Field
 		raw                      string
 	} `json:"-"`
@@ -2114,9 +2123,9 @@ type ParseV2ParametersProcessingOptionsAutoModeConfigurationParsingConfResp stru
 	// Current `latest` by tier:
 	//
 	// - `fast`: `2026-06-15`
-	// - `cost_effective`: `2026-08-19`
-	// - `agentic`: `2026-09-24`
-	// - `agentic_plus`: `2026-09-24`
+	// - `cost_effective`: `2026-09-28`
+	// - `agentic`: `2026-09-28`
+	// - `agentic_plus`: `2026-09-28`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
 	Version string `json:"version" api:"nullable"`
@@ -3220,9 +3229,9 @@ type ParseV2Parameters struct {
 	// Current `latest` by tier:
 	//
 	// - `fast`: `2026-06-15`
-	// - `cost_effective`: `2026-08-19`
-	// - `agentic`: `2026-09-24`
-	// - `agentic_plus`: `2026-09-24`
+	// - `cost_effective`: `2026-09-28`
+	// - `agentic`: `2026-09-28`
+	// - `agentic_plus`: `2026-09-28`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
 	Version ParseV2ParametersVersion `json:"version,omitzero" api:"required"`
@@ -3444,6 +3453,15 @@ type ParseV2ParametersOutputOptions struct {
 	//
 	// Any of "embedded", "layout", "screenshot".
 	ImagesToSave []string `json:"images_to_save,omitzero"`
+	// What to do with watermark text stamped across the page (e.g., 'CONFIDENTIAL',
+	// 'DRAFT'): 'move_to_end' (default) keeps it as the last block of the page's
+	// markdown and text output, 'move_to_start' as the first block, and 'remove' drops
+	// it. In every mode the detected text is reported in the page's `watermark`
+	// metadata. Requires version 2026-09-28 or later on the cost_effective, agentic,
+	// and agentic_plus tiers; ignored otherwise
+	//
+	// Any of "move_to_end", "move_to_start", "remove".
+	WatermarkHandling string `json:"watermark_handling,omitzero"`
 	// Optional additional output artifacts to save alongside the primary parse output.
 	// Each value opts in to generating and persisting one extra file; the empty list
 	// (default) saves none. The three accepted values are: 'stripped_md' — per-page
@@ -3486,6 +3504,12 @@ func (r ParseV2ParametersOutputOptions) MarshalJSON() (data []byte, err error) {
 }
 func (r *ParseV2ParametersOutputOptions) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
+}
+
+func init() {
+	apijson.RegisterFieldValidator[ParseV2ParametersOutputOptions](
+		"watermark_handling", "move_to_end", "move_to_start", "remove",
+	)
 }
 
 // Markdown formatting options including table styles and link annotations
@@ -3861,9 +3885,9 @@ type ParseV2ParametersProcessingOptionsAutoModeConfigurationParsingConf struct {
 	// Current `latest` by tier:
 	//
 	// - `fast`: `2026-06-15`
-	// - `cost_effective`: `2026-08-19`
-	// - `agentic`: `2026-09-24`
-	// - `agentic_plus`: `2026-09-24`
+	// - `cost_effective`: `2026-09-28`
+	// - `agentic`: `2026-09-28`
+	// - `agentic_plus`: `2026-09-28`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
 	Version string `json:"version,omitzero"`

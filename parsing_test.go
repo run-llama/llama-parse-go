@@ -94,6 +94,7 @@ func TestParsingNewWithOptionalParams(t *testing.T) {
 				Enable:         llamacloud.Bool(true),
 				GuessSheetName: llamacloud.Bool(true),
 			},
+			WatermarkHandling: "remove",
 		},
 		PageRanges: llamacloud.ParsingNewParamsPageRanges{
 			MaxPages:    llamacloud.Int(1),
