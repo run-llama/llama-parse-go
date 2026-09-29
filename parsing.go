@@ -4664,6 +4664,8 @@ func (r *ParsingNewParamsInputOptionsImage) UnmarshalJSON(data []byte) error {
 
 // Presentation parsing options (applies to .pptx, .ppt, .odp, .key files)
 type ParsingNewParamsInputOptionsPresentation struct {
+	// Include hidden PPTX slides in the output. Omitted or false skips hidden slides.
+	IncludeHiddenSlides param.Opt[bool] `json:"include_hidden_slides,omitzero"`
 	// Extract content positioned outside the visible slide area. Some presentations
 	// have hidden notes or content that extends beyond slide boundaries
 	OutOfBoundsContent param.Opt[bool] `json:"out_of_bounds_content,omitzero"`

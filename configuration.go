@@ -1543,6 +1543,8 @@ func (r *ParseV2ParametersInputOptionsImageResp) UnmarshalJSON(data []byte) erro
 
 // Presentation parsing options (applies to .pptx, .ppt, .odp, .key files)
 type ParseV2ParametersInputOptionsPresentationResp struct {
+	// Include hidden PPTX slides in the output. Omitted or false skips hidden slides.
+	IncludeHiddenSlides bool `json:"include_hidden_slides" api:"nullable"`
 	// Extract content positioned outside the visible slide area. Some presentations
 	// have hidden notes or content that extends beyond slide boundaries
 	OutOfBoundsContent bool `json:"out_of_bounds_content" api:"nullable"`
@@ -1551,10 +1553,11 @@ type ParseV2ParametersInputOptionsPresentationResp struct {
 	SkipEmbeddedData bool `json:"skip_embedded_data" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
-		OutOfBoundsContent respjson.Field
-		SkipEmbeddedData   respjson.Field
-		ExtraFields        map[string]respjson.Field
-		raw                string
+		IncludeHiddenSlides respjson.Field
+		OutOfBoundsContent  respjson.Field
+		SkipEmbeddedData    respjson.Field
+		ExtraFields         map[string]respjson.Field
+		raw                 string
 	} `json:"-"`
 }
 
@@ -3400,6 +3403,8 @@ func (r *ParseV2ParametersInputOptionsImage) UnmarshalJSON(data []byte) error {
 
 // Presentation parsing options (applies to .pptx, .ppt, .odp, .key files)
 type ParseV2ParametersInputOptionsPresentation struct {
+	// Include hidden PPTX slides in the output. Omitted or false skips hidden slides.
+	IncludeHiddenSlides param.Opt[bool] `json:"include_hidden_slides,omitzero"`
 	// Extract content positioned outside the visible slide area. Some presentations
 	// have hidden notes or content that extends beyond slide boundaries
 	OutOfBoundsContent param.Opt[bool] `json:"out_of_bounds_content,omitzero"`
