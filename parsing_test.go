@@ -58,8 +58,9 @@ func TestParsingNewWithOptionalParams(t *testing.T) {
 			},
 			Pdf: map[string]any{},
 			Presentation: llamacloud.ParsingNewParamsInputOptionsPresentation{
-				OutOfBoundsContent: llamacloud.Bool(true),
-				SkipEmbeddedData:   llamacloud.Bool(true),
+				IncludeHiddenSlides: llamacloud.Bool(true),
+				OutOfBoundsContent:  llamacloud.Bool(true),
+				SkipEmbeddedData:    llamacloud.Bool(true),
 			},
 			Spreadsheet: llamacloud.ParsingNewParamsInputOptionsSpreadsheet{
 				DetectSubTablesInSheets:         llamacloud.Bool(true),
@@ -94,6 +95,7 @@ func TestParsingNewWithOptionalParams(t *testing.T) {
 				Enable:         llamacloud.Bool(true),
 				GuessSheetName: llamacloud.Bool(true),
 			},
+			WatermarkHandling: "remove",
 		},
 		PageRanges: llamacloud.ParsingNewParamsPageRanges{
 			MaxPages:    llamacloud.Int(1),

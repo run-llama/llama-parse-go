@@ -17,6 +17,7 @@ type BetaService struct {
 	Indexes     BetaIndexService
 	Retrieval   BetaRetrievalService
 	Chat        BetaChatService
+	Attachments BetaAttachmentService
 	AgentData   BetaAgentDataService
 	Directories BetaDirectoryService
 	Split       BetaSplitService
@@ -31,6 +32,7 @@ func NewBetaService(opts ...option.RequestOption) (r BetaService) {
 	r.Indexes = NewBetaIndexService(opts...)
 	r.Retrieval = NewBetaRetrievalService(opts...)
 	r.Chat = NewBetaChatService(opts...)
+	r.Attachments = NewBetaAttachmentService(opts...)
 	r.AgentData = NewBetaAgentDataService(opts...)
 	r.Directories = NewBetaDirectoryService(opts...)
 	r.Split = NewBetaSplitService(opts...)

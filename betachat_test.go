@@ -30,6 +30,7 @@ func TestBetaChatNewWithOptionalParams(t *testing.T) {
 		OrganizationID: llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		ProjectID:      llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		IndexIDs:       []string{"idx-abc123", "idx-def456"},
+		SharedAccess:   llamacloud.BetaChatNewParamsSharedAccessReadOnly,
 	})
 	if err != nil {
 		var apierr *llamacloud.Error
@@ -175,10 +176,11 @@ func TestBetaChatStreamWithOptionalParams(t *testing.T) {
 		context.TODO(),
 		"session_id",
 		llamacloud.BetaChatStreamParams{
-			IndexIDs:       []string{"idx-abc123", "idx-def456"},
-			Prompt:         "What were the main findings in Q3?",
-			OrganizationID: llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-			ProjectID:      llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+			IndexIDs:          []string{"idx-abc123", "idx-def456"},
+			Prompt:            "What were the main findings in Q3?",
+			OrganizationID:    llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+			ProjectID:         llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+			RequireAllIndexes: llamacloud.Bool(true),
 		},
 	)
 	if err != nil {

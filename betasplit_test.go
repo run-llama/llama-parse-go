@@ -44,6 +44,7 @@ func TestBetaSplitNewWithOptionalParams(t *testing.T) {
 				CustomInstructions: llamacloud.String("Start a new segment at every signature page."),
 				MinPagesPerSplit:   llamacloud.Int(1),
 			},
+			Version: llamacloud.String("latest"),
 		},
 		ConfigurationID: llamacloud.String("configuration_id"),
 	})

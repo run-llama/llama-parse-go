@@ -89,6 +89,23 @@ func (r *ClassifyService) ListAutoPaging(ctx context.Context, query ClassifyList
 	return pagination.NewPaginatedCursorAutoPager(r.List(ctx, query, opts...))
 }
 
+// Delete a classify job and its result.
+//
+// The job must be in a terminal state (COMPLETED, FAILED, CANCELLED). Cancel a job
+// that is still running before deleting it.
+//
+// Returns the identifiers of the deleted job.
+func (r *ClassifyService) Delete(ctx context.Context, jobID string, body ClassifyDeleteParams, opts ...option.RequestOption) (res *ClassifyDeleteResponse, err error) {
+	opts = slices.Concat(r.options, opts)
+	if jobID == "" {
+		err = errors.New("missing required job_id parameter")
+		return nil, err
+	}
+	path := fmt.Sprintf("api/v2/classify/%s", url.PathEscape(jobID))
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodDelete, path, body, &res, opts...)
+	return res, err
+}
+
 // Cancel a running classify job.
 //
 // Stops processing and marks the job as CANCELLED. Returns the updated job. Jobs
@@ -527,6 +544,27 @@ const (
 	ClassifyListResponseStatusRunning   ClassifyListResponseStatus = "RUNNING"
 )
 
+// Identifiers for a deleted classify job.
+type ClassifyDeleteResponse struct {
+	// Identifier of the deleted classify job
+	ID string `json:"id" api:"required"`
+	// Project the deleted job belonged to
+	ProjectID string `json:"project_id" api:"nullable"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		ID          respjson.Field
+		ProjectID   respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r ClassifyDeleteResponse) RawJSON() string { return r.JSON.raw }
+func (r *ClassifyDeleteResponse) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
 // Response for a classify job.
 type ClassifyCancelResponse struct {
 	// Unique identifier
@@ -752,6 +790,20 @@ const (
 	ClassifyListParamsStatusPending   ClassifyListParamsStatus = "PENDING"
 	ClassifyListParamsStatusRunning   ClassifyListParamsStatus = "RUNNING"
 )
+
+type ClassifyDeleteParams struct {
+	OrganizationID param.Opt[string] `query:"organization_id,omitzero" format:"uuid" json:"-"`
+	ProjectID      param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
+	paramObj
+}
+
+// URLQuery serializes [ClassifyDeleteParams]'s query parameters as `url.Values`.
+func (r ClassifyDeleteParams) URLQuery() (v url.Values, err error) {
+	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
+		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
+		NestedFormat: apiquery.NestedQueryFormatBrackets,
+	})
+}
 
 type ClassifyCancelParams struct {
 	OrganizationID param.Opt[string] `query:"organization_id,omitzero" format:"uuid" json:"-"`

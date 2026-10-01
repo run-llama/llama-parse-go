@@ -1,17 +1,5 @@
 # Changelog
 
-## [1.7.0](https://github.com/run-llama/llama-parse-go/compare/v1.6.0...v1.7.0) (2026-09-08)
-
-
-### ⚠ BREAKING CHANGES
-
-* **classifier:** the classify v1 job methods (`client.Classifier.Jobs.New`, `.List`, `.Get`, `.GetResults`) are removed. The `/api/v1/classifier/jobs*` routes were unpublished from the API surface; use `client.Classify` instead.
-
-
-### Features
-
-* **api:** map DELETE /api/v2/parse/{job_id} and GET /api/v2/pipelines into the SDKs (LI-9569) ([8f541bb](https://github.com/run-llama/llama-parse-go/commit/8f541bb1e7518b577bacd338d990eb3f66b65b9f))
-
 ## [1.6.0](https://github.com/run-llama/llama-parse-go/compare/v1.5.1...v1.6.0) (2026-08-28)
 
 

@@ -7,14 +7,13 @@ import (
 	"errors"
 	"os"
 	"testing"
-	"time"
 
 	"github.com/run-llama/llama-parse-go"
 	"github.com/run-llama/llama-parse-go/internal/testutil"
 	"github.com/run-llama/llama-parse-go/option"
 )
 
-func TestJobDataPointListWithOptionalParams(t *testing.T) {
+func TestExtractionAgentListWithOptionalParams(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
@@ -27,16 +26,12 @@ func TestJobDataPointListWithOptionalParams(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.JobDataPoints.List(context.TODO(), llamacloud.JobDataPointListParams{
-		JobType:             llamacloud.JobDataPointListParamsJobTypeParse,
-		CreatedAtOnOrAfter:  llamacloud.Time(time.Now()),
-		CreatedAtOnOrBefore: llamacloud.Time(time.Now()),
-		Hours:               llamacloud.Int(24),
-		OrganizationID:      llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		PageSize:            llamacloud.Int(100),
-		PageToken:           llamacloud.String("page_token"),
-		ProjectID:           llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		Status:              []string{"completed", "failed"},
+	_, err := client.ExtractionAgents.List(context.TODO(), llamacloud.ExtractionAgentListParams{
+		IncludeDefault: llamacloud.Bool(true),
+		OrganizationID: llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		PageSize:       llamacloud.Int(1),
+		PageToken:      llamacloud.String("page_token"),
+		ProjectID:      llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 	})
 	if err != nil {
 		var apierr *llamacloud.Error
