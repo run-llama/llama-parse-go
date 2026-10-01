@@ -1044,10 +1044,9 @@ type ExtractV2ParametersResp struct {
 	//
 	// Any of "agentic", "agentic_plus", "cost_effective", "turbo".
 	Tier ExtractV2ParametersTier `json:"tier"`
-	// Use 'latest' for the latest release for the selected tier or a date string
-	// (YYYY-MM-DD format) to pin to the nearest release at or before that date. Job
-	// responses always report the concrete resolved version the job runs, fixed at job
-	// creation; saved configurations keep the value as provided.
+	// Extract version name, such as '2.5'. Use 'latest' for the newest compatible
+	// release for the selected tier. Dates (YYYY-MM-DD) are also supported, which will
+	// use the latest version on or before the specified date.
 	Version string `json:"version"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
@@ -1213,10 +1212,9 @@ type ExtractV2Parameters struct {
 	// rate, against a page count derived from workbook size. Citations and confidence
 	// scores are not available in this mode.
 	SpreadsheetMode param.Opt[bool] `json:"spreadsheet_mode,omitzero"`
-	// Use 'latest' for the latest release for the selected tier or a date string
-	// (YYYY-MM-DD format) to pin to the nearest release at or before that date. Job
-	// responses always report the concrete resolved version the job runs, fixed at job
-	// creation; saved configurations keep the value as provided.
+	// Extract version name, such as '2.5'. Use 'latest' for the newest compatible
+	// release for the selected tier. Dates (YYYY-MM-DD) are also supported, which will
+	// use the latest version on or before the specified date.
 	Version param.Opt[string] `json:"version,omitzero"`
 	// Parse tier to use before extraction. Defaults to the extract tier if not
 	// specified. Turbo extract does not support parse configuration or produce a parse
