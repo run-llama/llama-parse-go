@@ -1006,8 +1006,10 @@ type ExtractV2ParametersResp struct {
 	ConfidenceScores bool `json:"confidence_scores"`
 	// Disable reuse and storage of Extract results
 	DisableCache bool `json:"disable_cache"`
+	// Deprecated. Applies only to Agentic and Cost Effective versions 2.0 or earlier.
 	// Granularity of extraction: per_doc returns one object per document, per_page
-	// returns one object per page, per_table_row returns one object per table row
+	// returns one object per page, per_table_row returns one object per table row.
+	// Agentic Plus supports per_doc only.
 	//
 	// Any of "per_doc", "per_page", "per_table_row".
 	ExtractionTarget ExtractV2ParametersExtractionTarget `json:"extraction_target"`
@@ -1146,8 +1148,10 @@ func (r *ExtractV2ParametersDataSchemaUnionResp) UnmarshalJSON(data []byte) erro
 	return apijson.UnmarshalRoot(data, r)
 }
 
+// Deprecated. Applies only to Agentic and Cost Effective versions 2.0 or earlier.
 // Granularity of extraction: per_doc returns one object per document, per_page
-// returns one object per page, per_table_row returns one object per table row
+// returns one object per page, per_table_row returns one object per table row.
+// Agentic Plus supports per_doc only.
 type ExtractV2ParametersExtractionTarget string
 
 const (
@@ -1226,8 +1230,10 @@ type ExtractV2Parameters struct {
 	// target_pages for spreadsheets; omit to extract every sheet. Names are matched
 	// exactly (case-sensitive) — pass them as a list, e.g. ["Sheet 1", "My Sheet"].
 	SheetNames []string `json:"sheet_names,omitzero"`
+	// Deprecated. Applies only to Agentic and Cost Effective versions 2.0 or earlier.
 	// Granularity of extraction: per_doc returns one object per document, per_page
-	// returns one object per page, per_table_row returns one object per table row
+	// returns one object per page, per_table_row returns one object per table row.
+	// Agentic Plus supports per_doc only.
 	//
 	// Any of "per_doc", "per_page", "per_table_row".
 	ExtractionTarget ExtractV2ParametersExtractionTarget `json:"extraction_target,omitzero"`
