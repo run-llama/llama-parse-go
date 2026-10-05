@@ -4470,8 +4470,9 @@ type SplitV1ParametersResp struct {
 	ParseTier SplitV1ParametersParseTier `json:"parse_tier" api:"nullable"`
 	// Strategy for splitting documents.
 	SplittingStrategy SplitV1ParametersSplittingStrategyResp `json:"splitting_strategy"`
-	// Comma-separated page numbers or ranges to split (1-based). Omit to split all
-	// pages. Requires a completed parse job as file_input.
+	// Comma-separated page numbers or ranges to split (1-based). Pages are split in
+	// the order listed. Omit to split all pages. Requires a completed parse job as
+	// file_input.
 	TargetPages string `json:"target_pages" api:"nullable"`
 	// Split version to run. Omit for the current release. Preview versions are
 	// selectable by name and never resolved automatically.
@@ -4558,8 +4559,9 @@ type SplitV1Parameters struct {
 	// results number pages relative to the full document. Ignored when a completed
 	// parse job is supplied as file_input.
 	ParseConfigID param.Opt[string] `json:"parse_config_id,omitzero"`
-	// Comma-separated page numbers or ranges to split (1-based). Omit to split all
-	// pages. Requires a completed parse job as file_input.
+	// Comma-separated page numbers or ranges to split (1-based). Pages are split in
+	// the order listed. Omit to split all pages. Requires a completed parse job as
+	// file_input.
 	TargetPages param.Opt[string] `json:"target_pages,omitzero"`
 	// Split version to run. Omit for the current release. Preview versions are
 	// selectable by name and never resolved automatically.
