@@ -98,7 +98,8 @@ func (r *ExtractService) ListAutoPaging(ctx context.Context, query ExtractListPa
 	return pagination.NewPaginatedCursorAutoPager(r.List(ctx, query, opts...))
 }
 
-// Delete an extraction job and its results.
+// Delete an extraction job and its results. A non-terminal job is refused; cancel
+// it first, or pass force=true to delete a job whose workflow is gone.
 func (r *ExtractService) Delete(ctx context.Context, jobID string, body ExtractDeleteParams, opts ...option.RequestOption) (res *ExtractDeleteResponse, err error) {
 	opts = slices.Concat(r.options, opts)
 	if jobID == "" {
@@ -1311,6 +1312,7 @@ const (
 type ExtractDeleteParams struct {
 	OrganizationID param.Opt[string] `query:"organization_id,omitzero" format:"uuid" json:"-"`
 	ProjectID      param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
+	Force          param.Opt[bool]   `query:"force,omitzero" json:"-"`
 	paramObj
 }
 
