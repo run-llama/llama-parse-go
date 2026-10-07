@@ -98,7 +98,8 @@ func (r *ExtractService) ListAutoPaging(ctx context.Context, query ExtractListPa
 	return pagination.NewPaginatedCursorAutoPager(r.List(ctx, query, opts...))
 }
 
-// Delete an extraction job and its results.
+// Delete an extraction job and its results. A non-terminal job is refused; cancel
+// it first, or pass force=true to delete a job whose workflow is gone.
 func (r *ExtractService) Delete(ctx context.Context, jobID string, body ExtractDeleteParams, opts ...option.RequestOption) (res *ExtractDeleteResponse, err error) {
 	opts = slices.Concat(r.options, opts)
 	if jobID == "" {
@@ -170,8 +171,10 @@ type ExtractConfiguration struct {
 	ConfidenceScores bool `json:"confidence_scores"`
 	// Disable reuse and storage of Extract results
 	DisableCache bool `json:"disable_cache"`
+	// Deprecated. Applies only to Agentic and Cost Effective versions 2.0 or earlier.
 	// Granularity of extraction: per_doc returns one object per document, per_page
-	// returns one object per page, per_table_row returns one object per table row
+	// returns one object per page, per_table_row returns one object per table row.
+	// Agentic Plus supports per_doc only.
 	//
 	// Any of "per_doc", "per_page", "per_table_row".
 	ExtractionTarget ExtractConfigurationExtractionTarget `json:"extraction_target"`
@@ -208,10 +211,9 @@ type ExtractConfiguration struct {
 	//
 	// Any of "agentic", "agentic_plus", "cost_effective", "turbo".
 	Tier ExtractConfigurationTier `json:"tier"`
-	// Use 'latest' for the latest release for the selected tier or a date string
-	// (YYYY-MM-DD format) to pin to the nearest release at or before that date. Job
-	// responses always report the concrete resolved version the job runs, fixed at job
-	// creation; saved configurations keep the value as provided.
+	// Extract version name, such as '2.5'. Use 'latest' for the newest compatible
+	// release for the selected tier. Dates (YYYY-MM-DD) are also supported, which will
+	// use the latest version on or before the specified date.
 	Version string `json:"version"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
@@ -310,8 +312,10 @@ func (r *ExtractConfigurationDataSchemaUnion) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
+// Deprecated. Applies only to Agentic and Cost Effective versions 2.0 or earlier.
 // Granularity of extraction: per_doc returns one object per document, per_page
-// returns one object per page, per_table_row returns one object per table row
+// returns one object per page, per_table_row returns one object per table row.
+// Agentic Plus supports per_doc only.
 type ExtractConfigurationExtractionTarget string
 
 const (
@@ -376,10 +380,9 @@ type ExtractConfigurationParam struct {
 	// rate, against a page count derived from workbook size. Citations and confidence
 	// scores are not available in this mode.
 	SpreadsheetMode param.Opt[bool] `json:"spreadsheet_mode,omitzero"`
-	// Use 'latest' for the latest release for the selected tier or a date string
-	// (YYYY-MM-DD format) to pin to the nearest release at or before that date. Job
-	// responses always report the concrete resolved version the job runs, fixed at job
-	// creation; saved configurations keep the value as provided.
+	// Extract version name, such as '2.5'. Use 'latest' for the newest compatible
+	// release for the selected tier. Dates (YYYY-MM-DD) are also supported, which will
+	// use the latest version on or before the specified date.
 	Version param.Opt[string] `json:"version,omitzero"`
 	// Parse tier to use before extraction. Defaults to the extract tier if not
 	// specified. Turbo extract does not support parse configuration or produce a parse
@@ -391,8 +394,10 @@ type ExtractConfigurationParam struct {
 	// target_pages for spreadsheets; omit to extract every sheet. Names are matched
 	// exactly (case-sensitive) — pass them as a list, e.g. ["Sheet 1", "My Sheet"].
 	SheetNames []string `json:"sheet_names,omitzero"`
+	// Deprecated. Applies only to Agentic and Cost Effective versions 2.0 or earlier.
 	// Granularity of extraction: per_doc returns one object per document, per_page
-	// returns one object per page, per_table_row returns one object per table row
+	// returns one object per page, per_table_row returns one object per table row.
+	// Agentic Plus supports per_doc only.
 	//
 	// Any of "per_doc", "per_page", "per_table_row".
 	ExtractionTarget ExtractConfigurationExtractionTarget `json:"extraction_target,omitzero"`
@@ -1307,6 +1312,7 @@ const (
 type ExtractDeleteParams struct {
 	OrganizationID param.Opt[string] `query:"organization_id,omitzero" format:"uuid" json:"-"`
 	ProjectID      param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
+	Force          param.Opt[bool]   `query:"force,omitzero" json:"-"`
 	paramObj
 }
 

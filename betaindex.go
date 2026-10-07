@@ -134,6 +134,8 @@ type BetaIndexNewResponse struct {
 	LastSyncedAt time.Time `json:"last_synced_at" api:"nullable" format:"date-time"`
 	// Build state and diagnostic info.
 	Metadata map[string]any `json:"metadata"`
+	// Whether a sync is running. Set only when getting a single index.
+	SyncInProgress bool `json:"sync_in_progress" api:"nullable"`
 	// Update datetime
 	UpdatedAt time.Time `json:"updated_at" api:"nullable" format:"date-time"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
@@ -150,6 +152,7 @@ type BetaIndexNewResponse struct {
 		LastExportedAt    respjson.Field
 		LastSyncedAt      respjson.Field
 		Metadata          respjson.Field
+		SyncInProgress    respjson.Field
 		UpdatedAt         respjson.Field
 		ExtraFields       map[string]respjson.Field
 		raw               string
@@ -188,6 +191,8 @@ type BetaIndexListResponse struct {
 	LastSyncedAt time.Time `json:"last_synced_at" api:"nullable" format:"date-time"`
 	// Build state and diagnostic info.
 	Metadata map[string]any `json:"metadata"`
+	// Whether a sync is running. Set only when getting a single index.
+	SyncInProgress bool `json:"sync_in_progress" api:"nullable"`
 	// Update datetime
 	UpdatedAt time.Time `json:"updated_at" api:"nullable" format:"date-time"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
@@ -204,6 +209,7 @@ type BetaIndexListResponse struct {
 		LastExportedAt    respjson.Field
 		LastSyncedAt      respjson.Field
 		Metadata          respjson.Field
+		SyncInProgress    respjson.Field
 		UpdatedAt         respjson.Field
 		ExtraFields       map[string]respjson.Field
 		raw               string
@@ -242,6 +248,8 @@ type BetaIndexGetResponse struct {
 	LastSyncedAt time.Time `json:"last_synced_at" api:"nullable" format:"date-time"`
 	// Build state and diagnostic info.
 	Metadata map[string]any `json:"metadata"`
+	// Whether a sync is running. Set only when getting a single index.
+	SyncInProgress bool `json:"sync_in_progress" api:"nullable"`
 	// Update datetime
 	UpdatedAt time.Time `json:"updated_at" api:"nullable" format:"date-time"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
@@ -258,6 +266,7 @@ type BetaIndexGetResponse struct {
 		LastExportedAt    respjson.Field
 		LastSyncedAt      respjson.Field
 		Metadata          respjson.Field
+		SyncInProgress    respjson.Field
 		UpdatedAt         respjson.Field
 		ExtraFields       map[string]respjson.Field
 		raw               string

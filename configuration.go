@@ -327,20 +327,17 @@ type ConfigurationCreateParametersUnion struct {
 	// This field is from variant [ExtractV2ParametersResp].
 	ExtractionTarget ExtractV2ParametersExtractionTarget `json:"extraction_target"`
 	// This field is from variant [ExtractV2ParametersResp].
-	MaxPages int64 `json:"max_pages"`
-	// This field is from variant [ExtractV2ParametersResp].
-	ParseConfigID string `json:"parse_config_id"`
-	// This field is from variant [ExtractV2ParametersResp].
-	ParseTier  ExtractV2ParametersParseTier `json:"parse_tier"`
-	SheetNames []string                     `json:"sheet_names"`
+	MaxPages      int64    `json:"max_pages"`
+	ParseConfigID string   `json:"parse_config_id"`
+	ParseTier     string   `json:"parse_tier"`
+	SheetNames    []string `json:"sheet_names"`
 	// This field is from variant [ExtractV2ParametersResp].
 	SpreadsheetMode bool `json:"spreadsheet_mode"`
 	// This field is from variant [ExtractV2ParametersResp].
 	SystemPrompt string `json:"system_prompt"`
-	// This field is from variant [ExtractV2ParametersResp].
-	TargetPages string `json:"target_pages"`
-	Tier        string `json:"tier"`
-	Version     string `json:"version"`
+	TargetPages  string `json:"target_pages"`
+	Tier         string `json:"tier"`
+	Version      string `json:"version"`
 	// This field is from variant [ParseV2ParametersResp].
 	AgenticOptions ParseV2ParametersAgenticOptionsResp `json:"agentic_options"`
 	// This field is from variant [ParseV2ParametersResp].
@@ -748,20 +745,17 @@ type ConfigurationResponseParametersUnion struct {
 	// This field is from variant [ExtractV2ParametersResp].
 	ExtractionTarget ExtractV2ParametersExtractionTarget `json:"extraction_target"`
 	// This field is from variant [ExtractV2ParametersResp].
-	MaxPages int64 `json:"max_pages"`
-	// This field is from variant [ExtractV2ParametersResp].
-	ParseConfigID string `json:"parse_config_id"`
-	// This field is from variant [ExtractV2ParametersResp].
-	ParseTier  ExtractV2ParametersParseTier `json:"parse_tier"`
-	SheetNames []string                     `json:"sheet_names"`
+	MaxPages      int64    `json:"max_pages"`
+	ParseConfigID string   `json:"parse_config_id"`
+	ParseTier     string   `json:"parse_tier"`
+	SheetNames    []string `json:"sheet_names"`
 	// This field is from variant [ExtractV2ParametersResp].
 	SpreadsheetMode bool `json:"spreadsheet_mode"`
 	// This field is from variant [ExtractV2ParametersResp].
 	SystemPrompt string `json:"system_prompt"`
-	// This field is from variant [ExtractV2ParametersResp].
-	TargetPages string `json:"target_pages"`
-	Tier        string `json:"tier"`
-	Version     string `json:"version"`
+	TargetPages  string `json:"target_pages"`
+	Tier         string `json:"tier"`
+	Version      string `json:"version"`
 	// This field is from variant [ParseV2ParametersResp].
 	AgenticOptions ParseV2ParametersAgenticOptionsResp `json:"agentic_options"`
 	// This field is from variant [ParseV2ParametersResp].
@@ -1012,8 +1006,10 @@ type ExtractV2ParametersResp struct {
 	ConfidenceScores bool `json:"confidence_scores"`
 	// Disable reuse and storage of Extract results
 	DisableCache bool `json:"disable_cache"`
+	// Deprecated. Applies only to Agentic and Cost Effective versions 2.0 or earlier.
 	// Granularity of extraction: per_doc returns one object per document, per_page
-	// returns one object per page, per_table_row returns one object per table row
+	// returns one object per page, per_table_row returns one object per table row.
+	// Agentic Plus supports per_doc only.
 	//
 	// Any of "per_doc", "per_page", "per_table_row".
 	ExtractionTarget ExtractV2ParametersExtractionTarget `json:"extraction_target"`
@@ -1050,10 +1046,9 @@ type ExtractV2ParametersResp struct {
 	//
 	// Any of "agentic", "agentic_plus", "cost_effective", "turbo".
 	Tier ExtractV2ParametersTier `json:"tier"`
-	// Use 'latest' for the latest release for the selected tier or a date string
-	// (YYYY-MM-DD format) to pin to the nearest release at or before that date. Job
-	// responses always report the concrete resolved version the job runs, fixed at job
-	// creation; saved configurations keep the value as provided.
+	// Extract version name, such as '2.5'. Use 'latest' for the newest compatible
+	// release for the selected tier. Dates (YYYY-MM-DD) are also supported, which will
+	// use the latest version on or before the specified date.
 	Version string `json:"version"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
@@ -1153,8 +1148,10 @@ func (r *ExtractV2ParametersDataSchemaUnionResp) UnmarshalJSON(data []byte) erro
 	return apijson.UnmarshalRoot(data, r)
 }
 
+// Deprecated. Applies only to Agentic and Cost Effective versions 2.0 or earlier.
 // Granularity of extraction: per_doc returns one object per document, per_page
-// returns one object per page, per_table_row returns one object per table row
+// returns one object per page, per_table_row returns one object per table row.
+// Agentic Plus supports per_doc only.
 type ExtractV2ParametersExtractionTarget string
 
 const (
@@ -1219,10 +1216,9 @@ type ExtractV2Parameters struct {
 	// rate, against a page count derived from workbook size. Citations and confidence
 	// scores are not available in this mode.
 	SpreadsheetMode param.Opt[bool] `json:"spreadsheet_mode,omitzero"`
-	// Use 'latest' for the latest release for the selected tier or a date string
-	// (YYYY-MM-DD format) to pin to the nearest release at or before that date. Job
-	// responses always report the concrete resolved version the job runs, fixed at job
-	// creation; saved configurations keep the value as provided.
+	// Extract version name, such as '2.5'. Use 'latest' for the newest compatible
+	// release for the selected tier. Dates (YYYY-MM-DD) are also supported, which will
+	// use the latest version on or before the specified date.
 	Version param.Opt[string] `json:"version,omitzero"`
 	// Parse tier to use before extraction. Defaults to the extract tier if not
 	// specified. Turbo extract does not support parse configuration or produce a parse
@@ -1234,8 +1230,10 @@ type ExtractV2Parameters struct {
 	// target_pages for spreadsheets; omit to extract every sheet. Names are matched
 	// exactly (case-sensitive) — pass them as a list, e.g. ["Sheet 1", "My Sheet"].
 	SheetNames []string `json:"sheet_names,omitzero"`
+	// Deprecated. Applies only to Agentic and Cost Effective versions 2.0 or earlier.
 	// Granularity of extraction: per_doc returns one object per document, per_page
-	// returns one object per page, per_table_row returns one object per table row
+	// returns one object per page, per_table_row returns one object per table row.
+	// Agentic Plus supports per_doc only.
 	//
 	// Any of "per_doc", "per_page", "per_table_row".
 	ExtractionTarget ExtractV2ParametersExtractionTarget `json:"extraction_target,omitzero"`
@@ -1302,9 +1300,9 @@ type ParseV2ParametersResp struct {
 	// Current `latest` by tier:
 	//
 	// - `fast`: `2026-06-15`
-	// - `cost_effective`: `2026-08-19`
-	// - `agentic`: `2026-09-07`
-	// - `agentic_plus`: `2026-08-19`
+	// - `cost_effective`: `2026-09-28`
+	// - `agentic`: `2026-09-29`
+	// - `agentic_plus`: `2026-09-28`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
 	Version ParseV2ParametersVersion `json:"version" api:"required"`
@@ -1400,17 +1398,17 @@ const (
 // Current `latest` by tier:
 //
 // - `fast`: `2026-06-15`
-// - `cost_effective`: `2026-08-19`
-// - `agentic`: `2026-09-07`
-// - `agentic_plus`: `2026-08-19`
+// - `cost_effective`: `2026-09-28`
+// - `agentic`: `2026-09-29`
+// - `agentic_plus`: `2026-09-28`
 //
 // Full list: `GET /api/v2/parse/versions`.
 type ParseV2ParametersVersion string
 
 const (
 	ParseV2ParametersVersionLatest     ParseV2ParametersVersion = "latest"
-	ParseV2ParametersVersion2026_09_07 ParseV2ParametersVersion = "2026-09-07"
-	ParseV2ParametersVersion2026_08_19 ParseV2ParametersVersion = "2026-08-19"
+	ParseV2ParametersVersion2026_09_29 ParseV2ParametersVersion = "2026-09-29"
+	ParseV2ParametersVersion2026_09_28 ParseV2ParametersVersion = "2026-09-28"
 	ParseV2ParametersVersion2026_06_15 ParseV2ParametersVersion = "2026-06-15"
 )
 
@@ -1550,6 +1548,8 @@ func (r *ParseV2ParametersInputOptionsImageResp) UnmarshalJSON(data []byte) erro
 
 // Presentation parsing options (applies to .pptx, .ppt, .odp, .key files)
 type ParseV2ParametersInputOptionsPresentationResp struct {
+	// Include hidden PPTX slides in the output. Omitted or false skips hidden slides.
+	IncludeHiddenSlides bool `json:"include_hidden_slides" api:"nullable"`
 	// Extract content positioned outside the visible slide area. Some presentations
 	// have hidden notes or content that extends beyond slide boundaries
 	OutOfBoundsContent bool `json:"out_of_bounds_content" api:"nullable"`
@@ -1558,10 +1558,11 @@ type ParseV2ParametersInputOptionsPresentationResp struct {
 	SkipEmbeddedData bool `json:"skip_embedded_data" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
-		OutOfBoundsContent respjson.Field
-		SkipEmbeddedData   respjson.Field
-		ExtraFields        map[string]respjson.Field
-		raw                string
+		IncludeHiddenSlides respjson.Field
+		OutOfBoundsContent  respjson.Field
+		SkipEmbeddedData    respjson.Field
+		ExtraFields         map[string]respjson.Field
+		raw                 string
 	} `json:"-"`
 }
 
@@ -1646,6 +1647,16 @@ type ParseV2ParametersOutputOptionsResp struct {
 	SpatialText ParseV2ParametersOutputOptionsSpatialTextResp `json:"spatial_text"`
 	// Options for exporting tables as XLSX spreadsheets
 	TablesAsSpreadsheet ParseV2ParametersOutputOptionsTablesAsSpreadsheetResp `json:"tables_as_spreadsheet"`
+	// What to do with watermark text stamped across the page (e.g., 'CONFIDENTIAL',
+	// 'DRAFT'): 'move_to_end' (default) keeps it as the last block of the page's
+	// markdown, 'move_to_start' as the first block, and 'remove' drops it. The text
+	// output follows the same choice where the watermark is a line of its own in the
+	// PDF text layer. In every mode the detected text is reported in the page's
+	// `watermark` metadata. Requires version 2026-09-28 or later on the
+	// cost_effective, agentic, and agentic_plus tiers; ignored otherwise
+	//
+	// Any of "move_to_end", "move_to_start", "remove".
+	WatermarkHandling string `json:"watermark_handling" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		AdditionalOutputs        respjson.Field
@@ -1656,6 +1667,7 @@ type ParseV2ParametersOutputOptionsResp struct {
 		SaveOutputPdf            respjson.Field
 		SpatialText              respjson.Field
 		TablesAsSpreadsheet      respjson.Field
+		WatermarkHandling        respjson.Field
 		ExtraFields              map[string]respjson.Field
 		raw                      string
 	} `json:"-"`
@@ -2120,9 +2132,9 @@ type ParseV2ParametersProcessingOptionsAutoModeConfigurationParsingConfResp stru
 	// Current `latest` by tier:
 	//
 	// - `fast`: `2026-06-15`
-	// - `cost_effective`: `2026-08-19`
-	// - `agentic`: `2026-09-07`
-	// - `agentic_plus`: `2026-08-19`
+	// - `cost_effective`: `2026-09-28`
+	// - `agentic`: `2026-09-29`
+	// - `agentic_plus`: `2026-09-28`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
 	Version string `json:"version" api:"nullable"`
@@ -3226,9 +3238,9 @@ type ParseV2Parameters struct {
 	// Current `latest` by tier:
 	//
 	// - `fast`: `2026-06-15`
-	// - `cost_effective`: `2026-08-19`
-	// - `agentic`: `2026-09-07`
-	// - `agentic_plus`: `2026-08-19`
+	// - `cost_effective`: `2026-09-28`
+	// - `agentic`: `2026-09-29`
+	// - `agentic_plus`: `2026-09-28`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
 	Version ParseV2ParametersVersion `json:"version,omitzero" api:"required"`
@@ -3396,6 +3408,8 @@ func (r *ParseV2ParametersInputOptionsImage) UnmarshalJSON(data []byte) error {
 
 // Presentation parsing options (applies to .pptx, .ppt, .odp, .key files)
 type ParseV2ParametersInputOptionsPresentation struct {
+	// Include hidden PPTX slides in the output. Omitted or false skips hidden slides.
+	IncludeHiddenSlides param.Opt[bool] `json:"include_hidden_slides,omitzero"`
 	// Extract content positioned outside the visible slide area. Some presentations
 	// have hidden notes or content that extends beyond slide boundaries
 	OutOfBoundsContent param.Opt[bool] `json:"out_of_bounds_content,omitzero"`
@@ -3450,6 +3464,16 @@ type ParseV2ParametersOutputOptions struct {
 	//
 	// Any of "embedded", "layout", "screenshot".
 	ImagesToSave []string `json:"images_to_save,omitzero"`
+	// What to do with watermark text stamped across the page (e.g., 'CONFIDENTIAL',
+	// 'DRAFT'): 'move_to_end' (default) keeps it as the last block of the page's
+	// markdown, 'move_to_start' as the first block, and 'remove' drops it. The text
+	// output follows the same choice where the watermark is a line of its own in the
+	// PDF text layer. In every mode the detected text is reported in the page's
+	// `watermark` metadata. Requires version 2026-09-28 or later on the
+	// cost_effective, agentic, and agentic_plus tiers; ignored otherwise
+	//
+	// Any of "move_to_end", "move_to_start", "remove".
+	WatermarkHandling string `json:"watermark_handling,omitzero"`
 	// Optional additional output artifacts to save alongside the primary parse output.
 	// Each value opts in to generating and persisting one extra file; the empty list
 	// (default) saves none. The three accepted values are: 'stripped_md' — per-page
@@ -3492,6 +3516,12 @@ func (r ParseV2ParametersOutputOptions) MarshalJSON() (data []byte, err error) {
 }
 func (r *ParseV2ParametersOutputOptions) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
+}
+
+func init() {
+	apijson.RegisterFieldValidator[ParseV2ParametersOutputOptions](
+		"watermark_handling", "move_to_end", "move_to_start", "remove",
+	)
 }
 
 // Markdown formatting options including table styles and link annotations
@@ -3867,9 +3897,9 @@ type ParseV2ParametersProcessingOptionsAutoModeConfigurationParsingConf struct {
 	// Current `latest` by tier:
 	//
 	// - `fast`: `2026-06-15`
-	// - `cost_effective`: `2026-08-19`
-	// - `agentic`: `2026-09-07`
-	// - `agentic_plus`: `2026-08-19`
+	// - `cost_effective`: `2026-09-28`
+	// - `agentic`: `2026-09-29`
+	// - `agentic_plus`: `2026-09-28`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
 	Version string `json:"version,omitzero"`
@@ -4427,13 +4457,35 @@ type SplitV1ParametersResp struct {
 	Categories []SplitCategory `json:"categories" api:"required"`
 	// Product type.
 	ProductType constant.SplitV1 `json:"product_type" default:"split_v1"`
+	// Saved parse configuration ID to control how the document is parsed before
+	// splitting. Takes precedence over parse_tier. Configurations that restrict pages
+	// (`target_pages` or `max_pages` on the parse configuration) are rejected: split
+	// results number pages relative to the full document. Ignored when a completed
+	// parse job is supplied as file_input.
+	ParseConfigID string `json:"parse_config_id" api:"nullable"`
+	// Parse tier used to read the document before splitting. Defaults to fast. Ignored
+	// when a completed parse job is supplied as file_input.
+	//
+	// Any of "agentic", "agentic_plus", "cost_effective", "fast".
+	ParseTier SplitV1ParametersParseTier `json:"parse_tier" api:"nullable"`
 	// Strategy for splitting documents.
 	SplittingStrategy SplitV1ParametersSplittingStrategyResp `json:"splitting_strategy"`
+	// Comma-separated page numbers or ranges to split (1-based). Pages are split in
+	// the order listed. Omit to split all pages. Requires a completed parse job as
+	// file_input.
+	TargetPages string `json:"target_pages" api:"nullable"`
+	// Split version to run. Omit for the current release. Preview versions are
+	// selectable by name and never resolved automatically.
+	Version string `json:"version" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Categories        respjson.Field
 		ProductType       respjson.Field
+		ParseConfigID     respjson.Field
+		ParseTier         respjson.Field
 		SplittingStrategy respjson.Field
+		TargetPages       respjson.Field
+		Version           respjson.Field
 		ExtraFields       map[string]respjson.Field
 		raw               string
 	} `json:"-"`
@@ -4453,6 +4505,17 @@ func (r *SplitV1ParametersResp) UnmarshalJSON(data []byte) error {
 func (r SplitV1ParametersResp) ToParam() SplitV1Parameters {
 	return param.Override[SplitV1Parameters](json.RawMessage(r.RawJSON()))
 }
+
+// Parse tier used to read the document before splitting. Defaults to fast. Ignored
+// when a completed parse job is supplied as file_input.
+type SplitV1ParametersParseTier string
+
+const (
+	SplitV1ParametersParseTierAgentic       SplitV1ParametersParseTier = "agentic"
+	SplitV1ParametersParseTierAgenticPlus   SplitV1ParametersParseTier = "agentic_plus"
+	SplitV1ParametersParseTierCostEffective SplitV1ParametersParseTier = "cost_effective"
+	SplitV1ParametersParseTierFast          SplitV1ParametersParseTier = "fast"
+)
 
 // Strategy for splitting documents.
 type SplitV1ParametersSplittingStrategyResp struct {
@@ -4490,6 +4553,24 @@ func (r *SplitV1ParametersSplittingStrategyResp) UnmarshalJSON(data []byte) erro
 type SplitV1Parameters struct {
 	// Categories to split documents into.
 	Categories []SplitCategoryParam `json:"categories,omitzero" api:"required"`
+	// Saved parse configuration ID to control how the document is parsed before
+	// splitting. Takes precedence over parse_tier. Configurations that restrict pages
+	// (`target_pages` or `max_pages` on the parse configuration) are rejected: split
+	// results number pages relative to the full document. Ignored when a completed
+	// parse job is supplied as file_input.
+	ParseConfigID param.Opt[string] `json:"parse_config_id,omitzero"`
+	// Comma-separated page numbers or ranges to split (1-based). Pages are split in
+	// the order listed. Omit to split all pages. Requires a completed parse job as
+	// file_input.
+	TargetPages param.Opt[string] `json:"target_pages,omitzero"`
+	// Split version to run. Omit for the current release. Preview versions are
+	// selectable by name and never resolved automatically.
+	Version param.Opt[string] `json:"version,omitzero"`
+	// Parse tier used to read the document before splitting. Defaults to fast. Ignored
+	// when a completed parse job is supplied as file_input.
+	//
+	// Any of "agentic", "agentic_plus", "cost_effective", "fast".
+	ParseTier SplitV1ParametersParseTier `json:"parse_tier,omitzero"`
 	// Strategy for splitting documents.
 	SplittingStrategy SplitV1ParametersSplittingStrategy `json:"splitting_strategy,omitzero"`
 	// Product type.

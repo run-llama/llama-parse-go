@@ -42,6 +42,10 @@ func NewBetaDirectoryService(opts ...option.RequestOption) (r BetaDirectoryServi
 }
 
 // Create a new directory within the specified project.
+//
+// A connector subscription syncs into at most one directory. Creating a second one
+// for the same subscription returns `409` with the existing directory's id in
+// `detail.directory_id`.
 func (r *BetaDirectoryService) New(ctx context.Context, params BetaDirectoryNewParams, opts ...option.RequestOption) (res *BetaDirectoryNewResponse, err error) {
 	opts = slices.Concat(r.options, opts)
 	path := "api/v1/beta/directories"
