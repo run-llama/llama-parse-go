@@ -125,6 +125,7 @@ func TestBetaIndexGetWithOptionalParams(t *testing.T) {
 		context.TODO(),
 		"index_id",
 		llamacloud.BetaIndexGetParams{
+			Expand:         []string{"sync_in_progress"},
 			OrganizationID: llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 			ProjectID:      llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		},

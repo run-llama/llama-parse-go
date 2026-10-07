@@ -134,7 +134,8 @@ type BetaIndexNewResponse struct {
 	LastSyncedAt time.Time `json:"last_synced_at" api:"nullable" format:"date-time"`
 	// Build state and diagnostic info.
 	Metadata map[string]any `json:"metadata"`
-	// Whether a sync is running. Set only when getting a single index.
+	// Whether the index is syncing its source or exporting the result. Requires
+	// `expand=sync_in_progress`.
 	SyncInProgress bool `json:"sync_in_progress" api:"nullable"`
 	// Update datetime
 	UpdatedAt time.Time `json:"updated_at" api:"nullable" format:"date-time"`
@@ -191,7 +192,8 @@ type BetaIndexListResponse struct {
 	LastSyncedAt time.Time `json:"last_synced_at" api:"nullable" format:"date-time"`
 	// Build state and diagnostic info.
 	Metadata map[string]any `json:"metadata"`
-	// Whether a sync is running. Set only when getting a single index.
+	// Whether the index is syncing its source or exporting the result. Requires
+	// `expand=sync_in_progress`.
 	SyncInProgress bool `json:"sync_in_progress" api:"nullable"`
 	// Update datetime
 	UpdatedAt time.Time `json:"updated_at" api:"nullable" format:"date-time"`
@@ -248,7 +250,8 @@ type BetaIndexGetResponse struct {
 	LastSyncedAt time.Time `json:"last_synced_at" api:"nullable" format:"date-time"`
 	// Build state and diagnostic info.
 	Metadata map[string]any `json:"metadata"`
-	// Whether a sync is running. Set only when getting a single index.
+	// Whether the index is syncing its source or exporting the result. Requires
+	// `expand=sync_in_progress`.
 	SyncInProgress bool `json:"sync_in_progress" api:"nullable"`
 	// Update datetime
 	UpdatedAt time.Time `json:"updated_at" api:"nullable" format:"date-time"`
@@ -395,6 +398,10 @@ func (r BetaIndexDeleteParams) URLQuery() (v url.Values, err error) {
 type BetaIndexGetParams struct {
 	OrganizationID param.Opt[string] `query:"organization_id,omitzero" format:"uuid" json:"-"`
 	ProjectID      param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
+	// Fields to expand. Supported value: sync_in_progress.
+	//
+	// Any of "sync_in_progress".
+	Expand []string `query:"expand,omitzero" json:"-"`
 	paramObj
 }
 
