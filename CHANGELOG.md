@@ -1,5 +1,38 @@
 # Changelog
 
+## [1.8.0](https://github.com/run-llama/llama-parse-go/compare/v1.7.0...v1.8.0) (2026-10-07)
+
+
+### Features
+
+* add redline prompt changes to new prod version ([#27635](https://github.com/run-llama/llama-parse-go/issues/27635)) ([87eb6e5](https://github.com/run-llama/llama-parse-go/commit/87eb6e5660941cc11e9824eed2005cee5637304f))
+* **chat:** let a chat session refuse queries from its share link ([#27012](https://github.com/run-llama/llama-parse-go/issues/27012)) ([ddab949](https://github.com/run-llama/llama-parse-go/commit/ddab9493f60fa28a88b349019880e9343b6e4ca0))
+* **parse:** add detected_form_types to the per-page enriched forms output ([#26052](https://github.com/run-llama/llama-parse-go/issues/26052)) ([e920c91](https://github.com/run-llama/llama-parse-go/commit/e920c919e2d514154c1c33b9d4678a9ab748b975))
+* **parse:** add option to include hidden PPTX slides ([#27938](https://github.com/run-llama/llama-parse-go/issues/27938)) ([a4a7dcf](https://github.com/run-llama/llama-parse-go/commit/a4a7dcf6d3593a575438c812ede12a59ec7a98a1))
+* **parse:** agentic 2026-09-09 — cache-stable prompt order + Flash Lite MINIMAL thinking ([#26273](https://github.com/run-llama/llama-parse-go/issues/26273)) ([aad09ff](https://github.com/run-llama/llama-parse-go/commit/aad09ff2f072b3dbe3ea23432f76d3d1c8d4d37a))
+* **parse:** apply watermark_handling to text output; add watermark e2e test ([#27932](https://github.com/run-llama/llama-parse-go/issues/27932)) ([7071ba6](https://github.com/run-llama/llama-parse-go/commit/7071ba6372a7bdcd9a21536bb40c34f7126a4681))
+* **parse:** display enriched Forms granular highlights ([#26366](https://github.com/run-llama/llama-parse-go/issues/26366)) ([73df061](https://github.com/run-llama/llama-parse-go/commit/73df061e9e8cde538f94cb8d444cfe9a3cdf4a01))
+* **parse:** remove_watermark output option with 2026-09-28 tier versions ([#27813](https://github.com/run-llama/llama-parse-go/issues/27813)) ([9ae465f](https://github.com/run-llama/llama-parse-go/commit/9ae465fb4ba658194b289884bba0d072c9be083d))
+* **parse:** ship the illegible-classification prompts as agentic_plus 2026-09-11 (latest) ([#26490](https://github.com/run-llama/llama-parse-go/issues/26490)) ([bd6cbff](https://github.com/run-llama/llama-parse-go/commit/bd6cbff8366ef7207698a3b6e6d1dcb89aa9e45b))
+* **sdk:** publish beta.attachments list and get ([f2ae8c5](https://github.com/run-llama/llama-parse-go/commit/f2ae8c544da842b5f724d6c1faf68123ab874cba))
+* **split:** accept a parse config or parse_job_id like extract_v2 ([#26303](https://github.com/run-llama/llama-parse-go/issues/26303)) ([54c812e](https://github.com/run-llama/llama-parse-go/commit/54c812ed5e0d353bf5e6209df77d80ce549d65c3))
+* **split:** target_pages page selection when splitting a parse job ([#26921](https://github.com/run-llama/llama-parse-go/issues/26921)) ([2119867](https://github.com/run-llama/llama-parse-go/commit/211986782b19c9ef3b56f58d44ced1e57e5235d1))
+
+
+### Bug Fixes
+
+* **chat:** report every index a chat turn could not query ([#26981](https://github.com/run-llama/llama-parse-go/issues/26981)) ([aae2509](https://github.com/run-llama/llama-parse-go/commit/aae250939de947113b1ce73528c228e43e0623de))
+* **extract:** refuse to delete a non-terminal job (LI-8700) ([#23793](https://github.com/run-llama/llama-parse-go/issues/23793)) ([24fc732](https://github.com/run-llama/llama-parse-go/commit/24fc7328bd601e20db73efad9a9a974219ffb20e))
+* **split:** process target_pages in the order written, matching Extract ([#28173](https://github.com/run-llama/llama-parse-go/issues/28173)) ([fafd115](https://github.com/run-llama/llama-parse-go/commit/fafd115ee676da6fd6cc4cd9017be987d984d1a9))
+
+
+### Documentation
+
+* **changelog:** correct the shipped 1.7.0 changelog ([5ef4cf0](https://github.com/run-llama/llama-parse-go/commit/5ef4cf052a7a5a63b1215ef5853155a98b5d5482))
+* **changelog:** correct the shipped 1.7.0 changelog ([62c99a3](https://github.com/run-llama/llama-parse-go/commit/62c99a3952fbd27de8b66b67b9786edc9305bd5d))
+* **changelog:** match release-please's two-blank-line heading spacing ([a4ac555](https://github.com/run-llama/llama-parse-go/commit/a4ac555c760c2e0b37fb4195beb0a9a4faa8e9c2))
+* update Extract versions and pricing ([#28128](https://github.com/run-llama/llama-parse-go/issues/28128)) ([3960f4c](https://github.com/run-llama/llama-parse-go/commit/3960f4cc30c662a2951d5bcf0724d8d62e1f914b))
+
 ## [1.6.0](https://github.com/run-llama/llama-parse-go/compare/v1.5.1...v1.6.0) (2026-08-28)
 
 
