@@ -279,7 +279,7 @@ client := llamacloud.NewClient(
 	option.WithHeader("X-Some-Header", "custom_header_info"),
 )
 
-client.Beta.Indexes.List(context.TODO(), ...,
+client.Indexes.List(context.TODO(), ...,
 	// Override the header
 	option.WithHeader("X-Some-Header", "some_other_custom_header_info"),
 	// Add an undocumented field to the request body, using sjson syntax
@@ -339,7 +339,7 @@ When the API returns a non-success status code, we return an error with type
 To handle errors, we recommend that you use the `errors.As` pattern:
 
 ```go
-_, err := client.Beta.Indexes.List(context.TODO(), llamacloud.BetaIndexListParams{
+_, err := client.Indexes.List(context.TODO(), llamacloud.IndexListParams{
 	ProjectID: llamacloud.String("my-project-id"),
 })
 if err != nil {
@@ -366,9 +366,9 @@ To set a per-retry timeout, use `option.WithRequestTimeout()`.
 // This sets the timeout for the request, including all the retries.
 ctx, cancel := context.WithTimeout(context.Background(), 5*time.Minute)
 defer cancel()
-client.Beta.Indexes.List(
+client.Indexes.List(
 	ctx,
-	llamacloud.BetaIndexListParams{
+	llamacloud.IndexListParams{
 		ProjectID: llamacloud.String("my-project-id"),
 	},
 	// This sets the per-retry timeout
@@ -425,9 +425,9 @@ client := llamacloud.NewClient(
 )
 
 // Override per-request:
-client.Beta.Indexes.List(
+client.Indexes.List(
 	context.TODO(),
-	llamacloud.BetaIndexListParams{
+	llamacloud.IndexListParams{
 		ProjectID: llamacloud.String("my-project-id"),
 	},
 	option.WithMaxRetries(5),
@@ -442,9 +442,9 @@ you need to examine response headers, status codes, or other details.
 ```go
 // Create a variable to store the HTTP response
 var response *http.Response
-page, err := client.Beta.Indexes.List(
+page, err := client.Indexes.List(
 	context.TODO(),
-	llamacloud.BetaIndexListParams{
+	llamacloud.IndexListParams{
 		ProjectID: llamacloud.String("my-project-id"),
 	},
 	option.WithResponseInto(&response),

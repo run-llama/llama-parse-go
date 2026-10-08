@@ -34,6 +34,9 @@ type Client struct {
 	DataSources      DataSourceService
 	Pipelines        PipelineService
 	Retrievers       RetrieverService
+	Indexes          IndexService
+	Retrieval        RetrievalService
+	Chat             ChatService
 	Beta             BetaService
 }
 
@@ -83,6 +86,9 @@ func NewClient(opts ...option.RequestOption) (r Client) {
 	r.DataSources = NewDataSourceService(opts...)
 	r.Pipelines = NewPipelineService(opts...)
 	r.Retrievers = NewRetrieverService(opts...)
+	r.Indexes = NewIndexService(opts...)
+	r.Retrieval = NewRetrievalService(opts...)
+	r.Chat = NewChatService(opts...)
 	r.Beta = NewBetaService(opts...)
 
 	return

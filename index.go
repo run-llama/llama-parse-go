@@ -20,29 +20,27 @@ import (
 	"github.com/run-llama/llama-parse-go/packages/respjson"
 )
 
-// BetaIndexService contains methods and other services that help with interacting
-// with the llama-cloud API.
+// IndexService contains methods and other services that help with interacting with
+// the llama-cloud API.
 //
 // Note, unlike clients, this service does not read variables from the environment
 // automatically. You should not instantiate this service directly, and instead use
-// the [NewBetaIndexService] method instead.
-type BetaIndexService struct {
+// the [NewIndexService] method instead.
+type IndexService struct {
 	options []option.RequestOption
 }
 
-// NewBetaIndexService generates a new service that applies the given options to
-// each request. These options are applied after the parent client's options (if
-// there is one), and before any request-specific options.
-func NewBetaIndexService(opts ...option.RequestOption) (r BetaIndexService) {
-	r = BetaIndexService{}
+// NewIndexService generates a new service that applies the given options to each
+// request. These options are applied after the parent client's options (if there
+// is one), and before any request-specific options.
+func NewIndexService(opts ...option.RequestOption) (r IndexService) {
+	r = IndexService{}
 	r.options = opts
 	return
 }
 
 // Create a searchable index over a source directory.
-//
-// Deprecated: Moved out of beta. Use the top-level indexes resource instead
-func (r *BetaIndexService) New(ctx context.Context, params BetaIndexNewParams, opts ...option.RequestOption) (res *BetaIndexNewResponse, err error) {
+func (r *IndexService) New(ctx context.Context, params IndexNewParams, opts ...option.RequestOption) (res *IndexNewResponse, err error) {
 	opts = slices.Concat(r.options, opts)
 	path := "api/v1/indexes"
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, params, &res, opts...)
@@ -50,9 +48,7 @@ func (r *BetaIndexService) New(ctx context.Context, params BetaIndexNewParams, o
 }
 
 // List indexes for the current project.
-//
-// Deprecated: Moved out of beta. Use the top-level indexes resource instead
-func (r *BetaIndexService) List(ctx context.Context, query BetaIndexListParams, opts ...option.RequestOption) (res *pagination.PaginatedCursor[BetaIndexListResponse], err error) {
+func (r *IndexService) List(ctx context.Context, query IndexListParams, opts ...option.RequestOption) (res *pagination.PaginatedCursor[IndexListResponse], err error) {
 	var raw *http.Response
 	opts = slices.Concat(r.options, opts)
 	opts = append([]option.RequestOption{option.WithResponseInto(&raw)}, opts...)
@@ -70,16 +66,12 @@ func (r *BetaIndexService) List(ctx context.Context, query BetaIndexListParams, 
 }
 
 // List indexes for the current project.
-//
-// Deprecated: Moved out of beta. Use the top-level indexes resource instead
-func (r *BetaIndexService) ListAutoPaging(ctx context.Context, query BetaIndexListParams, opts ...option.RequestOption) *pagination.PaginatedCursorAutoPager[BetaIndexListResponse] {
+func (r *IndexService) ListAutoPaging(ctx context.Context, query IndexListParams, opts ...option.RequestOption) *pagination.PaginatedCursorAutoPager[IndexListResponse] {
 	return pagination.NewPaginatedCursorAutoPager(r.List(ctx, query, opts...))
 }
 
 // Delete an index.
-//
-// Deprecated: Moved out of beta. Use the top-level indexes resource instead
-func (r *BetaIndexService) Delete(ctx context.Context, indexID string, body BetaIndexDeleteParams, opts ...option.RequestOption) (err error) {
+func (r *IndexService) Delete(ctx context.Context, indexID string, body IndexDeleteParams, opts ...option.RequestOption) (err error) {
 	opts = slices.Concat(r.options, opts)
 	opts = append([]option.RequestOption{option.WithHeader("Accept", "*/*")}, opts...)
 	if indexID == "" {
@@ -91,10 +83,20 @@ func (r *BetaIndexService) Delete(ctx context.Context, indexID string, body Beta
 	return err
 }
 
+// Cancel the running sync for an index. Returns 409 if no sync is running.
+func (r *IndexService) CancelSync(ctx context.Context, indexID string, body IndexCancelSyncParams, opts ...option.RequestOption) (res *IndexCancelSyncResponse, err error) {
+	opts = slices.Concat(r.options, opts)
+	if indexID == "" {
+		err = errors.New("missing required index_id parameter")
+		return nil, err
+	}
+	path := fmt.Sprintf("api/v1/indexes/%s/sync/cancel", url.PathEscape(indexID))
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, body, &res, opts...)
+	return res, err
+}
+
 // Get an index by ID.
-//
-// Deprecated: Moved out of beta. Use the top-level indexes resource instead
-func (r *BetaIndexService) Get(ctx context.Context, indexID string, query BetaIndexGetParams, opts ...option.RequestOption) (res *BetaIndexGetResponse, err error) {
+func (r *IndexService) Get(ctx context.Context, indexID string, query IndexGetParams, opts ...option.RequestOption) (res *IndexGetResponse, err error) {
 	opts = slices.Concat(r.options, opts)
 	if indexID == "" {
 		err = errors.New("missing required index_id parameter")
@@ -107,9 +109,7 @@ func (r *BetaIndexService) Get(ctx context.Context, indexID string, query BetaIn
 
 // Trigger a sync and export for an existing index, re-parsing changed files and
 // exporting updated chunks.
-//
-// Deprecated: Moved out of beta. Use the top-level indexes resource instead
-func (r *BetaIndexService) Sync(ctx context.Context, indexID string, body BetaIndexSyncParams, opts ...option.RequestOption) (res *BetaIndexSyncResponse, err error) {
+func (r *IndexService) Sync(ctx context.Context, indexID string, body IndexSyncParams, opts ...option.RequestOption) (res *IndexSyncResponse, err error) {
 	opts = slices.Concat(r.options, opts)
 	if indexID == "" {
 		err = errors.New("missing required index_id parameter")
@@ -121,7 +121,7 @@ func (r *BetaIndexService) Sync(ctx context.Context, indexID string, body BetaIn
 }
 
 // A searchable index over a directory of documents.
-type BetaIndexNewResponse struct {
+type IndexNewResponse struct {
 	// Unique identifier
 	ID string `json:"id" api:"required"`
 	// ID of the export configuration.
@@ -173,13 +173,13 @@ type BetaIndexNewResponse struct {
 }
 
 // Returns the unmodified JSON received from the API
-func (r BetaIndexNewResponse) RawJSON() string { return r.JSON.raw }
-func (r *BetaIndexNewResponse) UnmarshalJSON(data []byte) error {
+func (r IndexNewResponse) RawJSON() string { return r.JSON.raw }
+func (r *IndexNewResponse) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
 // A searchable index over a directory of documents.
-type BetaIndexListResponse struct {
+type IndexListResponse struct {
 	// Unique identifier
 	ID string `json:"id" api:"required"`
 	// ID of the export configuration.
@@ -231,13 +231,15 @@ type BetaIndexListResponse struct {
 }
 
 // Returns the unmodified JSON received from the API
-func (r BetaIndexListResponse) RawJSON() string { return r.JSON.raw }
-func (r *BetaIndexListResponse) UnmarshalJSON(data []byte) error {
+func (r IndexListResponse) RawJSON() string { return r.JSON.raw }
+func (r *IndexListResponse) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
+
+type IndexCancelSyncResponse = any
 
 // A searchable index over a directory of documents.
-type BetaIndexGetResponse struct {
+type IndexGetResponse struct {
 	// Unique identifier
 	ID string `json:"id" api:"required"`
 	// ID of the export configuration.
@@ -289,14 +291,14 @@ type BetaIndexGetResponse struct {
 }
 
 // Returns the unmodified JSON received from the API
-func (r BetaIndexGetResponse) RawJSON() string { return r.JSON.raw }
-func (r *BetaIndexGetResponse) UnmarshalJSON(data []byte) error {
+func (r IndexGetResponse) RawJSON() string { return r.JSON.raw }
+func (r *IndexGetResponse) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-type BetaIndexSyncResponse = any
+type IndexSyncResponse = any
 
-type BetaIndexNewParams struct {
+type IndexNewParams struct {
 	// ID of the source directory containing your documents.
 	SourceDirectoryID string            `json:"source_directory_id" api:"required"`
 	OrganizationID    param.Opt[string] `query:"organization_id,omitzero" format:"uuid" json:"-"`
@@ -312,7 +314,7 @@ type BetaIndexNewParams struct {
 	// Product configurations for syncing. Omit to use a default parse configuration.
 	// Include an explicit entry per product type (e.g. parse, extract) to override the
 	// default.
-	Products []BetaIndexNewParamsProduct `json:"products,omitzero"`
+	Products []IndexNewParamsProduct `json:"products,omitzero"`
 	// Attachment kinds to store alongside parsed output. Each entry must be one of:
 	// screenshots, items. For example, ['screenshots'] renders and stores per-page
 	// screenshots; ['items'] stores structured items with bounding boxes. Omit or pass
@@ -323,20 +325,20 @@ type BetaIndexNewParams struct {
 	// export destination falls back to 'Download'.
 	//
 	// Any of "DEFAULT", "DISABLED".
-	VectorTarget BetaIndexNewParamsVectorTarget `json:"vector_target,omitzero"`
+	VectorTarget IndexNewParamsVectorTarget `json:"vector_target,omitzero"`
 	paramObj
 }
 
-func (r BetaIndexNewParams) MarshalJSON() (data []byte, err error) {
-	type shadow BetaIndexNewParams
+func (r IndexNewParams) MarshalJSON() (data []byte, err error) {
+	type shadow IndexNewParams
 	return param.MarshalObject(r, (*shadow)(&r))
 }
-func (r *BetaIndexNewParams) UnmarshalJSON(data []byte) error {
+func (r *IndexNewParams) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-// URLQuery serializes [BetaIndexNewParams]'s query parameters as `url.Values`.
-func (r BetaIndexNewParams) URLQuery() (v url.Values, err error) {
+// URLQuery serializes [IndexNewParams]'s query parameters as `url.Values`.
+func (r IndexNewParams) URLQuery() (v url.Values, err error) {
 	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
 		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
 		NestedFormat: apiquery.NestedQueryFormatBrackets,
@@ -350,7 +352,7 @@ func (r BetaIndexNewParams) URLQuery() (v url.Values, err error) {
 // internals. Translation between the two happens in `index/api_utils.py`.
 //
 // The properties ProductConfigID, ProductType are required.
-type BetaIndexNewParamsProduct struct {
+type IndexNewParamsProduct struct {
 	// ID of the product configuration.
 	ProductConfigID string `json:"product_config_id" api:"required"`
 	// Product type. One of: parse, extract.
@@ -358,25 +360,25 @@ type BetaIndexNewParamsProduct struct {
 	paramObj
 }
 
-func (r BetaIndexNewParamsProduct) MarshalJSON() (data []byte, err error) {
-	type shadow BetaIndexNewParamsProduct
+func (r IndexNewParamsProduct) MarshalJSON() (data []byte, err error) {
+	type shadow IndexNewParamsProduct
 	return param.MarshalObject(r, (*shadow)(&r))
 }
-func (r *BetaIndexNewParamsProduct) UnmarshalJSON(data []byte) error {
+func (r *IndexNewParamsProduct) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
 // Vector export destination for the index. 'DEFAULT' exports to the managed vector
 // DB destination resolved from configuration. 'DISABLED' skips vector export — the
 // export destination falls back to 'Download'.
-type BetaIndexNewParamsVectorTarget string
+type IndexNewParamsVectorTarget string
 
 const (
-	BetaIndexNewParamsVectorTargetDefault  BetaIndexNewParamsVectorTarget = "DEFAULT"
-	BetaIndexNewParamsVectorTargetDisabled BetaIndexNewParamsVectorTarget = "DISABLED"
+	IndexNewParamsVectorTargetDefault  IndexNewParamsVectorTarget = "DEFAULT"
+	IndexNewParamsVectorTargetDisabled IndexNewParamsVectorTarget = "DISABLED"
 )
 
-type BetaIndexListParams struct {
+type IndexListParams struct {
 	OrganizationID    param.Opt[string] `query:"organization_id,omitzero" format:"uuid" json:"-"`
 	PageSize          param.Opt[int64]  `query:"page_size,omitzero" json:"-"`
 	PageToken         param.Opt[string] `query:"page_token,omitzero" json:"-"`
@@ -385,29 +387,43 @@ type BetaIndexListParams struct {
 	paramObj
 }
 
-// URLQuery serializes [BetaIndexListParams]'s query parameters as `url.Values`.
-func (r BetaIndexListParams) URLQuery() (v url.Values, err error) {
+// URLQuery serializes [IndexListParams]'s query parameters as `url.Values`.
+func (r IndexListParams) URLQuery() (v url.Values, err error) {
 	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
 		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
 		NestedFormat: apiquery.NestedQueryFormatBrackets,
 	})
 }
 
-type BetaIndexDeleteParams struct {
+type IndexDeleteParams struct {
 	OrganizationID param.Opt[string] `query:"organization_id,omitzero" format:"uuid" json:"-"`
 	ProjectID      param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
 	paramObj
 }
 
-// URLQuery serializes [BetaIndexDeleteParams]'s query parameters as `url.Values`.
-func (r BetaIndexDeleteParams) URLQuery() (v url.Values, err error) {
+// URLQuery serializes [IndexDeleteParams]'s query parameters as `url.Values`.
+func (r IndexDeleteParams) URLQuery() (v url.Values, err error) {
 	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
 		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
 		NestedFormat: apiquery.NestedQueryFormatBrackets,
 	})
 }
 
-type BetaIndexGetParams struct {
+type IndexCancelSyncParams struct {
+	OrganizationID param.Opt[string] `query:"organization_id,omitzero" format:"uuid" json:"-"`
+	ProjectID      param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
+	paramObj
+}
+
+// URLQuery serializes [IndexCancelSyncParams]'s query parameters as `url.Values`.
+func (r IndexCancelSyncParams) URLQuery() (v url.Values, err error) {
+	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
+		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
+		NestedFormat: apiquery.NestedQueryFormatBrackets,
+	})
+}
+
+type IndexGetParams struct {
 	OrganizationID param.Opt[string] `query:"organization_id,omitzero" format:"uuid" json:"-"`
 	ProjectID      param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
 	// Fields to expand. Supported value: sync_in_progress.
@@ -417,22 +433,22 @@ type BetaIndexGetParams struct {
 	paramObj
 }
 
-// URLQuery serializes [BetaIndexGetParams]'s query parameters as `url.Values`.
-func (r BetaIndexGetParams) URLQuery() (v url.Values, err error) {
+// URLQuery serializes [IndexGetParams]'s query parameters as `url.Values`.
+func (r IndexGetParams) URLQuery() (v url.Values, err error) {
 	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
 		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
 		NestedFormat: apiquery.NestedQueryFormatBrackets,
 	})
 }
 
-type BetaIndexSyncParams struct {
+type IndexSyncParams struct {
 	OrganizationID param.Opt[string] `query:"organization_id,omitzero" format:"uuid" json:"-"`
 	ProjectID      param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
 	paramObj
 }
 
-// URLQuery serializes [BetaIndexSyncParams]'s query parameters as `url.Values`.
-func (r BetaIndexSyncParams) URLQuery() (v url.Values, err error) {
+// URLQuery serializes [IndexSyncParams]'s query parameters as `url.Values`.
+func (r IndexSyncParams) URLQuery() (v url.Values, err error) {
 	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
 		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
 		NestedFormat: apiquery.NestedQueryFormatBrackets,

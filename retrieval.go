@@ -18,30 +18,28 @@ import (
 	"github.com/run-llama/llama-parse-go/packages/respjson"
 )
 
-// BetaRetrievalService contains methods and other services that help with
-// interacting with the llama-cloud API.
+// RetrievalService contains methods and other services that help with interacting
+// with the llama-cloud API.
 //
 // Note, unlike clients, this service does not read variables from the environment
 // automatically. You should not instantiate this service directly, and instead use
-// the [NewBetaRetrievalService] method instead.
-type BetaRetrievalService struct {
+// the [NewRetrievalService] method instead.
+type RetrievalService struct {
 	options []option.RequestOption
 }
 
-// NewBetaRetrievalService generates a new service that applies the given options
-// to each request. These options are applied after the parent client's options (if
+// NewRetrievalService generates a new service that applies the given options to
+// each request. These options are applied after the parent client's options (if
 // there is one), and before any request-specific options.
-func NewBetaRetrievalService(opts ...option.RequestOption) (r BetaRetrievalService) {
-	r = BetaRetrievalService{}
+func NewRetrievalService(opts ...option.RequestOption) (r RetrievalService) {
+	r = RetrievalService{}
 	r.options = opts
 	return
 }
 
 // Retrieve relevant chunks via hybrid search (vector + full-text), with filtering
 // on built-in or user-defined metadata.
-//
-// Deprecated: Moved out of beta. Use the top-level retrieval resource instead
-func (r *BetaRetrievalService) Get(ctx context.Context, params BetaRetrievalGetParams, opts ...option.RequestOption) (res *BetaRetrievalGetResponse, err error) {
+func (r *RetrievalService) Get(ctx context.Context, params RetrievalGetParams, opts ...option.RequestOption) (res *RetrievalGetResponse, err error) {
 	opts = slices.Concat(r.options, opts)
 	path := "api/v1/retrieval/retrieve"
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, params, &res, opts...)
@@ -49,9 +47,7 @@ func (r *BetaRetrievalService) Get(ctx context.Context, params BetaRetrievalGetP
 }
 
 // Search for files by name.
-//
-// Deprecated: Moved out of beta. Use the top-level retrieval resource instead
-func (r *BetaRetrievalService) Find(ctx context.Context, params BetaRetrievalFindParams, opts ...option.RequestOption) (res *pagination.PaginatedCursorPost[BetaRetrievalFindResponse], err error) {
+func (r *RetrievalService) Find(ctx context.Context, params RetrievalFindParams, opts ...option.RequestOption) (res *pagination.PaginatedCursorPost[RetrievalFindResponse], err error) {
 	var raw *http.Response
 	opts = slices.Concat(r.options, opts)
 	opts = append([]option.RequestOption{option.WithResponseInto(&raw)}, opts...)
@@ -69,16 +65,12 @@ func (r *BetaRetrievalService) Find(ctx context.Context, params BetaRetrievalFin
 }
 
 // Search for files by name.
-//
-// Deprecated: Moved out of beta. Use the top-level retrieval resource instead
-func (r *BetaRetrievalService) FindAutoPaging(ctx context.Context, params BetaRetrievalFindParams, opts ...option.RequestOption) *pagination.PaginatedCursorPostAutoPager[BetaRetrievalFindResponse] {
+func (r *RetrievalService) FindAutoPaging(ctx context.Context, params RetrievalFindParams, opts ...option.RequestOption) *pagination.PaginatedCursorPostAutoPager[RetrievalFindResponse] {
 	return pagination.NewPaginatedCursorPostAutoPager(r.Find(ctx, params, opts...))
 }
 
 // Grep within a file's parsed content using a regex pattern.
-//
-// Deprecated: Moved out of beta. Use the top-level retrieval resource instead
-func (r *BetaRetrievalService) Grep(ctx context.Context, params BetaRetrievalGrepParams, opts ...option.RequestOption) (res *pagination.PaginatedCursorPost[BetaRetrievalGrepResponse], err error) {
+func (r *RetrievalService) Grep(ctx context.Context, params RetrievalGrepParams, opts ...option.RequestOption) (res *pagination.PaginatedCursorPost[RetrievalGrepResponse], err error) {
 	var raw *http.Response
 	opts = slices.Concat(r.options, opts)
 	opts = append([]option.RequestOption{option.WithResponseInto(&raw)}, opts...)
@@ -96,16 +88,12 @@ func (r *BetaRetrievalService) Grep(ctx context.Context, params BetaRetrievalGre
 }
 
 // Grep within a file's parsed content using a regex pattern.
-//
-// Deprecated: Moved out of beta. Use the top-level retrieval resource instead
-func (r *BetaRetrievalService) GrepAutoPaging(ctx context.Context, params BetaRetrievalGrepParams, opts ...option.RequestOption) *pagination.PaginatedCursorPostAutoPager[BetaRetrievalGrepResponse] {
+func (r *RetrievalService) GrepAutoPaging(ctx context.Context, params RetrievalGrepParams, opts ...option.RequestOption) *pagination.PaginatedCursorPostAutoPager[RetrievalGrepResponse] {
 	return pagination.NewPaginatedCursorPostAutoPager(r.Grep(ctx, params, opts...))
 }
 
 // Read the parsed text content of a specific file.
-//
-// Deprecated: Moved out of beta. Use the top-level retrieval resource instead
-func (r *BetaRetrievalService) Read(ctx context.Context, params BetaRetrievalReadParams, opts ...option.RequestOption) (res *BetaRetrievalReadResponse, err error) {
+func (r *RetrievalService) Read(ctx context.Context, params RetrievalReadParams, opts ...option.RequestOption) (res *RetrievalReadResponse, err error) {
 	opts = slices.Concat(r.options, opts)
 	path := "api/v1/retrieval/files/read"
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, params, &res, opts...)
@@ -113,9 +101,9 @@ func (r *BetaRetrievalService) Read(ctx context.Context, params BetaRetrievalRea
 }
 
 // Response containing retrieval results.
-type BetaRetrievalGetResponse struct {
+type RetrievalGetResponse struct {
 	// Ordered list of retrieved chunks.
-	Results []BetaRetrievalGetResponseResult `json:"results" api:"required"`
+	Results []RetrievalGetResponseResult `json:"results" api:"required"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Results     respjson.Field
@@ -125,23 +113,23 @@ type BetaRetrievalGetResponse struct {
 }
 
 // Returns the unmodified JSON received from the API
-func (r BetaRetrievalGetResponse) RawJSON() string { return r.JSON.raw }
-func (r *BetaRetrievalGetResponse) UnmarshalJSON(data []byte) error {
+func (r RetrievalGetResponse) RawJSON() string { return r.JSON.raw }
+func (r *RetrievalGetResponse) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
 // A single retrieval result.
-type BetaRetrievalGetResponseResult struct {
+type RetrievalGetResponseResult struct {
 	// Text content of the retrieved chunk.
 	Content string `json:"content" api:"required"`
 	// User-defined metadata associated with the chunk.
-	Metadata map[string]BetaRetrievalGetResponseResultMetadataUnion `json:"metadata" api:"nullable"`
+	Metadata map[string]RetrievalGetResponseResultMetadataUnion `json:"metadata" api:"nullable"`
 	// Relevance score from the reranker, if reranking was applied.
 	RerankScore float64 `json:"rerank_score" api:"nullable"`
 	// Hybrid search relevance score.
 	Score float64 `json:"score" api:"nullable"`
 	// Built-in fields stored for every exported chunk.
-	StaticFields BetaRetrievalGetResponseResultStaticFields `json:"static_fields"`
+	StaticFields RetrievalGetResponseResultStaticFields `json:"static_fields"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Content      respjson.Field
@@ -155,19 +143,19 @@ type BetaRetrievalGetResponseResult struct {
 }
 
 // Returns the unmodified JSON received from the API
-func (r BetaRetrievalGetResponseResult) RawJSON() string { return r.JSON.raw }
-func (r *BetaRetrievalGetResponseResult) UnmarshalJSON(data []byte) error {
+func (r RetrievalGetResponseResult) RawJSON() string { return r.JSON.raw }
+func (r *RetrievalGetResponseResult) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-// BetaRetrievalGetResponseResultMetadataUnion contains all possible properties and
+// RetrievalGetResponseResultMetadataUnion contains all possible properties and
 // values from [string], [int64], [float64], [bool], [[]string].
 //
 // Use the methods beginning with 'As' to cast the union to one of its variants.
 //
 // If the underlying value is not a json object, one of the following properties
 // will be valid: OfString OfInt OfFloat OfBool OfStringArray]
-type BetaRetrievalGetResponseResultMetadataUnion struct {
+type RetrievalGetResponseResultMetadataUnion struct {
 	// This field will be present if the value is a [string] instead of an object.
 	OfString string `json:",inline"`
 	// This field will be present if the value is a [int64] instead of an object.
@@ -188,42 +176,42 @@ type BetaRetrievalGetResponseResultMetadataUnion struct {
 	} `json:"-"`
 }
 
-func (u BetaRetrievalGetResponseResultMetadataUnion) AsString() (v string) {
+func (u RetrievalGetResponseResultMetadataUnion) AsString() (v string) {
 	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
 	return
 }
 
-func (u BetaRetrievalGetResponseResultMetadataUnion) AsInt() (v int64) {
+func (u RetrievalGetResponseResultMetadataUnion) AsInt() (v int64) {
 	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
 	return
 }
 
-func (u BetaRetrievalGetResponseResultMetadataUnion) AsFloat() (v float64) {
+func (u RetrievalGetResponseResultMetadataUnion) AsFloat() (v float64) {
 	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
 	return
 }
 
-func (u BetaRetrievalGetResponseResultMetadataUnion) AsBool() (v bool) {
+func (u RetrievalGetResponseResultMetadataUnion) AsBool() (v bool) {
 	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
 	return
 }
 
-func (u BetaRetrievalGetResponseResultMetadataUnion) AsStringArray() (v []string) {
+func (u RetrievalGetResponseResultMetadataUnion) AsStringArray() (v []string) {
 	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
 	return
 }
 
 // Returns the unmodified JSON received from the API
-func (u BetaRetrievalGetResponseResultMetadataUnion) RawJSON() string { return u.JSON.raw }
+func (u RetrievalGetResponseResultMetadataUnion) RawJSON() string { return u.JSON.raw }
 
-func (r *BetaRetrievalGetResponseResultMetadataUnion) UnmarshalJSON(data []byte) error {
+func (r *RetrievalGetResponseResultMetadataUnion) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
 // Built-in fields stored for every exported chunk.
-type BetaRetrievalGetResponseResultStaticFields struct {
+type RetrievalGetResponseResultStaticFields struct {
 	// Attachments associated with the chunk
-	Attachments []BetaRetrievalGetResponseResultStaticFieldsAttachment `json:"attachments"`
+	Attachments []RetrievalGetResponseResultStaticFieldsAttachment `json:"attachments"`
 	// End character offset of the chunk.
 	ChunkEndChar int64 `json:"chunk_end_char" api:"nullable"`
 	// Index of the chunk within the file.
@@ -254,14 +242,14 @@ type BetaRetrievalGetResponseResultStaticFields struct {
 }
 
 // Returns the unmodified JSON received from the API
-func (r BetaRetrievalGetResponseResultStaticFields) RawJSON() string { return r.JSON.raw }
-func (r *BetaRetrievalGetResponseResultStaticFields) UnmarshalJSON(data []byte) error {
+func (r RetrievalGetResponseResultStaticFields) RawJSON() string { return r.JSON.raw }
+func (r *RetrievalGetResponseResultStaticFields) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
 // Reference to a file attachment, retrievable via
 // `GET /api/v1/beta/attachments/{attachment_name}?source_id=...`.
-type BetaRetrievalGetResponseResultStaticFieldsAttachment struct {
+type RetrievalGetResponseResultStaticFieldsAttachment struct {
 	// Attachment-relative path, e.g. 'screenshots/page_7.jpg'.
 	AttachmentName string `json:"attachment_name" api:"required"`
 	// File ID to pass as source_id when fetching the attachment.
@@ -279,13 +267,13 @@ type BetaRetrievalGetResponseResultStaticFieldsAttachment struct {
 }
 
 // Returns the unmodified JSON received from the API
-func (r BetaRetrievalGetResponseResultStaticFieldsAttachment) RawJSON() string { return r.JSON.raw }
-func (r *BetaRetrievalGetResponseResultStaticFieldsAttachment) UnmarshalJSON(data []byte) error {
+func (r RetrievalGetResponseResultStaticFieldsAttachment) RawJSON() string { return r.JSON.raw }
+func (r *RetrievalGetResponseResultStaticFieldsAttachment) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
 // A file returned by find.
-type BetaRetrievalFindResponse struct {
+type RetrievalFindResponse struct {
 	// ID of the file.
 	FileID string `json:"file_id" api:"required"`
 	// Display name of the file.
@@ -300,13 +288,13 @@ type BetaRetrievalFindResponse struct {
 }
 
 // Returns the unmodified JSON received from the API
-func (r BetaRetrievalFindResponse) RawJSON() string { return r.JSON.raw }
-func (r *BetaRetrievalFindResponse) UnmarshalJSON(data []byte) error {
+func (r RetrievalFindResponse) RawJSON() string { return r.JSON.raw }
+func (r *RetrievalFindResponse) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
 // A single grep match within a file.
-type BetaRetrievalGrepResponse struct {
+type RetrievalGrepResponse struct {
 	// Matched text content.
 	Content string `json:"content" api:"required"`
 	// End character offset of the match.
@@ -324,13 +312,13 @@ type BetaRetrievalGrepResponse struct {
 }
 
 // Returns the unmodified JSON received from the API
-func (r BetaRetrievalGrepResponse) RawJSON() string { return r.JSON.raw }
-func (r *BetaRetrievalGrepResponse) UnmarshalJSON(data []byte) error {
+func (r RetrievalGrepResponse) RawJSON() string { return r.JSON.raw }
+func (r *RetrievalGrepResponse) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
 // File read result.
-type BetaRetrievalReadResponse struct {
+type RetrievalReadResponse struct {
 	// Parsed text content of the file.
 	Content string `json:"content" api:"required"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
@@ -342,12 +330,12 @@ type BetaRetrievalReadResponse struct {
 }
 
 // Returns the unmodified JSON received from the API
-func (r BetaRetrievalReadResponse) RawJSON() string { return r.JSON.raw }
-func (r *BetaRetrievalReadResponse) UnmarshalJSON(data []byte) error {
+func (r RetrievalReadResponse) RawJSON() string { return r.JSON.raw }
+func (r *RetrievalReadResponse) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-type BetaRetrievalGetParams struct {
+type RetrievalGetParams struct {
 	// ID of the index to retrieve against.
 	IndexID string `json:"index_id" api:"required"`
 	// Natural-language query to retrieve relevant chunks.
@@ -365,24 +353,24 @@ type BetaRetrievalGetParams struct {
 	// Weight of the vector search pipeline (0-1).
 	VectorPipelineWeight param.Opt[float64] `json:"vector_pipeline_weight,omitzero"`
 	// Filters on user-defined metadata fields.
-	CustomFilters map[string]*BetaRetrievalGetParamsCustomFilterUnion `json:"custom_filters,omitzero"`
+	CustomFilters map[string]*RetrievalGetParamsCustomFilterUnion `json:"custom_filters,omitzero"`
 	// Filters on built-in document fields (page range, chunk index, etc.).
-	StaticFilters BetaRetrievalGetParamsStaticFilters `json:"static_filters,omitzero"`
+	StaticFilters RetrievalGetParamsStaticFilters `json:"static_filters,omitzero"`
 	// Reranking configuration applied after hybrid search. Enabled by default.
-	Rerank BetaRetrievalGetParamsRerank `json:"rerank,omitzero"`
+	Rerank RetrievalGetParamsRerank `json:"rerank,omitzero"`
 	paramObj
 }
 
-func (r BetaRetrievalGetParams) MarshalJSON() (data []byte, err error) {
-	type shadow BetaRetrievalGetParams
+func (r RetrievalGetParams) MarshalJSON() (data []byte, err error) {
+	type shadow RetrievalGetParams
 	return param.MarshalObject(r, (*shadow)(&r))
 }
-func (r *BetaRetrievalGetParams) UnmarshalJSON(data []byte) error {
+func (r *RetrievalGetParams) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-// URLQuery serializes [BetaRetrievalGetParams]'s query parameters as `url.Values`.
-func (r BetaRetrievalGetParams) URLQuery() (v url.Values, err error) {
+// URLQuery serializes [RetrievalGetParams]'s query parameters as `url.Values`.
+func (r RetrievalGetParams) URLQuery() (v url.Values, err error) {
 	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
 		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
 		NestedFormat: apiquery.NestedQueryFormatBrackets,
@@ -392,39 +380,39 @@ func (r BetaRetrievalGetParams) URLQuery() (v url.Values, err error) {
 // Only one field can be non-zero.
 //
 // Use [param.IsOmitted] to confirm if a field is set.
-type BetaRetrievalGetParamsCustomFilterUnion struct {
-	OfValueFilter                        *BetaRetrievalGetParamsCustomFilterValueFilter `json:",omitzero,inline"`
-	OfBetaRetrievalGetsCustomFilterArray []BetaRetrievalGetParamsCustomFilterArrayItem  `json:",omitzero,inline"`
+type RetrievalGetParamsCustomFilterUnion struct {
+	OfValueFilter                    *RetrievalGetParamsCustomFilterValueFilter `json:",omitzero,inline"`
+	OfRetrievalGetsCustomFilterArray []RetrievalGetParamsCustomFilterArrayItem  `json:",omitzero,inline"`
 	paramUnion
 }
 
-func (u BetaRetrievalGetParamsCustomFilterUnion) MarshalJSON() ([]byte, error) {
-	return param.MarshalUnion(u, u.OfValueFilter, u.OfBetaRetrievalGetsCustomFilterArray)
+func (u RetrievalGetParamsCustomFilterUnion) MarshalJSON() ([]byte, error) {
+	return param.MarshalUnion(u, u.OfValueFilter, u.OfRetrievalGetsCustomFilterArray)
 }
-func (u *BetaRetrievalGetParamsCustomFilterUnion) UnmarshalJSON(data []byte) error {
+func (u *RetrievalGetParamsCustomFilterUnion) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, u)
 }
 
 // Filter on a single metadata field value.
 //
 // The properties Operator, Value are required.
-type BetaRetrievalGetParamsCustomFilterValueFilter struct {
+type RetrievalGetParamsCustomFilterValueFilter struct {
 	// Any of "eq", "gt", "gte", "in", "lt", "lte", "ne", "nin".
-	Operator string                                                  `json:"operator,omitzero" api:"required"`
-	Value    BetaRetrievalGetParamsCustomFilterValueFilterValueUnion `json:"value,omitzero" api:"required"`
+	Operator string                                              `json:"operator,omitzero" api:"required"`
+	Value    RetrievalGetParamsCustomFilterValueFilterValueUnion `json:"value,omitzero" api:"required"`
 	paramObj
 }
 
-func (r BetaRetrievalGetParamsCustomFilterValueFilter) MarshalJSON() (data []byte, err error) {
-	type shadow BetaRetrievalGetParamsCustomFilterValueFilter
+func (r RetrievalGetParamsCustomFilterValueFilter) MarshalJSON() (data []byte, err error) {
+	type shadow RetrievalGetParamsCustomFilterValueFilter
 	return param.MarshalObject(r, (*shadow)(&r))
 }
-func (r *BetaRetrievalGetParamsCustomFilterValueFilter) UnmarshalJSON(data []byte) error {
+func (r *RetrievalGetParamsCustomFilterValueFilter) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
 func init() {
-	apijson.RegisterFieldValidator[BetaRetrievalGetParamsCustomFilterValueFilter](
+	apijson.RegisterFieldValidator[RetrievalGetParamsCustomFilterValueFilter](
 		"operator", "eq", "gt", "gte", "in", "lt", "lte", "ne", "nin",
 	)
 }
@@ -432,58 +420,58 @@ func init() {
 // Only one field can be non-zero.
 //
 // Use [param.IsOmitted] to confirm if a field is set.
-type BetaRetrievalGetParamsCustomFilterValueFilterValueUnion struct {
-	OfString                                             param.Opt[string]                                                  `json:",omitzero,inline"`
-	OfBool                                               param.Opt[bool]                                                    `json:",omitzero,inline"`
-	OfFloat                                              param.Opt[float64]                                                 `json:",omitzero,inline"`
-	OfBetaRetrievalGetsCustomFilterValueFilterValueArray []BetaRetrievalGetParamsCustomFilterValueFilterValueArrayItemUnion `json:",omitzero,inline"`
+type RetrievalGetParamsCustomFilterValueFilterValueUnion struct {
+	OfString                                         param.Opt[string]                                              `json:",omitzero,inline"`
+	OfBool                                           param.Opt[bool]                                                `json:",omitzero,inline"`
+	OfFloat                                          param.Opt[float64]                                             `json:",omitzero,inline"`
+	OfRetrievalGetsCustomFilterValueFilterValueArray []RetrievalGetParamsCustomFilterValueFilterValueArrayItemUnion `json:",omitzero,inline"`
 	paramUnion
 }
 
-func (u BetaRetrievalGetParamsCustomFilterValueFilterValueUnion) MarshalJSON() ([]byte, error) {
-	return param.MarshalUnion(u, u.OfString, u.OfBool, u.OfFloat, u.OfBetaRetrievalGetsCustomFilterValueFilterValueArray)
+func (u RetrievalGetParamsCustomFilterValueFilterValueUnion) MarshalJSON() ([]byte, error) {
+	return param.MarshalUnion(u, u.OfString, u.OfBool, u.OfFloat, u.OfRetrievalGetsCustomFilterValueFilterValueArray)
 }
-func (u *BetaRetrievalGetParamsCustomFilterValueFilterValueUnion) UnmarshalJSON(data []byte) error {
+func (u *RetrievalGetParamsCustomFilterValueFilterValueUnion) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, u)
 }
 
 // Only one field can be non-zero.
 //
 // Use [param.IsOmitted] to confirm if a field is set.
-type BetaRetrievalGetParamsCustomFilterValueFilterValueArrayItemUnion struct {
+type RetrievalGetParamsCustomFilterValueFilterValueArrayItemUnion struct {
 	OfString param.Opt[string]  `json:",omitzero,inline"`
 	OfBool   param.Opt[bool]    `json:",omitzero,inline"`
 	OfFloat  param.Opt[float64] `json:",omitzero,inline"`
 	paramUnion
 }
 
-func (u BetaRetrievalGetParamsCustomFilterValueFilterValueArrayItemUnion) MarshalJSON() ([]byte, error) {
+func (u RetrievalGetParamsCustomFilterValueFilterValueArrayItemUnion) MarshalJSON() ([]byte, error) {
 	return param.MarshalUnion(u, u.OfString, u.OfBool, u.OfFloat)
 }
-func (u *BetaRetrievalGetParamsCustomFilterValueFilterValueArrayItemUnion) UnmarshalJSON(data []byte) error {
+func (u *RetrievalGetParamsCustomFilterValueFilterValueArrayItemUnion) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, u)
 }
 
 // One bound of a numeric range filter on a metadata field.
 //
 // The properties Operator, Value are required.
-type BetaRetrievalGetParamsCustomFilterArrayItem struct {
+type RetrievalGetParamsCustomFilterArrayItem struct {
 	// Any of "eq", "gt", "gte", "in", "lt", "lte", "ne", "nin".
-	Operator string                                                `json:"operator,omitzero" api:"required"`
-	Value    BetaRetrievalGetParamsCustomFilterArrayItemValueUnion `json:"value,omitzero" api:"required"`
+	Operator string                                            `json:"operator,omitzero" api:"required"`
+	Value    RetrievalGetParamsCustomFilterArrayItemValueUnion `json:"value,omitzero" api:"required"`
 	paramObj
 }
 
-func (r BetaRetrievalGetParamsCustomFilterArrayItem) MarshalJSON() (data []byte, err error) {
-	type shadow BetaRetrievalGetParamsCustomFilterArrayItem
+func (r RetrievalGetParamsCustomFilterArrayItem) MarshalJSON() (data []byte, err error) {
+	type shadow RetrievalGetParamsCustomFilterArrayItem
 	return param.MarshalObject(r, (*shadow)(&r))
 }
-func (r *BetaRetrievalGetParamsCustomFilterArrayItem) UnmarshalJSON(data []byte) error {
+func (r *RetrievalGetParamsCustomFilterArrayItem) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
 func init() {
-	apijson.RegisterFieldValidator[BetaRetrievalGetParamsCustomFilterArrayItem](
+	apijson.RegisterFieldValidator[RetrievalGetParamsCustomFilterArrayItem](
 		"operator", "eq", "gt", "gte", "in", "lt", "lte", "ne", "nin",
 	)
 }
@@ -491,21 +479,21 @@ func init() {
 // Only one field can be non-zero.
 //
 // Use [param.IsOmitted] to confirm if a field is set.
-type BetaRetrievalGetParamsCustomFilterArrayItemValueUnion struct {
+type RetrievalGetParamsCustomFilterArrayItemValueUnion struct {
 	OfFloat      param.Opt[float64] `json:",omitzero,inline"`
 	OfFloatArray []float64          `json:",omitzero,inline"`
 	paramUnion
 }
 
-func (u BetaRetrievalGetParamsCustomFilterArrayItemValueUnion) MarshalJSON() ([]byte, error) {
+func (u RetrievalGetParamsCustomFilterArrayItemValueUnion) MarshalJSON() ([]byte, error) {
 	return param.MarshalUnion(u, u.OfFloat, u.OfFloatArray)
 }
-func (u *BetaRetrievalGetParamsCustomFilterArrayItemValueUnion) UnmarshalJSON(data []byte) error {
+func (u *RetrievalGetParamsCustomFilterArrayItemValueUnion) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, u)
 }
 
 // Reranking configuration applied after hybrid search. Enabled by default.
-type BetaRetrievalGetParamsRerank struct {
+type RetrievalGetParamsRerank struct {
 	// Number of results to return after reranking.
 	TopN param.Opt[int64] `json:"top_n,omitzero"`
 	// Set to false to disable reranking.
@@ -513,49 +501,49 @@ type BetaRetrievalGetParamsRerank struct {
 	paramObj
 }
 
-func (r BetaRetrievalGetParamsRerank) MarshalJSON() (data []byte, err error) {
-	type shadow BetaRetrievalGetParamsRerank
+func (r RetrievalGetParamsRerank) MarshalJSON() (data []byte, err error) {
+	type shadow RetrievalGetParamsRerank
 	return param.MarshalObject(r, (*shadow)(&r))
 }
-func (r *BetaRetrievalGetParamsRerank) UnmarshalJSON(data []byte) error {
+func (r *RetrievalGetParamsRerank) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
 // Filters on built-in document fields (page range, chunk index, etc.).
-type BetaRetrievalGetParamsStaticFilters struct {
+type RetrievalGetParamsStaticFilters struct {
 	// Filter on a string field.
-	ParsedDirectoryFileID BetaRetrievalGetParamsStaticFiltersParsedDirectoryFileID `json:"parsed_directory_file_id,omitzero"`
+	ParsedDirectoryFileID RetrievalGetParamsStaticFiltersParsedDirectoryFileID `json:"parsed_directory_file_id,omitzero"`
 	paramObj
 }
 
-func (r BetaRetrievalGetParamsStaticFilters) MarshalJSON() (data []byte, err error) {
-	type shadow BetaRetrievalGetParamsStaticFilters
+func (r RetrievalGetParamsStaticFilters) MarshalJSON() (data []byte, err error) {
+	type shadow RetrievalGetParamsStaticFilters
 	return param.MarshalObject(r, (*shadow)(&r))
 }
-func (r *BetaRetrievalGetParamsStaticFilters) UnmarshalJSON(data []byte) error {
+func (r *RetrievalGetParamsStaticFilters) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
 // Filter on a string field.
 //
 // The properties Operator, Value are required.
-type BetaRetrievalGetParamsStaticFiltersParsedDirectoryFileID struct {
+type RetrievalGetParamsStaticFiltersParsedDirectoryFileID struct {
 	// Any of "eq", "gt", "gte", "in", "lt", "lte", "ne", "nin".
-	Operator string                                                             `json:"operator,omitzero" api:"required"`
-	Value    BetaRetrievalGetParamsStaticFiltersParsedDirectoryFileIDValueUnion `json:"value,omitzero" api:"required"`
+	Operator string                                                         `json:"operator,omitzero" api:"required"`
+	Value    RetrievalGetParamsStaticFiltersParsedDirectoryFileIDValueUnion `json:"value,omitzero" api:"required"`
 	paramObj
 }
 
-func (r BetaRetrievalGetParamsStaticFiltersParsedDirectoryFileID) MarshalJSON() (data []byte, err error) {
-	type shadow BetaRetrievalGetParamsStaticFiltersParsedDirectoryFileID
+func (r RetrievalGetParamsStaticFiltersParsedDirectoryFileID) MarshalJSON() (data []byte, err error) {
+	type shadow RetrievalGetParamsStaticFiltersParsedDirectoryFileID
 	return param.MarshalObject(r, (*shadow)(&r))
 }
-func (r *BetaRetrievalGetParamsStaticFiltersParsedDirectoryFileID) UnmarshalJSON(data []byte) error {
+func (r *RetrievalGetParamsStaticFiltersParsedDirectoryFileID) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
 func init() {
-	apijson.RegisterFieldValidator[BetaRetrievalGetParamsStaticFiltersParsedDirectoryFileID](
+	apijson.RegisterFieldValidator[RetrievalGetParamsStaticFiltersParsedDirectoryFileID](
 		"operator", "eq", "gt", "gte", "in", "lt", "lte", "ne", "nin",
 	)
 }
@@ -563,20 +551,20 @@ func init() {
 // Only one field can be non-zero.
 //
 // Use [param.IsOmitted] to confirm if a field is set.
-type BetaRetrievalGetParamsStaticFiltersParsedDirectoryFileIDValueUnion struct {
+type RetrievalGetParamsStaticFiltersParsedDirectoryFileIDValueUnion struct {
 	OfString      param.Opt[string] `json:",omitzero,inline"`
 	OfStringArray []string          `json:",omitzero,inline"`
 	paramUnion
 }
 
-func (u BetaRetrievalGetParamsStaticFiltersParsedDirectoryFileIDValueUnion) MarshalJSON() ([]byte, error) {
+func (u RetrievalGetParamsStaticFiltersParsedDirectoryFileIDValueUnion) MarshalJSON() ([]byte, error) {
 	return param.MarshalUnion(u, u.OfString, u.OfStringArray)
 }
-func (u *BetaRetrievalGetParamsStaticFiltersParsedDirectoryFileIDValueUnion) UnmarshalJSON(data []byte) error {
+func (u *RetrievalGetParamsStaticFiltersParsedDirectoryFileIDValueUnion) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, u)
 }
 
-type BetaRetrievalFindParams struct {
+type RetrievalFindParams struct {
 	// ID of the index to search within.
 	IndexID        string            `json:"index_id" api:"required"`
 	OrganizationID param.Opt[string] `query:"organization_id,omitzero" format:"uuid" json:"-"`
@@ -595,24 +583,23 @@ type BetaRetrievalFindParams struct {
 	paramObj
 }
 
-func (r BetaRetrievalFindParams) MarshalJSON() (data []byte, err error) {
-	type shadow BetaRetrievalFindParams
+func (r RetrievalFindParams) MarshalJSON() (data []byte, err error) {
+	type shadow RetrievalFindParams
 	return param.MarshalObject(r, (*shadow)(&r))
 }
-func (r *BetaRetrievalFindParams) UnmarshalJSON(data []byte) error {
+func (r *RetrievalFindParams) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-// URLQuery serializes [BetaRetrievalFindParams]'s query parameters as
-// `url.Values`.
-func (r BetaRetrievalFindParams) URLQuery() (v url.Values, err error) {
+// URLQuery serializes [RetrievalFindParams]'s query parameters as `url.Values`.
+func (r RetrievalFindParams) URLQuery() (v url.Values, err error) {
 	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
 		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
 		NestedFormat: apiquery.NestedQueryFormatBrackets,
 	})
 }
 
-type BetaRetrievalGrepParams struct {
+type RetrievalGrepParams struct {
 	// ID of the file to grep.
 	FileID string `json:"file_id" api:"required"`
 	// ID of the index the file belongs to.
@@ -634,24 +621,23 @@ type BetaRetrievalGrepParams struct {
 	paramObj
 }
 
-func (r BetaRetrievalGrepParams) MarshalJSON() (data []byte, err error) {
-	type shadow BetaRetrievalGrepParams
+func (r RetrievalGrepParams) MarshalJSON() (data []byte, err error) {
+	type shadow RetrievalGrepParams
 	return param.MarshalObject(r, (*shadow)(&r))
 }
-func (r *BetaRetrievalGrepParams) UnmarshalJSON(data []byte) error {
+func (r *RetrievalGrepParams) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-// URLQuery serializes [BetaRetrievalGrepParams]'s query parameters as
-// `url.Values`.
-func (r BetaRetrievalGrepParams) URLQuery() (v url.Values, err error) {
+// URLQuery serializes [RetrievalGrepParams]'s query parameters as `url.Values`.
+func (r RetrievalGrepParams) URLQuery() (v url.Values, err error) {
 	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
 		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
 		NestedFormat: apiquery.NestedQueryFormatBrackets,
 	})
 }
 
-type BetaRetrievalReadParams struct {
+type RetrievalReadParams struct {
 	// ID of the file to read.
 	FileID string `json:"file_id" api:"required"`
 	// ID of the index the file belongs to.
@@ -665,17 +651,16 @@ type BetaRetrievalReadParams struct {
 	paramObj
 }
 
-func (r BetaRetrievalReadParams) MarshalJSON() (data []byte, err error) {
-	type shadow BetaRetrievalReadParams
+func (r RetrievalReadParams) MarshalJSON() (data []byte, err error) {
+	type shadow RetrievalReadParams
 	return param.MarshalObject(r, (*shadow)(&r))
 }
-func (r *BetaRetrievalReadParams) UnmarshalJSON(data []byte) error {
+func (r *RetrievalReadParams) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-// URLQuery serializes [BetaRetrievalReadParams]'s query parameters as
-// `url.Values`.
-func (r BetaRetrievalReadParams) URLQuery() (v url.Values, err error) {
+// URLQuery serializes [RetrievalReadParams]'s query parameters as `url.Values`.
+func (r RetrievalReadParams) URLQuery() (v url.Values, err error) {
 	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
 		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
 		NestedFormat: apiquery.NestedQueryFormatBrackets,
