@@ -38,6 +38,7 @@ type Client struct {
 	Retrieval        RetrievalService
 	Chat             ChatService
 	Beta             BetaService
+	Alpha            AlphaService
 }
 
 // DefaultClientOptions read from the environment (LLAMA_CLOUD_API_KEY,
@@ -90,6 +91,7 @@ func NewClient(opts ...option.RequestOption) (r Client) {
 	r.Retrieval = NewRetrievalService(opts...)
 	r.Chat = NewChatService(opts...)
 	r.Beta = NewBetaService(opts...)
+	r.Alpha = NewAlphaService(opts...)
 
 	return
 }
