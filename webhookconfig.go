@@ -143,7 +143,8 @@ type WebhookConfigCreateParam struct {
 	// "parse.running", "parse.success", "sheets.cancelled", "sheets.error",
 	// "sheets.partial_success", "sheets.pending", "sheets.success", "split.cancelled",
 	// "split.error", "split.pending", "split.processing", "split.success",
-	// "unmapped_event".
+	// "unmapped_event", "verify.cancelled", "verify.error", "verify.pending",
+	// "verify.running", "verify.success".
 	WebhookEvents []string `json:"webhook_events,omitzero"`
 	// Custom HTTP headers sent with each webhook request.
 	WebhookHeaders map[string]string `json:"webhook_headers,omitzero"`
@@ -197,7 +198,8 @@ type WebhookConfigResponse struct {
 	// "parse.running", "parse.success", "sheets.cancelled", "sheets.error",
 	// "sheets.partial_success", "sheets.pending", "sheets.success", "split.cancelled",
 	// "split.error", "split.pending", "split.processing", "split.success",
-	// "unmapped_event".
+	// "unmapped_event", "verify.cancelled", "verify.error", "verify.pending",
+	// "verify.running", "verify.success".
 	WebhookEvents []string `json:"webhook_events" api:"nullable"`
 	// Custom HTTP headers sent with each request.
 	WebhookHeaders map[string]string `json:"webhook_headers" api:"nullable"`
@@ -294,7 +296,8 @@ type WebhookConfigUpdateParams struct {
 	// "parse.running", "parse.success", "sheets.cancelled", "sheets.error",
 	// "sheets.partial_success", "sheets.pending", "sheets.success", "split.cancelled",
 	// "split.error", "split.pending", "split.processing", "split.success",
-	// "unmapped_event".
+	// "unmapped_event", "verify.cancelled", "verify.error", "verify.pending",
+	// "verify.running", "verify.success".
 	WebhookEvents []string `json:"webhook_events,omitzero"`
 	// Updated headers.
 	WebhookHeaders map[string]string `json:"webhook_headers,omitzero"`

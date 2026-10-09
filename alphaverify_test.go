@@ -7,13 +7,14 @@ import (
 	"errors"
 	"os"
 	"testing"
+	"time"
 
 	"github.com/run-llama/llama-parse-go"
 	"github.com/run-llama/llama-parse-go/internal/testutil"
 	"github.com/run-llama/llama-parse-go/option"
 )
 
-func TestBetaIndexNewWithOptionalParams(t *testing.T) {
+func TestAlphaVerifyNewWithOptionalParams(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
@@ -26,19 +27,26 @@ func TestBetaIndexNewWithOptionalParams(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Beta.Indexes.New(context.TODO(), llamacloud.BetaIndexNewParams{
-		SourceDirectoryID: "dir-abc123",
-		OrganizationID:    llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		ProjectID:         llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		Description:       llamacloud.String("description"),
-		Name:              llamacloud.String("name"),
-		Products: []llamacloud.BetaIndexNewParamsProduct{{
-			ProductConfigID: "cfg-abc123",
-			ProductType:     "parse",
+	_, err := client.Alpha.Verify.New(context.TODO(), llamacloud.AlphaVerifyNewParams{
+		OrganizationID: llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		ProjectID:      llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		Configuration: llamacloud.AlphaVerifyNewParamsConfiguration{
+			TargetPages: llamacloud.String("1,3,5-7"),
+			Tier:        "agentic",
+		},
+		FileID:                  llamacloud.String("dfl-aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"),
+		FileInput:               llamacloud.String("dfl-aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"),
+		TransactionID:           llamacloud.String("tx-unique-idempotency-key"),
+		WebhookConfigurationIDs: []string{"whc-...", "whc-..."},
+		WebhookConfigurations: []llamacloud.AlphaVerifyNewParamsWebhookConfiguration{{
+			WebhookEvents: []string{"parse.success", "parse.error"},
+			WebhookHeaders: map[string]string{
+				"Authorization": "Bearer sk-...",
+			},
+			WebhookOutputFormat:  llamacloud.String("json"),
+			WebhookSigningSecret: llamacloud.String("whsec_..."),
+			WebhookURL:           llamacloud.String("https://example.com/webhooks/llamacloud"),
 		}},
-		StoreAttachments: []string{"screenshots"},
-		SyncFrequency:    llamacloud.String("manual"),
-		VectorTarget:     llamacloud.BetaIndexNewParamsVectorTargetDefault,
 	})
 	if err != nil {
 		var apierr *llamacloud.Error
@@ -49,7 +57,7 @@ func TestBetaIndexNewWithOptionalParams(t *testing.T) {
 	}
 }
 
-func TestBetaIndexListWithOptionalParams(t *testing.T) {
+func TestAlphaVerifyListWithOptionalParams(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
@@ -62,12 +70,16 @@ func TestBetaIndexListWithOptionalParams(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Beta.Indexes.List(context.TODO(), llamacloud.BetaIndexListParams{
-		OrganizationID:    llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		PageSize:          llamacloud.Int(0),
-		PageToken:         llamacloud.String("page_token"),
-		ProjectID:         llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		SourceDirectoryID: llamacloud.String("source_directory_id"),
+	_, err := client.Alpha.Verify.List(context.TODO(), llamacloud.AlphaVerifyListParams{
+		CreatedAtOnOrAfter:  llamacloud.Time(time.Now()),
+		CreatedAtOnOrBefore: llamacloud.Time(time.Now()),
+		Expand:              []string{"string"},
+		JobIDs:              []string{"string", "string"},
+		OrganizationID:      llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		PageSize:            llamacloud.Int(1),
+		PageToken:           llamacloud.String("page_token"),
+		ProjectID:           llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		Status:              llamacloud.AlphaVerifyListParamsStatusCancelled,
 	})
 	if err != nil {
 		var apierr *llamacloud.Error
@@ -78,7 +90,7 @@ func TestBetaIndexListWithOptionalParams(t *testing.T) {
 	}
 }
 
-func TestBetaIndexDeleteWithOptionalParams(t *testing.T) {
+func TestAlphaVerifyCancelWithOptionalParams(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
@@ -91,10 +103,10 @@ func TestBetaIndexDeleteWithOptionalParams(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	err := client.Beta.Indexes.Delete(
+	_, err := client.Alpha.Verify.Cancel(
 		context.TODO(),
-		"index_id",
-		llamacloud.BetaIndexDeleteParams{
+		"job_id",
+		llamacloud.AlphaVerifyCancelParams{
 			OrganizationID: llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 			ProjectID:      llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		},
@@ -108,7 +120,7 @@ func TestBetaIndexDeleteWithOptionalParams(t *testing.T) {
 	}
 }
 
-func TestBetaIndexGetWithOptionalParams(t *testing.T) {
+func TestAlphaVerifyGetWithOptionalParams(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
@@ -121,11 +133,11 @@ func TestBetaIndexGetWithOptionalParams(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Beta.Indexes.Get(
+	_, err := client.Alpha.Verify.Get(
 		context.TODO(),
-		"index_id",
-		llamacloud.BetaIndexGetParams{
-			Expand:         []string{"sync_in_progress"},
+		"job_id",
+		llamacloud.AlphaVerifyGetParams{
+			Expand:         []string{"string"},
 			OrganizationID: llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 			ProjectID:      llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		},
@@ -139,7 +151,7 @@ func TestBetaIndexGetWithOptionalParams(t *testing.T) {
 	}
 }
 
-func TestBetaIndexSyncWithOptionalParams(t *testing.T) {
+func TestAlphaVerifyGetDetailsWithOptionalParams(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
@@ -152,10 +164,10 @@ func TestBetaIndexSyncWithOptionalParams(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Beta.Indexes.Sync(
+	_, err := client.Alpha.Verify.GetDetails(
 		context.TODO(),
-		"index_id",
-		llamacloud.BetaIndexSyncParams{
+		"job_id",
+		llamacloud.AlphaVerifyGetDetailsParams{
 			OrganizationID: llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 			ProjectID:      llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		},

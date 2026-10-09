@@ -20,30 +20,28 @@ import (
 	"github.com/run-llama/llama-parse-go/packages/respjson"
 )
 
-// BetaChatService contains methods and other services that help with interacting
-// with the llama-cloud API.
+// ChatService contains methods and other services that help with interacting with
+// the llama-cloud API.
 //
 // Note, unlike clients, this service does not read variables from the environment
 // automatically. You should not instantiate this service directly, and instead use
-// the [NewBetaChatService] method instead.
-type BetaChatService struct {
+// the [NewChatService] method instead.
+type ChatService struct {
 	options []option.RequestOption
 }
 
-// NewBetaChatService generates a new service that applies the given options to
-// each request. These options are applied after the parent client's options (if
-// there is one), and before any request-specific options.
-func NewBetaChatService(opts ...option.RequestOption) (r BetaChatService) {
-	r = BetaChatService{}
+// NewChatService generates a new service that applies the given options to each
+// request. These options are applied after the parent client's options (if there
+// is one), and before any request-specific options.
+func NewChatService(opts ...option.RequestOption) (r ChatService) {
+	r = ChatService{}
 	r.options = opts
 	return
 }
 
 // Create a chat session, optionally bound to indexes (locked after the first
 // message).
-//
-// Deprecated: Moved out of beta. Use the top-level chat resource instead
-func (r *BetaChatService) New(ctx context.Context, params BetaChatNewParams, opts ...option.RequestOption) (res *BetaChatNewResponse, err error) {
+func (r *ChatService) New(ctx context.Context, params ChatNewParams, opts ...option.RequestOption) (res *ChatNewResponse, err error) {
 	opts = slices.Concat(r.options, opts)
 	path := "api/v1/chat"
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, params, &res, opts...)
@@ -51,9 +49,7 @@ func (r *BetaChatService) New(ctx context.Context, params BetaChatNewParams, opt
 }
 
 // Retrieve a full session by ID, including its event history.
-//
-// Deprecated: Moved out of beta. Use the top-level chat resource instead
-func (r *BetaChatService) Get(ctx context.Context, sessionID string, query BetaChatGetParams, opts ...option.RequestOption) (res *BetaChatGetResponse, err error) {
+func (r *ChatService) Get(ctx context.Context, sessionID string, query ChatGetParams, opts ...option.RequestOption) (res *ChatGetResponse, err error) {
 	opts = slices.Concat(r.options, opts)
 	if sessionID == "" {
 		err = errors.New("missing required session_id parameter")
@@ -65,9 +61,7 @@ func (r *BetaChatService) Get(ctx context.Context, sessionID string, query BetaC
 }
 
 // List all chat sessions for the current project.
-//
-// Deprecated: Moved out of beta. Use the top-level chat resource instead
-func (r *BetaChatService) List(ctx context.Context, query BetaChatListParams, opts ...option.RequestOption) (res *pagination.PaginatedCursor[BetaChatListResponse], err error) {
+func (r *ChatService) List(ctx context.Context, query ChatListParams, opts ...option.RequestOption) (res *pagination.PaginatedCursor[ChatListResponse], err error) {
 	var raw *http.Response
 	opts = slices.Concat(r.options, opts)
 	opts = append([]option.RequestOption{option.WithResponseInto(&raw)}, opts...)
@@ -85,16 +79,12 @@ func (r *BetaChatService) List(ctx context.Context, query BetaChatListParams, op
 }
 
 // List all chat sessions for the current project.
-//
-// Deprecated: Moved out of beta. Use the top-level chat resource instead
-func (r *BetaChatService) ListAutoPaging(ctx context.Context, query BetaChatListParams, opts ...option.RequestOption) *pagination.PaginatedCursorAutoPager[BetaChatListResponse] {
+func (r *ChatService) ListAutoPaging(ctx context.Context, query ChatListParams, opts ...option.RequestOption) *pagination.PaginatedCursorAutoPager[ChatListResponse] {
 	return pagination.NewPaginatedCursorAutoPager(r.List(ctx, query, opts...))
 }
 
 // Delete a session.
-//
-// Deprecated: Moved out of beta. Use the top-level chat resource instead
-func (r *BetaChatService) Delete(ctx context.Context, sessionID string, body BetaChatDeleteParams, opts ...option.RequestOption) (err error) {
+func (r *ChatService) Delete(ctx context.Context, sessionID string, body ChatDeleteParams, opts ...option.RequestOption) (err error) {
 	opts = slices.Concat(r.options, opts)
 	opts = append([]option.RequestOption{option.WithHeader("Accept", "*/*")}, opts...)
 	if sessionID == "" {
@@ -107,9 +97,7 @@ func (r *BetaChatService) Delete(ctx context.Context, sessionID string, body Bet
 }
 
 // Retrieve a session summary by ID.
-//
-// Deprecated: Moved out of beta. Use the top-level chat resource instead
-func (r *BetaChatService) GetSummary(ctx context.Context, sessionID string, query BetaChatGetSummaryParams, opts ...option.RequestOption) (res *BetaChatGetSummaryResponse, err error) {
+func (r *ChatService) GetSummary(ctx context.Context, sessionID string, query ChatGetSummaryParams, opts ...option.RequestOption) (res *ChatGetSummaryResponse, err error) {
 	opts = slices.Concat(r.options, opts)
 	if sessionID == "" {
 		err = errors.New("missing required session_id parameter")
@@ -121,9 +109,7 @@ func (r *BetaChatService) GetSummary(ctx context.Context, sessionID string, quer
 }
 
 // Stream agent events for a chat turn as Server-Sent Events.
-//
-// Deprecated: Moved out of beta. Use the top-level chat resource instead
-func (r *BetaChatService) Stream(ctx context.Context, sessionID string, params BetaChatStreamParams, opts ...option.RequestOption) (res *BetaChatStreamResponse, err error) {
+func (r *ChatService) Stream(ctx context.Context, sessionID string, params ChatStreamParams, opts ...option.RequestOption) (res *ChatStreamResponse, err error) {
 	opts = slices.Concat(r.options, opts)
 	if sessionID == "" {
 		err = errors.New("missing required session_id parameter")
@@ -135,7 +121,7 @@ func (r *BetaChatService) Stream(ctx context.Context, sessionID string, params B
 }
 
 // Summary of a chat session, including its title and last run metadata.
-type BetaChatNewResponse struct {
+type ChatNewResponse struct {
 	// ISO-format timestamp showing when the session was last updated.
 	LastUpdatedAt string `json:"last_updated_at" api:"required"`
 	// Unique session identifier.
@@ -144,14 +130,14 @@ type BetaChatNewResponse struct {
 	// (viewers may ask new questions).
 	//
 	// Any of "query", "read_only".
-	SharedAccess BetaChatNewResponseSharedAccess `json:"shared_access" api:"required"`
+	SharedAccess ChatNewResponseSharedAccess `json:"shared_access" api:"required"`
 	// Auto-generated title derived from the first user message.
 	GeneratedTitle string `json:"generated_title" api:"nullable"`
 	// Indexes this session is bound to. Null on unbound sessions.
 	IndexIDs []string `json:"index_ids" api:"nullable"`
 	// Token usage and status from the most recent run. Null if the session has not
 	// been run yet.
-	JobMetadata BetaChatNewResponseJobMetadata `json:"job_metadata" api:"nullable"`
+	JobMetadata ChatNewResponseJobMetadata `json:"job_metadata" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		LastUpdatedAt  respjson.Field
@@ -166,23 +152,23 @@ type BetaChatNewResponse struct {
 }
 
 // Returns the unmodified JSON received from the API
-func (r BetaChatNewResponse) RawJSON() string { return r.JSON.raw }
-func (r *BetaChatNewResponse) UnmarshalJSON(data []byte) error {
+func (r ChatNewResponse) RawJSON() string { return r.JSON.raw }
+func (r *ChatNewResponse) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
 // What this chat's share link grants: read_only (transcript only) or query
 // (viewers may ask new questions).
-type BetaChatNewResponseSharedAccess string
+type ChatNewResponseSharedAccess string
 
 const (
-	BetaChatNewResponseSharedAccessQuery    BetaChatNewResponseSharedAccess = "query"
-	BetaChatNewResponseSharedAccessReadOnly BetaChatNewResponseSharedAccess = "read_only"
+	ChatNewResponseSharedAccessQuery    ChatNewResponseSharedAccess = "query"
+	ChatNewResponseSharedAccessReadOnly ChatNewResponseSharedAccess = "read_only"
 )
 
 // Token usage and status from the most recent run. Null if the session has not
 // been run yet.
-type BetaChatNewResponseJobMetadata struct {
+type ChatNewResponseJobMetadata struct {
 	DurationMs        float64  `json:"duration_ms"`
 	Error             string   `json:"error" api:"nullable"`
 	ExportConfigIDs   []string `json:"export_config_ids" api:"nullable"`
@@ -205,15 +191,15 @@ type BetaChatNewResponseJobMetadata struct {
 }
 
 // Returns the unmodified JSON received from the API
-func (r BetaChatNewResponseJobMetadata) RawJSON() string { return r.JSON.raw }
-func (r *BetaChatNewResponseJobMetadata) UnmarshalJSON(data []byte) error {
+func (r ChatNewResponseJobMetadata) RawJSON() string { return r.JSON.raw }
+func (r *ChatNewResponseJobMetadata) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
 // Full chat session including its complete event history.
-type BetaChatGetResponse struct {
+type ChatGetResponse struct {
 	// Ordered list of events that make up the conversation history.
-	Events []BetaChatGetResponseEventUnion `json:"events" api:"required"`
+	Events []ChatGetResponseEventUnion `json:"events" api:"required"`
 	// ISO-format timestamp showing when the session was last updated.
 	LastUpdatedAt string `json:"last_updated_at" api:"required"`
 	// Unique session identifier.
@@ -222,14 +208,14 @@ type BetaChatGetResponse struct {
 	// (viewers may ask new questions).
 	//
 	// Any of "query", "read_only".
-	SharedAccess BetaChatGetResponseSharedAccess `json:"shared_access" api:"required"`
+	SharedAccess ChatGetResponseSharedAccess `json:"shared_access" api:"required"`
 	// Auto-generated title derived from the first user message.
 	GeneratedTitle string `json:"generated_title" api:"nullable"`
 	// Indexes this session is bound to. Null on unbound sessions.
 	IndexIDs []string `json:"index_ids" api:"nullable"`
 	// Token usage and status from the most recent run. Null if the session has not
 	// been run yet.
-	JobMetadata BetaChatGetResponseJobMetadata `json:"job_metadata" api:"nullable"`
+	JobMetadata ChatGetResponseJobMetadata `json:"job_metadata" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Events         respjson.Field
@@ -245,41 +231,41 @@ type BetaChatGetResponse struct {
 }
 
 // Returns the unmodified JSON received from the API
-func (r BetaChatGetResponse) RawJSON() string { return r.JSON.raw }
-func (r *BetaChatGetResponse) UnmarshalJSON(data []byte) error {
+func (r ChatGetResponse) RawJSON() string { return r.JSON.raw }
+func (r *ChatGetResponse) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-// BetaChatGetResponseEventUnion contains all possible properties and values from
-// [BetaChatGetResponseEventStop], [BetaChatGetResponseEventTextDelta],
-// [BetaChatGetResponseEventText], [BetaChatGetResponseEventThinkingDelta],
-// [BetaChatGetResponseEventThinking], [BetaChatGetResponseEventToolCall],
-// [BetaChatGetResponseEventToolResult], [BetaChatGetResponseEventUserInput].
+// ChatGetResponseEventUnion contains all possible properties and values from
+// [ChatGetResponseEventStop], [ChatGetResponseEventTextDelta],
+// [ChatGetResponseEventText], [ChatGetResponseEventThinkingDelta],
+// [ChatGetResponseEventThinking], [ChatGetResponseEventToolCall],
+// [ChatGetResponseEventToolResult], [ChatGetResponseEventUserInput].
 //
-// Use the [BetaChatGetResponseEventUnion.AsAny] method to switch on the variant.
+// Use the [ChatGetResponseEventUnion.AsAny] method to switch on the variant.
 //
 // Use the methods beginning with 'As' to cast the union to one of its variants.
-type BetaChatGetResponseEventUnion struct {
-	// This field is from variant [BetaChatGetResponseEventStop].
+type ChatGetResponseEventUnion struct {
+	// This field is from variant [ChatGetResponseEventStop].
 	Error string `json:"error"`
-	// This field is from variant [BetaChatGetResponseEventStop].
+	// This field is from variant [ChatGetResponseEventStop].
 	IsError bool `json:"is_error"`
-	// This field is from variant [BetaChatGetResponseEventStop].
-	Usage BetaChatGetResponseEventStopUsage `json:"usage"`
-	// This field is from variant [BetaChatGetResponseEventStop].
+	// This field is from variant [ChatGetResponseEventStop].
+	Usage ChatGetResponseEventStopUsage `json:"usage"`
+	// This field is from variant [ChatGetResponseEventStop].
 	SkippedIndexIDs []string `json:"skipped_index_ids"`
 	// Any of "stop", "text_delta", "text", "thinking_delta", "thinking", "tool_call",
 	// "tool_result", "user_input".
 	Type    string `json:"type"`
 	Content string `json:"content"`
-	// This field is from variant [BetaChatGetResponseEventToolCall].
+	// This field is from variant [ChatGetResponseEventToolCall].
 	Arguments map[string]any `json:"arguments"`
 	CallID    string         `json:"call_id"`
 	Name      string         `json:"name"`
-	// This field is from variant [BetaChatGetResponseEventToolResult].
+	// This field is from variant [ChatGetResponseEventToolResult].
 	Result any `json:"result"`
-	// This field is from variant [BetaChatGetResponseEventToolResult].
-	ImageAttachment BetaChatGetResponseEventToolResultImageAttachment `json:"image_attachment"`
+	// This field is from variant [ChatGetResponseEventToolResult].
+	ImageAttachment ChatGetResponseEventToolResultImageAttachment `json:"image_attachment"`
 	JSON            struct {
 		Error           respjson.Field
 		IsError         respjson.Field
@@ -296,37 +282,37 @@ type BetaChatGetResponseEventUnion struct {
 	} `json:"-"`
 }
 
-// anyBetaChatGetResponseEvent is implemented by each variant of
-// [BetaChatGetResponseEventUnion] to add type safety for the return type of
-// [BetaChatGetResponseEventUnion.AsAny]
-type anyBetaChatGetResponseEvent interface {
-	implBetaChatGetResponseEventUnion()
+// anyChatGetResponseEvent is implemented by each variant of
+// [ChatGetResponseEventUnion] to add type safety for the return type of
+// [ChatGetResponseEventUnion.AsAny]
+type anyChatGetResponseEvent interface {
+	implChatGetResponseEventUnion()
 }
 
-func (BetaChatGetResponseEventStop) implBetaChatGetResponseEventUnion()          {}
-func (BetaChatGetResponseEventTextDelta) implBetaChatGetResponseEventUnion()     {}
-func (BetaChatGetResponseEventText) implBetaChatGetResponseEventUnion()          {}
-func (BetaChatGetResponseEventThinkingDelta) implBetaChatGetResponseEventUnion() {}
-func (BetaChatGetResponseEventThinking) implBetaChatGetResponseEventUnion()      {}
-func (BetaChatGetResponseEventToolCall) implBetaChatGetResponseEventUnion()      {}
-func (BetaChatGetResponseEventToolResult) implBetaChatGetResponseEventUnion()    {}
-func (BetaChatGetResponseEventUserInput) implBetaChatGetResponseEventUnion()     {}
+func (ChatGetResponseEventStop) implChatGetResponseEventUnion()          {}
+func (ChatGetResponseEventTextDelta) implChatGetResponseEventUnion()     {}
+func (ChatGetResponseEventText) implChatGetResponseEventUnion()          {}
+func (ChatGetResponseEventThinkingDelta) implChatGetResponseEventUnion() {}
+func (ChatGetResponseEventThinking) implChatGetResponseEventUnion()      {}
+func (ChatGetResponseEventToolCall) implChatGetResponseEventUnion()      {}
+func (ChatGetResponseEventToolResult) implChatGetResponseEventUnion()    {}
+func (ChatGetResponseEventUserInput) implChatGetResponseEventUnion()     {}
 
 // Use the following switch statement to find the correct variant
 //
-//	switch variant := BetaChatGetResponseEventUnion.AsAny().(type) {
-//	case llamacloud.BetaChatGetResponseEventStop:
-//	case llamacloud.BetaChatGetResponseEventTextDelta:
-//	case llamacloud.BetaChatGetResponseEventText:
-//	case llamacloud.BetaChatGetResponseEventThinkingDelta:
-//	case llamacloud.BetaChatGetResponseEventThinking:
-//	case llamacloud.BetaChatGetResponseEventToolCall:
-//	case llamacloud.BetaChatGetResponseEventToolResult:
-//	case llamacloud.BetaChatGetResponseEventUserInput:
+//	switch variant := ChatGetResponseEventUnion.AsAny().(type) {
+//	case llamacloud.ChatGetResponseEventStop:
+//	case llamacloud.ChatGetResponseEventTextDelta:
+//	case llamacloud.ChatGetResponseEventText:
+//	case llamacloud.ChatGetResponseEventThinkingDelta:
+//	case llamacloud.ChatGetResponseEventThinking:
+//	case llamacloud.ChatGetResponseEventToolCall:
+//	case llamacloud.ChatGetResponseEventToolResult:
+//	case llamacloud.ChatGetResponseEventUserInput:
 //	default:
 //	  fmt.Errorf("no variant present")
 //	}
-func (u BetaChatGetResponseEventUnion) AsAny() anyBetaChatGetResponseEvent {
+func (u ChatGetResponseEventUnion) AsAny() anyChatGetResponseEvent {
 	switch u.Type {
 	case "stop":
 		return u.AsStop()
@@ -348,57 +334,57 @@ func (u BetaChatGetResponseEventUnion) AsAny() anyBetaChatGetResponseEvent {
 	return nil
 }
 
-func (u BetaChatGetResponseEventUnion) AsStop() (v BetaChatGetResponseEventStop) {
+func (u ChatGetResponseEventUnion) AsStop() (v ChatGetResponseEventStop) {
 	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
 	return
 }
 
-func (u BetaChatGetResponseEventUnion) AsTextDelta() (v BetaChatGetResponseEventTextDelta) {
+func (u ChatGetResponseEventUnion) AsTextDelta() (v ChatGetResponseEventTextDelta) {
 	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
 	return
 }
 
-func (u BetaChatGetResponseEventUnion) AsText() (v BetaChatGetResponseEventText) {
+func (u ChatGetResponseEventUnion) AsText() (v ChatGetResponseEventText) {
 	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
 	return
 }
 
-func (u BetaChatGetResponseEventUnion) AsThinkingDelta() (v BetaChatGetResponseEventThinkingDelta) {
+func (u ChatGetResponseEventUnion) AsThinkingDelta() (v ChatGetResponseEventThinkingDelta) {
 	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
 	return
 }
 
-func (u BetaChatGetResponseEventUnion) AsThinking() (v BetaChatGetResponseEventThinking) {
+func (u ChatGetResponseEventUnion) AsThinking() (v ChatGetResponseEventThinking) {
 	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
 	return
 }
 
-func (u BetaChatGetResponseEventUnion) AsToolCall() (v BetaChatGetResponseEventToolCall) {
+func (u ChatGetResponseEventUnion) AsToolCall() (v ChatGetResponseEventToolCall) {
 	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
 	return
 }
 
-func (u BetaChatGetResponseEventUnion) AsToolResult() (v BetaChatGetResponseEventToolResult) {
+func (u ChatGetResponseEventUnion) AsToolResult() (v ChatGetResponseEventToolResult) {
 	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
 	return
 }
 
-func (u BetaChatGetResponseEventUnion) AsUserInput() (v BetaChatGetResponseEventUserInput) {
+func (u ChatGetResponseEventUnion) AsUserInput() (v ChatGetResponseEventUserInput) {
 	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
 	return
 }
 
 // Returns the unmodified JSON received from the API
-func (u BetaChatGetResponseEventUnion) RawJSON() string { return u.JSON.raw }
+func (u ChatGetResponseEventUnion) RawJSON() string { return u.JSON.raw }
 
-func (r *BetaChatGetResponseEventUnion) UnmarshalJSON(data []byte) error {
+func (r *ChatGetResponseEventUnion) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-type BetaChatGetResponseEventStop struct {
-	Error   string                            `json:"error" api:"required"`
-	IsError bool                              `json:"is_error" api:"required"`
-	Usage   BetaChatGetResponseEventStopUsage `json:"usage" api:"required"`
+type ChatGetResponseEventStop struct {
+	Error   string                        `json:"error" api:"required"`
+	IsError bool                          `json:"is_error" api:"required"`
+	Usage   ChatGetResponseEventStopUsage `json:"usage" api:"required"`
 	// Requested indexes this turn could not query.
 	SkippedIndexIDs []string `json:"skipped_index_ids"`
 	// Any of "stop".
@@ -416,12 +402,12 @@ type BetaChatGetResponseEventStop struct {
 }
 
 // Returns the unmodified JSON received from the API
-func (r BetaChatGetResponseEventStop) RawJSON() string { return r.JSON.raw }
-func (r *BetaChatGetResponseEventStop) UnmarshalJSON(data []byte) error {
+func (r ChatGetResponseEventStop) RawJSON() string { return r.JSON.raw }
+func (r *ChatGetResponseEventStop) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-type BetaChatGetResponseEventStopUsage struct {
+type ChatGetResponseEventStopUsage struct {
 	DurationMs        float64 `json:"duration_ms"`
 	TotalInputTokens  int64   `json:"total_input_tokens" api:"nullable"`
 	TotalOutputTokens int64   `json:"total_output_tokens" api:"nullable"`
@@ -438,12 +424,12 @@ type BetaChatGetResponseEventStopUsage struct {
 }
 
 // Returns the unmodified JSON received from the API
-func (r BetaChatGetResponseEventStopUsage) RawJSON() string { return r.JSON.raw }
-func (r *BetaChatGetResponseEventStopUsage) UnmarshalJSON(data []byte) error {
+func (r ChatGetResponseEventStopUsage) RawJSON() string { return r.JSON.raw }
+func (r *ChatGetResponseEventStopUsage) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-type BetaChatGetResponseEventTextDelta struct {
+type ChatGetResponseEventTextDelta struct {
 	Content string `json:"content" api:"required"`
 	// Any of "text_delta".
 	Type string `json:"type"`
@@ -457,12 +443,12 @@ type BetaChatGetResponseEventTextDelta struct {
 }
 
 // Returns the unmodified JSON received from the API
-func (r BetaChatGetResponseEventTextDelta) RawJSON() string { return r.JSON.raw }
-func (r *BetaChatGetResponseEventTextDelta) UnmarshalJSON(data []byte) error {
+func (r ChatGetResponseEventTextDelta) RawJSON() string { return r.JSON.raw }
+func (r *ChatGetResponseEventTextDelta) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-type BetaChatGetResponseEventText struct {
+type ChatGetResponseEventText struct {
 	Content string `json:"content" api:"required"`
 	// Any of "text".
 	Type string `json:"type"`
@@ -476,12 +462,12 @@ type BetaChatGetResponseEventText struct {
 }
 
 // Returns the unmodified JSON received from the API
-func (r BetaChatGetResponseEventText) RawJSON() string { return r.JSON.raw }
-func (r *BetaChatGetResponseEventText) UnmarshalJSON(data []byte) error {
+func (r ChatGetResponseEventText) RawJSON() string { return r.JSON.raw }
+func (r *ChatGetResponseEventText) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-type BetaChatGetResponseEventThinkingDelta struct {
+type ChatGetResponseEventThinkingDelta struct {
 	Content string `json:"content" api:"required"`
 	// Any of "thinking_delta".
 	Type string `json:"type"`
@@ -495,12 +481,12 @@ type BetaChatGetResponseEventThinkingDelta struct {
 }
 
 // Returns the unmodified JSON received from the API
-func (r BetaChatGetResponseEventThinkingDelta) RawJSON() string { return r.JSON.raw }
-func (r *BetaChatGetResponseEventThinkingDelta) UnmarshalJSON(data []byte) error {
+func (r ChatGetResponseEventThinkingDelta) RawJSON() string { return r.JSON.raw }
+func (r *ChatGetResponseEventThinkingDelta) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-type BetaChatGetResponseEventThinking struct {
+type ChatGetResponseEventThinking struct {
 	Content string `json:"content" api:"required"`
 	// Any of "thinking".
 	Type string `json:"type"`
@@ -514,12 +500,12 @@ type BetaChatGetResponseEventThinking struct {
 }
 
 // Returns the unmodified JSON received from the API
-func (r BetaChatGetResponseEventThinking) RawJSON() string { return r.JSON.raw }
-func (r *BetaChatGetResponseEventThinking) UnmarshalJSON(data []byte) error {
+func (r ChatGetResponseEventThinking) RawJSON() string { return r.JSON.raw }
+func (r *ChatGetResponseEventThinking) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-type BetaChatGetResponseEventToolCall struct {
+type ChatGetResponseEventToolCall struct {
 	Arguments map[string]any `json:"arguments" api:"required"`
 	CallID    string         `json:"call_id" api:"required"`
 	Name      string         `json:"name" api:"required"`
@@ -537,17 +523,17 @@ type BetaChatGetResponseEventToolCall struct {
 }
 
 // Returns the unmodified JSON received from the API
-func (r BetaChatGetResponseEventToolCall) RawJSON() string { return r.JSON.raw }
-func (r *BetaChatGetResponseEventToolCall) UnmarshalJSON(data []byte) error {
+func (r ChatGetResponseEventToolCall) RawJSON() string { return r.JSON.raw }
+func (r *ChatGetResponseEventToolCall) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-type BetaChatGetResponseEventToolResult struct {
+type ChatGetResponseEventToolResult struct {
 	CallID string `json:"call_id" api:"required"`
 	Name   string `json:"name" api:"required"`
 	Result any    `json:"result" api:"required"`
 	// Coordinates for lazily resolving a page screenshot presigned URL.
-	ImageAttachment BetaChatGetResponseEventToolResultImageAttachment `json:"image_attachment" api:"nullable"`
+	ImageAttachment ChatGetResponseEventToolResultImageAttachment `json:"image_attachment" api:"nullable"`
 	// Any of "tool_result".
 	Type string `json:"type"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
@@ -563,13 +549,13 @@ type BetaChatGetResponseEventToolResult struct {
 }
 
 // Returns the unmodified JSON received from the API
-func (r BetaChatGetResponseEventToolResult) RawJSON() string { return r.JSON.raw }
-func (r *BetaChatGetResponseEventToolResult) UnmarshalJSON(data []byte) error {
+func (r ChatGetResponseEventToolResult) RawJSON() string { return r.JSON.raw }
+func (r *ChatGetResponseEventToolResult) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
 // Coordinates for lazily resolving a page screenshot presigned URL.
-type BetaChatGetResponseEventToolResultImageAttachment struct {
+type ChatGetResponseEventToolResultImageAttachment struct {
 	AttachmentName string `json:"attachment_name" api:"required"`
 	SourceID       string `json:"source_id" api:"required"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
@@ -582,12 +568,12 @@ type BetaChatGetResponseEventToolResultImageAttachment struct {
 }
 
 // Returns the unmodified JSON received from the API
-func (r BetaChatGetResponseEventToolResultImageAttachment) RawJSON() string { return r.JSON.raw }
-func (r *BetaChatGetResponseEventToolResultImageAttachment) UnmarshalJSON(data []byte) error {
+func (r ChatGetResponseEventToolResultImageAttachment) RawJSON() string { return r.JSON.raw }
+func (r *ChatGetResponseEventToolResultImageAttachment) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-type BetaChatGetResponseEventUserInput struct {
+type ChatGetResponseEventUserInput struct {
 	Content string `json:"content" api:"required"`
 	// Any of "user_input".
 	Type string `json:"type"`
@@ -601,23 +587,23 @@ type BetaChatGetResponseEventUserInput struct {
 }
 
 // Returns the unmodified JSON received from the API
-func (r BetaChatGetResponseEventUserInput) RawJSON() string { return r.JSON.raw }
-func (r *BetaChatGetResponseEventUserInput) UnmarshalJSON(data []byte) error {
+func (r ChatGetResponseEventUserInput) RawJSON() string { return r.JSON.raw }
+func (r *ChatGetResponseEventUserInput) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
 // What this chat's share link grants: read_only (transcript only) or query
 // (viewers may ask new questions).
-type BetaChatGetResponseSharedAccess string
+type ChatGetResponseSharedAccess string
 
 const (
-	BetaChatGetResponseSharedAccessQuery    BetaChatGetResponseSharedAccess = "query"
-	BetaChatGetResponseSharedAccessReadOnly BetaChatGetResponseSharedAccess = "read_only"
+	ChatGetResponseSharedAccessQuery    ChatGetResponseSharedAccess = "query"
+	ChatGetResponseSharedAccessReadOnly ChatGetResponseSharedAccess = "read_only"
 )
 
 // Token usage and status from the most recent run. Null if the session has not
 // been run yet.
-type BetaChatGetResponseJobMetadata struct {
+type ChatGetResponseJobMetadata struct {
 	DurationMs        float64  `json:"duration_ms"`
 	Error             string   `json:"error" api:"nullable"`
 	ExportConfigIDs   []string `json:"export_config_ids" api:"nullable"`
@@ -640,13 +626,13 @@ type BetaChatGetResponseJobMetadata struct {
 }
 
 // Returns the unmodified JSON received from the API
-func (r BetaChatGetResponseJobMetadata) RawJSON() string { return r.JSON.raw }
-func (r *BetaChatGetResponseJobMetadata) UnmarshalJSON(data []byte) error {
+func (r ChatGetResponseJobMetadata) RawJSON() string { return r.JSON.raw }
+func (r *ChatGetResponseJobMetadata) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
 // Summary of a chat session, including its title and last run metadata.
-type BetaChatListResponse struct {
+type ChatListResponse struct {
 	// ISO-format timestamp showing when the session was last updated.
 	LastUpdatedAt string `json:"last_updated_at" api:"required"`
 	// Unique session identifier.
@@ -655,14 +641,14 @@ type BetaChatListResponse struct {
 	// (viewers may ask new questions).
 	//
 	// Any of "query", "read_only".
-	SharedAccess BetaChatListResponseSharedAccess `json:"shared_access" api:"required"`
+	SharedAccess ChatListResponseSharedAccess `json:"shared_access" api:"required"`
 	// Auto-generated title derived from the first user message.
 	GeneratedTitle string `json:"generated_title" api:"nullable"`
 	// Indexes this session is bound to. Null on unbound sessions.
 	IndexIDs []string `json:"index_ids" api:"nullable"`
 	// Token usage and status from the most recent run. Null if the session has not
 	// been run yet.
-	JobMetadata BetaChatListResponseJobMetadata `json:"job_metadata" api:"nullable"`
+	JobMetadata ChatListResponseJobMetadata `json:"job_metadata" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		LastUpdatedAt  respjson.Field
@@ -677,23 +663,23 @@ type BetaChatListResponse struct {
 }
 
 // Returns the unmodified JSON received from the API
-func (r BetaChatListResponse) RawJSON() string { return r.JSON.raw }
-func (r *BetaChatListResponse) UnmarshalJSON(data []byte) error {
+func (r ChatListResponse) RawJSON() string { return r.JSON.raw }
+func (r *ChatListResponse) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
 // What this chat's share link grants: read_only (transcript only) or query
 // (viewers may ask new questions).
-type BetaChatListResponseSharedAccess string
+type ChatListResponseSharedAccess string
 
 const (
-	BetaChatListResponseSharedAccessQuery    BetaChatListResponseSharedAccess = "query"
-	BetaChatListResponseSharedAccessReadOnly BetaChatListResponseSharedAccess = "read_only"
+	ChatListResponseSharedAccessQuery    ChatListResponseSharedAccess = "query"
+	ChatListResponseSharedAccessReadOnly ChatListResponseSharedAccess = "read_only"
 )
 
 // Token usage and status from the most recent run. Null if the session has not
 // been run yet.
-type BetaChatListResponseJobMetadata struct {
+type ChatListResponseJobMetadata struct {
 	DurationMs        float64  `json:"duration_ms"`
 	Error             string   `json:"error" api:"nullable"`
 	ExportConfigIDs   []string `json:"export_config_ids" api:"nullable"`
@@ -716,13 +702,13 @@ type BetaChatListResponseJobMetadata struct {
 }
 
 // Returns the unmodified JSON received from the API
-func (r BetaChatListResponseJobMetadata) RawJSON() string { return r.JSON.raw }
-func (r *BetaChatListResponseJobMetadata) UnmarshalJSON(data []byte) error {
+func (r ChatListResponseJobMetadata) RawJSON() string { return r.JSON.raw }
+func (r *ChatListResponseJobMetadata) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
 // Summary of a chat session, including its title and last run metadata.
-type BetaChatGetSummaryResponse struct {
+type ChatGetSummaryResponse struct {
 	// ISO-format timestamp showing when the session was last updated.
 	LastUpdatedAt string `json:"last_updated_at" api:"required"`
 	// Unique session identifier.
@@ -731,14 +717,14 @@ type BetaChatGetSummaryResponse struct {
 	// (viewers may ask new questions).
 	//
 	// Any of "query", "read_only".
-	SharedAccess BetaChatGetSummaryResponseSharedAccess `json:"shared_access" api:"required"`
+	SharedAccess ChatGetSummaryResponseSharedAccess `json:"shared_access" api:"required"`
 	// Auto-generated title derived from the first user message.
 	GeneratedTitle string `json:"generated_title" api:"nullable"`
 	// Indexes this session is bound to. Null on unbound sessions.
 	IndexIDs []string `json:"index_ids" api:"nullable"`
 	// Token usage and status from the most recent run. Null if the session has not
 	// been run yet.
-	JobMetadata BetaChatGetSummaryResponseJobMetadata `json:"job_metadata" api:"nullable"`
+	JobMetadata ChatGetSummaryResponseJobMetadata `json:"job_metadata" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		LastUpdatedAt  respjson.Field
@@ -753,23 +739,23 @@ type BetaChatGetSummaryResponse struct {
 }
 
 // Returns the unmodified JSON received from the API
-func (r BetaChatGetSummaryResponse) RawJSON() string { return r.JSON.raw }
-func (r *BetaChatGetSummaryResponse) UnmarshalJSON(data []byte) error {
+func (r ChatGetSummaryResponse) RawJSON() string { return r.JSON.raw }
+func (r *ChatGetSummaryResponse) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
 // What this chat's share link grants: read_only (transcript only) or query
 // (viewers may ask new questions).
-type BetaChatGetSummaryResponseSharedAccess string
+type ChatGetSummaryResponseSharedAccess string
 
 const (
-	BetaChatGetSummaryResponseSharedAccessQuery    BetaChatGetSummaryResponseSharedAccess = "query"
-	BetaChatGetSummaryResponseSharedAccessReadOnly BetaChatGetSummaryResponseSharedAccess = "read_only"
+	ChatGetSummaryResponseSharedAccessQuery    ChatGetSummaryResponseSharedAccess = "query"
+	ChatGetSummaryResponseSharedAccessReadOnly ChatGetSummaryResponseSharedAccess = "read_only"
 )
 
 // Token usage and status from the most recent run. Null if the session has not
 // been run yet.
-type BetaChatGetSummaryResponseJobMetadata struct {
+type ChatGetSummaryResponseJobMetadata struct {
 	DurationMs        float64  `json:"duration_ms"`
 	Error             string   `json:"error" api:"nullable"`
 	ExportConfigIDs   []string `json:"export_config_ids" api:"nullable"`
@@ -792,14 +778,14 @@ type BetaChatGetSummaryResponseJobMetadata struct {
 }
 
 // Returns the unmodified JSON received from the API
-func (r BetaChatGetSummaryResponseJobMetadata) RawJSON() string { return r.JSON.raw }
-func (r *BetaChatGetSummaryResponseJobMetadata) UnmarshalJSON(data []byte) error {
+func (r ChatGetSummaryResponseJobMetadata) RawJSON() string { return r.JSON.raw }
+func (r *ChatGetSummaryResponseJobMetadata) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-type BetaChatStreamResponse = any
+type ChatStreamResponse = any
 
-type BetaChatNewParams struct {
+type ChatNewParams struct {
 	OrganizationID param.Opt[string] `query:"organization_id,omitzero" format:"uuid" json:"-"`
 	ProjectID      param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
 	// Indexes this session will retrieve from. Once set and the first message has been
@@ -810,20 +796,20 @@ type BetaChatNewParams struct {
 	// (viewers may ask new questions). Null follows the deployment default.
 	//
 	// Any of "query", "read_only".
-	SharedAccess BetaChatNewParamsSharedAccess `json:"shared_access,omitzero"`
+	SharedAccess ChatNewParamsSharedAccess `json:"shared_access,omitzero"`
 	paramObj
 }
 
-func (r BetaChatNewParams) MarshalJSON() (data []byte, err error) {
-	type shadow BetaChatNewParams
+func (r ChatNewParams) MarshalJSON() (data []byte, err error) {
+	type shadow ChatNewParams
 	return param.MarshalObject(r, (*shadow)(&r))
 }
-func (r *BetaChatNewParams) UnmarshalJSON(data []byte) error {
+func (r *ChatNewParams) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-// URLQuery serializes [BetaChatNewParams]'s query parameters as `url.Values`.
-func (r BetaChatNewParams) URLQuery() (v url.Values, err error) {
+// URLQuery serializes [ChatNewParams]'s query parameters as `url.Values`.
+func (r ChatNewParams) URLQuery() (v url.Values, err error) {
 	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
 		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
 		NestedFormat: apiquery.NestedQueryFormatBrackets,
@@ -832,28 +818,28 @@ func (r BetaChatNewParams) URLQuery() (v url.Values, err error) {
 
 // What this chat's share link grants: read_only (transcript only) or query
 // (viewers may ask new questions). Null follows the deployment default.
-type BetaChatNewParamsSharedAccess string
+type ChatNewParamsSharedAccess string
 
 const (
-	BetaChatNewParamsSharedAccessQuery    BetaChatNewParamsSharedAccess = "query"
-	BetaChatNewParamsSharedAccessReadOnly BetaChatNewParamsSharedAccess = "read_only"
+	ChatNewParamsSharedAccessQuery    ChatNewParamsSharedAccess = "query"
+	ChatNewParamsSharedAccessReadOnly ChatNewParamsSharedAccess = "read_only"
 )
 
-type BetaChatGetParams struct {
+type ChatGetParams struct {
 	OrganizationID param.Opt[string] `query:"organization_id,omitzero" format:"uuid" json:"-"`
 	ProjectID      param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
 	paramObj
 }
 
-// URLQuery serializes [BetaChatGetParams]'s query parameters as `url.Values`.
-func (r BetaChatGetParams) URLQuery() (v url.Values, err error) {
+// URLQuery serializes [ChatGetParams]'s query parameters as `url.Values`.
+func (r ChatGetParams) URLQuery() (v url.Values, err error) {
 	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
 		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
 		NestedFormat: apiquery.NestedQueryFormatBrackets,
 	})
 }
 
-type BetaChatListParams struct {
+type ChatListParams struct {
 	OrganizationID param.Opt[string] `query:"organization_id,omitzero" format:"uuid" json:"-"`
 	PageSize       param.Opt[int64]  `query:"page_size,omitzero" json:"-"`
 	PageToken      param.Opt[string] `query:"page_token,omitzero" json:"-"`
@@ -861,44 +847,43 @@ type BetaChatListParams struct {
 	paramObj
 }
 
-// URLQuery serializes [BetaChatListParams]'s query parameters as `url.Values`.
-func (r BetaChatListParams) URLQuery() (v url.Values, err error) {
+// URLQuery serializes [ChatListParams]'s query parameters as `url.Values`.
+func (r ChatListParams) URLQuery() (v url.Values, err error) {
 	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
 		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
 		NestedFormat: apiquery.NestedQueryFormatBrackets,
 	})
 }
 
-type BetaChatDeleteParams struct {
+type ChatDeleteParams struct {
 	OrganizationID param.Opt[string] `query:"organization_id,omitzero" format:"uuid" json:"-"`
 	ProjectID      param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
 	paramObj
 }
 
-// URLQuery serializes [BetaChatDeleteParams]'s query parameters as `url.Values`.
-func (r BetaChatDeleteParams) URLQuery() (v url.Values, err error) {
+// URLQuery serializes [ChatDeleteParams]'s query parameters as `url.Values`.
+func (r ChatDeleteParams) URLQuery() (v url.Values, err error) {
 	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
 		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
 		NestedFormat: apiquery.NestedQueryFormatBrackets,
 	})
 }
 
-type BetaChatGetSummaryParams struct {
+type ChatGetSummaryParams struct {
 	OrganizationID param.Opt[string] `query:"organization_id,omitzero" format:"uuid" json:"-"`
 	ProjectID      param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
 	paramObj
 }
 
-// URLQuery serializes [BetaChatGetSummaryParams]'s query parameters as
-// `url.Values`.
-func (r BetaChatGetSummaryParams) URLQuery() (v url.Values, err error) {
+// URLQuery serializes [ChatGetSummaryParams]'s query parameters as `url.Values`.
+func (r ChatGetSummaryParams) URLQuery() (v url.Values, err error) {
 	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
 		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
 		NestedFormat: apiquery.NestedQueryFormatBrackets,
 	})
 }
 
-type BetaChatStreamParams struct {
+type ChatStreamParams struct {
 	// Indexes to retrieve data from.
 	IndexIDs []string `json:"index_ids,omitzero" api:"required"`
 	// User message for this chat turn.
@@ -910,16 +895,16 @@ type BetaChatStreamParams struct {
 	paramObj
 }
 
-func (r BetaChatStreamParams) MarshalJSON() (data []byte, err error) {
-	type shadow BetaChatStreamParams
+func (r ChatStreamParams) MarshalJSON() (data []byte, err error) {
+	type shadow ChatStreamParams
 	return param.MarshalObject(r, (*shadow)(&r))
 }
-func (r *BetaChatStreamParams) UnmarshalJSON(data []byte) error {
+func (r *ChatStreamParams) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-// URLQuery serializes [BetaChatStreamParams]'s query parameters as `url.Values`.
-func (r BetaChatStreamParams) URLQuery() (v url.Values, err error) {
+// URLQuery serializes [ChatStreamParams]'s query parameters as `url.Values`.
+func (r ChatStreamParams) URLQuery() (v url.Values, err error) {
 	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
 		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
 		NestedFormat: apiquery.NestedQueryFormatBrackets,
