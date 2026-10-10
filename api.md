@@ -102,6 +102,7 @@ Response Types:
 - <a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go">llamacloud</a>.<a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go#FormSection">FormSection</a>
 - <a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go">llamacloud</a>.<a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go#FormTable">FormTable</a>
 - <a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go">llamacloud</a>.<a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go#FormTableCellItems">FormTableCellItems</a>
+- <a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go">llamacloud</a>.<a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go#FormText">FormText</a>
 - <a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go">llamacloud</a>.<a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go#HeaderItem">HeaderItem</a>
 - <a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go">llamacloud</a>.<a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go#HeadingItem">HeadingItem</a>
 - <a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go">llamacloud</a>.<a href="https://pkg.go.dev/github.com/run-llama/llama-parse-go#ImageItem">ImageItem</a>
