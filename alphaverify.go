@@ -1873,18 +1873,18 @@ type AlphaVerifyGetDetailsResponseEvidence struct {
 	// Whether this is hard (conclusive) evidence
 	Hard bool `json:"hard"`
 	// Raw values from the tool behind this finding; the shape varies by tool
-	MetadataTool map[string]any `json:"metadata_tool"`
+	Metadata map[string]any `json:"metadata"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
-		Code         respjson.Field
-		Detail       respjson.Field
-		Family       respjson.Field
-		Score        respjson.Field
-		Tool         respjson.Field
-		Hard         respjson.Field
-		MetadataTool respjson.Field
-		ExtraFields  map[string]respjson.Field
-		raw          string
+		Code        respjson.Field
+		Detail      respjson.Field
+		Family      respjson.Field
+		Score       respjson.Field
+		Tool        respjson.Field
+		Hard        respjson.Field
+		Metadata    respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
 	} `json:"-"`
 }
 
