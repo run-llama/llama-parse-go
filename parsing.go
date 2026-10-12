@@ -428,7 +428,7 @@ const (
 
 // One form detected on a page, in two representations of the same content.
 type Form struct {
-	// Structured representation: an ordered tree of sections, fields, and tables
+	// Structured representation: an ordered tree of sections, fields, tables, and text
 	Json []FormJsonUnion `json:"json" api:"required"`
 	// Flattened list representation of the same content
 	List FormListItem `json:"list" api:"required"`
@@ -3822,7 +3822,8 @@ func (r *ParsingCancelResponseUsage) UnmarshalJSON(data []byte) error {
 type ParsingGetResponse struct {
 	// Parse job status and metadata
 	Job ParsingGetResponseJob `json:"job" api:"required"`
-	// Per-page form analysis results (one entry per page).
+	// Beta: per-page form analysis results; node types the calling SDK predates are
+	// left out.
 	Forms ParsingGetResponseForms `json:"forms" api:"nullable"`
 	// Metadata for all extracted images.
 	ImagesContentMetadata ParsingGetResponseImagesContentMetadata `json:"images_content_metadata" api:"nullable"`
@@ -3933,7 +3934,8 @@ func (r *ParsingGetResponseJobUsage) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-// Per-page form analysis results (one entry per page).
+// Beta: per-page form analysis results; node types the calling SDK predates are
+// left out.
 type ParsingGetResponseForms struct {
 	// List of form pages or failed page entries
 	Pages []ParsingGetResponseFormsPageUnion `json:"pages" api:"required"`
