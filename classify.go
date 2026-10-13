@@ -124,7 +124,8 @@ func (r *ClassifyService) Cancel(ctx context.Context, jobID string, body Classif
 // Get a classify job by ID.
 //
 // Returns the job status, configuration, and classify result when complete. The
-// result includes the matched document type, confidence score, and reasoning.
+// result includes the matched document type, confidence score, and reasoning. Use
+// `expand=usage` for credits billed against the job.
 func (r *ClassifyService) Get(ctx context.Context, jobID string, query ClassifyGetParams, opts ...option.RequestOption) (res *ClassifyGetResponse, err error) {
 	opts = slices.Concat(r.options, opts)
 	if jobID == "" {
@@ -417,6 +418,12 @@ type ClassifyNewResponse struct {
 	TransactionID string `json:"transaction_id" api:"nullable"`
 	// Update datetime
 	UpdatedAt time.Time `json:"updated_at" api:"nullable" format:"date-time"`
+	// Usage recorded against a classify job.
+	//
+	// Classify bills through the parse job it runs on a file input, so that parse
+	// job's credits are the whole total. A job run on a parse job you created bills
+	// nothing of its own: `parse_credits` is null and `credits` is 0.
+	Usage ClassifyNewResponseUsage `json:"usage" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		ID                respjson.Field
@@ -433,6 +440,7 @@ type ClassifyNewResponse struct {
 		Result            respjson.Field
 		TransactionID     respjson.Field
 		UpdatedAt         respjson.Field
+		Usage             respjson.Field
 		ExtraFields       map[string]respjson.Field
 		raw               string
 	} `json:"-"`
@@ -463,6 +471,31 @@ const (
 	ClassifyNewResponseStatusPending   ClassifyNewResponseStatus = "PENDING"
 	ClassifyNewResponseStatusRunning   ClassifyNewResponseStatus = "RUNNING"
 )
+
+// Usage recorded against a classify job.
+//
+// Classify bills through the parse job it runs on a file input, so that parse
+// job's credits are the whole total. A job run on a parse job you created bills
+// nothing of its own: `parse_credits` is null and `credits` is 0.
+type ClassifyNewResponseUsage struct {
+	// Total credits billed against this job. Null until billing has recorded it.
+	Credits float64 `json:"credits" api:"nullable"`
+	// Credits billed against the parse job Classify ran on the input file
+	ParseCredits float64 `json:"parse_credits" api:"nullable"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Credits      respjson.Field
+		ParseCredits respjson.Field
+		ExtraFields  map[string]respjson.Field
+		raw          string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r ClassifyNewResponseUsage) RawJSON() string { return r.JSON.raw }
+func (r *ClassifyNewResponseUsage) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
 
 // Response for a classify job.
 type ClassifyListResponse struct {
@@ -498,6 +531,12 @@ type ClassifyListResponse struct {
 	TransactionID string `json:"transaction_id" api:"nullable"`
 	// Update datetime
 	UpdatedAt time.Time `json:"updated_at" api:"nullable" format:"date-time"`
+	// Usage recorded against a classify job.
+	//
+	// Classify bills through the parse job it runs on a file input, so that parse
+	// job's credits are the whole total. A job run on a parse job you created bills
+	// nothing of its own: `parse_credits` is null and `credits` is 0.
+	Usage ClassifyListResponseUsage `json:"usage" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		ID                respjson.Field
@@ -514,6 +553,7 @@ type ClassifyListResponse struct {
 		Result            respjson.Field
 		TransactionID     respjson.Field
 		UpdatedAt         respjson.Field
+		Usage             respjson.Field
 		ExtraFields       map[string]respjson.Field
 		raw               string
 	} `json:"-"`
@@ -544,6 +584,31 @@ const (
 	ClassifyListResponseStatusPending   ClassifyListResponseStatus = "PENDING"
 	ClassifyListResponseStatusRunning   ClassifyListResponseStatus = "RUNNING"
 )
+
+// Usage recorded against a classify job.
+//
+// Classify bills through the parse job it runs on a file input, so that parse
+// job's credits are the whole total. A job run on a parse job you created bills
+// nothing of its own: `parse_credits` is null and `credits` is 0.
+type ClassifyListResponseUsage struct {
+	// Total credits billed against this job. Null until billing has recorded it.
+	Credits float64 `json:"credits" api:"nullable"`
+	// Credits billed against the parse job Classify ran on the input file
+	ParseCredits float64 `json:"parse_credits" api:"nullable"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Credits      respjson.Field
+		ParseCredits respjson.Field
+		ExtraFields  map[string]respjson.Field
+		raw          string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r ClassifyListResponseUsage) RawJSON() string { return r.JSON.raw }
+func (r *ClassifyListResponseUsage) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
 
 // Identifiers for a deleted classify job.
 type ClassifyDeleteResponse struct {
@@ -600,6 +665,12 @@ type ClassifyCancelResponse struct {
 	TransactionID string `json:"transaction_id" api:"nullable"`
 	// Update datetime
 	UpdatedAt time.Time `json:"updated_at" api:"nullable" format:"date-time"`
+	// Usage recorded against a classify job.
+	//
+	// Classify bills through the parse job it runs on a file input, so that parse
+	// job's credits are the whole total. A job run on a parse job you created bills
+	// nothing of its own: `parse_credits` is null and `credits` is 0.
+	Usage ClassifyCancelResponseUsage `json:"usage" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		ID                respjson.Field
@@ -616,6 +687,7 @@ type ClassifyCancelResponse struct {
 		Result            respjson.Field
 		TransactionID     respjson.Field
 		UpdatedAt         respjson.Field
+		Usage             respjson.Field
 		ExtraFields       map[string]respjson.Field
 		raw               string
 	} `json:"-"`
@@ -646,6 +718,31 @@ const (
 	ClassifyCancelResponseStatusPending   ClassifyCancelResponseStatus = "PENDING"
 	ClassifyCancelResponseStatusRunning   ClassifyCancelResponseStatus = "RUNNING"
 )
+
+// Usage recorded against a classify job.
+//
+// Classify bills through the parse job it runs on a file input, so that parse
+// job's credits are the whole total. A job run on a parse job you created bills
+// nothing of its own: `parse_credits` is null and `credits` is 0.
+type ClassifyCancelResponseUsage struct {
+	// Total credits billed against this job. Null until billing has recorded it.
+	Credits float64 `json:"credits" api:"nullable"`
+	// Credits billed against the parse job Classify ran on the input file
+	ParseCredits float64 `json:"parse_credits" api:"nullable"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Credits      respjson.Field
+		ParseCredits respjson.Field
+		ExtraFields  map[string]respjson.Field
+		raw          string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r ClassifyCancelResponseUsage) RawJSON() string { return r.JSON.raw }
+func (r *ClassifyCancelResponseUsage) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
 
 // Response for a classify job.
 type ClassifyGetResponse struct {
@@ -681,6 +778,12 @@ type ClassifyGetResponse struct {
 	TransactionID string `json:"transaction_id" api:"nullable"`
 	// Update datetime
 	UpdatedAt time.Time `json:"updated_at" api:"nullable" format:"date-time"`
+	// Usage recorded against a classify job.
+	//
+	// Classify bills through the parse job it runs on a file input, so that parse
+	// job's credits are the whole total. A job run on a parse job you created bills
+	// nothing of its own: `parse_credits` is null and `credits` is 0.
+	Usage ClassifyGetResponseUsage `json:"usage" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		ID                respjson.Field
@@ -697,6 +800,7 @@ type ClassifyGetResponse struct {
 		Result            respjson.Field
 		TransactionID     respjson.Field
 		UpdatedAt         respjson.Field
+		Usage             respjson.Field
 		ExtraFields       map[string]respjson.Field
 		raw               string
 	} `json:"-"`
@@ -727,6 +831,31 @@ const (
 	ClassifyGetResponseStatusPending   ClassifyGetResponseStatus = "PENDING"
 	ClassifyGetResponseStatusRunning   ClassifyGetResponseStatus = "RUNNING"
 )
+
+// Usage recorded against a classify job.
+//
+// Classify bills through the parse job it runs on a file input, so that parse
+// job's credits are the whole total. A job run on a parse job you created bills
+// nothing of its own: `parse_credits` is null and `credits` is 0.
+type ClassifyGetResponseUsage struct {
+	// Total credits billed against this job. Null until billing has recorded it.
+	Credits float64 `json:"credits" api:"nullable"`
+	// Credits billed against the parse job Classify ran on the input file
+	ParseCredits float64 `json:"parse_credits" api:"nullable"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Credits      respjson.Field
+		ParseCredits respjson.Field
+		ExtraFields  map[string]respjson.Field
+		raw          string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r ClassifyGetResponseUsage) RawJSON() string { return r.JSON.raw }
+func (r *ClassifyGetResponseUsage) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
 
 type ClassifyNewParams struct {
 	// Request to create a classify job.
@@ -823,6 +952,8 @@ func (r ClassifyCancelParams) URLQuery() (v url.Values, err error) {
 type ClassifyGetParams struct {
 	OrganizationID param.Opt[string] `query:"organization_id,omitzero" format:"uuid" json:"-"`
 	ProjectID      param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
+	// Additional fields to include: usage
+	Expand []string `query:"expand,omitzero" json:"-"`
 	paramObj
 }
 
