@@ -1993,12 +1993,10 @@ func (r *AlphaVerifyGetDetailsResponseRegion) UnmarshalJSON(data []byte) error {
 }
 
 type AlphaVerifyNewParams struct {
+	// File ID of the document to analyze
+	FileInput      string            `json:"file_input" api:"required"`
 	OrganizationID param.Opt[string] `query:"organization_id,omitzero" format:"uuid" json:"-"`
 	ProjectID      param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
-	// Deprecated: use file_input instead
-	FileID param.Opt[string] `json:"file_id,omitzero"`
-	// File ID of the document to analyze
-	FileInput param.Opt[string] `json:"file_input,omitzero"`
 	// Idempotency key scoped to the project. Reusing a key returns the original job;
 	// the new request body is ignored.
 	TransactionID param.Opt[string] `json:"transaction_id,omitzero"`

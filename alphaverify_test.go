@@ -28,14 +28,13 @@ func TestAlphaVerifyNewWithOptionalParams(t *testing.T) {
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Alpha.Verify.New(context.TODO(), llamacloud.AlphaVerifyNewParams{
+		FileInput:      "dfl-aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
 		OrganizationID: llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		ProjectID:      llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		Configuration: llamacloud.AlphaVerifyNewParamsConfiguration{
 			TargetPages: llamacloud.String("1,3,5-7"),
 			Tier:        "agentic",
 		},
-		FileID:                  llamacloud.String("dfl-aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"),
-		FileInput:               llamacloud.String("dfl-aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"),
 		TransactionID:           llamacloud.String("tx-unique-idempotency-key"),
 		WebhookConfigurationIDs: []string{"whc-...", "whc-..."},
 		WebhookConfigurations: []llamacloud.AlphaVerifyNewParamsWebhookConfiguration{{
