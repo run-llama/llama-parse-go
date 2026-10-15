@@ -94,7 +94,8 @@ func (r *SplitService) ListAutoPaging(ctx context.Context, query SplitListParams
 	return pagination.NewPaginatedCursorAutoPager(r.List(ctx, query, opts...))
 }
 
-// Delete a split job and its results.
+// Delete a split job and its results. A job that is not in a terminal state is
+// refused with 409; cancel it first.
 func (r *SplitService) Delete(ctx context.Context, splitJobID string, body SplitDeleteParams, opts ...option.RequestOption) (res *SplitDeleteResponse, err error) {
 	opts = slices.Concat(r.options, opts)
 	if splitJobID == "" {
