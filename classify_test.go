@@ -179,6 +179,7 @@ func TestClassifyGetWithOptionalParams(t *testing.T) {
 		context.TODO(),
 		"job_id",
 		llamacloud.ClassifyGetParams{
+			Expand:         []string{"string"},
 			OrganizationID: llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 			ProjectID:      llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		},
