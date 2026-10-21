@@ -320,6 +320,8 @@ type ConfigurationCreateParametersUnion struct {
 	// This field is from variant [ExtractV2ParametersResp].
 	DataSchema map[string]*ExtractV2ParametersDataSchemaUnionResp `json:"data_schema"`
 	// This field is from variant [ExtractV2ParametersResp].
+	AdvancedCitations bool `json:"advanced_citations"`
+	// This field is from variant [ExtractV2ParametersResp].
 	CiteSources bool `json:"cite_sources"`
 	// This field is from variant [ExtractV2ParametersResp].
 	ConfidenceScores bool `json:"confidence_scores"`
@@ -384,6 +386,7 @@ type ConfigurationCreateParametersUnion struct {
 		Mode                       respjson.Field
 		ParsingConfiguration       respjson.Field
 		DataSchema                 respjson.Field
+		AdvancedCitations          respjson.Field
 		CiteSources                respjson.Field
 		ConfidenceScores           respjson.Field
 		DisableCache               respjson.Field
@@ -738,6 +741,8 @@ type ConfigurationResponseParametersUnion struct {
 	// This field is from variant [ExtractV2ParametersResp].
 	DataSchema map[string]*ExtractV2ParametersDataSchemaUnionResp `json:"data_schema"`
 	// This field is from variant [ExtractV2ParametersResp].
+	AdvancedCitations bool `json:"advanced_citations"`
+	// This field is from variant [ExtractV2ParametersResp].
 	CiteSources bool `json:"cite_sources"`
 	// This field is from variant [ExtractV2ParametersResp].
 	ConfidenceScores bool `json:"confidence_scores"`
@@ -802,6 +807,7 @@ type ConfigurationResponseParametersUnion struct {
 		Mode                       respjson.Field
 		ParsingConfiguration       respjson.Field
 		DataSchema                 respjson.Field
+		AdvancedCitations          respjson.Field
 		CiteSources                respjson.Field
 		ConfidenceScores           respjson.Field
 		DisableCache               respjson.Field
@@ -998,6 +1004,9 @@ type ExtractV2ParametersResp struct {
 	DataSchema map[string]*ExtractV2ParametersDataSchemaUnionResp `json:"data_schema" api:"required"`
 	// Product type.
 	ProductType constant.ExtractV2 `json:"product_type" default:"extract_v2"`
+	// More precise citation bounding boxes. Set to false for faster extraction with
+	// less precise boxes.
+	AdvancedCitations bool `json:"advanced_citations"`
 	// Include citations in results. Returned under `extract_metadata` (auto-included
 	// when set). Text-level on `turbo` (no bounding boxes).
 	CiteSources bool `json:"cite_sources"`
@@ -1052,23 +1061,24 @@ type ExtractV2ParametersResp struct {
 	Version string `json:"version"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
-		DataSchema       respjson.Field
-		ProductType      respjson.Field
-		CiteSources      respjson.Field
-		ConfidenceScores respjson.Field
-		DisableCache     respjson.Field
-		ExtractionTarget respjson.Field
-		MaxPages         respjson.Field
-		ParseConfigID    respjson.Field
-		ParseTier        respjson.Field
-		SheetNames       respjson.Field
-		SpreadsheetMode  respjson.Field
-		SystemPrompt     respjson.Field
-		TargetPages      respjson.Field
-		Tier             respjson.Field
-		Version          respjson.Field
-		ExtraFields      map[string]respjson.Field
-		raw              string
+		DataSchema        respjson.Field
+		ProductType       respjson.Field
+		AdvancedCitations respjson.Field
+		CiteSources       respjson.Field
+		ConfidenceScores  respjson.Field
+		DisableCache      respjson.Field
+		ExtractionTarget  respjson.Field
+		MaxPages          respjson.Field
+		ParseConfigID     respjson.Field
+		ParseTier         respjson.Field
+		SheetNames        respjson.Field
+		SpreadsheetMode   respjson.Field
+		SystemPrompt      respjson.Field
+		TargetPages       respjson.Field
+		Tier              respjson.Field
+		Version           respjson.Field
+		ExtraFields       map[string]respjson.Field
+		raw               string
 	} `json:"-"`
 }
 
@@ -1201,6 +1211,9 @@ type ExtractV2Parameters struct {
 	// Comma-separated page numbers or ranges to process (1-based). Omit to process all
 	// pages.
 	TargetPages param.Opt[string] `json:"target_pages,omitzero"`
+	// More precise citation bounding boxes. Set to false for faster extraction with
+	// less precise boxes.
+	AdvancedCitations param.Opt[bool] `json:"advanced_citations,omitzero"`
 	// Include citations in results. Returned under `extract_metadata` (auto-included
 	// when set). Text-level on `turbo` (no bounding boxes).
 	CiteSources param.Opt[bool] `json:"cite_sources,omitzero"`
@@ -1301,7 +1314,7 @@ type ParseV2ParametersResp struct {
 	//
 	// - `fast`: `2026-06-15`
 	// - `cost_effective`: `2026-09-28`
-	// - `agentic`: `2026-09-29`
+	// - `agentic`: `2026-10-16`
 	// - `agentic_plus`: `2026-09-28`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
@@ -1399,7 +1412,7 @@ const (
 //
 // - `fast`: `2026-06-15`
 // - `cost_effective`: `2026-09-28`
-// - `agentic`: `2026-09-29`
+// - `agentic`: `2026-10-16`
 // - `agentic_plus`: `2026-09-28`
 //
 // Full list: `GET /api/v2/parse/versions`.
@@ -1407,7 +1420,7 @@ type ParseV2ParametersVersion string
 
 const (
 	ParseV2ParametersVersionLatest     ParseV2ParametersVersion = "latest"
-	ParseV2ParametersVersion2026_09_29 ParseV2ParametersVersion = "2026-09-29"
+	ParseV2ParametersVersion2026_10_16 ParseV2ParametersVersion = "2026-10-16"
 	ParseV2ParametersVersion2026_09_28 ParseV2ParametersVersion = "2026-09-28"
 	ParseV2ParametersVersion2026_06_15 ParseV2ParametersVersion = "2026-06-15"
 )
@@ -2133,7 +2146,7 @@ type ParseV2ParametersProcessingOptionsAutoModeConfigurationParsingConfResp stru
 	//
 	// - `fast`: `2026-06-15`
 	// - `cost_effective`: `2026-09-28`
-	// - `agentic`: `2026-09-29`
+	// - `agentic`: `2026-10-16`
 	// - `agentic_plus`: `2026-09-28`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
@@ -3239,7 +3252,7 @@ type ParseV2Parameters struct {
 	//
 	// - `fast`: `2026-06-15`
 	// - `cost_effective`: `2026-09-28`
-	// - `agentic`: `2026-09-29`
+	// - `agentic`: `2026-10-16`
 	// - `agentic_plus`: `2026-09-28`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
@@ -3898,7 +3911,7 @@ type ParseV2ParametersProcessingOptionsAutoModeConfigurationParsingConf struct {
 	//
 	// - `fast`: `2026-06-15`
 	// - `cost_effective`: `2026-09-28`
-	// - `agentic`: `2026-09-29`
+	// - `agentic`: `2026-10-16`
 	// - `agentic_plus`: `2026-09-28`
 	//
 	// Full list: `GET /api/v2/parse/versions`.

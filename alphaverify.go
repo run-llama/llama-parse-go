@@ -1870,10 +1870,10 @@ type AlphaVerifyGetDetailsResponseEvidence struct {
 	Score float64 `json:"score" api:"required"`
 	// Tool that produced this evidence
 	Tool string `json:"tool" api:"required"`
-	// Tool-specific structured payload
-	Data map[string]any `json:"data"`
 	// Whether this is hard (conclusive) evidence
 	Hard bool `json:"hard"`
+	// Raw values from the tool behind this finding; the shape varies by tool
+	Metadata map[string]any `json:"metadata"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Code        respjson.Field
@@ -1881,8 +1881,8 @@ type AlphaVerifyGetDetailsResponseEvidence struct {
 		Family      respjson.Field
 		Score       respjson.Field
 		Tool        respjson.Field
-		Data        respjson.Field
 		Hard        respjson.Field
+		Metadata    respjson.Field
 		ExtraFields map[string]respjson.Field
 		raw         string
 	} `json:"-"`
@@ -1993,12 +1993,10 @@ func (r *AlphaVerifyGetDetailsResponseRegion) UnmarshalJSON(data []byte) error {
 }
 
 type AlphaVerifyNewParams struct {
+	// File ID of the document to analyze
+	FileInput      string            `json:"file_input" api:"required"`
 	OrganizationID param.Opt[string] `query:"organization_id,omitzero" format:"uuid" json:"-"`
 	ProjectID      param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
-	// Deprecated: use file_input instead
-	FileID param.Opt[string] `json:"file_id,omitzero"`
-	// File ID of the document to analyze
-	FileInput param.Opt[string] `json:"file_input,omitzero"`
 	// Idempotency key scoped to the project. Reusing a key returns the original job;
 	// the new request body is ignored.
 	TransactionID param.Opt[string] `json:"transaction_id,omitzero"`
