@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.10.0](https://github.com/run-llama/llama-parse-go/compare/v1.9.0...v1.10.0) (2026-10-21)
+
+
+### Features
+
+* **classify:** add expand=usage to GET /api/v2/classify/{job_id} ([#29577](https://github.com/run-llama/llama-parse-go/issues/29577)) ([35114c0](https://github.com/run-llama/llama-parse-go/commit/35114c07b01af09a5979b4f34254a7c2ab257c5c))
+* **split:** report the job's Split version on v1 SplitJobResponse ([#30318](https://github.com/run-llama/llama-parse-go/issues/30318)) ([0e5258f](https://github.com/run-llama/llama-parse-go/commit/0e5258f670339ac1d6e7d68a2da9d965a3c30f96))
+
+
+### Bug Fixes
+
+* **parse:** apply watermark and wrapped-word rules to Lite fallbacks ([#30128](https://github.com/run-llama/llama-parse-go/issues/30128)) ([330bc34](https://github.com/run-llama/llama-parse-go/commit/330bc34b1dd1674a7b8c755a7e384a754cef6ba0))
+* **sdk:** one FormText model for the forms text node (PROD-10339) ([5705ff5](https://github.com/run-llama/llama-parse-go/commit/5705ff5ee29eab6c08b3650d345b869a4936ed46))
+* **split:** refuse to delete a non-terminal job ([#29785](https://github.com/run-llama/llama-parse-go/issues/29785)) ([992d1f4](https://github.com/run-llama/llama-parse-go/commit/992d1f467d0f4073a7108bdb449f25e4a22a05d1))
+
 ## [1.9.0](https://github.com/run-llama/llama-parse-go/compare/v1.8.0...v1.9.0) (2026-10-09)
 
 
