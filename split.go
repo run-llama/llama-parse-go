@@ -155,6 +155,8 @@ type SplitNewResponse struct {
 	Status string `json:"status" api:"required"`
 	// User who created this job.
 	UserID string `json:"user_id" api:"required"`
+	// Split version used for this job.
+	Version string `json:"version" api:"required"`
 	// Split configuration ID used for this job.
 	ConfigurationID string `json:"configuration_id" api:"nullable"`
 	// Creation datetime
@@ -184,6 +186,7 @@ type SplitNewResponse struct {
 		ProjectID         respjson.Field
 		Status            respjson.Field
 		UserID            respjson.Field
+		Version           respjson.Field
 		ConfigurationID   respjson.Field
 		CreatedAt         respjson.Field
 		ErrorMessage      respjson.Field
@@ -263,6 +266,8 @@ type SplitListResponse struct {
 	Status string `json:"status" api:"required"`
 	// User who created this job.
 	UserID string `json:"user_id" api:"required"`
+	// Split version used for this job.
+	Version string `json:"version" api:"required"`
 	// Split configuration ID used for this job.
 	ConfigurationID string `json:"configuration_id" api:"nullable"`
 	// Creation datetime
@@ -292,6 +297,7 @@ type SplitListResponse struct {
 		ProjectID         respjson.Field
 		Status            respjson.Field
 		UserID            respjson.Field
+		Version           respjson.Field
 		ConfigurationID   respjson.Field
 		CreatedAt         respjson.Field
 		ErrorMessage      respjson.Field
@@ -373,6 +379,8 @@ type SplitCancelResponse struct {
 	Status string `json:"status" api:"required"`
 	// User who created this job.
 	UserID string `json:"user_id" api:"required"`
+	// Split version used for this job.
+	Version string `json:"version" api:"required"`
 	// Split configuration ID used for this job.
 	ConfigurationID string `json:"configuration_id" api:"nullable"`
 	// Creation datetime
@@ -402,6 +410,7 @@ type SplitCancelResponse struct {
 		ProjectID         respjson.Field
 		Status            respjson.Field
 		UserID            respjson.Field
+		Version           respjson.Field
 		ConfigurationID   respjson.Field
 		CreatedAt         respjson.Field
 		ErrorMessage      respjson.Field
@@ -481,6 +490,8 @@ type SplitGetResponse struct {
 	Status string `json:"status" api:"required"`
 	// User who created this job.
 	UserID string `json:"user_id" api:"required"`
+	// Split version used for this job.
+	Version string `json:"version" api:"required"`
 	// Split configuration ID used for this job.
 	ConfigurationID string `json:"configuration_id" api:"nullable"`
 	// Creation datetime
@@ -510,6 +521,7 @@ type SplitGetResponse struct {
 		ProjectID         respjson.Field
 		Status            respjson.Field
 		UserID            respjson.Field
+		Version           respjson.Field
 		ConfigurationID   respjson.Field
 		CreatedAt         respjson.Field
 		ErrorMessage      respjson.Field
