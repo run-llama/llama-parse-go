@@ -3193,9 +3193,13 @@ func (r *PipelineEmbeddingConfigManagedOpenAIEmbeddingComponent) UnmarshalJSON(d
 
 // Hashes for the configuration of a pipeline.
 type PipelineConfigHash struct {
-	// Hash of the embedding config.
+	// Hash of the embedding config. Null in API responses.
+	//
+	// Deprecated: deprecated
 	EmbeddingConfigHash string `json:"embedding_config_hash" api:"nullable"`
-	// Hash of the llama parse parameters.
+	// Hash of the llama parse parameters. Null in API responses.
+	//
+	// Deprecated: deprecated
 	ParsingConfigHash string `json:"parsing_config_hash" api:"nullable"`
 	// Hash of the transform config.
 	TransformConfigHash string `json:"transform_config_hash" api:"nullable"`
