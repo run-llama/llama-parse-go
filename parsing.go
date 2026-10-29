@@ -5096,8 +5096,8 @@ type ParsingNewParams struct {
 	ProcessingControl ParsingNewParamsProcessingControl `json:"processing_control,omitzero"`
 	// Document processing options including OCR, table extraction, and chart parsing
 	ProcessingOptions ParsingNewParamsProcessingOptions `json:"processing_options,omitzero"`
-	// Webhook endpoints for job status notifications. Multiple webhooks can be
-	// configured for different events or services
+	// Webhook endpoints for job notifications. Maximum 10 total, including
+	// webhook_configuration_ids.
 	WebhookConfigurations []ParsingNewParamsWebhookConfiguration `json:"webhook_configurations,omitzero"`
 	paramObj
 }

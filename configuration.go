@@ -1353,8 +1353,8 @@ type ParseV2ParametersResp struct {
 	ProcessingOptions ParseV2ParametersProcessingOptionsResp `json:"processing_options"`
 	// IDs of saved webhook configurations to notify for this job.
 	WebhookConfigurationIDs []string `json:"webhook_configuration_ids" api:"nullable"`
-	// Webhook endpoints for job status notifications. Multiple webhooks can be
-	// configured for different events or services
+	// Webhook endpoints for job notifications. Maximum 10 total, including
+	// webhook_configuration_ids.
 	WebhookConfigurations []ParseV2ParametersWebhookConfigurationResp `json:"webhook_configurations"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
@@ -3292,8 +3292,8 @@ type ParseV2Parameters struct {
 	ProcessingControl ParseV2ParametersProcessingControl `json:"processing_control,omitzero"`
 	// Document processing options including OCR, table extraction, and chart parsing
 	ProcessingOptions ParseV2ParametersProcessingOptions `json:"processing_options,omitzero"`
-	// Webhook endpoints for job status notifications. Multiple webhooks can be
-	// configured for different events or services
+	// Webhook endpoints for job notifications. Maximum 10 total, including
+	// webhook_configuration_ids.
 	WebhookConfigurations []ParseV2ParametersWebhookConfiguration `json:"webhook_configurations,omitzero"`
 	// Product type.
 	//
