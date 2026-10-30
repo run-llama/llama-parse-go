@@ -49,6 +49,7 @@ func TestExtractNewWithOptionalParams(t *testing.T) {
 				CiteSources:       llamacloud.Bool(true),
 				ConfidenceScores:  llamacloud.Bool(true),
 				DisableCache:      llamacloud.Bool(true),
+				Effort:            llamacloud.ExtractConfigurationEffortMax,
 				ExtractionTarget:  llamacloud.ExtractConfigurationExtractionTargetPerDoc,
 				MaxPages:          llamacloud.Int(10),
 				ParseConfigID:     llamacloud.String("cfg-11111111-2222-3333-4444-555555555555"),
