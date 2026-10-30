@@ -1038,12 +1038,9 @@ type ExtractV2ParametersResp struct {
 	// target_pages for spreadsheets; omit to extract every sheet. Names are matched
 	// exactly (case-sensitive) — pass them as a list, e.g. ["Sheet 1", "My Sheet"].
 	SheetNames []string `json:"sheet_names" api:"nullable"`
-	// Beta. When true, extract structured data directly from a spreadsheet workbook
-	// (.xlsx/.xls/.csv) — the agent reads cells straight from the workbook instead of
-	// the standard document path. Off by default (spreadsheets keep the standard
-	// path). Requires the agentic_plus tier. Billed on the standard per-page extract
-	// rate, against a page count derived from workbook size. Citations and confidence
-	// scores are not available in this mode.
+	// Extract structured data directly from spreadsheet cells (.xlsx/.xls/.csv).
+	// Billed at the standard per-page Extract rate, with page count derived from
+	// workbook size.
 	SpreadsheetMode bool `json:"spreadsheet_mode"`
 	// Custom system prompt to guide extraction behavior
 	SystemPrompt string `json:"system_prompt" api:"nullable"`
@@ -1222,12 +1219,9 @@ type ExtractV2Parameters struct {
 	ConfidenceScores param.Opt[bool] `json:"confidence_scores,omitzero"`
 	// Disable reuse and storage of Extract results
 	DisableCache param.Opt[bool] `json:"disable_cache,omitzero"`
-	// Beta. When true, extract structured data directly from a spreadsheet workbook
-	// (.xlsx/.xls/.csv) — the agent reads cells straight from the workbook instead of
-	// the standard document path. Off by default (spreadsheets keep the standard
-	// path). Requires the agentic_plus tier. Billed on the standard per-page extract
-	// rate, against a page count derived from workbook size. Citations and confidence
-	// scores are not available in this mode.
+	// Extract structured data directly from spreadsheet cells (.xlsx/.xls/.csv).
+	// Billed at the standard per-page Extract rate, with page count derived from
+	// workbook size.
 	SpreadsheetMode param.Opt[bool] `json:"spreadsheet_mode,omitzero"`
 	// Extract version name, such as '2.5'. Use 'latest' for the newest compatible
 	// release for the selected tier. Dates (YYYY-MM-DD) are also supported, which will
