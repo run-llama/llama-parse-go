@@ -174,6 +174,12 @@ type ExtractConfiguration struct {
 	ConfidenceScores bool `json:"confidence_scores"`
 	// Disable reuse and storage of Extract results
 	DisableCache bool `json:"disable_cache"`
+	// Use 'max' for additional processing effort on agentic_plus. Bills by model usage
+	// with the page charge as a minimum. Omit or set to null for the tier's default
+	// behavior.
+	//
+	// Any of "max".
+	Effort ExtractConfigurationEffort `json:"effort" api:"nullable"`
 	// Deprecated. Applies only to Agentic and Cost Effective versions 2.0 or earlier.
 	// Granularity of extraction: per_doc returns one object per document, per_page
 	// returns one object per page, per_table_row returns one object per table row.
@@ -222,6 +228,7 @@ type ExtractConfiguration struct {
 		CiteSources       respjson.Field
 		ConfidenceScores  respjson.Field
 		DisableCache      respjson.Field
+		Effort            respjson.Field
 		ExtractionTarget  respjson.Field
 		MaxPages          respjson.Field
 		ParseConfigID     respjson.Field
@@ -313,6 +320,15 @@ func (r *ExtractConfigurationDataSchemaUnion) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
+// Use 'max' for additional processing effort on agentic_plus. Bills by model usage
+// with the page charge as a minimum. Omit or set to null for the tier's default
+// behavior.
+type ExtractConfigurationEffort string
+
+const (
+	ExtractConfigurationEffortMax ExtractConfigurationEffort = "max"
+)
+
 // Deprecated. Applies only to Agentic and Cost Effective versions 2.0 or earlier.
 // Granularity of extraction: per_doc returns one object per document, per_page
 // returns one object per page, per_table_row returns one object per table row.
@@ -385,6 +401,12 @@ type ExtractConfigurationParam struct {
 	// release for the selected tier. Dates (YYYY-MM-DD) are also supported, which will
 	// use the latest version on or before the specified date.
 	Version param.Opt[string] `json:"version,omitzero"`
+	// Use 'max' for additional processing effort on agentic_plus. Bills by model usage
+	// with the page charge as a minimum. Omit or set to null for the tier's default
+	// behavior.
+	//
+	// Any of "max".
+	Effort ExtractConfigurationEffort `json:"effort,omitzero"`
 	// Parse tier to use before extraction. Defaults to the extract tier if not
 	// specified. Turbo extract does not support parse configuration or produce a parse
 	// output; use another tier if your workflow requires parsed text.

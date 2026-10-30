@@ -327,6 +327,8 @@ type ConfigurationCreateParametersUnion struct {
 	ConfidenceScores bool `json:"confidence_scores"`
 	DisableCache     bool `json:"disable_cache"`
 	// This field is from variant [ExtractV2ParametersResp].
+	Effort ExtractV2ParametersEffort `json:"effort"`
+	// This field is from variant [ExtractV2ParametersResp].
 	ExtractionTarget ExtractV2ParametersExtractionTarget `json:"extraction_target"`
 	// This field is from variant [ExtractV2ParametersResp].
 	MaxPages      int64    `json:"max_pages"`
@@ -390,6 +392,7 @@ type ConfigurationCreateParametersUnion struct {
 		CiteSources                respjson.Field
 		ConfidenceScores           respjson.Field
 		DisableCache               respjson.Field
+		Effort                     respjson.Field
 		ExtractionTarget           respjson.Field
 		MaxPages                   respjson.Field
 		ParseConfigID              respjson.Field
@@ -748,6 +751,8 @@ type ConfigurationResponseParametersUnion struct {
 	ConfidenceScores bool `json:"confidence_scores"`
 	DisableCache     bool `json:"disable_cache"`
 	// This field is from variant [ExtractV2ParametersResp].
+	Effort ExtractV2ParametersEffort `json:"effort"`
+	// This field is from variant [ExtractV2ParametersResp].
 	ExtractionTarget ExtractV2ParametersExtractionTarget `json:"extraction_target"`
 	// This field is from variant [ExtractV2ParametersResp].
 	MaxPages      int64    `json:"max_pages"`
@@ -811,6 +816,7 @@ type ConfigurationResponseParametersUnion struct {
 		CiteSources                respjson.Field
 		ConfidenceScores           respjson.Field
 		DisableCache               respjson.Field
+		Effort                     respjson.Field
 		ExtractionTarget           respjson.Field
 		MaxPages                   respjson.Field
 		ParseConfigID              respjson.Field
@@ -1015,6 +1021,12 @@ type ExtractV2ParametersResp struct {
 	ConfidenceScores bool `json:"confidence_scores"`
 	// Disable reuse and storage of Extract results
 	DisableCache bool `json:"disable_cache"`
+	// Use 'max' for additional processing effort on agentic_plus. Bills by model usage
+	// with the page charge as a minimum. Omit or set to null for the tier's default
+	// behavior.
+	//
+	// Any of "max".
+	Effort ExtractV2ParametersEffort `json:"effort" api:"nullable"`
 	// Deprecated. Applies only to Agentic and Cost Effective versions 2.0 or earlier.
 	// Granularity of extraction: per_doc returns one object per document, per_page
 	// returns one object per page, per_table_row returns one object per table row.
@@ -1064,6 +1076,7 @@ type ExtractV2ParametersResp struct {
 		CiteSources       respjson.Field
 		ConfidenceScores  respjson.Field
 		DisableCache      respjson.Field
+		Effort            respjson.Field
 		ExtractionTarget  respjson.Field
 		MaxPages          respjson.Field
 		ParseConfigID     respjson.Field
@@ -1155,6 +1168,15 @@ func (r *ExtractV2ParametersDataSchemaUnionResp) UnmarshalJSON(data []byte) erro
 	return apijson.UnmarshalRoot(data, r)
 }
 
+// Use 'max' for additional processing effort on agentic_plus. Bills by model usage
+// with the page charge as a minimum. Omit or set to null for the tier's default
+// behavior.
+type ExtractV2ParametersEffort string
+
+const (
+	ExtractV2ParametersEffortMax ExtractV2ParametersEffort = "max"
+)
+
 // Deprecated. Applies only to Agentic and Cost Effective versions 2.0 or earlier.
 // Granularity of extraction: per_doc returns one object per document, per_page
 // returns one object per page, per_table_row returns one object per table row.
@@ -1227,6 +1249,12 @@ type ExtractV2Parameters struct {
 	// release for the selected tier. Dates (YYYY-MM-DD) are also supported, which will
 	// use the latest version on or before the specified date.
 	Version param.Opt[string] `json:"version,omitzero"`
+	// Use 'max' for additional processing effort on agentic_plus. Bills by model usage
+	// with the page charge as a minimum. Omit or set to null for the tier's default
+	// behavior.
+	//
+	// Any of "max".
+	Effort ExtractV2ParametersEffort `json:"effort,omitzero"`
 	// Parse tier to use before extraction. Defaults to the extract tier if not
 	// specified. Turbo extract does not support parse configuration or produce a parse
 	// output; use another tier if your workflow requires parsed text.
