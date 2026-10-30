@@ -93,7 +93,7 @@ func (r *PipelineService) Update(ctx context.Context, pipelineID string, params 
 // Deprecated: use `GET /api/v2/pipelines`, which is paginated.
 //
 // Deprecated: deprecated
-func (r *PipelineService) List(ctx context.Context, query PipelineListParams, opts ...option.RequestOption) (res *[]PipelineListResponse, err error) {
+func (r *PipelineService) List(ctx context.Context, query PipelineListParams, opts ...option.RequestOption) (res *[]PipelineListItem, err error) {
 	opts = slices.Concat(r.options, opts)
 	path := "api/v1/pipelines"
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, query, &res, opts...)
@@ -3654,6 +3654,742 @@ func (u *PipelineCreateTransformConfigUnionParam) UnmarshalJSON(data []byte) err
 	return apijson.UnmarshalRoot(data, u)
 }
 
+// A pipeline returned by the legacy list endpoint.
+type PipelineListItem struct {
+	// Unique identifier
+	ID string `json:"id" api:"required" format:"uuid"`
+	// Embedding configuration, or null when unavailable for a legacy pipeline.
+	EmbeddingConfig PipelineListItemEmbeddingConfigUnion `json:"embedding_config" api:"required"`
+	Name            string                               `json:"name" api:"required"`
+	ProjectID       string                               `json:"project_id" api:"required" format:"uuid"`
+	// Hashes for the configuration of a pipeline.
+	ConfigHash PipelineListItemConfigHash `json:"config_hash" api:"nullable"`
+	// Creation datetime
+	CreatedAt time.Time `json:"created_at" api:"nullable" format:"date-time"`
+	// Schema for a data sink.
+	DataSink DataSink `json:"data_sink" api:"nullable"`
+	// Schema for an embedding model config.
+	EmbeddingModelConfig PipelineListItemEmbeddingModelConfig `json:"embedding_model_config" api:"nullable"`
+	// The ID of the EmbeddingModelConfig this pipeline is using.
+	EmbeddingModelConfigID string `json:"embedding_model_config_id" api:"nullable" format:"uuid"`
+	// Settings that can be configured for how to use LlamaParse to parse files within
+	// a LlamaCloud pipeline.
+	LlamaParseParameters LlamaParseParametersResp `json:"llama_parse_parameters" api:"nullable"`
+	// The ID of the ManagedPipeline this playground pipeline is linked to.
+	ManagedPipelineID string `json:"managed_pipeline_id" api:"nullable" format:"uuid"`
+	// Metadata configuration for the pipeline.
+	MetadataConfig PipelineMetadataConfig `json:"metadata_config" api:"nullable"`
+	// Type of pipeline. Either PLAYGROUND or MANAGED.
+	//
+	// Any of "MANAGED", "PLAYGROUND".
+	PipelineType PipelineType `json:"pipeline_type"`
+	// Preset retrieval parameters for the pipeline.
+	PresetRetrievalParameters PresetRetrievalParamsResp `json:"preset_retrieval_parameters"`
+	// Configuration for sparse embedding models used in hybrid search.
+	//
+	// This allows users to choose between Splade and BM25 models for sparse retrieval
+	// in managed data sinks.
+	SparseModelConfig SparseModelConfig `json:"sparse_model_config" api:"nullable"`
+	// Status of the pipeline.
+	//
+	// Any of "CREATED", "DELETING".
+	Status PipelineListItemStatus `json:"status" api:"nullable"`
+	// Configuration for the transformation.
+	TransformConfig PipelineListItemTransformConfigUnion `json:"transform_config"`
+	// Update datetime
+	UpdatedAt time.Time `json:"updated_at" api:"nullable" format:"date-time"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		ID                        respjson.Field
+		EmbeddingConfig           respjson.Field
+		Name                      respjson.Field
+		ProjectID                 respjson.Field
+		ConfigHash                respjson.Field
+		CreatedAt                 respjson.Field
+		DataSink                  respjson.Field
+		EmbeddingModelConfig      respjson.Field
+		EmbeddingModelConfigID    respjson.Field
+		LlamaParseParameters      respjson.Field
+		ManagedPipelineID         respjson.Field
+		MetadataConfig            respjson.Field
+		PipelineType              respjson.Field
+		PresetRetrievalParameters respjson.Field
+		SparseModelConfig         respjson.Field
+		Status                    respjson.Field
+		TransformConfig           respjson.Field
+		UpdatedAt                 respjson.Field
+		ExtraFields               map[string]respjson.Field
+		raw                       string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r PipelineListItem) RawJSON() string { return r.JSON.raw }
+func (r *PipelineListItem) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// PipelineListItemEmbeddingConfigUnion contains all possible properties and values
+// from [AzureOpenAIEmbeddingConfig], [BedrockEmbeddingConfig],
+// [CohereEmbeddingConfig], [GeminiEmbeddingConfig],
+// [HuggingFaceInferenceAPIEmbeddingConfig],
+// [PipelineListItemEmbeddingConfigManagedOpenAIEmbedding],
+// [OpenAIEmbeddingConfig], [VertexAIEmbeddingConfig].
+//
+// Use the [PipelineListItemEmbeddingConfigUnion.AsAny] method to switch on the
+// variant.
+//
+// Use the methods beginning with 'As' to cast the union to one of its variants.
+type PipelineListItemEmbeddingConfigUnion struct {
+	// This field is a union of [AzureOpenAIEmbedding], [BedrockEmbedding],
+	// [CohereEmbedding], [GeminiEmbedding], [HuggingFaceInferenceAPIEmbedding],
+	// [PipelineListItemEmbeddingConfigManagedOpenAIEmbeddingComponent],
+	// [OpenAIEmbedding], [VertexTextEmbedding]
+	Component PipelineListItemEmbeddingConfigUnionComponent `json:"component"`
+	// Any of "AZURE_EMBEDDING", "BEDROCK_EMBEDDING", "COHERE_EMBEDDING",
+	// "GEMINI_EMBEDDING", "HUGGINGFACE_API_EMBEDDING", "MANAGED_OPENAI_EMBEDDING",
+	// "OPENAI_EMBEDDING", "VERTEXAI_EMBEDDING".
+	Type string `json:"type"`
+	JSON struct {
+		Component respjson.Field
+		Type      respjson.Field
+		raw       string
+	} `json:"-"`
+}
+
+// anyPipelineListItemEmbeddingConfig is implemented by each variant of
+// [PipelineListItemEmbeddingConfigUnion] to add type safety for the return type of
+// [PipelineListItemEmbeddingConfigUnion.AsAny]
+type anyPipelineListItemEmbeddingConfig interface {
+	implPipelineListItemEmbeddingConfigUnion()
+}
+
+func (AzureOpenAIEmbeddingConfig) implPipelineListItemEmbeddingConfigUnion()             {}
+func (BedrockEmbeddingConfig) implPipelineListItemEmbeddingConfigUnion()                 {}
+func (CohereEmbeddingConfig) implPipelineListItemEmbeddingConfigUnion()                  {}
+func (GeminiEmbeddingConfig) implPipelineListItemEmbeddingConfigUnion()                  {}
+func (HuggingFaceInferenceAPIEmbeddingConfig) implPipelineListItemEmbeddingConfigUnion() {}
+func (PipelineListItemEmbeddingConfigManagedOpenAIEmbedding) implPipelineListItemEmbeddingConfigUnion() {
+}
+func (OpenAIEmbeddingConfig) implPipelineListItemEmbeddingConfigUnion()   {}
+func (VertexAIEmbeddingConfig) implPipelineListItemEmbeddingConfigUnion() {}
+
+// Use the following switch statement to find the correct variant
+//
+//	switch variant := PipelineListItemEmbeddingConfigUnion.AsAny().(type) {
+//	case llamacloud.AzureOpenAIEmbeddingConfig:
+//	case llamacloud.BedrockEmbeddingConfig:
+//	case llamacloud.CohereEmbeddingConfig:
+//	case llamacloud.GeminiEmbeddingConfig:
+//	case llamacloud.HuggingFaceInferenceAPIEmbeddingConfig:
+//	case llamacloud.PipelineListItemEmbeddingConfigManagedOpenAIEmbedding:
+//	case llamacloud.OpenAIEmbeddingConfig:
+//	case llamacloud.VertexAIEmbeddingConfig:
+//	default:
+//	  fmt.Errorf("no variant present")
+//	}
+func (u PipelineListItemEmbeddingConfigUnion) AsAny() anyPipelineListItemEmbeddingConfig {
+	switch u.Type {
+	case "AZURE_EMBEDDING":
+		return u.AsAzureEmbedding()
+	case "BEDROCK_EMBEDDING":
+		return u.AsBedrockEmbedding()
+	case "COHERE_EMBEDDING":
+		return u.AsCohereEmbedding()
+	case "GEMINI_EMBEDDING":
+		return u.AsGeminiEmbedding()
+	case "HUGGINGFACE_API_EMBEDDING":
+		return u.AsHuggingfaceAPIEmbedding()
+	case "MANAGED_OPENAI_EMBEDDING":
+		return u.AsManagedOpenAIEmbedding()
+	case "OPENAI_EMBEDDING":
+		return u.AsOpenAIEmbedding()
+	case "VERTEXAI_EMBEDDING":
+		return u.AsVertexaiEmbedding()
+	}
+	return nil
+}
+
+func (u PipelineListItemEmbeddingConfigUnion) AsAzureEmbedding() (v AzureOpenAIEmbeddingConfig) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u PipelineListItemEmbeddingConfigUnion) AsBedrockEmbedding() (v BedrockEmbeddingConfig) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u PipelineListItemEmbeddingConfigUnion) AsCohereEmbedding() (v CohereEmbeddingConfig) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u PipelineListItemEmbeddingConfigUnion) AsGeminiEmbedding() (v GeminiEmbeddingConfig) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u PipelineListItemEmbeddingConfigUnion) AsHuggingfaceAPIEmbedding() (v HuggingFaceInferenceAPIEmbeddingConfig) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u PipelineListItemEmbeddingConfigUnion) AsManagedOpenAIEmbedding() (v PipelineListItemEmbeddingConfigManagedOpenAIEmbedding) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u PipelineListItemEmbeddingConfigUnion) AsOpenAIEmbedding() (v OpenAIEmbeddingConfig) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u PipelineListItemEmbeddingConfigUnion) AsVertexaiEmbedding() (v VertexAIEmbeddingConfig) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+// Returns the unmodified JSON received from the API
+func (u PipelineListItemEmbeddingConfigUnion) RawJSON() string { return u.JSON.raw }
+
+func (r *PipelineListItemEmbeddingConfigUnion) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// PipelineListItemEmbeddingConfigUnionComponent is an implicit subunion of
+// [PipelineListItemEmbeddingConfigUnion].
+// PipelineListItemEmbeddingConfigUnionComponent provides convenient access to the
+// sub-properties of the union.
+//
+// For type safety it is recommended to directly use a variant of the
+// [PipelineListItemEmbeddingConfigUnion].
+type PipelineListItemEmbeddingConfigUnionComponent struct {
+	AdditionalKwargs any    `json:"additional_kwargs"`
+	APIBase          string `json:"api_base"`
+	APIKey           string `json:"api_key"`
+	APIVersion       string `json:"api_version"`
+	// This field is from variant [AzureOpenAIEmbedding].
+	AzureDeployment string `json:"azure_deployment"`
+	// This field is from variant [AzureOpenAIEmbedding].
+	AzureEndpoint  string  `json:"azure_endpoint"`
+	ClassName      string  `json:"class_name"`
+	DefaultHeaders string  `json:"default_headers"`
+	Dimensions     int64   `json:"dimensions"`
+	EmbedBatchSize int64   `json:"embed_batch_size"`
+	MaxRetries     int64   `json:"max_retries"`
+	ModelName      string  `json:"model_name"`
+	NumWorkers     int64   `json:"num_workers"`
+	ReuseClient    bool    `json:"reuse_client"`
+	Timeout        float64 `json:"timeout"`
+	// This field is from variant [BedrockEmbedding].
+	AwsAccessKeyID string `json:"aws_access_key_id"`
+	// This field is from variant [BedrockEmbedding].
+	AwsSecretAccessKey string `json:"aws_secret_access_key"`
+	// This field is from variant [BedrockEmbedding].
+	AwsSessionToken string `json:"aws_session_token"`
+	// This field is from variant [BedrockEmbedding].
+	ProfileName string `json:"profile_name"`
+	// This field is from variant [BedrockEmbedding].
+	RegionName string `json:"region_name"`
+	// This field is from variant [CohereEmbedding].
+	EmbeddingType string `json:"embedding_type"`
+	// This field is from variant [CohereEmbedding].
+	InputType string `json:"input_type"`
+	// This field is from variant [CohereEmbedding].
+	Truncate string `json:"truncate"`
+	// This field is from variant [GeminiEmbedding].
+	OutputDimensionality int64 `json:"output_dimensionality"`
+	// This field is from variant [GeminiEmbedding].
+	TaskType string `json:"task_type"`
+	// This field is from variant [GeminiEmbedding].
+	Title string `json:"title"`
+	// This field is from variant [GeminiEmbedding].
+	Transport string `json:"transport"`
+	// This field is from variant [HuggingFaceInferenceAPIEmbedding].
+	Token HuggingFaceInferenceAPIEmbeddingTokenUnion `json:"token"`
+	// This field is from variant [HuggingFaceInferenceAPIEmbedding].
+	Cookies map[string]string `json:"cookies"`
+	// This field is from variant [HuggingFaceInferenceAPIEmbedding].
+	Headers map[string]string `json:"headers"`
+	// This field is from variant [HuggingFaceInferenceAPIEmbedding].
+	Pooling HuggingFaceInferenceAPIEmbeddingPooling `json:"pooling"`
+	// This field is from variant [HuggingFaceInferenceAPIEmbedding].
+	QueryInstruction string `json:"query_instruction"`
+	// This field is from variant [HuggingFaceInferenceAPIEmbedding].
+	Task string `json:"task"`
+	// This field is from variant [HuggingFaceInferenceAPIEmbedding].
+	TextInstruction string `json:"text_instruction"`
+	// This field is from variant [VertexTextEmbedding].
+	ClientEmail string `json:"client_email"`
+	// This field is from variant [VertexTextEmbedding].
+	Location string `json:"location"`
+	// This field is from variant [VertexTextEmbedding].
+	PrivateKey string `json:"private_key"`
+	// This field is from variant [VertexTextEmbedding].
+	PrivateKeyID string `json:"private_key_id"`
+	// This field is from variant [VertexTextEmbedding].
+	Project string `json:"project"`
+	// This field is from variant [VertexTextEmbedding].
+	TokenUri string `json:"token_uri"`
+	// This field is from variant [VertexTextEmbedding].
+	EmbedMode VertexTextEmbeddingEmbedMode `json:"embed_mode"`
+	JSON      struct {
+		AdditionalKwargs     respjson.Field
+		APIBase              respjson.Field
+		APIKey               respjson.Field
+		APIVersion           respjson.Field
+		AzureDeployment      respjson.Field
+		AzureEndpoint        respjson.Field
+		ClassName            respjson.Field
+		DefaultHeaders       respjson.Field
+		Dimensions           respjson.Field
+		EmbedBatchSize       respjson.Field
+		MaxRetries           respjson.Field
+		ModelName            respjson.Field
+		NumWorkers           respjson.Field
+		ReuseClient          respjson.Field
+		Timeout              respjson.Field
+		AwsAccessKeyID       respjson.Field
+		AwsSecretAccessKey   respjson.Field
+		AwsSessionToken      respjson.Field
+		ProfileName          respjson.Field
+		RegionName           respjson.Field
+		EmbeddingType        respjson.Field
+		InputType            respjson.Field
+		Truncate             respjson.Field
+		OutputDimensionality respjson.Field
+		TaskType             respjson.Field
+		Title                respjson.Field
+		Transport            respjson.Field
+		Token                respjson.Field
+		Cookies              respjson.Field
+		Headers              respjson.Field
+		Pooling              respjson.Field
+		QueryInstruction     respjson.Field
+		Task                 respjson.Field
+		TextInstruction      respjson.Field
+		ClientEmail          respjson.Field
+		Location             respjson.Field
+		PrivateKey           respjson.Field
+		PrivateKeyID         respjson.Field
+		Project              respjson.Field
+		TokenUri             respjson.Field
+		EmbedMode            respjson.Field
+		raw                  string
+	} `json:"-"`
+}
+
+func (r *PipelineListItemEmbeddingConfigUnionComponent) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+type PipelineListItemEmbeddingConfigManagedOpenAIEmbedding struct {
+	// Configuration for the Managed OpenAI embedding model.
+	Component PipelineListItemEmbeddingConfigManagedOpenAIEmbeddingComponent `json:"component"`
+	// Type of the embedding model.
+	//
+	// Any of "MANAGED_OPENAI_EMBEDDING".
+	Type string `json:"type"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Component   respjson.Field
+		Type        respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r PipelineListItemEmbeddingConfigManagedOpenAIEmbedding) RawJSON() string { return r.JSON.raw }
+func (r *PipelineListItemEmbeddingConfigManagedOpenAIEmbedding) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Configuration for the Managed OpenAI embedding model.
+type PipelineListItemEmbeddingConfigManagedOpenAIEmbeddingComponent struct {
+	ClassName string `json:"class_name"`
+	// The batch size for embedding calls.
+	EmbedBatchSize int64 `json:"embed_batch_size"`
+	// The name of the OpenAI embedding model.
+	//
+	// Any of "openai-text-embedding-3-small".
+	ModelName string `json:"model_name"`
+	// The number of workers to use for async embedding calls.
+	NumWorkers int64 `json:"num_workers" api:"nullable"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		ClassName      respjson.Field
+		EmbedBatchSize respjson.Field
+		ModelName      respjson.Field
+		NumWorkers     respjson.Field
+		ExtraFields    map[string]respjson.Field
+		raw            string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r PipelineListItemEmbeddingConfigManagedOpenAIEmbeddingComponent) RawJSON() string {
+	return r.JSON.raw
+}
+func (r *PipelineListItemEmbeddingConfigManagedOpenAIEmbeddingComponent) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Hashes for the configuration of a pipeline.
+type PipelineListItemConfigHash struct {
+	// Hash of the embedding config. Null in API responses.
+	//
+	// Deprecated: deprecated
+	EmbeddingConfigHash string `json:"embedding_config_hash" api:"nullable"`
+	// Hash of the llama parse parameters. Null in API responses.
+	//
+	// Deprecated: deprecated
+	ParsingConfigHash string `json:"parsing_config_hash" api:"nullable"`
+	// Hash of the transform config.
+	TransformConfigHash string `json:"transform_config_hash" api:"nullable"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		EmbeddingConfigHash respjson.Field
+		ParsingConfigHash   respjson.Field
+		TransformConfigHash respjson.Field
+		ExtraFields         map[string]respjson.Field
+		raw                 string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r PipelineListItemConfigHash) RawJSON() string { return r.JSON.raw }
+func (r *PipelineListItemConfigHash) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Schema for an embedding model config.
+type PipelineListItemEmbeddingModelConfig struct {
+	// Unique identifier
+	ID string `json:"id" api:"required" format:"uuid"`
+	// The embedding configuration for the embedding model config.
+	EmbeddingConfig PipelineListItemEmbeddingModelConfigEmbeddingConfigUnion `json:"embedding_config" api:"required"`
+	// The name of the embedding model config.
+	Name      string `json:"name" api:"required"`
+	ProjectID string `json:"project_id" api:"required" format:"uuid"`
+	// Creation datetime
+	CreatedAt time.Time `json:"created_at" api:"nullable" format:"date-time"`
+	// Update datetime
+	UpdatedAt time.Time `json:"updated_at" api:"nullable" format:"date-time"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		ID              respjson.Field
+		EmbeddingConfig respjson.Field
+		Name            respjson.Field
+		ProjectID       respjson.Field
+		CreatedAt       respjson.Field
+		UpdatedAt       respjson.Field
+		ExtraFields     map[string]respjson.Field
+		raw             string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r PipelineListItemEmbeddingModelConfig) RawJSON() string { return r.JSON.raw }
+func (r *PipelineListItemEmbeddingModelConfig) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// PipelineListItemEmbeddingModelConfigEmbeddingConfigUnion contains all possible
+// properties and values from [AzureOpenAIEmbeddingConfig],
+// [BedrockEmbeddingConfig], [CohereEmbeddingConfig], [GeminiEmbeddingConfig],
+// [HuggingFaceInferenceAPIEmbeddingConfig], [OpenAIEmbeddingConfig],
+// [VertexAIEmbeddingConfig].
+//
+// Use the [PipelineListItemEmbeddingModelConfigEmbeddingConfigUnion.AsAny] method
+// to switch on the variant.
+//
+// Use the methods beginning with 'As' to cast the union to one of its variants.
+type PipelineListItemEmbeddingModelConfigEmbeddingConfigUnion struct {
+	// This field is a union of [AzureOpenAIEmbedding], [BedrockEmbedding],
+	// [CohereEmbedding], [GeminiEmbedding], [HuggingFaceInferenceAPIEmbedding],
+	// [OpenAIEmbedding], [VertexTextEmbedding]
+	Component PipelineListItemEmbeddingModelConfigEmbeddingConfigUnionComponent `json:"component"`
+	// Any of "AZURE_EMBEDDING", "BEDROCK_EMBEDDING", "COHERE_EMBEDDING",
+	// "GEMINI_EMBEDDING", "HUGGINGFACE_API_EMBEDDING", "OPENAI_EMBEDDING",
+	// "VERTEXAI_EMBEDDING".
+	Type string `json:"type"`
+	JSON struct {
+		Component respjson.Field
+		Type      respjson.Field
+		raw       string
+	} `json:"-"`
+}
+
+// anyPipelineListItemEmbeddingModelConfigEmbeddingConfig is implemented by each
+// variant of [PipelineListItemEmbeddingModelConfigEmbeddingConfigUnion] to add
+// type safety for the return type of
+// [PipelineListItemEmbeddingModelConfigEmbeddingConfigUnion.AsAny]
+type anyPipelineListItemEmbeddingModelConfigEmbeddingConfig interface {
+	implPipelineListItemEmbeddingModelConfigEmbeddingConfigUnion()
+}
+
+func (AzureOpenAIEmbeddingConfig) implPipelineListItemEmbeddingModelConfigEmbeddingConfigUnion() {}
+func (BedrockEmbeddingConfig) implPipelineListItemEmbeddingModelConfigEmbeddingConfigUnion()     {}
+func (CohereEmbeddingConfig) implPipelineListItemEmbeddingModelConfigEmbeddingConfigUnion()      {}
+func (GeminiEmbeddingConfig) implPipelineListItemEmbeddingModelConfigEmbeddingConfigUnion()      {}
+func (HuggingFaceInferenceAPIEmbeddingConfig) implPipelineListItemEmbeddingModelConfigEmbeddingConfigUnion() {
+}
+func (OpenAIEmbeddingConfig) implPipelineListItemEmbeddingModelConfigEmbeddingConfigUnion()   {}
+func (VertexAIEmbeddingConfig) implPipelineListItemEmbeddingModelConfigEmbeddingConfigUnion() {}
+
+// Use the following switch statement to find the correct variant
+//
+//	switch variant := PipelineListItemEmbeddingModelConfigEmbeddingConfigUnion.AsAny().(type) {
+//	case llamacloud.AzureOpenAIEmbeddingConfig:
+//	case llamacloud.BedrockEmbeddingConfig:
+//	case llamacloud.CohereEmbeddingConfig:
+//	case llamacloud.GeminiEmbeddingConfig:
+//	case llamacloud.HuggingFaceInferenceAPIEmbeddingConfig:
+//	case llamacloud.OpenAIEmbeddingConfig:
+//	case llamacloud.VertexAIEmbeddingConfig:
+//	default:
+//	  fmt.Errorf("no variant present")
+//	}
+func (u PipelineListItemEmbeddingModelConfigEmbeddingConfigUnion) AsAny() anyPipelineListItemEmbeddingModelConfigEmbeddingConfig {
+	switch u.Type {
+	case "AZURE_EMBEDDING":
+		return u.AsAzureEmbedding()
+	case "BEDROCK_EMBEDDING":
+		return u.AsBedrockEmbedding()
+	case "COHERE_EMBEDDING":
+		return u.AsCohereEmbedding()
+	case "GEMINI_EMBEDDING":
+		return u.AsGeminiEmbedding()
+	case "HUGGINGFACE_API_EMBEDDING":
+		return u.AsHuggingfaceAPIEmbedding()
+	case "OPENAI_EMBEDDING":
+		return u.AsOpenAIEmbedding()
+	case "VERTEXAI_EMBEDDING":
+		return u.AsVertexaiEmbedding()
+	}
+	return nil
+}
+
+func (u PipelineListItemEmbeddingModelConfigEmbeddingConfigUnion) AsAzureEmbedding() (v AzureOpenAIEmbeddingConfig) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u PipelineListItemEmbeddingModelConfigEmbeddingConfigUnion) AsBedrockEmbedding() (v BedrockEmbeddingConfig) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u PipelineListItemEmbeddingModelConfigEmbeddingConfigUnion) AsCohereEmbedding() (v CohereEmbeddingConfig) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u PipelineListItemEmbeddingModelConfigEmbeddingConfigUnion) AsGeminiEmbedding() (v GeminiEmbeddingConfig) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u PipelineListItemEmbeddingModelConfigEmbeddingConfigUnion) AsHuggingfaceAPIEmbedding() (v HuggingFaceInferenceAPIEmbeddingConfig) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u PipelineListItemEmbeddingModelConfigEmbeddingConfigUnion) AsOpenAIEmbedding() (v OpenAIEmbeddingConfig) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u PipelineListItemEmbeddingModelConfigEmbeddingConfigUnion) AsVertexaiEmbedding() (v VertexAIEmbeddingConfig) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+// Returns the unmodified JSON received from the API
+func (u PipelineListItemEmbeddingModelConfigEmbeddingConfigUnion) RawJSON() string { return u.JSON.raw }
+
+func (r *PipelineListItemEmbeddingModelConfigEmbeddingConfigUnion) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// PipelineListItemEmbeddingModelConfigEmbeddingConfigUnionComponent is an implicit
+// subunion of [PipelineListItemEmbeddingModelConfigEmbeddingConfigUnion].
+// PipelineListItemEmbeddingModelConfigEmbeddingConfigUnionComponent provides
+// convenient access to the sub-properties of the union.
+//
+// For type safety it is recommended to directly use a variant of the
+// [PipelineListItemEmbeddingModelConfigEmbeddingConfigUnion].
+type PipelineListItemEmbeddingModelConfigEmbeddingConfigUnionComponent struct {
+	AdditionalKwargs any    `json:"additional_kwargs"`
+	APIBase          string `json:"api_base"`
+	APIKey           string `json:"api_key"`
+	APIVersion       string `json:"api_version"`
+	// This field is from variant [AzureOpenAIEmbedding].
+	AzureDeployment string `json:"azure_deployment"`
+	// This field is from variant [AzureOpenAIEmbedding].
+	AzureEndpoint  string  `json:"azure_endpoint"`
+	ClassName      string  `json:"class_name"`
+	DefaultHeaders string  `json:"default_headers"`
+	Dimensions     int64   `json:"dimensions"`
+	EmbedBatchSize int64   `json:"embed_batch_size"`
+	MaxRetries     int64   `json:"max_retries"`
+	ModelName      string  `json:"model_name"`
+	NumWorkers     int64   `json:"num_workers"`
+	ReuseClient    bool    `json:"reuse_client"`
+	Timeout        float64 `json:"timeout"`
+	// This field is from variant [BedrockEmbedding].
+	AwsAccessKeyID string `json:"aws_access_key_id"`
+	// This field is from variant [BedrockEmbedding].
+	AwsSecretAccessKey string `json:"aws_secret_access_key"`
+	// This field is from variant [BedrockEmbedding].
+	AwsSessionToken string `json:"aws_session_token"`
+	// This field is from variant [BedrockEmbedding].
+	ProfileName string `json:"profile_name"`
+	// This field is from variant [BedrockEmbedding].
+	RegionName string `json:"region_name"`
+	// This field is from variant [CohereEmbedding].
+	EmbeddingType string `json:"embedding_type"`
+	// This field is from variant [CohereEmbedding].
+	InputType string `json:"input_type"`
+	// This field is from variant [CohereEmbedding].
+	Truncate string `json:"truncate"`
+	// This field is from variant [GeminiEmbedding].
+	OutputDimensionality int64 `json:"output_dimensionality"`
+	// This field is from variant [GeminiEmbedding].
+	TaskType string `json:"task_type"`
+	// This field is from variant [GeminiEmbedding].
+	Title string `json:"title"`
+	// This field is from variant [GeminiEmbedding].
+	Transport string `json:"transport"`
+	// This field is from variant [HuggingFaceInferenceAPIEmbedding].
+	Token HuggingFaceInferenceAPIEmbeddingTokenUnion `json:"token"`
+	// This field is from variant [HuggingFaceInferenceAPIEmbedding].
+	Cookies map[string]string `json:"cookies"`
+	// This field is from variant [HuggingFaceInferenceAPIEmbedding].
+	Headers map[string]string `json:"headers"`
+	// This field is from variant [HuggingFaceInferenceAPIEmbedding].
+	Pooling HuggingFaceInferenceAPIEmbeddingPooling `json:"pooling"`
+	// This field is from variant [HuggingFaceInferenceAPIEmbedding].
+	QueryInstruction string `json:"query_instruction"`
+	// This field is from variant [HuggingFaceInferenceAPIEmbedding].
+	Task string `json:"task"`
+	// This field is from variant [HuggingFaceInferenceAPIEmbedding].
+	TextInstruction string `json:"text_instruction"`
+	// This field is from variant [VertexTextEmbedding].
+	ClientEmail string `json:"client_email"`
+	// This field is from variant [VertexTextEmbedding].
+	Location string `json:"location"`
+	// This field is from variant [VertexTextEmbedding].
+	PrivateKey string `json:"private_key"`
+	// This field is from variant [VertexTextEmbedding].
+	PrivateKeyID string `json:"private_key_id"`
+	// This field is from variant [VertexTextEmbedding].
+	Project string `json:"project"`
+	// This field is from variant [VertexTextEmbedding].
+	TokenUri string `json:"token_uri"`
+	// This field is from variant [VertexTextEmbedding].
+	EmbedMode VertexTextEmbeddingEmbedMode `json:"embed_mode"`
+	JSON      struct {
+		AdditionalKwargs     respjson.Field
+		APIBase              respjson.Field
+		APIKey               respjson.Field
+		APIVersion           respjson.Field
+		AzureDeployment      respjson.Field
+		AzureEndpoint        respjson.Field
+		ClassName            respjson.Field
+		DefaultHeaders       respjson.Field
+		Dimensions           respjson.Field
+		EmbedBatchSize       respjson.Field
+		MaxRetries           respjson.Field
+		ModelName            respjson.Field
+		NumWorkers           respjson.Field
+		ReuseClient          respjson.Field
+		Timeout              respjson.Field
+		AwsAccessKeyID       respjson.Field
+		AwsSecretAccessKey   respjson.Field
+		AwsSessionToken      respjson.Field
+		ProfileName          respjson.Field
+		RegionName           respjson.Field
+		EmbeddingType        respjson.Field
+		InputType            respjson.Field
+		Truncate             respjson.Field
+		OutputDimensionality respjson.Field
+		TaskType             respjson.Field
+		Title                respjson.Field
+		Transport            respjson.Field
+		Token                respjson.Field
+		Cookies              respjson.Field
+		Headers              respjson.Field
+		Pooling              respjson.Field
+		QueryInstruction     respjson.Field
+		Task                 respjson.Field
+		TextInstruction      respjson.Field
+		ClientEmail          respjson.Field
+		Location             respjson.Field
+		PrivateKey           respjson.Field
+		PrivateKeyID         respjson.Field
+		Project              respjson.Field
+		TokenUri             respjson.Field
+		EmbedMode            respjson.Field
+		raw                  string
+	} `json:"-"`
+}
+
+func (r *PipelineListItemEmbeddingModelConfigEmbeddingConfigUnionComponent) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Status of the pipeline.
+type PipelineListItemStatus string
+
+const (
+	PipelineListItemStatusCreated  PipelineListItemStatus = "CREATED"
+	PipelineListItemStatusDeleting PipelineListItemStatus = "DELETING"
+)
+
+// PipelineListItemTransformConfigUnion contains all possible properties and values
+// from [AutoTransformConfig], [AdvancedModeTransformConfig].
+//
+// Use the methods beginning with 'As' to cast the union to one of its variants.
+type PipelineListItemTransformConfigUnion struct {
+	// This field is from variant [AutoTransformConfig].
+	ChunkOverlap int64 `json:"chunk_overlap"`
+	// This field is from variant [AutoTransformConfig].
+	ChunkSize int64  `json:"chunk_size"`
+	Mode      string `json:"mode"`
+	// This field is from variant [AdvancedModeTransformConfig].
+	ChunkingConfig AdvancedModeTransformConfigChunkingConfigUnion `json:"chunking_config"`
+	// This field is from variant [AdvancedModeTransformConfig].
+	SegmentationConfig AdvancedModeTransformConfigSegmentationConfigUnion `json:"segmentation_config"`
+	JSON               struct {
+		ChunkOverlap       respjson.Field
+		ChunkSize          respjson.Field
+		Mode               respjson.Field
+		ChunkingConfig     respjson.Field
+		SegmentationConfig respjson.Field
+		raw                string
+	} `json:"-"`
+}
+
+func (u PipelineListItemTransformConfigUnion) AsAutoTransformConfig() (v AutoTransformConfig) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u PipelineListItemTransformConfigUnion) AsAdvancedModeTransformConfig() (v AdvancedModeTransformConfig) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+// Returns the unmodified JSON received from the API
+func (u PipelineListItemTransformConfigUnion) RawJSON() string { return u.JSON.raw }
+
+func (r *PipelineListItemTransformConfigUnion) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
 type PipelineMetadataConfig struct {
 	// List of metadata keys to exclude from embeddings
 	ExcludedEmbedMetadataKeys []string `json:"excluded_embed_metadata_keys"`
@@ -4157,748 +4893,6 @@ func (r VertexTextEmbeddingParam) MarshalJSON() (data []byte, err error) {
 	return param.MarshalObject(r, (*shadow)(&r))
 }
 func (r *VertexTextEmbeddingParam) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-// A pipeline returned by the legacy list endpoint.
-type PipelineListResponse struct {
-	// Unique identifier
-	ID string `json:"id" api:"required" format:"uuid"`
-	// Embedding configuration, or null when unavailable for a legacy pipeline.
-	EmbeddingConfig PipelineListResponseEmbeddingConfigUnion `json:"embedding_config" api:"required"`
-	Name            string                                   `json:"name" api:"required"`
-	ProjectID       string                                   `json:"project_id" api:"required" format:"uuid"`
-	// Hashes for the configuration of a pipeline.
-	ConfigHash PipelineListResponseConfigHash `json:"config_hash" api:"nullable"`
-	// Creation datetime
-	CreatedAt time.Time `json:"created_at" api:"nullable" format:"date-time"`
-	// Schema for a data sink.
-	DataSink DataSink `json:"data_sink" api:"nullable"`
-	// Schema for an embedding model config.
-	EmbeddingModelConfig PipelineListResponseEmbeddingModelConfig `json:"embedding_model_config" api:"nullable"`
-	// The ID of the EmbeddingModelConfig this pipeline is using.
-	EmbeddingModelConfigID string `json:"embedding_model_config_id" api:"nullable" format:"uuid"`
-	// Settings that can be configured for how to use LlamaParse to parse files within
-	// a LlamaCloud pipeline.
-	LlamaParseParameters LlamaParseParametersResp `json:"llama_parse_parameters" api:"nullable"`
-	// The ID of the ManagedPipeline this playground pipeline is linked to.
-	ManagedPipelineID string `json:"managed_pipeline_id" api:"nullable" format:"uuid"`
-	// Metadata configuration for the pipeline.
-	MetadataConfig PipelineMetadataConfig `json:"metadata_config" api:"nullable"`
-	// Type of pipeline. Either PLAYGROUND or MANAGED.
-	//
-	// Any of "MANAGED", "PLAYGROUND".
-	PipelineType PipelineType `json:"pipeline_type"`
-	// Preset retrieval parameters for the pipeline.
-	PresetRetrievalParameters PresetRetrievalParamsResp `json:"preset_retrieval_parameters"`
-	// Configuration for sparse embedding models used in hybrid search.
-	//
-	// This allows users to choose between Splade and BM25 models for sparse retrieval
-	// in managed data sinks.
-	SparseModelConfig SparseModelConfig `json:"sparse_model_config" api:"nullable"`
-	// Status of the pipeline.
-	//
-	// Any of "CREATED", "DELETING".
-	Status PipelineListResponseStatus `json:"status" api:"nullable"`
-	// Configuration for the transformation.
-	TransformConfig PipelineListResponseTransformConfigUnion `json:"transform_config"`
-	// Update datetime
-	UpdatedAt time.Time `json:"updated_at" api:"nullable" format:"date-time"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		ID                        respjson.Field
-		EmbeddingConfig           respjson.Field
-		Name                      respjson.Field
-		ProjectID                 respjson.Field
-		ConfigHash                respjson.Field
-		CreatedAt                 respjson.Field
-		DataSink                  respjson.Field
-		EmbeddingModelConfig      respjson.Field
-		EmbeddingModelConfigID    respjson.Field
-		LlamaParseParameters      respjson.Field
-		ManagedPipelineID         respjson.Field
-		MetadataConfig            respjson.Field
-		PipelineType              respjson.Field
-		PresetRetrievalParameters respjson.Field
-		SparseModelConfig         respjson.Field
-		Status                    respjson.Field
-		TransformConfig           respjson.Field
-		UpdatedAt                 respjson.Field
-		ExtraFields               map[string]respjson.Field
-		raw                       string
-	} `json:"-"`
-}
-
-// Returns the unmodified JSON received from the API
-func (r PipelineListResponse) RawJSON() string { return r.JSON.raw }
-func (r *PipelineListResponse) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-// PipelineListResponseEmbeddingConfigUnion contains all possible properties and
-// values from [AzureOpenAIEmbeddingConfig], [BedrockEmbeddingConfig],
-// [CohereEmbeddingConfig], [GeminiEmbeddingConfig],
-// [HuggingFaceInferenceAPIEmbeddingConfig],
-// [PipelineListResponseEmbeddingConfigManagedOpenAIEmbedding],
-// [OpenAIEmbeddingConfig], [VertexAIEmbeddingConfig].
-//
-// Use the [PipelineListResponseEmbeddingConfigUnion.AsAny] method to switch on the
-// variant.
-//
-// Use the methods beginning with 'As' to cast the union to one of its variants.
-type PipelineListResponseEmbeddingConfigUnion struct {
-	// This field is a union of [AzureOpenAIEmbedding], [BedrockEmbedding],
-	// [CohereEmbedding], [GeminiEmbedding], [HuggingFaceInferenceAPIEmbedding],
-	// [PipelineListResponseEmbeddingConfigManagedOpenAIEmbeddingComponent],
-	// [OpenAIEmbedding], [VertexTextEmbedding]
-	Component PipelineListResponseEmbeddingConfigUnionComponent `json:"component"`
-	// Any of "AZURE_EMBEDDING", "BEDROCK_EMBEDDING", "COHERE_EMBEDDING",
-	// "GEMINI_EMBEDDING", "HUGGINGFACE_API_EMBEDDING", "MANAGED_OPENAI_EMBEDDING",
-	// "OPENAI_EMBEDDING", "VERTEXAI_EMBEDDING".
-	Type string `json:"type"`
-	JSON struct {
-		Component respjson.Field
-		Type      respjson.Field
-		raw       string
-	} `json:"-"`
-}
-
-// anyPipelineListResponseEmbeddingConfig is implemented by each variant of
-// [PipelineListResponseEmbeddingConfigUnion] to add type safety for the return
-// type of [PipelineListResponseEmbeddingConfigUnion.AsAny]
-type anyPipelineListResponseEmbeddingConfig interface {
-	implPipelineListResponseEmbeddingConfigUnion()
-}
-
-func (AzureOpenAIEmbeddingConfig) implPipelineListResponseEmbeddingConfigUnion()             {}
-func (BedrockEmbeddingConfig) implPipelineListResponseEmbeddingConfigUnion()                 {}
-func (CohereEmbeddingConfig) implPipelineListResponseEmbeddingConfigUnion()                  {}
-func (GeminiEmbeddingConfig) implPipelineListResponseEmbeddingConfigUnion()                  {}
-func (HuggingFaceInferenceAPIEmbeddingConfig) implPipelineListResponseEmbeddingConfigUnion() {}
-func (PipelineListResponseEmbeddingConfigManagedOpenAIEmbedding) implPipelineListResponseEmbeddingConfigUnion() {
-}
-func (OpenAIEmbeddingConfig) implPipelineListResponseEmbeddingConfigUnion()   {}
-func (VertexAIEmbeddingConfig) implPipelineListResponseEmbeddingConfigUnion() {}
-
-// Use the following switch statement to find the correct variant
-//
-//	switch variant := PipelineListResponseEmbeddingConfigUnion.AsAny().(type) {
-//	case llamacloud.AzureOpenAIEmbeddingConfig:
-//	case llamacloud.BedrockEmbeddingConfig:
-//	case llamacloud.CohereEmbeddingConfig:
-//	case llamacloud.GeminiEmbeddingConfig:
-//	case llamacloud.HuggingFaceInferenceAPIEmbeddingConfig:
-//	case llamacloud.PipelineListResponseEmbeddingConfigManagedOpenAIEmbedding:
-//	case llamacloud.OpenAIEmbeddingConfig:
-//	case llamacloud.VertexAIEmbeddingConfig:
-//	default:
-//	  fmt.Errorf("no variant present")
-//	}
-func (u PipelineListResponseEmbeddingConfigUnion) AsAny() anyPipelineListResponseEmbeddingConfig {
-	switch u.Type {
-	case "AZURE_EMBEDDING":
-		return u.AsAzureEmbedding()
-	case "BEDROCK_EMBEDDING":
-		return u.AsBedrockEmbedding()
-	case "COHERE_EMBEDDING":
-		return u.AsCohereEmbedding()
-	case "GEMINI_EMBEDDING":
-		return u.AsGeminiEmbedding()
-	case "HUGGINGFACE_API_EMBEDDING":
-		return u.AsHuggingfaceAPIEmbedding()
-	case "MANAGED_OPENAI_EMBEDDING":
-		return u.AsManagedOpenAIEmbedding()
-	case "OPENAI_EMBEDDING":
-		return u.AsOpenAIEmbedding()
-	case "VERTEXAI_EMBEDDING":
-		return u.AsVertexaiEmbedding()
-	}
-	return nil
-}
-
-func (u PipelineListResponseEmbeddingConfigUnion) AsAzureEmbedding() (v AzureOpenAIEmbeddingConfig) {
-	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
-	return
-}
-
-func (u PipelineListResponseEmbeddingConfigUnion) AsBedrockEmbedding() (v BedrockEmbeddingConfig) {
-	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
-	return
-}
-
-func (u PipelineListResponseEmbeddingConfigUnion) AsCohereEmbedding() (v CohereEmbeddingConfig) {
-	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
-	return
-}
-
-func (u PipelineListResponseEmbeddingConfigUnion) AsGeminiEmbedding() (v GeminiEmbeddingConfig) {
-	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
-	return
-}
-
-func (u PipelineListResponseEmbeddingConfigUnion) AsHuggingfaceAPIEmbedding() (v HuggingFaceInferenceAPIEmbeddingConfig) {
-	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
-	return
-}
-
-func (u PipelineListResponseEmbeddingConfigUnion) AsManagedOpenAIEmbedding() (v PipelineListResponseEmbeddingConfigManagedOpenAIEmbedding) {
-	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
-	return
-}
-
-func (u PipelineListResponseEmbeddingConfigUnion) AsOpenAIEmbedding() (v OpenAIEmbeddingConfig) {
-	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
-	return
-}
-
-func (u PipelineListResponseEmbeddingConfigUnion) AsVertexaiEmbedding() (v VertexAIEmbeddingConfig) {
-	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
-	return
-}
-
-// Returns the unmodified JSON received from the API
-func (u PipelineListResponseEmbeddingConfigUnion) RawJSON() string { return u.JSON.raw }
-
-func (r *PipelineListResponseEmbeddingConfigUnion) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-// PipelineListResponseEmbeddingConfigUnionComponent is an implicit subunion of
-// [PipelineListResponseEmbeddingConfigUnion].
-// PipelineListResponseEmbeddingConfigUnionComponent provides convenient access to
-// the sub-properties of the union.
-//
-// For type safety it is recommended to directly use a variant of the
-// [PipelineListResponseEmbeddingConfigUnion].
-type PipelineListResponseEmbeddingConfigUnionComponent struct {
-	AdditionalKwargs any    `json:"additional_kwargs"`
-	APIBase          string `json:"api_base"`
-	APIKey           string `json:"api_key"`
-	APIVersion       string `json:"api_version"`
-	// This field is from variant [AzureOpenAIEmbedding].
-	AzureDeployment string `json:"azure_deployment"`
-	// This field is from variant [AzureOpenAIEmbedding].
-	AzureEndpoint  string  `json:"azure_endpoint"`
-	ClassName      string  `json:"class_name"`
-	DefaultHeaders string  `json:"default_headers"`
-	Dimensions     int64   `json:"dimensions"`
-	EmbedBatchSize int64   `json:"embed_batch_size"`
-	MaxRetries     int64   `json:"max_retries"`
-	ModelName      string  `json:"model_name"`
-	NumWorkers     int64   `json:"num_workers"`
-	ReuseClient    bool    `json:"reuse_client"`
-	Timeout        float64 `json:"timeout"`
-	// This field is from variant [BedrockEmbedding].
-	AwsAccessKeyID string `json:"aws_access_key_id"`
-	// This field is from variant [BedrockEmbedding].
-	AwsSecretAccessKey string `json:"aws_secret_access_key"`
-	// This field is from variant [BedrockEmbedding].
-	AwsSessionToken string `json:"aws_session_token"`
-	// This field is from variant [BedrockEmbedding].
-	ProfileName string `json:"profile_name"`
-	// This field is from variant [BedrockEmbedding].
-	RegionName string `json:"region_name"`
-	// This field is from variant [CohereEmbedding].
-	EmbeddingType string `json:"embedding_type"`
-	// This field is from variant [CohereEmbedding].
-	InputType string `json:"input_type"`
-	// This field is from variant [CohereEmbedding].
-	Truncate string `json:"truncate"`
-	// This field is from variant [GeminiEmbedding].
-	OutputDimensionality int64 `json:"output_dimensionality"`
-	// This field is from variant [GeminiEmbedding].
-	TaskType string `json:"task_type"`
-	// This field is from variant [GeminiEmbedding].
-	Title string `json:"title"`
-	// This field is from variant [GeminiEmbedding].
-	Transport string `json:"transport"`
-	// This field is from variant [HuggingFaceInferenceAPIEmbedding].
-	Token HuggingFaceInferenceAPIEmbeddingTokenUnion `json:"token"`
-	// This field is from variant [HuggingFaceInferenceAPIEmbedding].
-	Cookies map[string]string `json:"cookies"`
-	// This field is from variant [HuggingFaceInferenceAPIEmbedding].
-	Headers map[string]string `json:"headers"`
-	// This field is from variant [HuggingFaceInferenceAPIEmbedding].
-	Pooling HuggingFaceInferenceAPIEmbeddingPooling `json:"pooling"`
-	// This field is from variant [HuggingFaceInferenceAPIEmbedding].
-	QueryInstruction string `json:"query_instruction"`
-	// This field is from variant [HuggingFaceInferenceAPIEmbedding].
-	Task string `json:"task"`
-	// This field is from variant [HuggingFaceInferenceAPIEmbedding].
-	TextInstruction string `json:"text_instruction"`
-	// This field is from variant [VertexTextEmbedding].
-	ClientEmail string `json:"client_email"`
-	// This field is from variant [VertexTextEmbedding].
-	Location string `json:"location"`
-	// This field is from variant [VertexTextEmbedding].
-	PrivateKey string `json:"private_key"`
-	// This field is from variant [VertexTextEmbedding].
-	PrivateKeyID string `json:"private_key_id"`
-	// This field is from variant [VertexTextEmbedding].
-	Project string `json:"project"`
-	// This field is from variant [VertexTextEmbedding].
-	TokenUri string `json:"token_uri"`
-	// This field is from variant [VertexTextEmbedding].
-	EmbedMode VertexTextEmbeddingEmbedMode `json:"embed_mode"`
-	JSON      struct {
-		AdditionalKwargs     respjson.Field
-		APIBase              respjson.Field
-		APIKey               respjson.Field
-		APIVersion           respjson.Field
-		AzureDeployment      respjson.Field
-		AzureEndpoint        respjson.Field
-		ClassName            respjson.Field
-		DefaultHeaders       respjson.Field
-		Dimensions           respjson.Field
-		EmbedBatchSize       respjson.Field
-		MaxRetries           respjson.Field
-		ModelName            respjson.Field
-		NumWorkers           respjson.Field
-		ReuseClient          respjson.Field
-		Timeout              respjson.Field
-		AwsAccessKeyID       respjson.Field
-		AwsSecretAccessKey   respjson.Field
-		AwsSessionToken      respjson.Field
-		ProfileName          respjson.Field
-		RegionName           respjson.Field
-		EmbeddingType        respjson.Field
-		InputType            respjson.Field
-		Truncate             respjson.Field
-		OutputDimensionality respjson.Field
-		TaskType             respjson.Field
-		Title                respjson.Field
-		Transport            respjson.Field
-		Token                respjson.Field
-		Cookies              respjson.Field
-		Headers              respjson.Field
-		Pooling              respjson.Field
-		QueryInstruction     respjson.Field
-		Task                 respjson.Field
-		TextInstruction      respjson.Field
-		ClientEmail          respjson.Field
-		Location             respjson.Field
-		PrivateKey           respjson.Field
-		PrivateKeyID         respjson.Field
-		Project              respjson.Field
-		TokenUri             respjson.Field
-		EmbedMode            respjson.Field
-		raw                  string
-	} `json:"-"`
-}
-
-func (r *PipelineListResponseEmbeddingConfigUnionComponent) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-type PipelineListResponseEmbeddingConfigManagedOpenAIEmbedding struct {
-	// Configuration for the Managed OpenAI embedding model.
-	Component PipelineListResponseEmbeddingConfigManagedOpenAIEmbeddingComponent `json:"component"`
-	// Type of the embedding model.
-	//
-	// Any of "MANAGED_OPENAI_EMBEDDING".
-	Type string `json:"type"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		Component   respjson.Field
-		Type        respjson.Field
-		ExtraFields map[string]respjson.Field
-		raw         string
-	} `json:"-"`
-}
-
-// Returns the unmodified JSON received from the API
-func (r PipelineListResponseEmbeddingConfigManagedOpenAIEmbedding) RawJSON() string {
-	return r.JSON.raw
-}
-func (r *PipelineListResponseEmbeddingConfigManagedOpenAIEmbedding) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-// Configuration for the Managed OpenAI embedding model.
-type PipelineListResponseEmbeddingConfigManagedOpenAIEmbeddingComponent struct {
-	ClassName string `json:"class_name"`
-	// The batch size for embedding calls.
-	EmbedBatchSize int64 `json:"embed_batch_size"`
-	// The name of the OpenAI embedding model.
-	//
-	// Any of "openai-text-embedding-3-small".
-	ModelName string `json:"model_name"`
-	// The number of workers to use for async embedding calls.
-	NumWorkers int64 `json:"num_workers" api:"nullable"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		ClassName      respjson.Field
-		EmbedBatchSize respjson.Field
-		ModelName      respjson.Field
-		NumWorkers     respjson.Field
-		ExtraFields    map[string]respjson.Field
-		raw            string
-	} `json:"-"`
-}
-
-// Returns the unmodified JSON received from the API
-func (r PipelineListResponseEmbeddingConfigManagedOpenAIEmbeddingComponent) RawJSON() string {
-	return r.JSON.raw
-}
-func (r *PipelineListResponseEmbeddingConfigManagedOpenAIEmbeddingComponent) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-// Hashes for the configuration of a pipeline.
-type PipelineListResponseConfigHash struct {
-	// Hash of the embedding config. Null in API responses.
-	//
-	// Deprecated: deprecated
-	EmbeddingConfigHash string `json:"embedding_config_hash" api:"nullable"`
-	// Hash of the llama parse parameters. Null in API responses.
-	//
-	// Deprecated: deprecated
-	ParsingConfigHash string `json:"parsing_config_hash" api:"nullable"`
-	// Hash of the transform config.
-	TransformConfigHash string `json:"transform_config_hash" api:"nullable"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		EmbeddingConfigHash respjson.Field
-		ParsingConfigHash   respjson.Field
-		TransformConfigHash respjson.Field
-		ExtraFields         map[string]respjson.Field
-		raw                 string
-	} `json:"-"`
-}
-
-// Returns the unmodified JSON received from the API
-func (r PipelineListResponseConfigHash) RawJSON() string { return r.JSON.raw }
-func (r *PipelineListResponseConfigHash) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-// Schema for an embedding model config.
-type PipelineListResponseEmbeddingModelConfig struct {
-	// Unique identifier
-	ID string `json:"id" api:"required" format:"uuid"`
-	// The embedding configuration for the embedding model config.
-	EmbeddingConfig PipelineListResponseEmbeddingModelConfigEmbeddingConfigUnion `json:"embedding_config" api:"required"`
-	// The name of the embedding model config.
-	Name      string `json:"name" api:"required"`
-	ProjectID string `json:"project_id" api:"required" format:"uuid"`
-	// Creation datetime
-	CreatedAt time.Time `json:"created_at" api:"nullable" format:"date-time"`
-	// Update datetime
-	UpdatedAt time.Time `json:"updated_at" api:"nullable" format:"date-time"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		ID              respjson.Field
-		EmbeddingConfig respjson.Field
-		Name            respjson.Field
-		ProjectID       respjson.Field
-		CreatedAt       respjson.Field
-		UpdatedAt       respjson.Field
-		ExtraFields     map[string]respjson.Field
-		raw             string
-	} `json:"-"`
-}
-
-// Returns the unmodified JSON received from the API
-func (r PipelineListResponseEmbeddingModelConfig) RawJSON() string { return r.JSON.raw }
-func (r *PipelineListResponseEmbeddingModelConfig) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-// PipelineListResponseEmbeddingModelConfigEmbeddingConfigUnion contains all
-// possible properties and values from [AzureOpenAIEmbeddingConfig],
-// [BedrockEmbeddingConfig], [CohereEmbeddingConfig], [GeminiEmbeddingConfig],
-// [HuggingFaceInferenceAPIEmbeddingConfig], [OpenAIEmbeddingConfig],
-// [VertexAIEmbeddingConfig].
-//
-// Use the [PipelineListResponseEmbeddingModelConfigEmbeddingConfigUnion.AsAny]
-// method to switch on the variant.
-//
-// Use the methods beginning with 'As' to cast the union to one of its variants.
-type PipelineListResponseEmbeddingModelConfigEmbeddingConfigUnion struct {
-	// This field is a union of [AzureOpenAIEmbedding], [BedrockEmbedding],
-	// [CohereEmbedding], [GeminiEmbedding], [HuggingFaceInferenceAPIEmbedding],
-	// [OpenAIEmbedding], [VertexTextEmbedding]
-	Component PipelineListResponseEmbeddingModelConfigEmbeddingConfigUnionComponent `json:"component"`
-	// Any of "AZURE_EMBEDDING", "BEDROCK_EMBEDDING", "COHERE_EMBEDDING",
-	// "GEMINI_EMBEDDING", "HUGGINGFACE_API_EMBEDDING", "OPENAI_EMBEDDING",
-	// "VERTEXAI_EMBEDDING".
-	Type string `json:"type"`
-	JSON struct {
-		Component respjson.Field
-		Type      respjson.Field
-		raw       string
-	} `json:"-"`
-}
-
-// anyPipelineListResponseEmbeddingModelConfigEmbeddingConfig is implemented by
-// each variant of [PipelineListResponseEmbeddingModelConfigEmbeddingConfigUnion]
-// to add type safety for the return type of
-// [PipelineListResponseEmbeddingModelConfigEmbeddingConfigUnion.AsAny]
-type anyPipelineListResponseEmbeddingModelConfigEmbeddingConfig interface {
-	implPipelineListResponseEmbeddingModelConfigEmbeddingConfigUnion()
-}
-
-func (AzureOpenAIEmbeddingConfig) implPipelineListResponseEmbeddingModelConfigEmbeddingConfigUnion() {
-}
-func (BedrockEmbeddingConfig) implPipelineListResponseEmbeddingModelConfigEmbeddingConfigUnion() {}
-func (CohereEmbeddingConfig) implPipelineListResponseEmbeddingModelConfigEmbeddingConfigUnion()  {}
-func (GeminiEmbeddingConfig) implPipelineListResponseEmbeddingModelConfigEmbeddingConfigUnion()  {}
-func (HuggingFaceInferenceAPIEmbeddingConfig) implPipelineListResponseEmbeddingModelConfigEmbeddingConfigUnion() {
-}
-func (OpenAIEmbeddingConfig) implPipelineListResponseEmbeddingModelConfigEmbeddingConfigUnion()   {}
-func (VertexAIEmbeddingConfig) implPipelineListResponseEmbeddingModelConfigEmbeddingConfigUnion() {}
-
-// Use the following switch statement to find the correct variant
-//
-//	switch variant := PipelineListResponseEmbeddingModelConfigEmbeddingConfigUnion.AsAny().(type) {
-//	case llamacloud.AzureOpenAIEmbeddingConfig:
-//	case llamacloud.BedrockEmbeddingConfig:
-//	case llamacloud.CohereEmbeddingConfig:
-//	case llamacloud.GeminiEmbeddingConfig:
-//	case llamacloud.HuggingFaceInferenceAPIEmbeddingConfig:
-//	case llamacloud.OpenAIEmbeddingConfig:
-//	case llamacloud.VertexAIEmbeddingConfig:
-//	default:
-//	  fmt.Errorf("no variant present")
-//	}
-func (u PipelineListResponseEmbeddingModelConfigEmbeddingConfigUnion) AsAny() anyPipelineListResponseEmbeddingModelConfigEmbeddingConfig {
-	switch u.Type {
-	case "AZURE_EMBEDDING":
-		return u.AsAzureEmbedding()
-	case "BEDROCK_EMBEDDING":
-		return u.AsBedrockEmbedding()
-	case "COHERE_EMBEDDING":
-		return u.AsCohereEmbedding()
-	case "GEMINI_EMBEDDING":
-		return u.AsGeminiEmbedding()
-	case "HUGGINGFACE_API_EMBEDDING":
-		return u.AsHuggingfaceAPIEmbedding()
-	case "OPENAI_EMBEDDING":
-		return u.AsOpenAIEmbedding()
-	case "VERTEXAI_EMBEDDING":
-		return u.AsVertexaiEmbedding()
-	}
-	return nil
-}
-
-func (u PipelineListResponseEmbeddingModelConfigEmbeddingConfigUnion) AsAzureEmbedding() (v AzureOpenAIEmbeddingConfig) {
-	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
-	return
-}
-
-func (u PipelineListResponseEmbeddingModelConfigEmbeddingConfigUnion) AsBedrockEmbedding() (v BedrockEmbeddingConfig) {
-	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
-	return
-}
-
-func (u PipelineListResponseEmbeddingModelConfigEmbeddingConfigUnion) AsCohereEmbedding() (v CohereEmbeddingConfig) {
-	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
-	return
-}
-
-func (u PipelineListResponseEmbeddingModelConfigEmbeddingConfigUnion) AsGeminiEmbedding() (v GeminiEmbeddingConfig) {
-	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
-	return
-}
-
-func (u PipelineListResponseEmbeddingModelConfigEmbeddingConfigUnion) AsHuggingfaceAPIEmbedding() (v HuggingFaceInferenceAPIEmbeddingConfig) {
-	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
-	return
-}
-
-func (u PipelineListResponseEmbeddingModelConfigEmbeddingConfigUnion) AsOpenAIEmbedding() (v OpenAIEmbeddingConfig) {
-	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
-	return
-}
-
-func (u PipelineListResponseEmbeddingModelConfigEmbeddingConfigUnion) AsVertexaiEmbedding() (v VertexAIEmbeddingConfig) {
-	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
-	return
-}
-
-// Returns the unmodified JSON received from the API
-func (u PipelineListResponseEmbeddingModelConfigEmbeddingConfigUnion) RawJSON() string {
-	return u.JSON.raw
-}
-
-func (r *PipelineListResponseEmbeddingModelConfigEmbeddingConfigUnion) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-// PipelineListResponseEmbeddingModelConfigEmbeddingConfigUnionComponent is an
-// implicit subunion of
-// [PipelineListResponseEmbeddingModelConfigEmbeddingConfigUnion].
-// PipelineListResponseEmbeddingModelConfigEmbeddingConfigUnionComponent provides
-// convenient access to the sub-properties of the union.
-//
-// For type safety it is recommended to directly use a variant of the
-// [PipelineListResponseEmbeddingModelConfigEmbeddingConfigUnion].
-type PipelineListResponseEmbeddingModelConfigEmbeddingConfigUnionComponent struct {
-	AdditionalKwargs any    `json:"additional_kwargs"`
-	APIBase          string `json:"api_base"`
-	APIKey           string `json:"api_key"`
-	APIVersion       string `json:"api_version"`
-	// This field is from variant [AzureOpenAIEmbedding].
-	AzureDeployment string `json:"azure_deployment"`
-	// This field is from variant [AzureOpenAIEmbedding].
-	AzureEndpoint  string  `json:"azure_endpoint"`
-	ClassName      string  `json:"class_name"`
-	DefaultHeaders string  `json:"default_headers"`
-	Dimensions     int64   `json:"dimensions"`
-	EmbedBatchSize int64   `json:"embed_batch_size"`
-	MaxRetries     int64   `json:"max_retries"`
-	ModelName      string  `json:"model_name"`
-	NumWorkers     int64   `json:"num_workers"`
-	ReuseClient    bool    `json:"reuse_client"`
-	Timeout        float64 `json:"timeout"`
-	// This field is from variant [BedrockEmbedding].
-	AwsAccessKeyID string `json:"aws_access_key_id"`
-	// This field is from variant [BedrockEmbedding].
-	AwsSecretAccessKey string `json:"aws_secret_access_key"`
-	// This field is from variant [BedrockEmbedding].
-	AwsSessionToken string `json:"aws_session_token"`
-	// This field is from variant [BedrockEmbedding].
-	ProfileName string `json:"profile_name"`
-	// This field is from variant [BedrockEmbedding].
-	RegionName string `json:"region_name"`
-	// This field is from variant [CohereEmbedding].
-	EmbeddingType string `json:"embedding_type"`
-	// This field is from variant [CohereEmbedding].
-	InputType string `json:"input_type"`
-	// This field is from variant [CohereEmbedding].
-	Truncate string `json:"truncate"`
-	// This field is from variant [GeminiEmbedding].
-	OutputDimensionality int64 `json:"output_dimensionality"`
-	// This field is from variant [GeminiEmbedding].
-	TaskType string `json:"task_type"`
-	// This field is from variant [GeminiEmbedding].
-	Title string `json:"title"`
-	// This field is from variant [GeminiEmbedding].
-	Transport string `json:"transport"`
-	// This field is from variant [HuggingFaceInferenceAPIEmbedding].
-	Token HuggingFaceInferenceAPIEmbeddingTokenUnion `json:"token"`
-	// This field is from variant [HuggingFaceInferenceAPIEmbedding].
-	Cookies map[string]string `json:"cookies"`
-	// This field is from variant [HuggingFaceInferenceAPIEmbedding].
-	Headers map[string]string `json:"headers"`
-	// This field is from variant [HuggingFaceInferenceAPIEmbedding].
-	Pooling HuggingFaceInferenceAPIEmbeddingPooling `json:"pooling"`
-	// This field is from variant [HuggingFaceInferenceAPIEmbedding].
-	QueryInstruction string `json:"query_instruction"`
-	// This field is from variant [HuggingFaceInferenceAPIEmbedding].
-	Task string `json:"task"`
-	// This field is from variant [HuggingFaceInferenceAPIEmbedding].
-	TextInstruction string `json:"text_instruction"`
-	// This field is from variant [VertexTextEmbedding].
-	ClientEmail string `json:"client_email"`
-	// This field is from variant [VertexTextEmbedding].
-	Location string `json:"location"`
-	// This field is from variant [VertexTextEmbedding].
-	PrivateKey string `json:"private_key"`
-	// This field is from variant [VertexTextEmbedding].
-	PrivateKeyID string `json:"private_key_id"`
-	// This field is from variant [VertexTextEmbedding].
-	Project string `json:"project"`
-	// This field is from variant [VertexTextEmbedding].
-	TokenUri string `json:"token_uri"`
-	// This field is from variant [VertexTextEmbedding].
-	EmbedMode VertexTextEmbeddingEmbedMode `json:"embed_mode"`
-	JSON      struct {
-		AdditionalKwargs     respjson.Field
-		APIBase              respjson.Field
-		APIKey               respjson.Field
-		APIVersion           respjson.Field
-		AzureDeployment      respjson.Field
-		AzureEndpoint        respjson.Field
-		ClassName            respjson.Field
-		DefaultHeaders       respjson.Field
-		Dimensions           respjson.Field
-		EmbedBatchSize       respjson.Field
-		MaxRetries           respjson.Field
-		ModelName            respjson.Field
-		NumWorkers           respjson.Field
-		ReuseClient          respjson.Field
-		Timeout              respjson.Field
-		AwsAccessKeyID       respjson.Field
-		AwsSecretAccessKey   respjson.Field
-		AwsSessionToken      respjson.Field
-		ProfileName          respjson.Field
-		RegionName           respjson.Field
-		EmbeddingType        respjson.Field
-		InputType            respjson.Field
-		Truncate             respjson.Field
-		OutputDimensionality respjson.Field
-		TaskType             respjson.Field
-		Title                respjson.Field
-		Transport            respjson.Field
-		Token                respjson.Field
-		Cookies              respjson.Field
-		Headers              respjson.Field
-		Pooling              respjson.Field
-		QueryInstruction     respjson.Field
-		Task                 respjson.Field
-		TextInstruction      respjson.Field
-		ClientEmail          respjson.Field
-		Location             respjson.Field
-		PrivateKey           respjson.Field
-		PrivateKeyID         respjson.Field
-		Project              respjson.Field
-		TokenUri             respjson.Field
-		EmbedMode            respjson.Field
-		raw                  string
-	} `json:"-"`
-}
-
-func (r *PipelineListResponseEmbeddingModelConfigEmbeddingConfigUnionComponent) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-// Status of the pipeline.
-type PipelineListResponseStatus string
-
-const (
-	PipelineListResponseStatusCreated  PipelineListResponseStatus = "CREATED"
-	PipelineListResponseStatusDeleting PipelineListResponseStatus = "DELETING"
-)
-
-// PipelineListResponseTransformConfigUnion contains all possible properties and
-// values from [AutoTransformConfig], [AdvancedModeTransformConfig].
-//
-// Use the methods beginning with 'As' to cast the union to one of its variants.
-type PipelineListResponseTransformConfigUnion struct {
-	// This field is from variant [AutoTransformConfig].
-	ChunkOverlap int64 `json:"chunk_overlap"`
-	// This field is from variant [AutoTransformConfig].
-	ChunkSize int64  `json:"chunk_size"`
-	Mode      string `json:"mode"`
-	// This field is from variant [AdvancedModeTransformConfig].
-	ChunkingConfig AdvancedModeTransformConfigChunkingConfigUnion `json:"chunking_config"`
-	// This field is from variant [AdvancedModeTransformConfig].
-	SegmentationConfig AdvancedModeTransformConfigSegmentationConfigUnion `json:"segmentation_config"`
-	JSON               struct {
-		ChunkOverlap       respjson.Field
-		ChunkSize          respjson.Field
-		Mode               respjson.Field
-		ChunkingConfig     respjson.Field
-		SegmentationConfig respjson.Field
-		raw                string
-	} `json:"-"`
-}
-
-func (u PipelineListResponseTransformConfigUnion) AsAutoTransformConfig() (v AutoTransformConfig) {
-	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
-	return
-}
-
-func (u PipelineListResponseTransformConfigUnion) AsAdvancedModeTransformConfig() (v AdvancedModeTransformConfig) {
-	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
-	return
-}
-
-// Returns the unmodified JSON received from the API
-func (u PipelineListResponseTransformConfigUnion) RawJSON() string { return u.JSON.raw }
-
-func (r *PipelineListResponseTransformConfigUnion) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
