@@ -4946,17 +4946,17 @@ func (r *ParsingGetResponseTextPage) UnmarshalJSON(data []byte) error {
 type ParsingListVersionsResponse struct {
 	// Versions for the agentic tier
 	//
-	// Any of "2026-10-16", "2026-10-15", "2026-09-29", "2026-09-28", "2026-09-24",
-	// "2026-09-13", "2026-09-09", "2026-09-07", "2026-08-19", "2026-07-24",
-	// "2026-07-23", "2026-07-15", "2026-06-18", "2026-06-11", "2026-06-04",
-	// "2026-06-01", "2026-05-26", "2026-05-21", "2026-05-20", "2026-05-19",
-	// "2026-05-13", "2026-05-11", "2026-05-06", "2026-05-04", "2026-04-27",
-	// "2026-04-22", "2026-04-09", "2026-04-06", "2026-04-02", "2026-03-31",
-	// "2026-03-30", "2026-03-27", "2026-03-25", "2026-03-23", "2026-03-22",
-	// "2026-03-20", "2026-03-11", "2026-03-10", "2026-03-09", "2026-03-03",
-	// "2026-03-02", "2026-02-26", "2026-02-24", "2026-01-30", "2026-01-22",
-	// "2026-01-21", "2026-01-16", "2026-01-08", "2025-12-31", "2025-12-18",
-	// "2025-12-11".
+	// Any of "2026-10-30", "2026-10-16", "2026-10-15", "2026-09-29", "2026-09-28",
+	// "2026-09-24", "2026-09-13", "2026-09-09", "2026-09-07", "2026-08-19",
+	// "2026-07-24", "2026-07-23", "2026-07-15", "2026-06-18", "2026-06-11",
+	// "2026-06-04", "2026-06-01", "2026-05-26", "2026-05-21", "2026-05-20",
+	// "2026-05-19", "2026-05-13", "2026-05-11", "2026-05-06", "2026-05-04",
+	// "2026-04-27", "2026-04-22", "2026-04-09", "2026-04-06", "2026-04-02",
+	// "2026-03-31", "2026-03-30", "2026-03-27", "2026-03-25", "2026-03-23",
+	// "2026-03-22", "2026-03-20", "2026-03-11", "2026-03-10", "2026-03-09",
+	// "2026-03-03", "2026-03-02", "2026-02-26", "2026-02-24", "2026-01-30",
+	// "2026-01-22", "2026-01-21", "2026-01-16", "2026-01-08", "2025-12-31",
+	// "2025-12-18", "2025-12-11".
 	Agentic []string `json:"agentic" api:"required"`
 	// Versions for the agentic_plus tier
 	//
@@ -4973,10 +4973,10 @@ type ParsingListVersionsResponse struct {
 	AgenticPlus []string `json:"agentic_plus" api:"required"`
 	// Versions for the cost_effective tier
 	//
-	// Any of "2026-09-28", "2026-08-19", "2026-08-11", "2026-08-08", "2026-07-23",
-	// "2026-06-26", "2026-06-18", "2026-06-17", "2026-06-11", "2026-06-08",
-	// "2026-06-05", "2026-05-28", "2026-04-09", "2026-03-31", "2026-03-27",
-	// "2026-03-25".
+	// Any of "2026-10-30", "2026-09-28", "2026-08-19", "2026-08-11", "2026-08-08",
+	// "2026-07-23", "2026-06-26", "2026-06-18", "2026-06-17", "2026-06-11",
+	// "2026-06-08", "2026-06-05", "2026-05-28", "2026-04-09", "2026-03-31",
+	// "2026-03-27", "2026-03-25".
 	CostEffective []string `json:"cost_effective" api:"required"`
 	// Versions for the fast tier
 	//
@@ -5040,8 +5040,8 @@ type ParsingNewParams struct {
 	// Current `latest` by tier:
 	//
 	// - `fast`: `2026-06-15`
-	// - `cost_effective`: `2026-09-28`
-	// - `agentic`: `2026-10-16`
+	// - `cost_effective`: `2026-10-30`
+	// - `agentic`: `2026-10-30`
 	// - `agentic_plus`: `2026-10-28`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
@@ -5136,8 +5136,8 @@ const (
 // Current `latest` by tier:
 //
 // - `fast`: `2026-06-15`
-// - `cost_effective`: `2026-09-28`
-// - `agentic`: `2026-10-16`
+// - `cost_effective`: `2026-10-30`
+// - `agentic`: `2026-10-30`
 // - `agentic_plus`: `2026-10-28`
 //
 // Full list: `GET /api/v2/parse/versions`.
@@ -5145,9 +5145,8 @@ type ParsingNewParamsVersion string
 
 const (
 	ParsingNewParamsVersionLatest     ParsingNewParamsVersion = "latest"
+	ParsingNewParamsVersion2026_10_30 ParsingNewParamsVersion = "2026-10-30"
 	ParsingNewParamsVersion2026_10_28 ParsingNewParamsVersion = "2026-10-28"
-	ParsingNewParamsVersion2026_10_16 ParsingNewParamsVersion = "2026-10-16"
-	ParsingNewParamsVersion2026_09_28 ParsingNewParamsVersion = "2026-09-28"
 	ParsingNewParamsVersion2026_06_15 ParsingNewParamsVersion = "2026-06-15"
 )
 
@@ -5752,8 +5751,8 @@ type ParsingNewParamsProcessingOptionsAutoModeConfigurationParsingConf struct {
 	// Current `latest` by tier:
 	//
 	// - `fast`: `2026-06-15`
-	// - `cost_effective`: `2026-09-28`
-	// - `agentic`: `2026-10-16`
+	// - `cost_effective`: `2026-10-30`
+	// - `agentic`: `2026-10-30`
 	// - `agentic_plus`: `2026-10-28`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
