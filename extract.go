@@ -69,9 +69,12 @@ func (r *ExtractService) New(ctx context.Context, params ExtractNewParams, opts 
 
 // List extraction jobs with optional filtering and pagination.
 //
-// Filter by `configuration_id`, `status`, `file_input`, or creation date range.
-// Results are returned newest-first. Use `expand=configuration` to include the
-// full configuration used, and `expand=extract_metadata` for per-field metadata.
+// Filter by `configuration_id`, `status`, `file_input`, `review_status`, or
+// creation date range. Results are returned newest-first. `review_status=pending`
+// lists completed jobs waiting for review, unless `status` names another. A review
+// stays pending when its job fails or is cancelled, so pass that `status` to list
+// those. Use `expand=configuration` to include the full configuration used, and
+// `expand=extract_metadata` for per-field metadata.
 func (r *ExtractService) List(ctx context.Context, query ExtractListParams, opts ...option.RequestOption) (res *pagination.PaginatedCursor[ExtractV2Job], err error) {
 	var raw *http.Response
 	opts = slices.Concat(r.options, opts)
@@ -91,9 +94,12 @@ func (r *ExtractService) List(ctx context.Context, query ExtractListParams, opts
 
 // List extraction jobs with optional filtering and pagination.
 //
-// Filter by `configuration_id`, `status`, `file_input`, or creation date range.
-// Results are returned newest-first. Use `expand=configuration` to include the
-// full configuration used, and `expand=extract_metadata` for per-field metadata.
+// Filter by `configuration_id`, `status`, `file_input`, `review_status`, or
+// creation date range. Results are returned newest-first. `review_status=pending`
+// lists completed jobs waiting for review, unless `status` names another. A review
+// stays pending when its job fails or is cancelled, so pass that `status` to list
+// those. Use `expand=configuration` to include the full configuration used, and
+// `expand=extract_metadata` for per-field metadata.
 func (r *ExtractService) ListAutoPaging(ctx context.Context, query ExtractListParams, opts ...option.RequestOption) *pagination.PaginatedCursorAutoPager[ExtractV2Job] {
 	return pagination.NewPaginatedCursorAutoPager(r.List(ctx, query, opts...))
 }
@@ -1304,6 +1310,10 @@ type ExtractListParams struct {
 	ProjectID param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
 	// Filter by specific job IDs
 	JobIDs []string `query:"job_ids,omitzero" json:"-"`
+	// Filter by review status; none is a job without a review
+	//
+	// Any of "approved", "none", "pending", "rejected".
+	ReviewStatus ExtractListParamsReviewStatus `query:"review_status,omitzero" json:"-"`
 	// Filter by status
 	//
 	// Any of "CANCELLED", "COMPLETED", "FAILED", "PENDING", "RUNNING", "THROTTLED".
@@ -1320,6 +1330,16 @@ func (r ExtractListParams) URLQuery() (v url.Values, err error) {
 		NestedFormat: apiquery.NestedQueryFormatBrackets,
 	})
 }
+
+// Filter by review status; none is a job without a review
+type ExtractListParamsReviewStatus string
+
+const (
+	ExtractListParamsReviewStatusApproved ExtractListParamsReviewStatus = "approved"
+	ExtractListParamsReviewStatusNone     ExtractListParamsReviewStatus = "none"
+	ExtractListParamsReviewStatusPending  ExtractListParamsReviewStatus = "pending"
+	ExtractListParamsReviewStatusRejected ExtractListParamsReviewStatus = "rejected"
+)
 
 // Filter by status
 type ExtractListParamsStatus string

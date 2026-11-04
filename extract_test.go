@@ -111,6 +111,7 @@ func TestExtractListWithOptionalParams(t *testing.T) {
 		PageSize:            llamacloud.Int(1),
 		PageToken:           llamacloud.String("page_token"),
 		ProjectID:           llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
+		ReviewStatus:        llamacloud.ExtractListParamsReviewStatusApproved,
 		Status:              llamacloud.ExtractListParamsStatusCancelled,
 	})
 	if err != nil {
