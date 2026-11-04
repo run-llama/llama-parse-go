@@ -1656,15 +1656,16 @@ type ParseV2ParametersOutputOptionsResp struct {
 	ExtractPrintedPageNumber bool `json:"extract_printed_page_number" api:"nullable"`
 	// Bounding-box granularity levels to compute for the parse. 'word' computes one
 	// bounding box per detected word; 'line' computes one per text line; 'cell'
-	// computes one per table cell. Multiple levels can be requested. Empty list
-	// (default) disables granular bboxes — only item-level layout boxes are returned
-	// on the result. When set, the computed boxes are not inlined on the result items;
-	// they are written to a separate `grounded_items` sidecar (JSONL, one row per
-	// page) and exposed as `result_content_metadata.grounded_items` (a presigned
-	// download URL) on the parse result. Each row matches the `GroundedJsonItem`
-	// shape.
+	// computes one per table cell; 'char' adds one box per character inside each
+	// grounded word (`chars` on each word), available on the `agentic_plus` tier only.
+	// Multiple levels can be requested. Empty list (default) disables granular bboxes
+	// — only item-level layout boxes are returned on the result. When set, the
+	// computed boxes are not inlined on the result items; they are written to a
+	// separate `grounded_items` sidecar (JSONL, one row per page) and exposed as
+	// `result_content_metadata.grounded_items` (a presigned download URL) on the parse
+	// result. Each row matches the `GroundedJsonItem` shape.
 	//
-	// Any of "cell", "line", "word".
+	// Any of "cell", "char", "line", "word".
 	GranularBboxes []string `json:"granular_bboxes"`
 	// Image categories to save: 'screenshot' (full page renders), 'embedded' (images
 	// found within the document), 'layout' (cropped figures and diagrams). Defaults to
@@ -3526,15 +3527,16 @@ type ParseV2ParametersOutputOptions struct {
 	AdditionalOutputs []string `json:"additional_outputs,omitzero"`
 	// Bounding-box granularity levels to compute for the parse. 'word' computes one
 	// bounding box per detected word; 'line' computes one per text line; 'cell'
-	// computes one per table cell. Multiple levels can be requested. Empty list
-	// (default) disables granular bboxes — only item-level layout boxes are returned
-	// on the result. When set, the computed boxes are not inlined on the result items;
-	// they are written to a separate `grounded_items` sidecar (JSONL, one row per
-	// page) and exposed as `result_content_metadata.grounded_items` (a presigned
-	// download URL) on the parse result. Each row matches the `GroundedJsonItem`
-	// shape.
+	// computes one per table cell; 'char' adds one box per character inside each
+	// grounded word (`chars` on each word), available on the `agentic_plus` tier only.
+	// Multiple levels can be requested. Empty list (default) disables granular bboxes
+	// — only item-level layout boxes are returned on the result. When set, the
+	// computed boxes are not inlined on the result items; they are written to a
+	// separate `grounded_items` sidecar (JSONL, one row per page) and exposed as
+	// `result_content_metadata.grounded_items` (a presigned download URL) on the parse
+	// result. Each row matches the `GroundedJsonItem` shape.
 	//
-	// Any of "cell", "line", "word".
+	// Any of "cell", "char", "line", "word".
 	GranularBboxes []string `json:"granular_bboxes,omitzero"`
 	// Markdown formatting options including table styles and link annotations
 	Markdown ParseV2ParametersOutputOptionsMarkdown `json:"markdown,omitzero"`
