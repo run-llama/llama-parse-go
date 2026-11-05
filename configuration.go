@@ -3211,11 +3211,11 @@ func (r *ParseV2ParametersProcessingOptionsOcrParametersResp) UnmarshalJSON(data
 	return apijson.UnmarshalRoot(data, r)
 }
 
-// Webhook configuration for receiving parsing job notifications.
-//
-// Webhooks are called when specified events occur during job processing. Configure
-// multiple webhook configurations to send to different endpoints.
+// A webhook endpoint kept in a saved Parse configuration.
 type ParseV2ParametersWebhookConfigurationResp struct {
+	// Webhook ID, set by the server. Send it back unchanged so a masked credential
+	// keeps this webhook's saved value.
+	ID string `json:"id" api:"nullable"`
 	// Events that trigger this webhook. Options: 'parse.success' (job completed),
 	// 'parse.error' (job failed), 'parse.partial_success' (some pages failed),
 	// 'parse.pending', 'parse.running', 'parse.cancelled'. If not specified, webhook
@@ -3238,6 +3238,7 @@ type ParseV2ParametersWebhookConfigurationResp struct {
 	WebhookURL string `json:"webhook_url" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
+		ID                   respjson.Field
 		WebhookEvents        respjson.Field
 		WebhookHeaders       respjson.Field
 		WebhookOutputFormat  respjson.Field
@@ -4446,11 +4447,11 @@ func (r *ParseV2ParametersProcessingOptionsOcrParameters) UnmarshalJSON(data []b
 	return apijson.UnmarshalRoot(data, r)
 }
 
-// Webhook configuration for receiving parsing job notifications.
-//
-// Webhooks are called when specified events occur during job processing. Configure
-// multiple webhook configurations to send to different endpoints.
+// A webhook endpoint kept in a saved Parse configuration.
 type ParseV2ParametersWebhookConfiguration struct {
+	// Webhook ID, set by the server. Send it back unchanged so a masked credential
+	// keeps this webhook's saved value.
+	ID param.Opt[string] `json:"id,omitzero"`
 	// Shared signing secret used to sign webhook deliveries. When set, each request
 	// includes an HMAC-SHA256 signature of the request body in the 'LC-Signature'
 	// header (value 'sha256=<hex>'). Recompute the HMAC over the raw request body with

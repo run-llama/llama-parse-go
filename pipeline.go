@@ -1992,8 +1992,11 @@ const (
 	LlamaParseParametersPriorityMedium   LlamaParseParametersPriority = "medium"
 )
 
-// Configuration for a single outbound webhook endpoint.
+// A webhook endpoint kept in a saved configuration or pipeline.
 type LlamaParseParametersWebhookConfigurationResp struct {
+	// Webhook ID, set by the server. Send it back unchanged so a masked credential
+	// keeps this webhook's saved value.
+	ID string `json:"id" api:"nullable"`
 	// Events to subscribe to (e.g. 'parse.success', 'extract.error'). If null, all
 	// events are delivered.
 	//
@@ -2022,6 +2025,7 @@ type LlamaParseParametersWebhookConfigurationResp struct {
 	WebhookURL string `json:"webhook_url" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
+		ID                   respjson.Field
 		WebhookEvents        respjson.Field
 		WebhookHeaders       respjson.Field
 		WebhookOutputFormat  respjson.Field
@@ -2187,8 +2191,11 @@ func (r *LlamaParseParameters) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-// Configuration for a single outbound webhook endpoint.
+// A webhook endpoint kept in a saved configuration or pipeline.
 type LlamaParseParametersWebhookConfiguration struct {
+	// Webhook ID, set by the server. Send it back unchanged so a masked credential
+	// keeps this webhook's saved value.
+	ID param.Opt[string] `json:"id,omitzero"`
 	// Response format sent to the webhook: 'string' (default) or 'json'
 	WebhookOutputFormat param.Opt[string] `json:"webhook_output_format,omitzero"`
 	// Shared signing secret used to sign webhook deliveries. When set, each request
