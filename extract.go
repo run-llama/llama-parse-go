@@ -30,6 +30,7 @@ import (
 // the [NewExtractService] method instead.
 type ExtractService struct {
 	options []option.RequestOption
+	Review  ExtractReviewService
 }
 
 // NewExtractService generates a new service that applies the given options to each
@@ -38,6 +39,7 @@ type ExtractService struct {
 func NewExtractService(opts ...option.RequestOption) (r ExtractService) {
 	r = ExtractService{}
 	r.options = opts
+	r.Review = NewExtractReviewService(opts...)
 	return
 }
 
