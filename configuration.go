@@ -1335,8 +1335,8 @@ type ParseV2ParametersResp struct {
 	// Current `latest` by tier:
 	//
 	// - `fast`: `2026-06-15`
-	// - `cost_effective`: `2026-10-30`
-	// - `agentic`: `2026-10-30`
+	// - `cost_effective`: `2026-11-05`
+	// - `agentic`: `2026-11-05`
 	// - `agentic_plus`: `2026-11-02`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
@@ -1433,8 +1433,8 @@ const (
 // Current `latest` by tier:
 //
 // - `fast`: `2026-06-15`
-// - `cost_effective`: `2026-10-30`
-// - `agentic`: `2026-10-30`
+// - `cost_effective`: `2026-11-05`
+// - `agentic`: `2026-11-05`
 // - `agentic_plus`: `2026-11-02`
 //
 // Full list: `GET /api/v2/parse/versions`.
@@ -1442,8 +1442,8 @@ type ParseV2ParametersVersion string
 
 const (
 	ParseV2ParametersVersionLatest     ParseV2ParametersVersion = "latest"
+	ParseV2ParametersVersion2026_11_05 ParseV2ParametersVersion = "2026-11-05"
 	ParseV2ParametersVersion2026_11_02 ParseV2ParametersVersion = "2026-11-02"
-	ParseV2ParametersVersion2026_10_30 ParseV2ParametersVersion = "2026-10-30"
 	ParseV2ParametersVersion2026_06_15 ParseV2ParametersVersion = "2026-06-15"
 )
 
@@ -2168,8 +2168,8 @@ type ParseV2ParametersProcessingOptionsAutoModeConfigurationParsingConfResp stru
 	// Current `latest` by tier:
 	//
 	// - `fast`: `2026-06-15`
-	// - `cost_effective`: `2026-10-30`
-	// - `agentic`: `2026-10-30`
+	// - `cost_effective`: `2026-11-05`
+	// - `agentic`: `2026-11-05`
 	// - `agentic_plus`: `2026-11-02`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
@@ -3275,8 +3275,8 @@ type ParseV2Parameters struct {
 	// Current `latest` by tier:
 	//
 	// - `fast`: `2026-06-15`
-	// - `cost_effective`: `2026-10-30`
-	// - `agentic`: `2026-10-30`
+	// - `cost_effective`: `2026-11-05`
+	// - `agentic`: `2026-11-05`
 	// - `agentic_plus`: `2026-11-02`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
@@ -3935,8 +3935,8 @@ type ParseV2ParametersProcessingOptionsAutoModeConfigurationParsingConf struct {
 	// Current `latest` by tier:
 	//
 	// - `fast`: `2026-06-15`
-	// - `cost_effective`: `2026-10-30`
-	// - `agentic`: `2026-10-30`
+	// - `cost_effective`: `2026-11-05`
+	// - `agentic`: `2026-11-05`
 	// - `agentic_plus`: `2026-11-02`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
