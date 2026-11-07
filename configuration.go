@@ -327,6 +327,8 @@ type ConfigurationCreateParametersUnion struct {
 	ConfidenceScores bool `json:"confidence_scores"`
 	DisableCache     bool `json:"disable_cache"`
 	// This field is from variant [ExtractV2ParametersResp].
+	Effort ExtractV2ParametersEffort `json:"effort"`
+	// This field is from variant [ExtractV2ParametersResp].
 	ExtractionTarget ExtractV2ParametersExtractionTarget `json:"extraction_target"`
 	// This field is from variant [ExtractV2ParametersResp].
 	MaxPages      int64    `json:"max_pages"`
@@ -390,6 +392,7 @@ type ConfigurationCreateParametersUnion struct {
 		CiteSources                respjson.Field
 		ConfidenceScores           respjson.Field
 		DisableCache               respjson.Field
+		Effort                     respjson.Field
 		ExtractionTarget           respjson.Field
 		MaxPages                   respjson.Field
 		ParseConfigID              respjson.Field
@@ -748,6 +751,8 @@ type ConfigurationResponseParametersUnion struct {
 	ConfidenceScores bool `json:"confidence_scores"`
 	DisableCache     bool `json:"disable_cache"`
 	// This field is from variant [ExtractV2ParametersResp].
+	Effort ExtractV2ParametersEffort `json:"effort"`
+	// This field is from variant [ExtractV2ParametersResp].
 	ExtractionTarget ExtractV2ParametersExtractionTarget `json:"extraction_target"`
 	// This field is from variant [ExtractV2ParametersResp].
 	MaxPages      int64    `json:"max_pages"`
@@ -811,6 +816,7 @@ type ConfigurationResponseParametersUnion struct {
 		CiteSources                respjson.Field
 		ConfidenceScores           respjson.Field
 		DisableCache               respjson.Field
+		Effort                     respjson.Field
 		ExtractionTarget           respjson.Field
 		MaxPages                   respjson.Field
 		ParseConfigID              respjson.Field
@@ -1015,6 +1021,12 @@ type ExtractV2ParametersResp struct {
 	ConfidenceScores bool `json:"confidence_scores"`
 	// Disable reuse and storage of Extract results
 	DisableCache bool `json:"disable_cache"`
+	// Use 'max' for additional processing effort on agentic_plus. Bills by model usage
+	// with the page charge as a minimum. Omit or set to null for the tier's default
+	// behavior.
+	//
+	// Any of "max".
+	Effort ExtractV2ParametersEffort `json:"effort" api:"nullable"`
 	// Deprecated. Applies only to Agentic and Cost Effective versions 2.0 or earlier.
 	// Granularity of extraction: per_doc returns one object per document, per_page
 	// returns one object per page, per_table_row returns one object per table row.
@@ -1038,12 +1050,9 @@ type ExtractV2ParametersResp struct {
 	// target_pages for spreadsheets; omit to extract every sheet. Names are matched
 	// exactly (case-sensitive) — pass them as a list, e.g. ["Sheet 1", "My Sheet"].
 	SheetNames []string `json:"sheet_names" api:"nullable"`
-	// Beta. When true, extract structured data directly from a spreadsheet workbook
-	// (.xlsx/.xls/.csv) — the agent reads cells straight from the workbook instead of
-	// the standard document path. Off by default (spreadsheets keep the standard
-	// path). Requires the agentic_plus tier. Billed on the standard per-page extract
-	// rate, against a page count derived from workbook size. Citations and confidence
-	// scores are not available in this mode.
+	// Extract structured data directly from spreadsheet cells (.xlsx/.xls/.csv).
+	// Billed at the standard per-page Extract rate, with page count derived from
+	// workbook size.
 	SpreadsheetMode bool `json:"spreadsheet_mode"`
 	// Custom system prompt to guide extraction behavior
 	SystemPrompt string `json:"system_prompt" api:"nullable"`
@@ -1067,6 +1076,7 @@ type ExtractV2ParametersResp struct {
 		CiteSources       respjson.Field
 		ConfidenceScores  respjson.Field
 		DisableCache      respjson.Field
+		Effort            respjson.Field
 		ExtractionTarget  respjson.Field
 		MaxPages          respjson.Field
 		ParseConfigID     respjson.Field
@@ -1158,6 +1168,15 @@ func (r *ExtractV2ParametersDataSchemaUnionResp) UnmarshalJSON(data []byte) erro
 	return apijson.UnmarshalRoot(data, r)
 }
 
+// Use 'max' for additional processing effort on agentic_plus. Bills by model usage
+// with the page charge as a minimum. Omit or set to null for the tier's default
+// behavior.
+type ExtractV2ParametersEffort string
+
+const (
+	ExtractV2ParametersEffortMax ExtractV2ParametersEffort = "max"
+)
+
 // Deprecated. Applies only to Agentic and Cost Effective versions 2.0 or earlier.
 // Granularity of extraction: per_doc returns one object per document, per_page
 // returns one object per page, per_table_row returns one object per table row.
@@ -1222,17 +1241,20 @@ type ExtractV2Parameters struct {
 	ConfidenceScores param.Opt[bool] `json:"confidence_scores,omitzero"`
 	// Disable reuse and storage of Extract results
 	DisableCache param.Opt[bool] `json:"disable_cache,omitzero"`
-	// Beta. When true, extract structured data directly from a spreadsheet workbook
-	// (.xlsx/.xls/.csv) — the agent reads cells straight from the workbook instead of
-	// the standard document path. Off by default (spreadsheets keep the standard
-	// path). Requires the agentic_plus tier. Billed on the standard per-page extract
-	// rate, against a page count derived from workbook size. Citations and confidence
-	// scores are not available in this mode.
+	// Extract structured data directly from spreadsheet cells (.xlsx/.xls/.csv).
+	// Billed at the standard per-page Extract rate, with page count derived from
+	// workbook size.
 	SpreadsheetMode param.Opt[bool] `json:"spreadsheet_mode,omitzero"`
 	// Extract version name, such as '2.5'. Use 'latest' for the newest compatible
 	// release for the selected tier. Dates (YYYY-MM-DD) are also supported, which will
 	// use the latest version on or before the specified date.
 	Version param.Opt[string] `json:"version,omitzero"`
+	// Use 'max' for additional processing effort on agentic_plus. Bills by model usage
+	// with the page charge as a minimum. Omit or set to null for the tier's default
+	// behavior.
+	//
+	// Any of "max".
+	Effort ExtractV2ParametersEffort `json:"effort,omitzero"`
 	// Parse tier to use before extraction. Defaults to the extract tier if not
 	// specified. Turbo extract does not support parse configuration or produce a parse
 	// output; use another tier if your workflow requires parsed text.
@@ -1313,9 +1335,9 @@ type ParseV2ParametersResp struct {
 	// Current `latest` by tier:
 	//
 	// - `fast`: `2026-06-15`
-	// - `cost_effective`: `2026-09-28`
-	// - `agentic`: `2026-10-16`
-	// - `agentic_plus`: `2026-09-28`
+	// - `cost_effective`: `2026-11-05`
+	// - `agentic`: `2026-11-05`
+	// - `agentic_plus`: `2026-11-07`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
 	Version ParseV2ParametersVersion `json:"version" api:"required"`
@@ -1353,8 +1375,8 @@ type ParseV2ParametersResp struct {
 	ProcessingOptions ParseV2ParametersProcessingOptionsResp `json:"processing_options"`
 	// IDs of saved webhook configurations to notify for this job.
 	WebhookConfigurationIDs []string `json:"webhook_configuration_ids" api:"nullable"`
-	// Webhook endpoints for job status notifications. Multiple webhooks can be
-	// configured for different events or services
+	// Webhook endpoints for job notifications. Maximum 10 total, including
+	// webhook_configuration_ids.
 	WebhookConfigurations []ParseV2ParametersWebhookConfigurationResp `json:"webhook_configurations"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
@@ -1411,17 +1433,17 @@ const (
 // Current `latest` by tier:
 //
 // - `fast`: `2026-06-15`
-// - `cost_effective`: `2026-09-28`
-// - `agentic`: `2026-10-16`
-// - `agentic_plus`: `2026-09-28`
+// - `cost_effective`: `2026-11-05`
+// - `agentic`: `2026-11-05`
+// - `agentic_plus`: `2026-11-07`
 //
 // Full list: `GET /api/v2/parse/versions`.
 type ParseV2ParametersVersion string
 
 const (
 	ParseV2ParametersVersionLatest     ParseV2ParametersVersion = "latest"
-	ParseV2ParametersVersion2026_10_16 ParseV2ParametersVersion = "2026-10-16"
-	ParseV2ParametersVersion2026_09_28 ParseV2ParametersVersion = "2026-09-28"
+	ParseV2ParametersVersion2026_11_07 ParseV2ParametersVersion = "2026-11-07"
+	ParseV2ParametersVersion2026_11_05 ParseV2ParametersVersion = "2026-11-05"
 	ParseV2ParametersVersion2026_06_15 ParseV2ParametersVersion = "2026-06-15"
 )
 
@@ -1634,15 +1656,16 @@ type ParseV2ParametersOutputOptionsResp struct {
 	ExtractPrintedPageNumber bool `json:"extract_printed_page_number" api:"nullable"`
 	// Bounding-box granularity levels to compute for the parse. 'word' computes one
 	// bounding box per detected word; 'line' computes one per text line; 'cell'
-	// computes one per table cell. Multiple levels can be requested. Empty list
-	// (default) disables granular bboxes — only item-level layout boxes are returned
-	// on the result. When set, the computed boxes are not inlined on the result items;
-	// they are written to a separate `grounded_items` sidecar (JSONL, one row per
-	// page) and exposed as `result_content_metadata.grounded_items` (a presigned
-	// download URL) on the parse result. Each row matches the `GroundedJsonItem`
-	// shape.
+	// computes one per table cell; 'char' adds one box per character inside each
+	// grounded word (`chars` on each word), available on the `agentic_plus` tier only.
+	// Multiple levels can be requested. Empty list (default) disables granular bboxes
+	// — only item-level layout boxes are returned on the result. When set, the
+	// computed boxes are not inlined on the result items; they are written to a
+	// separate `grounded_items` sidecar (JSONL, one row per page) and exposed as
+	// `result_content_metadata.grounded_items` (a presigned download URL) on the parse
+	// result. Each row matches the `GroundedJsonItem` shape.
 	//
-	// Any of "cell", "line", "word".
+	// Any of "cell", "char", "line", "word".
 	GranularBboxes []string `json:"granular_bboxes"`
 	// Image categories to save: 'screenshot' (full page renders), 'embedded' (images
 	// found within the document), 'layout' (cropped figures and diagrams). Defaults to
@@ -2145,9 +2168,9 @@ type ParseV2ParametersProcessingOptionsAutoModeConfigurationParsingConfResp stru
 	// Current `latest` by tier:
 	//
 	// - `fast`: `2026-06-15`
-	// - `cost_effective`: `2026-09-28`
-	// - `agentic`: `2026-10-16`
-	// - `agentic_plus`: `2026-09-28`
+	// - `cost_effective`: `2026-11-05`
+	// - `agentic`: `2026-11-05`
+	// - `agentic_plus`: `2026-11-07`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
 	Version string `json:"version" api:"nullable"`
@@ -3188,11 +3211,11 @@ func (r *ParseV2ParametersProcessingOptionsOcrParametersResp) UnmarshalJSON(data
 	return apijson.UnmarshalRoot(data, r)
 }
 
-// Webhook configuration for receiving parsing job notifications.
-//
-// Webhooks are called when specified events occur during job processing. Configure
-// multiple webhook configurations to send to different endpoints.
+// A webhook endpoint kept in a saved Parse configuration.
 type ParseV2ParametersWebhookConfigurationResp struct {
+	// Webhook ID, set by the server. Send it back unchanged so a masked credential
+	// keeps this webhook's saved value.
+	ID string `json:"id" api:"nullable"`
 	// Events that trigger this webhook. Options: 'parse.success' (job completed),
 	// 'parse.error' (job failed), 'parse.partial_success' (some pages failed),
 	// 'parse.pending', 'parse.running', 'parse.cancelled'. If not specified, webhook
@@ -3215,6 +3238,7 @@ type ParseV2ParametersWebhookConfigurationResp struct {
 	WebhookURL string `json:"webhook_url" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
+		ID                   respjson.Field
 		WebhookEvents        respjson.Field
 		WebhookHeaders       respjson.Field
 		WebhookOutputFormat  respjson.Field
@@ -3251,9 +3275,9 @@ type ParseV2Parameters struct {
 	// Current `latest` by tier:
 	//
 	// - `fast`: `2026-06-15`
-	// - `cost_effective`: `2026-09-28`
-	// - `agentic`: `2026-10-16`
-	// - `agentic_plus`: `2026-09-28`
+	// - `cost_effective`: `2026-11-05`
+	// - `agentic`: `2026-11-05`
+	// - `agentic_plus`: `2026-11-07`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
 	Version ParseV2ParametersVersion `json:"version,omitzero" api:"required"`
@@ -3291,8 +3315,8 @@ type ParseV2Parameters struct {
 	ProcessingControl ParseV2ParametersProcessingControl `json:"processing_control,omitzero"`
 	// Document processing options including OCR, table extraction, and chart parsing
 	ProcessingOptions ParseV2ParametersProcessingOptions `json:"processing_options,omitzero"`
-	// Webhook endpoints for job status notifications. Multiple webhooks can be
-	// configured for different events or services
+	// Webhook endpoints for job notifications. Maximum 10 total, including
+	// webhook_configuration_ids.
 	WebhookConfigurations []ParseV2ParametersWebhookConfiguration `json:"webhook_configurations,omitzero"`
 	// Product type.
 	//
@@ -3504,15 +3528,16 @@ type ParseV2ParametersOutputOptions struct {
 	AdditionalOutputs []string `json:"additional_outputs,omitzero"`
 	// Bounding-box granularity levels to compute for the parse. 'word' computes one
 	// bounding box per detected word; 'line' computes one per text line; 'cell'
-	// computes one per table cell. Multiple levels can be requested. Empty list
-	// (default) disables granular bboxes — only item-level layout boxes are returned
-	// on the result. When set, the computed boxes are not inlined on the result items;
-	// they are written to a separate `grounded_items` sidecar (JSONL, one row per
-	// page) and exposed as `result_content_metadata.grounded_items` (a presigned
-	// download URL) on the parse result. Each row matches the `GroundedJsonItem`
-	// shape.
+	// computes one per table cell; 'char' adds one box per character inside each
+	// grounded word (`chars` on each word), available on the `agentic_plus` tier only.
+	// Multiple levels can be requested. Empty list (default) disables granular bboxes
+	// — only item-level layout boxes are returned on the result. When set, the
+	// computed boxes are not inlined on the result items; they are written to a
+	// separate `grounded_items` sidecar (JSONL, one row per page) and exposed as
+	// `result_content_metadata.grounded_items` (a presigned download URL) on the parse
+	// result. Each row matches the `GroundedJsonItem` shape.
 	//
-	// Any of "cell", "line", "word".
+	// Any of "cell", "char", "line", "word".
 	GranularBboxes []string `json:"granular_bboxes,omitzero"`
 	// Markdown formatting options including table styles and link annotations
 	Markdown ParseV2ParametersOutputOptionsMarkdown `json:"markdown,omitzero"`
@@ -3910,9 +3935,9 @@ type ParseV2ParametersProcessingOptionsAutoModeConfigurationParsingConf struct {
 	// Current `latest` by tier:
 	//
 	// - `fast`: `2026-06-15`
-	// - `cost_effective`: `2026-09-28`
-	// - `agentic`: `2026-10-16`
-	// - `agentic_plus`: `2026-09-28`
+	// - `cost_effective`: `2026-11-05`
+	// - `agentic`: `2026-11-05`
+	// - `agentic_plus`: `2026-11-07`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
 	Version string `json:"version,omitzero"`
@@ -4422,11 +4447,11 @@ func (r *ParseV2ParametersProcessingOptionsOcrParameters) UnmarshalJSON(data []b
 	return apijson.UnmarshalRoot(data, r)
 }
 
-// Webhook configuration for receiving parsing job notifications.
-//
-// Webhooks are called when specified events occur during job processing. Configure
-// multiple webhook configurations to send to different endpoints.
+// A webhook endpoint kept in a saved Parse configuration.
 type ParseV2ParametersWebhookConfiguration struct {
+	// Webhook ID, set by the server. Send it back unchanged so a masked credential
+	// keeps this webhook's saved value.
+	ID param.Opt[string] `json:"id,omitzero"`
 	// Shared signing secret used to sign webhook deliveries. When set, each request
 	// includes an HMAC-SHA256 signature of the request body in the 'LC-Signature'
 	// header (value 'sha256=<hex>'). Recompute the HMAC over the raw request body with
