@@ -161,6 +161,7 @@ func TestParsingNewWithOptionalParams(t *testing.T) {
 				LayoutElementInPageConfidenceThreshold: llamacloud.ParsingNewParamsProcessingOptionsAutoModeConfigurationLayoutElementInPageConfidenceThresholdUnion{
 					OfFloat: llamacloud.Float(0),
 				},
+				MinComplexity: "high",
 				PageContainsAtLeastNCharts: llamacloud.ParsingNewParamsProcessingOptionsAutoModeConfigurationPageContainsAtLeastNChartsUnion{
 					OfInt: llamacloud.Int(0),
 				},

@@ -5975,6 +5975,11 @@ type ParsingNewParamsProcessingOptionsAutoModeConfiguration struct {
 	FullPageImageInPageThreshold ParsingNewParamsProcessingOptionsAutoModeConfigurationFullPageImageInPageThresholdUnion `json:"full_page_image_in_page_threshold,omitzero"`
 	// Confidence threshold for layout element detection
 	LayoutElementInPageConfidenceThreshold ParsingNewParamsProcessingOptionsAutoModeConfigurationLayoutElementInPageConfidenceThresholdUnion `json:"layout_element_in_page_confidence_threshold,omitzero"`
+	// Trigger on pages at least this complex. high: pages whose tables look wrong.
+	// medium: also pages that are mostly scanned text.
+	//
+	// Any of "high", "medium".
+	MinComplexity string `json:"min_complexity,omitzero"`
 	// Trigger if page has more than N charts
 	PageContainsAtLeastNCharts ParsingNewParamsProcessingOptionsAutoModeConfigurationPageContainsAtLeastNChartsUnion `json:"page_contains_at_least_n_charts,omitzero"`
 	// Trigger if page has more than N images
@@ -6024,6 +6029,12 @@ func (r ParsingNewParamsProcessingOptionsAutoModeConfiguration) MarshalJSON() (d
 }
 func (r *ParsingNewParamsProcessingOptionsAutoModeConfiguration) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
+}
+
+func init() {
+	apijson.RegisterFieldValidator[ParsingNewParamsProcessingOptionsAutoModeConfiguration](
+		"min_complexity", "high", "medium",
+	)
 }
 
 // Parsing configuration to apply when trigger conditions are met
