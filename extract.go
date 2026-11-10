@@ -182,9 +182,9 @@ type ExtractConfiguration struct {
 	ConfidenceScores bool `json:"confidence_scores"`
 	// Disable reuse and storage of Extract results
 	DisableCache bool `json:"disable_cache"`
-	// Use 'max' for additional processing effort on agentic_plus. Bills by model usage
-	// with the page charge as a minimum. Omit or set to null for the tier's default
-	// behavior.
+	// Use 'max' for additional processing effort on agentic_plus. Priced by the
+	// processing each document needs, with the page price as the minimum. Omit or set
+	// to null for the tier's default behavior.
 	//
 	// Any of "max".
 	Effort ExtractConfigurationEffort `json:"effort" api:"nullable"`
@@ -328,9 +328,9 @@ func (r *ExtractConfigurationDataSchemaUnion) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-// Use 'max' for additional processing effort on agentic_plus. Bills by model usage
-// with the page charge as a minimum. Omit or set to null for the tier's default
-// behavior.
+// Use 'max' for additional processing effort on agentic_plus. Priced by the
+// processing each document needs, with the page price as the minimum. Omit or set
+// to null for the tier's default behavior.
 type ExtractConfigurationEffort string
 
 const (
@@ -409,9 +409,9 @@ type ExtractConfigurationParam struct {
 	// release for the selected tier. Dates (YYYY-MM-DD) are also supported, which will
 	// use the latest version on or before the specified date.
 	Version param.Opt[string] `json:"version,omitzero"`
-	// Use 'max' for additional processing effort on agentic_plus. Bills by model usage
-	// with the page charge as a minimum. Omit or set to null for the tier's default
-	// behavior.
+	// Use 'max' for additional processing effort on agentic_plus. Priced by the
+	// processing each document needs, with the page price as the minimum. Omit or set
+	// to null for the tier's default behavior.
 	//
 	// Any of "max".
 	Effort ExtractConfigurationEffort `json:"effort,omitzero"`
