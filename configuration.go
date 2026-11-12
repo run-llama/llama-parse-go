@@ -2026,10 +2026,11 @@ type ParseV2ParametersProcessingOptionsAutoModeConfigurationResp struct {
 	LayoutElementInPage string `json:"layout_element_in_page" api:"nullable"`
 	// Confidence threshold for layout element detection
 	LayoutElementInPageConfidenceThreshold ParseV2ParametersProcessingOptionsAutoModeConfigurationLayoutElementInPageConfidenceThresholdUnionResp `json:"layout_element_in_page_confidence_threshold" api:"nullable"`
-	// Trigger on pages at least this complex. high: pages whose tables look wrong.
-	// medium: also pages that are mostly scanned text.
+	// Trigger on pages with at least 100 source words. low: table warnings or at least
+	// 50% OCR words. medium: at least 3 table concerns or missed tables. high: medium
+	// plus at least 2 detected tables.
 	//
-	// Any of "high", "medium".
+	// Any of "high", "low", "medium".
 	MinComplexity string `json:"min_complexity" api:"nullable"`
 	// Trigger if page has more than N charts
 	PageContainsAtLeastNCharts ParseV2ParametersProcessingOptionsAutoModeConfigurationPageContainsAtLeastNChartsUnionResp `json:"page_contains_at_least_n_charts" api:"nullable"`
@@ -3852,10 +3853,11 @@ type ParseV2ParametersProcessingOptionsAutoModeConfiguration struct {
 	FullPageImageInPageThreshold ParseV2ParametersProcessingOptionsAutoModeConfigurationFullPageImageInPageThresholdUnion `json:"full_page_image_in_page_threshold,omitzero"`
 	// Confidence threshold for layout element detection
 	LayoutElementInPageConfidenceThreshold ParseV2ParametersProcessingOptionsAutoModeConfigurationLayoutElementInPageConfidenceThresholdUnion `json:"layout_element_in_page_confidence_threshold,omitzero"`
-	// Trigger on pages at least this complex. high: pages whose tables look wrong.
-	// medium: also pages that are mostly scanned text.
+	// Trigger on pages with at least 100 source words. low: table warnings or at least
+	// 50% OCR words. medium: at least 3 table concerns or missed tables. high: medium
+	// plus at least 2 detected tables.
 	//
-	// Any of "high", "medium".
+	// Any of "high", "low", "medium".
 	MinComplexity string `json:"min_complexity,omitzero"`
 	// Trigger if page has more than N charts
 	PageContainsAtLeastNCharts ParseV2ParametersProcessingOptionsAutoModeConfigurationPageContainsAtLeastNChartsUnion `json:"page_contains_at_least_n_charts,omitzero"`
@@ -3910,7 +3912,7 @@ func (r *ParseV2ParametersProcessingOptionsAutoModeConfiguration) UnmarshalJSON(
 
 func init() {
 	apijson.RegisterFieldValidator[ParseV2ParametersProcessingOptionsAutoModeConfiguration](
-		"min_complexity", "high", "medium",
+		"min_complexity", "high", "low", "medium",
 	)
 }
 
