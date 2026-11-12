@@ -5296,7 +5296,7 @@ type ParsingListVersionsResponse struct {
 	CostEffective []string `json:"cost_effective" api:"required"`
 	// Versions for the fast tier
 	//
-	// Any of "2026-06-15", "2025-12-11".
+	// Any of "2026-11-12", "2026-06-15", "2025-12-11".
 	Fast []string `json:"fast" api:"required"`
 	// Version `latest` currently resolves to, per tier
 	Latest ParsingListVersionsResponseLatest `json:"latest" api:"required"`
@@ -5355,7 +5355,7 @@ type ParsingNewParams struct {
 	//
 	// Current `latest` by tier:
 	//
-	// - `fast`: `2026-06-15`
+	// - `fast`: `2026-11-12`
 	// - `cost_effective`: `2026-11-09`
 	// - `agentic`: `2026-11-09`
 	// - `agentic_plus`: `2026-11-11`
@@ -5451,7 +5451,7 @@ const (
 //
 // Current `latest` by tier:
 //
-// - `fast`: `2026-06-15`
+// - `fast`: `2026-11-12`
 // - `cost_effective`: `2026-11-09`
 // - `agentic`: `2026-11-09`
 // - `agentic_plus`: `2026-11-11`
@@ -5461,9 +5461,9 @@ type ParsingNewParamsVersion string
 
 const (
 	ParsingNewParamsVersionLatest     ParsingNewParamsVersion = "latest"
+	ParsingNewParamsVersion2026_11_12 ParsingNewParamsVersion = "2026-11-12"
 	ParsingNewParamsVersion2026_11_11 ParsingNewParamsVersion = "2026-11-11"
 	ParsingNewParamsVersion2026_11_09 ParsingNewParamsVersion = "2026-11-09"
-	ParsingNewParamsVersion2026_06_15 ParsingNewParamsVersion = "2026-06-15"
 )
 
 // Options for AI-powered parsing tiers (cost_effective, agentic, agentic_plus).
@@ -6079,7 +6079,7 @@ type ParsingNewParamsProcessingOptionsAutoModeConfigurationParsingConf struct {
 	//
 	// Current `latest` by tier:
 	//
-	// - `fast`: `2026-06-15`
+	// - `fast`: `2026-11-12`
 	// - `cost_effective`: `2026-11-09`
 	// - `agentic`: `2026-11-09`
 	// - `agentic_plus`: `2026-11-11`
