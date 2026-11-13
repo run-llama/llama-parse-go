@@ -2008,6 +2008,10 @@ func (r *ParseV2ParametersProcessingOptionsResp) UnmarshalJSON(data []byte) erro
 type ParseV2ParametersProcessingOptionsAutoModeConfigurationResp struct {
 	// Parsing configuration to apply when trigger conditions are met
 	ParsingConf ParseV2ParametersProcessingOptionsAutoModeConfigurationParsingConfResp `json:"parsing_conf" api:"required"`
+	// Match every page when the document has more than N pages
+	DocumentLongerThanNPages int64 `json:"document_longer_than_n_pages" api:"nullable"`
+	// Match every page when the document has fewer than N pages
+	DocumentShorterThanNPages int64 `json:"document_shorter_than_n_pages" api:"nullable"`
 	// Single glob pattern to match against filename
 	FilenameMatchGlob string `json:"filename_match_glob" api:"nullable"`
 	// List of glob patterns to match against filename
@@ -2088,6 +2092,8 @@ type ParseV2ParametersProcessingOptionsAutoModeConfigurationResp struct {
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		ParsingConf                            respjson.Field
+		DocumentLongerThanNPages               respjson.Field
+		DocumentShorterThanNPages              respjson.Field
 		FilenameMatchGlob                      respjson.Field
 		FilenameMatchGlobList                  respjson.Field
 		FilenameRegexp                         respjson.Field
@@ -3822,6 +3828,10 @@ func init() {
 type ParseV2ParametersProcessingOptionsAutoModeConfiguration struct {
 	// Parsing configuration to apply when trigger conditions are met
 	ParsingConf ParseV2ParametersProcessingOptionsAutoModeConfigurationParsingConf `json:"parsing_conf,omitzero" api:"required"`
+	// Match every page when the document has more than N pages
+	DocumentLongerThanNPages param.Opt[int64] `json:"document_longer_than_n_pages,omitzero"`
+	// Match every page when the document has fewer than N pages
+	DocumentShorterThanNPages param.Opt[int64] `json:"document_shorter_than_n_pages,omitzero"`
 	// Single glob pattern to match against filename
 	FilenameMatchGlob param.Opt[string] `json:"filename_match_glob,omitzero"`
 	// Regex pattern to match against filename

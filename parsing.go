@@ -5948,6 +5948,10 @@ func init() {
 type ParsingNewParamsProcessingOptionsAutoModeConfiguration struct {
 	// Parsing configuration to apply when trigger conditions are met
 	ParsingConf ParsingNewParamsProcessingOptionsAutoModeConfigurationParsingConf `json:"parsing_conf,omitzero" api:"required"`
+	// Match every page when the document has more than N pages
+	DocumentLongerThanNPages param.Opt[int64] `json:"document_longer_than_n_pages,omitzero"`
+	// Match every page when the document has fewer than N pages
+	DocumentShorterThanNPages param.Opt[int64] `json:"document_shorter_than_n_pages,omitzero"`
 	// Single glob pattern to match against filename
 	FilenameMatchGlob param.Opt[string] `json:"filename_match_glob,omitzero"`
 	// Regex pattern to match against filename
