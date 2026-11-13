@@ -5983,9 +5983,11 @@ type ParsingNewParamsProcessingOptionsAutoModeConfiguration struct {
 	FullPageImageInPageThreshold ParsingNewParamsProcessingOptionsAutoModeConfigurationFullPageImageInPageThresholdUnion `json:"full_page_image_in_page_threshold,omitzero"`
 	// Confidence threshold for layout element detection
 	LayoutElementInPageConfidenceThreshold ParsingNewParamsProcessingOptionsAutoModeConfigurationLayoutElementInPageConfidenceThresholdUnion `json:"layout_element_in_page_confidence_threshold,omitzero"`
-	// Trigger on pages with at least 100 source words. low: table warnings or at least
-	// 50% OCR words. medium: at least 3 table concerns or missed tables. high: medium
-	// plus at least 2 detected tables.
+	// All levels trigger when at least 50% of grounded words inside detected table
+	// regions lack table-cell grounding, regardless of word count. Pages with at least
+	// 100 source words also trigger by level: low: table warnings or at least 50% OCR
+	// words. medium: at least 3 table concerns or missed tables. high: medium plus at
+	// least 2 detected tables.
 	//
 	// Any of "high", "low", "medium".
 	MinComplexity string `json:"min_complexity,omitzero"`
