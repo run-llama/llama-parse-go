@@ -364,7 +364,7 @@ const (
 type ExtractReviewEvent struct {
 	// Unique identifier of the entry.
 	ID string `json:"id" api:"required"`
-	// ID of the user who acted.
+	// ID of the user who acted; null when a review policy turned review on.
 	ActorID string `json:"actor_id" api:"required"`
 	// When it happened.
 	CreatedAt time.Time `json:"created_at" api:"required" format:"date-time"`
@@ -480,9 +480,10 @@ type ExtractReviewEventDetailExtractReviewCreatedDetail struct {
 	ConfidenceThreshold float64 `json:"confidence_threshold" api:"required"`
 	// JSON Pointers of the fields the threshold applies to; empty means all.
 	FieldsInScope []string `json:"fields_in_scope" api:"required"`
-	// Turned on as the job ran, from History, by a first edit, or by the API.
+	// Turned on as the job ran, from History, by a first edit, by the API, or by the
+	// configuration's review policy as the job completed.
 	//
-	// Any of "api", "edit", "history", "run".
+	// Any of "api", "edit", "history", "policy", "run".
 	Origin string `json:"origin" api:"required"`
 	// JSON Pointers of fields flagged when empty.
 	RequiredFields []string `json:"required_fields" api:"required"`
