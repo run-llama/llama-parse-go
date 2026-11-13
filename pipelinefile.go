@@ -161,7 +161,8 @@ type PipelineFile struct {
 	ID string `json:"id" api:"required" format:"uuid"`
 	// The ID of the pipeline that the file is associated with.
 	PipelineID string `json:"pipeline_id" api:"required" format:"uuid"`
-	// Hashes for the configuration of the pipeline.
+	// Hashes for the configuration of the pipeline. Every hash but
+	// `transform_config_hash` is null.
 	ConfigHash map[string]*PipelineFileConfigHashUnion `json:"config_hash" api:"nullable"`
 	// When the pipeline file was created.
 	CreatedAt time.Time `json:"created_at" api:"nullable" format:"date-time"`

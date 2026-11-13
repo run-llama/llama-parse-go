@@ -30,6 +30,7 @@ import (
 // the [NewExtractService] method instead.
 type ExtractService struct {
 	options []option.RequestOption
+	Review  ExtractReviewService
 }
 
 // NewExtractService generates a new service that applies the given options to each
@@ -38,6 +39,7 @@ type ExtractService struct {
 func NewExtractService(opts ...option.RequestOption) (r ExtractService) {
 	r = ExtractService{}
 	r.options = opts
+	r.Review = NewExtractReviewService(opts...)
 	return
 }
 
@@ -69,9 +71,12 @@ func (r *ExtractService) New(ctx context.Context, params ExtractNewParams, opts 
 
 // List extraction jobs with optional filtering and pagination.
 //
-// Filter by `configuration_id`, `status`, `file_input`, or creation date range.
-// Results are returned newest-first. Use `expand=configuration` to include the
-// full configuration used, and `expand=extract_metadata` for per-field metadata.
+// Filter by `configuration_id`, `status`, `file_input`, `review_status`, or
+// creation date range. Results are returned newest-first. `review_status=pending`
+// lists completed jobs waiting for review, unless `status` names another. A review
+// stays pending when its job fails or is cancelled, so pass that `status` to list
+// those. Use `expand=configuration` to include the full configuration used, and
+// `expand=extract_metadata` for per-field metadata.
 func (r *ExtractService) List(ctx context.Context, query ExtractListParams, opts ...option.RequestOption) (res *pagination.PaginatedCursor[ExtractV2Job], err error) {
 	var raw *http.Response
 	opts = slices.Concat(r.options, opts)
@@ -91,9 +96,12 @@ func (r *ExtractService) List(ctx context.Context, query ExtractListParams, opts
 
 // List extraction jobs with optional filtering and pagination.
 //
-// Filter by `configuration_id`, `status`, `file_input`, or creation date range.
-// Results are returned newest-first. Use `expand=configuration` to include the
-// full configuration used, and `expand=extract_metadata` for per-field metadata.
+// Filter by `configuration_id`, `status`, `file_input`, `review_status`, or
+// creation date range. Results are returned newest-first. `review_status=pending`
+// lists completed jobs waiting for review, unless `status` names another. A review
+// stays pending when its job fails or is cancelled, so pass that `status` to list
+// those. Use `expand=configuration` to include the full configuration used, and
+// `expand=extract_metadata` for per-field metadata.
 func (r *ExtractService) ListAutoPaging(ctx context.Context, query ExtractListParams, opts ...option.RequestOption) *pagination.PaginatedCursorAutoPager[ExtractV2Job] {
 	return pagination.NewPaginatedCursorAutoPager(r.List(ctx, query, opts...))
 }
@@ -174,6 +182,12 @@ type ExtractConfiguration struct {
 	ConfidenceScores bool `json:"confidence_scores"`
 	// Disable reuse and storage of Extract results
 	DisableCache bool `json:"disable_cache"`
+	// Use 'max' for additional processing effort on agentic_plus. Priced by the
+	// processing each document needs, with the page price as the minimum. Omit or set
+	// to null for the tier's default behavior.
+	//
+	// Any of "max".
+	Effort ExtractConfigurationEffort `json:"effort" api:"nullable"`
 	// Deprecated. Applies only to Agentic and Cost Effective versions 2.0 or earlier.
 	// Granularity of extraction: per_doc returns one object per document, per_page
 	// returns one object per page, per_table_row returns one object per table row.
@@ -197,12 +211,9 @@ type ExtractConfiguration struct {
 	// target_pages for spreadsheets; omit to extract every sheet. Names are matched
 	// exactly (case-sensitive) — pass them as a list, e.g. ["Sheet 1", "My Sheet"].
 	SheetNames []string `json:"sheet_names" api:"nullable"`
-	// Beta. When true, extract structured data directly from a spreadsheet workbook
-	// (.xlsx/.xls/.csv) — the agent reads cells straight from the workbook instead of
-	// the standard document path. Off by default (spreadsheets keep the standard
-	// path). Requires the agentic_plus tier. Billed on the standard per-page extract
-	// rate, against a page count derived from workbook size. Citations and confidence
-	// scores are not available in this mode.
+	// Extract structured data directly from spreadsheet cells (.xlsx/.xls/.csv).
+	// Billed at the standard per-page Extract rate, with page count derived from
+	// workbook size.
 	SpreadsheetMode bool `json:"spreadsheet_mode"`
 	// Custom system prompt to guide extraction behavior
 	SystemPrompt string `json:"system_prompt" api:"nullable"`
@@ -225,6 +236,7 @@ type ExtractConfiguration struct {
 		CiteSources       respjson.Field
 		ConfidenceScores  respjson.Field
 		DisableCache      respjson.Field
+		Effort            respjson.Field
 		ExtractionTarget  respjson.Field
 		MaxPages          respjson.Field
 		ParseConfigID     respjson.Field
@@ -316,6 +328,15 @@ func (r *ExtractConfigurationDataSchemaUnion) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
+// Use 'max' for additional processing effort on agentic_plus. Priced by the
+// processing each document needs, with the page price as the minimum. Omit or set
+// to null for the tier's default behavior.
+type ExtractConfigurationEffort string
+
+const (
+	ExtractConfigurationEffortMax ExtractConfigurationEffort = "max"
+)
+
 // Deprecated. Applies only to Agentic and Cost Effective versions 2.0 or earlier.
 // Granularity of extraction: per_doc returns one object per document, per_page
 // returns one object per page, per_table_row returns one object per table row.
@@ -380,17 +401,20 @@ type ExtractConfigurationParam struct {
 	ConfidenceScores param.Opt[bool] `json:"confidence_scores,omitzero"`
 	// Disable reuse and storage of Extract results
 	DisableCache param.Opt[bool] `json:"disable_cache,omitzero"`
-	// Beta. When true, extract structured data directly from a spreadsheet workbook
-	// (.xlsx/.xls/.csv) — the agent reads cells straight from the workbook instead of
-	// the standard document path. Off by default (spreadsheets keep the standard
-	// path). Requires the agentic_plus tier. Billed on the standard per-page extract
-	// rate, against a page count derived from workbook size. Citations and confidence
-	// scores are not available in this mode.
+	// Extract structured data directly from spreadsheet cells (.xlsx/.xls/.csv).
+	// Billed at the standard per-page Extract rate, with page count derived from
+	// workbook size.
 	SpreadsheetMode param.Opt[bool] `json:"spreadsheet_mode,omitzero"`
 	// Extract version name, such as '2.5'. Use 'latest' for the newest compatible
 	// release for the selected tier. Dates (YYYY-MM-DD) are also supported, which will
 	// use the latest version on or before the specified date.
 	Version param.Opt[string] `json:"version,omitzero"`
+	// Use 'max' for additional processing effort on agentic_plus. Priced by the
+	// processing each document needs, with the page price as the minimum. Omit or set
+	// to null for the tier's default behavior.
+	//
+	// Any of "max".
+	Effort ExtractConfigurationEffort `json:"effort,omitzero"`
 	// Parse tier to use before extraction. Defaults to the extract tier if not
 	// specified. Turbo extract does not support parse configuration or produce a parse
 	// output; use another tier if your workflow requires parsed text.
@@ -819,13 +843,13 @@ type ExtractV2JobCreateWebhookConfigurationParam struct {
 	// "batch.success", "classify.cancelled", "classify.error",
 	// "classify.partial_success", "classify.pending", "classify.running",
 	// "classify.success", "extract.cancelled", "extract.error",
-	// "extract.partial_success", "extract.pending", "extract.success",
-	// "parse.cancelled", "parse.error", "parse.partial_success", "parse.pending",
-	// "parse.running", "parse.success", "sheets.cancelled", "sheets.error",
-	// "sheets.partial_success", "sheets.pending", "sheets.success", "split.cancelled",
-	// "split.error", "split.pending", "split.processing", "split.success",
-	// "unmapped_event", "verify.cancelled", "verify.error", "verify.pending",
-	// "verify.running", "verify.success".
+	// "extract.partial_success", "extract.pending", "extract.running",
+	// "extract.success", "parse.cancelled", "parse.error", "parse.partial_success",
+	// "parse.pending", "parse.running", "parse.success", "sheets.cancelled",
+	// "sheets.error", "sheets.partial_success", "sheets.pending", "sheets.success",
+	// "split.cancelled", "split.error", "split.pending", "split.processing",
+	// "split.success", "unmapped_event", "verify.cancelled", "verify.error",
+	// "verify.pending", "verify.running", "verify.success".
 	WebhookEvents []string `json:"webhook_events,omitzero"`
 	// Custom HTTP headers sent with each webhook request (e.g. auth tokens)
 	WebhookHeaders map[string]string `json:"webhook_headers,omitzero"`
@@ -1288,6 +1312,10 @@ type ExtractListParams struct {
 	ProjectID param.Opt[string] `query:"project_id,omitzero" format:"uuid" json:"-"`
 	// Filter by specific job IDs
 	JobIDs []string `query:"job_ids,omitzero" json:"-"`
+	// Filter by review status; none is a job without a review
+	//
+	// Any of "approved", "none", "pending", "rejected".
+	ReviewStatus ExtractListParamsReviewStatus `query:"review_status,omitzero" json:"-"`
 	// Filter by status
 	//
 	// Any of "CANCELLED", "COMPLETED", "FAILED", "PENDING", "RUNNING", "THROTTLED".
@@ -1304,6 +1332,16 @@ func (r ExtractListParams) URLQuery() (v url.Values, err error) {
 		NestedFormat: apiquery.NestedQueryFormatBrackets,
 	})
 }
+
+// Filter by review status; none is a job without a review
+type ExtractListParamsReviewStatus string
+
+const (
+	ExtractListParamsReviewStatusApproved ExtractListParamsReviewStatus = "approved"
+	ExtractListParamsReviewStatusNone     ExtractListParamsReviewStatus = "none"
+	ExtractListParamsReviewStatusPending  ExtractListParamsReviewStatus = "pending"
+	ExtractListParamsReviewStatusRejected ExtractListParamsReviewStatus = "rejected"
+)
 
 // Filter by status
 type ExtractListParamsStatus string
