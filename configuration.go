@@ -2030,11 +2030,8 @@ type ParseV2ParametersProcessingOptionsAutoModeConfigurationResp struct {
 	LayoutElementInPage string `json:"layout_element_in_page" api:"nullable"`
 	// Confidence threshold for layout element detection
 	LayoutElementInPageConfidenceThreshold ParseV2ParametersProcessingOptionsAutoModeConfigurationLayoutElementInPageConfidenceThresholdUnionResp `json:"layout_element_in_page_confidence_threshold" api:"nullable"`
-	// All levels trigger when at least 50% of grounded words inside detected table
-	// regions lack table-cell grounding, regardless of word count. Pages with at least
-	// 100 source words also trigger by level: low: table warnings or at least 50% OCR
-	// words. medium: at least 3 table concerns or missed tables. high: medium plus at
-	// least 2 detected tables.
+	// Minimum page complexity that sends a page to the escalation tier. Lower levels
+	// escalate more pages: low escalates the most, high only the most complex pages.
 	//
 	// Any of "high", "low", "medium".
 	MinComplexity string `json:"min_complexity" api:"nullable"`
@@ -3865,11 +3862,8 @@ type ParseV2ParametersProcessingOptionsAutoModeConfiguration struct {
 	FullPageImageInPageThreshold ParseV2ParametersProcessingOptionsAutoModeConfigurationFullPageImageInPageThresholdUnion `json:"full_page_image_in_page_threshold,omitzero"`
 	// Confidence threshold for layout element detection
 	LayoutElementInPageConfidenceThreshold ParseV2ParametersProcessingOptionsAutoModeConfigurationLayoutElementInPageConfidenceThresholdUnion `json:"layout_element_in_page_confidence_threshold,omitzero"`
-	// All levels trigger when at least 50% of grounded words inside detected table
-	// regions lack table-cell grounding, regardless of word count. Pages with at least
-	// 100 source words also trigger by level: low: table warnings or at least 50% OCR
-	// words. medium: at least 3 table concerns or missed tables. high: medium plus at
-	// least 2 detected tables.
+	// Minimum page complexity that sends a page to the escalation tier. Lower levels
+	// escalate more pages: low escalates the most, high only the most complex pages.
 	//
 	// Any of "high", "low", "medium".
 	MinComplexity string `json:"min_complexity,omitzero"`
