@@ -177,6 +177,8 @@ type SplitNewResponse struct {
 	TransactionID string `json:"transaction_id" api:"nullable"`
 	// Update datetime
 	UpdatedAt time.Time `json:"updated_at" api:"nullable" format:"date-time"`
+	// Advisory findings about the categories this job uses; empty when none.
+	Warnings []SplitNewResponseWarning `json:"warnings"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		ID                respjson.Field
@@ -197,6 +199,7 @@ type SplitNewResponse struct {
 		TargetPages       respjson.Field
 		TransactionID     respjson.Field
 		UpdatedAt         respjson.Field
+		Warnings          respjson.Field
 		ExtraFields       map[string]respjson.Field
 		raw               string
 	} `json:"-"`
@@ -247,6 +250,33 @@ func (r *SplitNewResponseSplittingStrategy) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
+// Advisory finding about split categories; the job still runs.
+type SplitNewResponseWarning struct {
+	// Names of the categories the warning concerns.
+	CategoryNames []string `json:"category_names" api:"required"`
+	// Rule that produced the warning.
+	//
+	// Any of "catch_all_category", "missing_description",
+	// "near_duplicate_description", "near_duplicate_name".
+	Code string `json:"code" api:"required"`
+	// What is ambiguous and how to fix it.
+	Message string `json:"message" api:"required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		CategoryNames respjson.Field
+		Code          respjson.Field
+		Message       respjson.Field
+		ExtraFields   map[string]respjson.Field
+		raw           string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r SplitNewResponseWarning) RawJSON() string { return r.JSON.raw }
+func (r *SplitNewResponseWarning) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
 // A split job.
 type SplitListResponse struct {
 	// Unique identifier for the split job.
@@ -288,6 +318,8 @@ type SplitListResponse struct {
 	TransactionID string `json:"transaction_id" api:"nullable"`
 	// Update datetime
 	UpdatedAt time.Time `json:"updated_at" api:"nullable" format:"date-time"`
+	// Advisory findings about the categories this job uses; empty when none.
+	Warnings []SplitListResponseWarning `json:"warnings"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		ID                respjson.Field
@@ -308,6 +340,7 @@ type SplitListResponse struct {
 		TargetPages       respjson.Field
 		TransactionID     respjson.Field
 		UpdatedAt         respjson.Field
+		Warnings          respjson.Field
 		ExtraFields       map[string]respjson.Field
 		raw               string
 	} `json:"-"`
@@ -358,6 +391,33 @@ func (r *SplitListResponseSplittingStrategy) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
+// Advisory finding about split categories; the job still runs.
+type SplitListResponseWarning struct {
+	// Names of the categories the warning concerns.
+	CategoryNames []string `json:"category_names" api:"required"`
+	// Rule that produced the warning.
+	//
+	// Any of "catch_all_category", "missing_description",
+	// "near_duplicate_description", "near_duplicate_name".
+	Code string `json:"code" api:"required"`
+	// What is ambiguous and how to fix it.
+	Message string `json:"message" api:"required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		CategoryNames respjson.Field
+		Code          respjson.Field
+		Message       respjson.Field
+		ExtraFields   map[string]respjson.Field
+		raw           string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r SplitListResponseWarning) RawJSON() string { return r.JSON.raw }
+func (r *SplitListResponseWarning) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
 type SplitDeleteResponse = any
 
 // A split job.
@@ -401,6 +461,8 @@ type SplitCancelResponse struct {
 	TransactionID string `json:"transaction_id" api:"nullable"`
 	// Update datetime
 	UpdatedAt time.Time `json:"updated_at" api:"nullable" format:"date-time"`
+	// Advisory findings about the categories this job uses; empty when none.
+	Warnings []SplitCancelResponseWarning `json:"warnings"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		ID                respjson.Field
@@ -421,6 +483,7 @@ type SplitCancelResponse struct {
 		TargetPages       respjson.Field
 		TransactionID     respjson.Field
 		UpdatedAt         respjson.Field
+		Warnings          respjson.Field
 		ExtraFields       map[string]respjson.Field
 		raw               string
 	} `json:"-"`
@@ -471,6 +534,33 @@ func (r *SplitCancelResponseSplittingStrategy) UnmarshalJSON(data []byte) error 
 	return apijson.UnmarshalRoot(data, r)
 }
 
+// Advisory finding about split categories; the job still runs.
+type SplitCancelResponseWarning struct {
+	// Names of the categories the warning concerns.
+	CategoryNames []string `json:"category_names" api:"required"`
+	// Rule that produced the warning.
+	//
+	// Any of "catch_all_category", "missing_description",
+	// "near_duplicate_description", "near_duplicate_name".
+	Code string `json:"code" api:"required"`
+	// What is ambiguous and how to fix it.
+	Message string `json:"message" api:"required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		CategoryNames respjson.Field
+		Code          respjson.Field
+		Message       respjson.Field
+		ExtraFields   map[string]respjson.Field
+		raw           string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r SplitCancelResponseWarning) RawJSON() string { return r.JSON.raw }
+func (r *SplitCancelResponseWarning) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
 // A split job.
 type SplitGetResponse struct {
 	// Unique identifier for the split job.
@@ -512,6 +602,8 @@ type SplitGetResponse struct {
 	TransactionID string `json:"transaction_id" api:"nullable"`
 	// Update datetime
 	UpdatedAt time.Time `json:"updated_at" api:"nullable" format:"date-time"`
+	// Advisory findings about the categories this job uses; empty when none.
+	Warnings []SplitGetResponseWarning `json:"warnings"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		ID                respjson.Field
@@ -532,6 +624,7 @@ type SplitGetResponse struct {
 		TargetPages       respjson.Field
 		TransactionID     respjson.Field
 		UpdatedAt         respjson.Field
+		Warnings          respjson.Field
 		ExtraFields       map[string]respjson.Field
 		raw               string
 	} `json:"-"`
@@ -579,6 +672,33 @@ type SplitGetResponseSplittingStrategy struct {
 // Returns the unmodified JSON received from the API
 func (r SplitGetResponseSplittingStrategy) RawJSON() string { return r.JSON.raw }
 func (r *SplitGetResponseSplittingStrategy) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Advisory finding about split categories; the job still runs.
+type SplitGetResponseWarning struct {
+	// Names of the categories the warning concerns.
+	CategoryNames []string `json:"category_names" api:"required"`
+	// Rule that produced the warning.
+	//
+	// Any of "catch_all_category", "missing_description",
+	// "near_duplicate_description", "near_duplicate_name".
+	Code string `json:"code" api:"required"`
+	// What is ambiguous and how to fix it.
+	Message string `json:"message" api:"required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		CategoryNames respjson.Field
+		Code          respjson.Field
+		Message       respjson.Field
+		ExtraFields   map[string]respjson.Field
+		raw           string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r SplitGetResponseWarning) RawJSON() string { return r.JSON.raw }
+func (r *SplitGetResponseWarning) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
