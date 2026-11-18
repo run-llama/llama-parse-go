@@ -406,7 +406,8 @@ func (r BetaSplitNewParams) URLQuery() (v url.Values, err error) {
 //
 // The property Categories is required.
 type BetaSplitNewParamsConfiguration struct {
-	// Categories to split documents into.
+	// Categories to split documents into. Names must be unique; 'uncategorized' is
+	// reserved unless allow_uncategorized is 'forbid'.
 	Categories []SplitCategoryParam `json:"categories,omitzero" api:"required"`
 	// Split version to run. Omit for the current release. Preview versions are
 	// selectable by name and never resolved automatically.

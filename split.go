@@ -741,7 +741,8 @@ func (r SplitNewParams) URLQuery() (v url.Values, err error) {
 //
 // The property Categories is required.
 type SplitNewParamsConfiguration struct {
-	// Categories to split documents into.
+	// Categories to split documents into. Names must be unique; 'uncategorized' is
+	// reserved unless allow_uncategorized is 'forbid'.
 	Categories []SplitCategoryParam `json:"categories,omitzero" api:"required"`
 	// Saved parse configuration ID to control how the document is parsed before
 	// splitting. Takes precedence over parse_tier. Configurations that restrict pages

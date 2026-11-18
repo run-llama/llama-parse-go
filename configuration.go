@@ -4522,7 +4522,8 @@ func init() {
 
 // Typed parameters for a _split v1_ product configuration.
 type SplitV1ParametersResp struct {
-	// Categories to split documents into.
+	// Categories to split documents into. Names must be unique; 'uncategorized' is
+	// reserved unless allow_uncategorized is 'forbid'.
 	Categories []SplitCategory `json:"categories" api:"required"`
 	// Product type.
 	ProductType constant.SplitV1 `json:"product_type" default:"split_v1"`
@@ -4620,7 +4621,8 @@ func (r *SplitV1ParametersSplittingStrategyResp) UnmarshalJSON(data []byte) erro
 //
 // The properties Categories, ProductType are required.
 type SplitV1Parameters struct {
-	// Categories to split documents into.
+	// Categories to split documents into. Names must be unique; 'uncategorized' is
+	// reserved unless allow_uncategorized is 'forbid'.
 	Categories []SplitCategoryParam `json:"categories,omitzero" api:"required"`
 	// Saved parse configuration ID to control how the document is parsed before
 	// splitting. Takes precedence over parse_tier. Configurations that restrict pages
