@@ -209,7 +209,9 @@ type SplitSegmentResponse struct {
 	Category string `json:"category" api:"required"`
 	// Categorical confidence level. Valid values are: high, medium, low.
 	ConfidenceCategory string `json:"confidence_category" api:"required"`
-	// Page numbers in this segment, as numbered by the input document.
+	// Page numbers in this segment, as numbered by the input document. For PPTX,
+	// hidden slides are skipped unless the parse config or parse job sets
+	// `input_options.presentation.include_hidden_slides`.
 	Pages []int64 `json:"pages" api:"required"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
