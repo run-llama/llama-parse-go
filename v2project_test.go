@@ -29,7 +29,7 @@ func TestV2ProjectListWithOptionalParams(t *testing.T) {
 	_, err := client.V2Projects.List(context.TODO(), llamacloud.V2ProjectListParams{
 		Name:           llamacloud.String("name"),
 		OrganizationID: llamacloud.String("organization_id"),
-		PageSize:       llamacloud.Int(0),
+		PageSize:       llamacloud.Int(1),
 		PageToken:      llamacloud.String("page_token"),
 	})
 	if err != nil {

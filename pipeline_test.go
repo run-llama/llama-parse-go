@@ -646,7 +646,7 @@ func TestPipelineListPaginatedWithOptionalParams(t *testing.T) {
 	_, err := client.Pipelines.ListPaginated(context.TODO(), llamacloud.PipelineListPaginatedParams{
 		Name:           llamacloud.String("name"),
 		OrganizationID: llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		PageSize:       llamacloud.Int(0),
+		PageSize:       llamacloud.Int(1),
 		PageToken:      llamacloud.String("page_token"),
 		PipelineType:   llamacloud.PipelineListPaginatedParamsPipelineTypeManaged,
 		ProjectID:      llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),

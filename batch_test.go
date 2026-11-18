@@ -74,7 +74,7 @@ func TestBatchListWithOptionalParams(t *testing.T) {
 		CreatedAtOnOrAfter:  llamacloud.Time(time.Now()),
 		CreatedAtOnOrBefore: llamacloud.Time(time.Now()),
 		OrganizationID:      llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		PageSize:            llamacloud.Int(0),
+		PageSize:            llamacloud.Int(1),
 		PageToken:           llamacloud.String("page_token"),
 		ProjectID:           llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 		SourceDirectoryID:   llamacloud.String("source_directory_id"),
