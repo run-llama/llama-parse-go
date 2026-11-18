@@ -172,6 +172,8 @@ type FileNewResponse struct {
 	ExpiresAt time.Time `json:"expires_at" api:"nullable" format:"date-time"`
 	// Optional ID for correlating with an external system
 	ExternalFileID string `json:"external_file_id" api:"nullable"`
+	// Recorded file size in bytes. Null means no size was recorded.
+	FileSize int64 `json:"file_size" api:"nullable"`
 	// File extension (pdf, docx, png, etc.)
 	FileType string `json:"file_type" api:"nullable"`
 	// When the file was last modified (ISO 8601)
@@ -187,6 +189,7 @@ type FileNewResponse struct {
 		DownloadURL    respjson.Field
 		ExpiresAt      respjson.Field
 		ExternalFileID respjson.Field
+		FileSize       respjson.Field
 		FileType       respjson.Field
 		LastModifiedAt respjson.Field
 		Purpose        respjson.Field
@@ -216,6 +219,8 @@ type FileGetResponse struct {
 	ExpiresAt time.Time `json:"expires_at" api:"nullable" format:"date-time"`
 	// Optional ID for correlating with an external system
 	ExternalFileID string `json:"external_file_id" api:"nullable"`
+	// Recorded file size in bytes. Null means no size was recorded.
+	FileSize int64 `json:"file_size" api:"nullable"`
 	// File extension (pdf, docx, png, etc.)
 	FileType string `json:"file_type" api:"nullable"`
 	// When the file was last modified (ISO 8601)
@@ -231,6 +236,7 @@ type FileGetResponse struct {
 		DownloadURL    respjson.Field
 		ExpiresAt      respjson.Field
 		ExternalFileID respjson.Field
+		FileSize       respjson.Field
 		FileType       respjson.Field
 		LastModifiedAt respjson.Field
 		Purpose        respjson.Field
@@ -260,6 +266,8 @@ type FileListResponse struct {
 	ExpiresAt time.Time `json:"expires_at" api:"nullable" format:"date-time"`
 	// Optional ID for correlating with an external system
 	ExternalFileID string `json:"external_file_id" api:"nullable"`
+	// Recorded file size in bytes. Null means no size was recorded.
+	FileSize int64 `json:"file_size" api:"nullable"`
 	// File extension (pdf, docx, png, etc.)
 	FileType string `json:"file_type" api:"nullable"`
 	// When the file was last modified (ISO 8601)
@@ -275,6 +283,7 @@ type FileListResponse struct {
 		DownloadURL    respjson.Field
 		ExpiresAt      respjson.Field
 		ExternalFileID respjson.Field
+		FileSize       respjson.Field
 		FileType       respjson.Field
 		LastModifiedAt respjson.Field
 		Purpose        respjson.Field
@@ -331,6 +340,8 @@ type FileQueryResponseItem struct {
 	ExpiresAt time.Time `json:"expires_at" api:"nullable" format:"date-time"`
 	// Optional ID for correlating with an external system
 	ExternalFileID string `json:"external_file_id" api:"nullable"`
+	// Recorded file size in bytes. Null means no size was recorded.
+	FileSize int64 `json:"file_size" api:"nullable"`
 	// File extension (pdf, docx, png, etc.)
 	FileType string `json:"file_type" api:"nullable"`
 	// When the file was last modified (ISO 8601)
@@ -346,6 +357,7 @@ type FileQueryResponseItem struct {
 		DownloadURL    respjson.Field
 		ExpiresAt      respjson.Field
 		ExternalFileID respjson.Field
+		FileSize       respjson.Field
 		FileType       respjson.Field
 		LastModifiedAt respjson.Field
 		Purpose        respjson.Field
