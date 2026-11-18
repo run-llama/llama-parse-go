@@ -5902,9 +5902,11 @@ type ParsingNewParamsProcessingOptions struct {
 	// detected as forms, producing a structured tree of the form's sections, fields,
 	// and fillable grids. Retrieve the result with expand=forms. 'default' (the
 	// default) applies standard parsing with no extra pass. Not available on the fast
-	// tier
+	// tier. 'enrich_pro' reads forms with higher accuracy than 'enrich' and returns
+	// the same expand=forms tree; it is available on tier='agentic_plus' with version
+	// 'latest' or 2026-11-17 or later
 	//
-	// Any of "default", "enrich".
+	// Any of "default", "enrich", "enrich_pro".
 	Forms string `json:"forms,omitzero"`
 	// Enable AI-powered chart analysis. Modes: 'efficient' (fast, lower cost),
 	// 'agentic' (balanced), 'agentic_plus' (highest accuracy). Automatically enables
@@ -5932,7 +5934,7 @@ func init() {
 		"confidence_score_effort", "high",
 	)
 	apijson.RegisterFieldValidator[ParsingNewParamsProcessingOptions](
-		"forms", "default", "enrich",
+		"forms", "default", "enrich", "enrich_pro",
 	)
 	apijson.RegisterFieldValidator[ParsingNewParamsProcessingOptions](
 		"specialized_chart_parsing", "agentic", "agentic_plus", "efficient",
