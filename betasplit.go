@@ -242,6 +242,8 @@ type BetaSplitNewResponse struct {
 	Status string `json:"status" api:"required"`
 	// User ID who created this job.
 	UserID string `json:"user_id" api:"required"`
+	// Split version used for this job.
+	Version string `json:"version" api:"required"`
 	// Split configuration ID used for this job.
 	ConfigurationID string `json:"configuration_id" api:"nullable"`
 	// Creation datetime
@@ -260,6 +262,7 @@ type BetaSplitNewResponse struct {
 		ProjectID       respjson.Field
 		Status          respjson.Field
 		UserID          respjson.Field
+		Version         respjson.Field
 		ConfigurationID respjson.Field
 		CreatedAt       respjson.Field
 		ErrorMessage    respjson.Field
@@ -291,6 +294,8 @@ type BetaSplitListResponse struct {
 	Status string `json:"status" api:"required"`
 	// User ID who created this job.
 	UserID string `json:"user_id" api:"required"`
+	// Split version used for this job.
+	Version string `json:"version" api:"required"`
 	// Split configuration ID used for this job.
 	ConfigurationID string `json:"configuration_id" api:"nullable"`
 	// Creation datetime
@@ -309,6 +314,7 @@ type BetaSplitListResponse struct {
 		ProjectID       respjson.Field
 		Status          respjson.Field
 		UserID          respjson.Field
+		Version         respjson.Field
 		ConfigurationID respjson.Field
 		CreatedAt       respjson.Field
 		ErrorMessage    respjson.Field
@@ -340,6 +346,8 @@ type BetaSplitGetResponse struct {
 	Status string `json:"status" api:"required"`
 	// User ID who created this job.
 	UserID string `json:"user_id" api:"required"`
+	// Split version used for this job.
+	Version string `json:"version" api:"required"`
 	// Split configuration ID used for this job.
 	ConfigurationID string `json:"configuration_id" api:"nullable"`
 	// Creation datetime
@@ -358,6 +366,7 @@ type BetaSplitGetResponse struct {
 		ProjectID       respjson.Field
 		Status          respjson.Field
 		UserID          respjson.Field
+		Version         respjson.Field
 		ConfigurationID respjson.Field
 		CreatedAt       respjson.Field
 		ErrorMessage    respjson.Field
