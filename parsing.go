@@ -771,13 +771,14 @@ type FormField struct {
 	// Printed field caption, if any
 	Label string `json:"label" api:"nullable"`
 	// `[start, end)` UTF-8 byte offsets of the field's printed caption (a table cell's
-	// column header) in its page's `markdown` string (forms=enrich_pro only). Absent
-	// when it has no place in the markdown
+	// column header) in its page's `markdown` string, on some Agentic Plus jobs from
+	// version 2026-11-19. Absent on other jobs and when it has no place in the
+	// markdown
 	LabelMarkdownSpan []any `json:"label_markdown_span" api:"nullable"`
 	// `[start, end)` UTF-8 byte offsets of the field's value in its page's `markdown`
-	// string (forms=enrich_pro only). A checkbox covers its `[x]` or `[ ]`, and a
-	// blank table cell covers the whole cell. Absent when the value has no place in
-	// the markdown
+	// string, on some Agentic Plus jobs from version 2026-11-19. A checkbox covers its
+	// `[x]` or `[ ]`, and a blank table cell covers the whole cell. Absent on other
+	// jobs and when the value has no place in the markdown
 	MarkdownSpan []any `json:"markdown_span" api:"nullable"`
 	// Form field node
 	//
@@ -1595,8 +1596,8 @@ type FormSection struct {
 	// Printed section heading, if any
 	Label string `json:"label" api:"nullable"`
 	// `[start, end)` UTF-8 byte offsets of the section heading in its page's
-	// `markdown` string (forms=enrich_pro only). Absent when it has no place in the
-	// markdown
+	// `markdown` string, on some Agentic Plus jobs from version 2026-11-19. Absent on
+	// other jobs and when it has no place in the markdown
 	MarkdownSpan []any `json:"markdown_span" api:"nullable"`
 	// Form section node
 	//
@@ -2157,7 +2158,8 @@ type FormTable struct {
 	// Printed table caption, if any
 	Label string `json:"label" api:"nullable"`
 	// `[start, end)` UTF-8 byte offsets of the table caption in its page's `markdown`
-	// string (forms=enrich_pro only). Absent when it has no place in the markdown
+	// string, on some Agentic Plus jobs from version 2026-11-19. Absent on other jobs
+	// and when it has no place in the markdown
 	MarkdownSpan []any `json:"markdown_span" api:"nullable"`
 	// Form table node
 	//
@@ -5938,11 +5940,9 @@ type ParsingNewParamsProcessingOptions struct {
 	// detected as forms, producing a structured tree of the form's sections, fields,
 	// and fillable grids. Retrieve the result with expand=forms. 'default' (the
 	// default) applies standard parsing with no extra pass. Not available on the fast
-	// tier. 'enrich_pro' reads forms with higher accuracy than 'enrich' and returns
-	// the same expand=forms tree; it is available on tier='agentic_plus' with version
-	// 'latest' or 2026-11-17 or later
+	// tier
 	//
-	// Any of "default", "enrich", "enrich_pro".
+	// Any of "default", "enrich".
 	Forms string `json:"forms,omitzero"`
 	// Enable AI-powered chart analysis. Modes: 'efficient' (fast, lower cost),
 	// 'agentic' (balanced), 'agentic_plus' (highest accuracy). Automatically enables
@@ -5970,7 +5970,7 @@ func init() {
 		"confidence_score_effort", "high",
 	)
 	apijson.RegisterFieldValidator[ParsingNewParamsProcessingOptions](
-		"forms", "default", "enrich", "enrich_pro",
+		"forms", "default", "enrich",
 	)
 	apijson.RegisterFieldValidator[ParsingNewParamsProcessingOptions](
 		"specialized_chart_parsing", "agentic", "agentic_plus", "efficient",
