@@ -464,6 +464,9 @@ type FormJsonUnion struct {
 	// This field is from variant [FormField].
 	IsEmpty bool   `json:"isEmpty"`
 	Label   string `json:"label"`
+	// This field is from variant [FormField].
+	LabelMarkdownSpan []any `json:"label_markdown_span"`
+	MarkdownSpan      []any `json:"markdown_span"`
 	// Any of "field", "section", "table", "text".
 	Type string `json:"type"`
 	// This field is a union of [FormFieldValueUnion], [string]
@@ -479,20 +482,22 @@ type FormJsonUnion struct {
 	// This field is from variant [FormTable].
 	HTML string `json:"html"`
 	JSON struct {
-		Field      respjson.Field
-		ID         respjson.Field
-		Bbox       respjson.Field
-		Grounding  respjson.Field
-		IsEmpty    respjson.Field
-		Label      respjson.Field
-		Type       respjson.Field
-		Value      respjson.Field
-		ValueItems respjson.Field
-		Items      respjson.Field
-		Rows       respjson.Field
-		Columns    respjson.Field
-		HTML       respjson.Field
-		raw        string
+		Field             respjson.Field
+		ID                respjson.Field
+		Bbox              respjson.Field
+		Grounding         respjson.Field
+		IsEmpty           respjson.Field
+		Label             respjson.Field
+		LabelMarkdownSpan respjson.Field
+		MarkdownSpan      respjson.Field
+		Type              respjson.Field
+		Value             respjson.Field
+		ValueItems        respjson.Field
+		Items             respjson.Field
+		Rows              respjson.Field
+		Columns           respjson.Field
+		HTML              respjson.Field
+		raw               string
 	} `json:"-"`
 }
 
@@ -765,6 +770,15 @@ type FormField struct {
 	IsEmpty bool `json:"isEmpty" api:"nullable"`
 	// Printed field caption, if any
 	Label string `json:"label" api:"nullable"`
+	// `[start, end)` UTF-8 byte offsets of the field's printed caption (a table cell's
+	// column header) in its page's `markdown` string (forms=enrich_pro only). Absent
+	// when it has no place in the markdown
+	LabelMarkdownSpan []any `json:"label_markdown_span" api:"nullable"`
+	// `[start, end)` UTF-8 byte offsets of the field's value in its page's `markdown`
+	// string (forms=enrich_pro only). A checkbox covers its `[x]` or `[ ]`, and a
+	// blank table cell covers the whole cell. Absent when the value has no place in
+	// the markdown
+	MarkdownSpan []any `json:"markdown_span" api:"nullable"`
 	// Form field node
 	//
 	// Any of "field".
@@ -777,17 +791,19 @@ type FormField struct {
 	ValueItems []FormFieldValueItemUnion `json:"valueItems" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
-		Field       respjson.Field
-		ID          respjson.Field
-		Bbox        respjson.Field
-		Grounding   respjson.Field
-		IsEmpty     respjson.Field
-		Label       respjson.Field
-		Type        respjson.Field
-		Value       respjson.Field
-		ValueItems  respjson.Field
-		ExtraFields map[string]respjson.Field
-		raw         string
+		Field             respjson.Field
+		ID                respjson.Field
+		Bbox              respjson.Field
+		Grounding         respjson.Field
+		IsEmpty           respjson.Field
+		Label             respjson.Field
+		LabelMarkdownSpan respjson.Field
+		MarkdownSpan      respjson.Field
+		Type              respjson.Field
+		Value             respjson.Field
+		ValueItems        respjson.Field
+		ExtraFields       map[string]respjson.Field
+		raw               string
 	} `json:"-"`
 }
 
@@ -1170,6 +1186,9 @@ type FormFieldValueItemUnion struct {
 	// This field is from variant [FormField].
 	IsEmpty bool   `json:"isEmpty"`
 	Label   string `json:"label"`
+	// This field is from variant [FormField].
+	LabelMarkdownSpan []any `json:"label_markdown_span"`
+	MarkdownSpan      []any `json:"markdown_span"`
 	// Any of "field", "section", "table", "text".
 	Type string `json:"type"`
 	// This field is a union of [FormFieldValueUnion], [string]
@@ -1185,20 +1204,22 @@ type FormFieldValueItemUnion struct {
 	// This field is from variant [FormTable].
 	HTML string `json:"html"`
 	JSON struct {
-		Field      respjson.Field
-		ID         respjson.Field
-		Bbox       respjson.Field
-		Grounding  respjson.Field
-		IsEmpty    respjson.Field
-		Label      respjson.Field
-		Type       respjson.Field
-		Value      respjson.Field
-		ValueItems respjson.Field
-		Items      respjson.Field
-		Rows       respjson.Field
-		Columns    respjson.Field
-		HTML       respjson.Field
-		raw        string
+		Field             respjson.Field
+		ID                respjson.Field
+		Bbox              respjson.Field
+		Grounding         respjson.Field
+		IsEmpty           respjson.Field
+		Label             respjson.Field
+		LabelMarkdownSpan respjson.Field
+		MarkdownSpan      respjson.Field
+		Type              respjson.Field
+		Value             respjson.Field
+		ValueItems        respjson.Field
+		Items             respjson.Field
+		Rows              respjson.Field
+		Columns           respjson.Field
+		HTML              respjson.Field
+		raw               string
 	} `json:"-"`
 }
 
@@ -1573,19 +1594,24 @@ type FormSection struct {
 	Grounding FormSectionGrounding `json:"grounding" api:"nullable"`
 	// Printed section heading, if any
 	Label string `json:"label" api:"nullable"`
+	// `[start, end)` UTF-8 byte offsets of the section heading in its page's
+	// `markdown` string (forms=enrich_pro only). Absent when it has no place in the
+	// markdown
+	MarkdownSpan []any `json:"markdown_span" api:"nullable"`
 	// Form section node
 	//
 	// Any of "section".
 	Type FormSectionType `json:"type"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
-		Items       respjson.Field
-		ID          respjson.Field
-		Grounding   respjson.Field
-		Label       respjson.Field
-		Type        respjson.Field
-		ExtraFields map[string]respjson.Field
-		raw         string
+		Items        respjson.Field
+		ID           respjson.Field
+		Grounding    respjson.Field
+		Label        respjson.Field
+		MarkdownSpan respjson.Field
+		Type         respjson.Field
+		ExtraFields  map[string]respjson.Field
+		raw          string
 	} `json:"-"`
 }
 
@@ -1612,6 +1638,9 @@ type FormSectionItemUnion struct {
 	// This field is from variant [FormField].
 	IsEmpty bool   `json:"isEmpty"`
 	Label   string `json:"label"`
+	// This field is from variant [FormField].
+	LabelMarkdownSpan []any `json:"label_markdown_span"`
+	MarkdownSpan      []any `json:"markdown_span"`
 	// Any of "field", "section", "table", "text".
 	Type string `json:"type"`
 	// This field is a union of [FormFieldValueUnion], [string]
@@ -1627,20 +1656,22 @@ type FormSectionItemUnion struct {
 	// This field is from variant [FormTable].
 	HTML string `json:"html"`
 	JSON struct {
-		Field      respjson.Field
-		ID         respjson.Field
-		Bbox       respjson.Field
-		Grounding  respjson.Field
-		IsEmpty    respjson.Field
-		Label      respjson.Field
-		Type       respjson.Field
-		Value      respjson.Field
-		ValueItems respjson.Field
-		Items      respjson.Field
-		Rows       respjson.Field
-		Columns    respjson.Field
-		HTML       respjson.Field
-		raw        string
+		Field             respjson.Field
+		ID                respjson.Field
+		Bbox              respjson.Field
+		Grounding         respjson.Field
+		IsEmpty           respjson.Field
+		Label             respjson.Field
+		LabelMarkdownSpan respjson.Field
+		MarkdownSpan      respjson.Field
+		Type              respjson.Field
+		Value             respjson.Field
+		ValueItems        respjson.Field
+		Items             respjson.Field
+		Rows              respjson.Field
+		Columns           respjson.Field
+		HTML              respjson.Field
+		raw               string
 	} `json:"-"`
 }
 
@@ -2125,22 +2156,26 @@ type FormTable struct {
 	HTML string `json:"html" api:"nullable"`
 	// Printed table caption, if any
 	Label string `json:"label" api:"nullable"`
+	// `[start, end)` UTF-8 byte offsets of the table caption in its page's `markdown`
+	// string (forms=enrich_pro only). Absent when it has no place in the markdown
+	MarkdownSpan []any `json:"markdown_span" api:"nullable"`
 	// Form table node
 	//
 	// Any of "table".
 	Type FormTableType `json:"type"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
-		Rows        respjson.Field
-		ID          respjson.Field
-		Bbox        respjson.Field
-		Columns     respjson.Field
-		Grounding   respjson.Field
-		HTML        respjson.Field
-		Label       respjson.Field
-		Type        respjson.Field
-		ExtraFields map[string]respjson.Field
-		raw         string
+		Rows         respjson.Field
+		ID           respjson.Field
+		Bbox         respjson.Field
+		Columns      respjson.Field
+		Grounding    respjson.Field
+		HTML         respjson.Field
+		Label        respjson.Field
+		MarkdownSpan respjson.Field
+		Type         respjson.Field
+		ExtraFields  map[string]respjson.Field
+		raw          string
 	} `json:"-"`
 }
 
@@ -2622,6 +2657,9 @@ type FormTableCellItemsItemUnion struct {
 	// This field is from variant [FormField].
 	IsEmpty bool   `json:"isEmpty"`
 	Label   string `json:"label"`
+	// This field is from variant [FormField].
+	LabelMarkdownSpan []any `json:"label_markdown_span"`
+	MarkdownSpan      []any `json:"markdown_span"`
 	// Any of "field", "section", "table", "text".
 	Type string `json:"type"`
 	// This field is a union of [FormFieldValueUnion], [string]
@@ -2637,20 +2675,22 @@ type FormTableCellItemsItemUnion struct {
 	// This field is from variant [FormTable].
 	HTML string `json:"html"`
 	JSON struct {
-		Field      respjson.Field
-		ID         respjson.Field
-		Bbox       respjson.Field
-		Grounding  respjson.Field
-		IsEmpty    respjson.Field
-		Label      respjson.Field
-		Type       respjson.Field
-		Value      respjson.Field
-		ValueItems respjson.Field
-		Items      respjson.Field
-		Rows       respjson.Field
-		Columns    respjson.Field
-		HTML       respjson.Field
-		raw        string
+		Field             respjson.Field
+		ID                respjson.Field
+		Bbox              respjson.Field
+		Grounding         respjson.Field
+		IsEmpty           respjson.Field
+		Label             respjson.Field
+		LabelMarkdownSpan respjson.Field
+		MarkdownSpan      respjson.Field
+		Type              respjson.Field
+		Value             respjson.Field
+		ValueItems        respjson.Field
+		Items             respjson.Field
+		Rows              respjson.Field
+		Columns           respjson.Field
+		HTML              respjson.Field
+		raw               string
 	} `json:"-"`
 }
 
@@ -5272,17 +5312,17 @@ type ParsingListVersionsResponse struct {
 	Agentic []string `json:"agentic" api:"required"`
 	// Versions for the agentic_plus tier
 	//
-	// Any of "2026-11-18", "2026-11-17", "2026-11-16", "2026-11-11", "2026-11-10",
-	// "2026-11-07", "2026-11-02", "2026-10-28", "2026-10-26", "2026-10-20",
-	// "2026-09-28", "2026-09-24", "2026-09-11", "2026-08-19", "2026-07-08",
-	// "2026-06-18", "2026-06-11", "2026-06-04", "2026-06-01", "2026-05-26",
-	// "2026-05-21", "2026-05-20", "2026-05-19", "2026-05-11", "2026-05-06",
-	// "2026-05-04", "2026-05-01", "2026-04-27", "2026-04-19", "2026-04-14",
-	// "2026-04-09", "2026-04-02", "2026-03-31", "2026-03-26", "2026-03-25",
-	// "2026-03-22", "2026-03-20", "2026-03-17", "2026-03-12", "2026-03-10",
-	// "2026-03-09", "2026-03-02", "2026-02-26", "2026-02-24", "2026-01-30",
-	// "2026-01-29", "2026-01-24", "2026-01-22", "2026-01-21", "2026-01-16",
-	// "2025-12-31", "2025-12-18", "2025-12-11".
+	// Any of "2026-11-19", "2026-11-18", "2026-11-17", "2026-11-16", "2026-11-11",
+	// "2026-11-10", "2026-11-07", "2026-11-02", "2026-10-28", "2026-10-26",
+	// "2026-10-20", "2026-09-28", "2026-09-24", "2026-09-11", "2026-08-19",
+	// "2026-07-08", "2026-06-18", "2026-06-11", "2026-06-04", "2026-06-01",
+	// "2026-05-26", "2026-05-21", "2026-05-20", "2026-05-19", "2026-05-11",
+	// "2026-05-06", "2026-05-04", "2026-05-01", "2026-04-27", "2026-04-19",
+	// "2026-04-14", "2026-04-09", "2026-04-02", "2026-03-31", "2026-03-26",
+	// "2026-03-25", "2026-03-22", "2026-03-20", "2026-03-17", "2026-03-12",
+	// "2026-03-10", "2026-03-09", "2026-03-02", "2026-02-26", "2026-02-24",
+	// "2026-01-30", "2026-01-29", "2026-01-24", "2026-01-22", "2026-01-21",
+	// "2026-01-16", "2025-12-31", "2025-12-18", "2025-12-11".
 	AgenticPlus []string `json:"agentic_plus" api:"required"`
 	// Versions for the cost_effective tier
 	//
@@ -5355,7 +5395,7 @@ type ParsingNewParams struct {
 	// - `fast`: `2026-11-12`
 	// - `cost_effective`: `2026-11-09`
 	// - `agentic`: `2026-11-09`
-	// - `agentic_plus`: `2026-11-18`
+	// - `agentic_plus`: `2026-11-19`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
 	Version        ParsingNewParamsVersion `json:"version,omitzero" api:"required"`
@@ -5451,14 +5491,14 @@ const (
 // - `fast`: `2026-11-12`
 // - `cost_effective`: `2026-11-09`
 // - `agentic`: `2026-11-09`
-// - `agentic_plus`: `2026-11-18`
+// - `agentic_plus`: `2026-11-19`
 //
 // Full list: `GET /api/v2/parse/versions`.
 type ParsingNewParamsVersion string
 
 const (
 	ParsingNewParamsVersionLatest     ParsingNewParamsVersion = "latest"
-	ParsingNewParamsVersion2026_11_18 ParsingNewParamsVersion = "2026-11-18"
+	ParsingNewParamsVersion2026_11_19 ParsingNewParamsVersion = "2026-11-19"
 	ParsingNewParamsVersion2026_11_12 ParsingNewParamsVersion = "2026-11-12"
 	ParsingNewParamsVersion2026_11_09 ParsingNewParamsVersion = "2026-11-09"
 )
@@ -6084,7 +6124,7 @@ type ParsingNewParamsProcessingOptionsAutoModeConfigurationParsingConf struct {
 	// - `fast`: `2026-11-12`
 	// - `cost_effective`: `2026-11-09`
 	// - `agentic`: `2026-11-09`
-	// - `agentic_plus`: `2026-11-18`
+	// - `agentic_plus`: `2026-11-19`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
 	Version string `json:"version,omitzero"`
