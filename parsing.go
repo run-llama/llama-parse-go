@@ -607,8 +607,11 @@ type FormJsonUnionGroundingID struct {
 	// [[]FormSectionGroundingIDLine], [[]FormTableGroundingIDLine],
 	// [[]FormTextGroundingIDLine]
 	Lines FormJsonUnionGroundingIDLines `json:"lines"`
-	JSON  struct {
+	// This field is from variant [FormFieldGroundingID].
+	Bbox BBox `json:"bbox"`
+	JSON struct {
 		Lines respjson.Field
+		Bbox  respjson.Field
 		raw   string
 	} `json:"-"`
 }
@@ -651,8 +654,11 @@ type FormJsonUnionGroundingLabel struct {
 	// [[]FormSectionGroundingLabelLine], [[]FormTableGroundingLabelLine],
 	// [[]FormTextGroundingLabelLine]
 	Lines FormJsonUnionGroundingLabelLines `json:"lines"`
-	JSON  struct {
+	// This field is from variant [FormFieldGroundingLabel].
+	Bbox BBox `json:"bbox"`
+	JSON struct {
 		Lines respjson.Field
+		Bbox  respjson.Field
 		raw   string
 	} `json:"-"`
 }
@@ -694,8 +700,11 @@ type FormJsonUnionGroundingValue struct {
 	// This field is a union of [[]FormFieldGroundingValueLine],
 	// [[]FormTextGroundingValueLine]
 	Lines FormJsonUnionGroundingValueLines `json:"lines"`
-	JSON  struct {
+	// This field is from variant [FormFieldGroundingValue].
+	Bbox BBox `json:"bbox"`
+	JSON struct {
 		Lines respjson.Field
+		Bbox  respjson.Field
 		raw   string
 	} `json:"-"`
 }
@@ -860,9 +869,12 @@ type FormFieldGroundingID struct {
 	// Supported lines. Word requests include supported words; gaps are valid. Boxes
 	// use final page coordinates and optional local rotation r.
 	Lines []FormFieldGroundingIDLine `json:"lines" api:"required"`
+	// Bounding box with coordinates and optional metadata.
+	Bbox BBox `json:"bbox" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Lines       respjson.Field
+		Bbox        respjson.Field
 		ExtraFields map[string]respjson.Field
 		raw         string
 	} `json:"-"`
@@ -951,9 +963,12 @@ type FormFieldGroundingLabel struct {
 	// Supported lines. Word requests include supported words; gaps are valid. Boxes
 	// use final page coordinates and optional local rotation r.
 	Lines []FormFieldGroundingLabelLine `json:"lines" api:"required"`
+	// Bounding box with coordinates and optional metadata.
+	Bbox BBox `json:"bbox" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Lines       respjson.Field
+		Bbox        respjson.Field
 		ExtraFields map[string]respjson.Field
 		raw         string
 	} `json:"-"`
@@ -1042,9 +1057,12 @@ type FormFieldGroundingValue struct {
 	// Supported lines. Word requests include supported words; gaps are valid. Boxes
 	// use final page coordinates and optional local rotation r.
 	Lines []FormFieldGroundingValueLine `json:"lines" api:"required"`
+	// Bounding box with coordinates and optional metadata.
+	Bbox BBox `json:"bbox" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Lines       respjson.Field
+		Bbox        respjson.Field
 		ExtraFields map[string]respjson.Field
 		raw         string
 	} `json:"-"`
@@ -1331,8 +1349,11 @@ type FormFieldValueItemUnionGroundingID struct {
 	// [[]FormSectionGroundingIDLine], [[]FormTableGroundingIDLine],
 	// [[]FormTextGroundingIDLine]
 	Lines FormFieldValueItemUnionGroundingIDLines `json:"lines"`
-	JSON  struct {
+	// This field is from variant [FormFieldGroundingID].
+	Bbox BBox `json:"bbox"`
+	JSON struct {
 		Lines respjson.Field
+		Bbox  respjson.Field
 		raw   string
 	} `json:"-"`
 }
@@ -1375,8 +1396,11 @@ type FormFieldValueItemUnionGroundingLabel struct {
 	// [[]FormSectionGroundingLabelLine], [[]FormTableGroundingLabelLine],
 	// [[]FormTextGroundingLabelLine]
 	Lines FormFieldValueItemUnionGroundingLabelLines `json:"lines"`
-	JSON  struct {
+	// This field is from variant [FormFieldGroundingLabel].
+	Bbox BBox `json:"bbox"`
+	JSON struct {
 		Lines respjson.Field
+		Bbox  respjson.Field
 		raw   string
 	} `json:"-"`
 }
@@ -1418,8 +1442,11 @@ type FormFieldValueItemUnionGroundingValue struct {
 	// This field is a union of [[]FormFieldGroundingValueLine],
 	// [[]FormTextGroundingValueLine]
 	Lines FormFieldValueItemUnionGroundingValueLines `json:"lines"`
-	JSON  struct {
+	// This field is from variant [FormFieldGroundingValue].
+	Bbox BBox `json:"bbox"`
+	JSON struct {
 		Lines respjson.Field
+		Bbox  respjson.Field
 		raw   string
 	} `json:"-"`
 }
@@ -1782,8 +1809,11 @@ type FormSectionItemUnionGroundingID struct {
 	// [[]FormSectionGroundingIDLine], [[]FormTableGroundingIDLine],
 	// [[]FormTextGroundingIDLine]
 	Lines FormSectionItemUnionGroundingIDLines `json:"lines"`
-	JSON  struct {
+	// This field is from variant [FormFieldGroundingID].
+	Bbox BBox `json:"bbox"`
+	JSON struct {
 		Lines respjson.Field
+		Bbox  respjson.Field
 		raw   string
 	} `json:"-"`
 }
@@ -1826,8 +1856,11 @@ type FormSectionItemUnionGroundingLabel struct {
 	// [[]FormSectionGroundingLabelLine], [[]FormTableGroundingLabelLine],
 	// [[]FormTextGroundingLabelLine]
 	Lines FormSectionItemUnionGroundingLabelLines `json:"lines"`
-	JSON  struct {
+	// This field is from variant [FormFieldGroundingLabel].
+	Bbox BBox `json:"bbox"`
+	JSON struct {
 		Lines respjson.Field
+		Bbox  respjson.Field
 		raw   string
 	} `json:"-"`
 }
@@ -1869,8 +1902,11 @@ type FormSectionItemUnionGroundingValue struct {
 	// This field is a union of [[]FormFieldGroundingValueLine],
 	// [[]FormTextGroundingValueLine]
 	Lines FormSectionItemUnionGroundingValueLines `json:"lines"`
-	JSON  struct {
+	// This field is from variant [FormFieldGroundingValue].
+	Bbox BBox `json:"bbox"`
+	JSON struct {
 		Lines respjson.Field
+		Bbox  respjson.Field
 		raw   string
 	} `json:"-"`
 }
@@ -1956,9 +1992,12 @@ type FormSectionGroundingID struct {
 	// Supported lines. Word requests include supported words; gaps are valid. Boxes
 	// use final page coordinates and optional local rotation r.
 	Lines []FormSectionGroundingIDLine `json:"lines" api:"required"`
+	// Bounding box with coordinates and optional metadata.
+	Bbox BBox `json:"bbox" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Lines       respjson.Field
+		Bbox        respjson.Field
 		ExtraFields map[string]respjson.Field
 		raw         string
 	} `json:"-"`
@@ -2047,9 +2086,12 @@ type FormSectionGroundingLabel struct {
 	// Supported lines. Word requests include supported words; gaps are valid. Boxes
 	// use final page coordinates and optional local rotation r.
 	Lines []FormSectionGroundingLabelLine `json:"lines" api:"required"`
+	// Bounding box with coordinates and optional metadata.
+	Bbox BBox `json:"bbox" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Lines       respjson.Field
+		Bbox        respjson.Field
 		ExtraFields map[string]respjson.Field
 		raw         string
 	} `json:"-"`
@@ -2259,9 +2301,12 @@ type FormTableGroundingID struct {
 	// Supported lines. Word requests include supported words; gaps are valid. Boxes
 	// use final page coordinates and optional local rotation r.
 	Lines []FormTableGroundingIDLine `json:"lines" api:"required"`
+	// Bounding box with coordinates and optional metadata.
+	Bbox BBox `json:"bbox" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Lines       respjson.Field
+		Bbox        respjson.Field
 		ExtraFields map[string]respjson.Field
 		raw         string
 	} `json:"-"`
@@ -2350,9 +2395,12 @@ type FormTableGroundingColumn struct {
 	// Supported lines. Word requests include supported words; gaps are valid. Boxes
 	// use final page coordinates and optional local rotation r.
 	Lines []FormTableGroundingColumnLine `json:"lines" api:"required"`
+	// Bounding box with coordinates and optional metadata.
+	Bbox BBox `json:"bbox" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Lines       respjson.Field
+		Bbox        respjson.Field
 		ExtraFields map[string]respjson.Field
 		raw         string
 	} `json:"-"`
@@ -2441,9 +2489,12 @@ type FormTableGroundingLabel struct {
 	// Supported lines. Word requests include supported words; gaps are valid. Boxes
 	// use final page coordinates and optional local rotation r.
 	Lines []FormTableGroundingLabelLine `json:"lines" api:"required"`
+	// Bounding box with coordinates and optional metadata.
+	Bbox BBox `json:"bbox" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Lines       respjson.Field
+		Bbox        respjson.Field
 		ExtraFields map[string]respjson.Field
 		raw         string
 	} `json:"-"`
@@ -2532,9 +2583,12 @@ type FormTableGroundingRow struct {
 	// Supported lines. Word requests include supported words; gaps are valid. Boxes
 	// use final page coordinates and optional local rotation r.
 	Lines []FormTableGroundingRowLine `json:"lines" api:"required"`
+	// Bounding box with coordinates and optional metadata.
+	Bbox BBox `json:"bbox" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Lines       respjson.Field
+		Bbox        respjson.Field
 		ExtraFields map[string]respjson.Field
 		raw         string
 	} `json:"-"`
@@ -2803,8 +2857,11 @@ type FormTableCellItemsItemUnionGroundingID struct {
 	// [[]FormSectionGroundingIDLine], [[]FormTableGroundingIDLine],
 	// [[]FormTextGroundingIDLine]
 	Lines FormTableCellItemsItemUnionGroundingIDLines `json:"lines"`
-	JSON  struct {
+	// This field is from variant [FormFieldGroundingID].
+	Bbox BBox `json:"bbox"`
+	JSON struct {
 		Lines respjson.Field
+		Bbox  respjson.Field
 		raw   string
 	} `json:"-"`
 }
@@ -2847,8 +2904,11 @@ type FormTableCellItemsItemUnionGroundingLabel struct {
 	// [[]FormSectionGroundingLabelLine], [[]FormTableGroundingLabelLine],
 	// [[]FormTextGroundingLabelLine]
 	Lines FormTableCellItemsItemUnionGroundingLabelLines `json:"lines"`
-	JSON  struct {
+	// This field is from variant [FormFieldGroundingLabel].
+	Bbox BBox `json:"bbox"`
+	JSON struct {
 		Lines respjson.Field
+		Bbox  respjson.Field
 		raw   string
 	} `json:"-"`
 }
@@ -2890,8 +2950,11 @@ type FormTableCellItemsItemUnionGroundingValue struct {
 	// This field is a union of [[]FormFieldGroundingValueLine],
 	// [[]FormTextGroundingValueLine]
 	Lines FormTableCellItemsItemUnionGroundingValueLines `json:"lines"`
-	JSON  struct {
+	// This field is from variant [FormFieldGroundingValue].
+	Bbox BBox `json:"bbox"`
+	JSON struct {
 		Lines respjson.Field
+		Bbox  respjson.Field
 		raw   string
 	} `json:"-"`
 }
@@ -3014,9 +3077,12 @@ type FormTextGroundingID struct {
 	// Supported lines. Word requests include supported words; gaps are valid. Boxes
 	// use final page coordinates and optional local rotation r.
 	Lines []FormTextGroundingIDLine `json:"lines" api:"required"`
+	// Bounding box with coordinates and optional metadata.
+	Bbox BBox `json:"bbox" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Lines       respjson.Field
+		Bbox        respjson.Field
 		ExtraFields map[string]respjson.Field
 		raw         string
 	} `json:"-"`
@@ -3105,9 +3171,12 @@ type FormTextGroundingLabel struct {
 	// Supported lines. Word requests include supported words; gaps are valid. Boxes
 	// use final page coordinates and optional local rotation r.
 	Lines []FormTextGroundingLabelLine `json:"lines" api:"required"`
+	// Bounding box with coordinates and optional metadata.
+	Bbox BBox `json:"bbox" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Lines       respjson.Field
+		Bbox        respjson.Field
 		ExtraFields map[string]respjson.Field
 		raw         string
 	} `json:"-"`
@@ -3196,9 +3265,12 @@ type FormTextGroundingValue struct {
 	// Supported lines. Word requests include supported words; gaps are valid. Boxes
 	// use final page coordinates and optional local rotation r.
 	Lines []FormTextGroundingValueLine `json:"lines" api:"required"`
+	// Bounding box with coordinates and optional metadata.
+	Bbox BBox `json:"bbox" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Lines       respjson.Field
+		Bbox        respjson.Field
 		ExtraFields map[string]respjson.Field
 		raw         string
 	} `json:"-"`
