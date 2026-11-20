@@ -4597,11 +4597,18 @@ type SplitV1ParametersSplittingStrategyResp struct {
 	// Minimum pages per segment. Shorter segments are merged into an adjacent segment;
 	// 1 disables merging.
 	MinPagesPerSplit int64 `json:"min_pages_per_split"`
+	// Where a new segment starts: document at each new document, category wherever the
+	// category changes. Unset means document. category requires version 1.3.0 or
+	// later.
+	//
+	// Any of "category", "document".
+	SegmentBoundary string `json:"segment_boundary" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		AllowUncategorized respjson.Field
 		CustomInstructions respjson.Field
 		MinPagesPerSplit   respjson.Field
+		SegmentBoundary    respjson.Field
 		ExtraFields        map[string]respjson.Field
 		raw                string
 	} `json:"-"`
@@ -4662,6 +4669,12 @@ type SplitV1ParametersSplittingStrategy struct {
 	// Minimum pages per segment. Shorter segments are merged into an adjacent segment;
 	// 1 disables merging.
 	MinPagesPerSplit param.Opt[int64] `json:"min_pages_per_split,omitzero"`
+	// Where a new segment starts: document at each new document, category wherever the
+	// category changes. Unset means document. category requires version 1.3.0 or
+	// later.
+	//
+	// Any of "category", "document".
+	SegmentBoundary string `json:"segment_boundary,omitzero"`
 	// Controls handling of pages that don't match any category. 'include': pages can
 	// be grouped as 'uncategorized' and included in results. 'forbid': all pages must
 	// be assigned to a defined category. 'omit': pages can be classified as
@@ -4683,6 +4696,9 @@ func (r *SplitV1ParametersSplittingStrategy) UnmarshalJSON(data []byte) error {
 func init() {
 	apijson.RegisterFieldValidator[SplitV1ParametersSplittingStrategy](
 		"allow_uncategorized", "forbid", "include", "omit",
+	)
+	apijson.RegisterFieldValidator[SplitV1ParametersSplittingStrategy](
+		"segment_boundary", "category", "document",
 	)
 }
 

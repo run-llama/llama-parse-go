@@ -42,6 +42,7 @@ func TestSplitNewWithOptionalParams(t *testing.T) {
 				AllowUncategorized: "forbid",
 				CustomInstructions: llamacloud.String("Start a new segment at every signature page."),
 				MinPagesPerSplit:   llamacloud.Int(1),
+				SegmentBoundary:    "category",
 			},
 			TargetPages: llamacloud.String("1,3,5-7"),
 			Version:     llamacloud.String("latest"),
