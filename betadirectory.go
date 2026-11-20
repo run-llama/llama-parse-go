@@ -88,7 +88,8 @@ func (r *BetaDirectoryService) ListAutoPaging(ctx context.Context, query BetaDir
 	return pagination.NewPaginatedCursorAutoPager(r.List(ctx, query, opts...))
 }
 
-// Permanently delete a directory.
+// Permanently delete a directory, and the files in it that no other directory or
+// index uses.
 func (r *BetaDirectoryService) Delete(ctx context.Context, directoryID string, body BetaDirectoryDeleteParams, opts ...option.RequestOption) (err error) {
 	opts = slices.Concat(r.options, opts)
 	opts = append([]option.RequestOption{option.WithHeader("Accept", "*/*")}, opts...)

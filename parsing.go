@@ -464,6 +464,9 @@ type FormJsonUnion struct {
 	// This field is from variant [FormField].
 	IsEmpty bool   `json:"isEmpty"`
 	Label   string `json:"label"`
+	// This field is from variant [FormField].
+	LabelMarkdownSpan []any `json:"label_markdown_span"`
+	MarkdownSpan      []any `json:"markdown_span"`
 	// Any of "field", "section", "table", "text".
 	Type string `json:"type"`
 	// This field is a union of [FormFieldValueUnion], [string]
@@ -479,20 +482,22 @@ type FormJsonUnion struct {
 	// This field is from variant [FormTable].
 	HTML string `json:"html"`
 	JSON struct {
-		Field      respjson.Field
-		ID         respjson.Field
-		Bbox       respjson.Field
-		Grounding  respjson.Field
-		IsEmpty    respjson.Field
-		Label      respjson.Field
-		Type       respjson.Field
-		Value      respjson.Field
-		ValueItems respjson.Field
-		Items      respjson.Field
-		Rows       respjson.Field
-		Columns    respjson.Field
-		HTML       respjson.Field
-		raw        string
+		Field             respjson.Field
+		ID                respjson.Field
+		Bbox              respjson.Field
+		Grounding         respjson.Field
+		IsEmpty           respjson.Field
+		Label             respjson.Field
+		LabelMarkdownSpan respjson.Field
+		MarkdownSpan      respjson.Field
+		Type              respjson.Field
+		Value             respjson.Field
+		ValueItems        respjson.Field
+		Items             respjson.Field
+		Rows              respjson.Field
+		Columns           respjson.Field
+		HTML              respjson.Field
+		raw               string
 	} `json:"-"`
 }
 
@@ -602,8 +607,11 @@ type FormJsonUnionGroundingID struct {
 	// [[]FormSectionGroundingIDLine], [[]FormTableGroundingIDLine],
 	// [[]FormTextGroundingIDLine]
 	Lines FormJsonUnionGroundingIDLines `json:"lines"`
-	JSON  struct {
+	// This field is from variant [FormFieldGroundingID].
+	Bbox BBox `json:"bbox"`
+	JSON struct {
 		Lines respjson.Field
+		Bbox  respjson.Field
 		raw   string
 	} `json:"-"`
 }
@@ -646,8 +654,11 @@ type FormJsonUnionGroundingLabel struct {
 	// [[]FormSectionGroundingLabelLine], [[]FormTableGroundingLabelLine],
 	// [[]FormTextGroundingLabelLine]
 	Lines FormJsonUnionGroundingLabelLines `json:"lines"`
-	JSON  struct {
+	// This field is from variant [FormFieldGroundingLabel].
+	Bbox BBox `json:"bbox"`
+	JSON struct {
 		Lines respjson.Field
+		Bbox  respjson.Field
 		raw   string
 	} `json:"-"`
 }
@@ -689,8 +700,11 @@ type FormJsonUnionGroundingValue struct {
 	// This field is a union of [[]FormFieldGroundingValueLine],
 	// [[]FormTextGroundingValueLine]
 	Lines FormJsonUnionGroundingValueLines `json:"lines"`
-	JSON  struct {
+	// This field is from variant [FormFieldGroundingValue].
+	Bbox BBox `json:"bbox"`
+	JSON struct {
 		Lines respjson.Field
+		Bbox  respjson.Field
 		raw   string
 	} `json:"-"`
 }
@@ -765,6 +779,16 @@ type FormField struct {
 	IsEmpty bool `json:"isEmpty" api:"nullable"`
 	// Printed field caption, if any
 	Label string `json:"label" api:"nullable"`
+	// `[start, end)` UTF-8 byte offsets of the field's printed caption (a table cell's
+	// column header) in its page's `markdown` string, on some Agentic Plus jobs from
+	// version 2026-11-19. Absent on other jobs and when it has no place in the
+	// markdown
+	LabelMarkdownSpan []any `json:"label_markdown_span" api:"nullable"`
+	// `[start, end)` UTF-8 byte offsets of the field's value in its page's `markdown`
+	// string, on some Agentic Plus jobs from version 2026-11-19. A checkbox covers its
+	// `[x]` or `[ ]`, and a blank table cell covers the whole cell. Absent on other
+	// jobs and when the value has no place in the markdown
+	MarkdownSpan []any `json:"markdown_span" api:"nullable"`
 	// Form field node
 	//
 	// Any of "field".
@@ -777,17 +801,19 @@ type FormField struct {
 	ValueItems []FormFieldValueItemUnion `json:"valueItems" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
-		Field       respjson.Field
-		ID          respjson.Field
-		Bbox        respjson.Field
-		Grounding   respjson.Field
-		IsEmpty     respjson.Field
-		Label       respjson.Field
-		Type        respjson.Field
-		Value       respjson.Field
-		ValueItems  respjson.Field
-		ExtraFields map[string]respjson.Field
-		raw         string
+		Field             respjson.Field
+		ID                respjson.Field
+		Bbox              respjson.Field
+		Grounding         respjson.Field
+		IsEmpty           respjson.Field
+		Label             respjson.Field
+		LabelMarkdownSpan respjson.Field
+		MarkdownSpan      respjson.Field
+		Type              respjson.Field
+		Value             respjson.Field
+		ValueItems        respjson.Field
+		ExtraFields       map[string]respjson.Field
+		raw               string
 	} `json:"-"`
 }
 
@@ -843,9 +869,12 @@ type FormFieldGroundingID struct {
 	// Supported lines. Word requests include supported words; gaps are valid. Boxes
 	// use final page coordinates and optional local rotation r.
 	Lines []FormFieldGroundingIDLine `json:"lines" api:"required"`
+	// Bounding box with coordinates and optional metadata.
+	Bbox BBox `json:"bbox" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Lines       respjson.Field
+		Bbox        respjson.Field
 		ExtraFields map[string]respjson.Field
 		raw         string
 	} `json:"-"`
@@ -887,10 +916,15 @@ type FormFieldGroundingIDLineWord struct {
 	Bbox BBox `json:"bbox" api:"required"`
 	// `[start, end)` UTF-8 byte span in the complete source property string
 	Span []any `json:"span" api:"required"`
+	// Per-character grounding within the word, present when `granular_bboxes` includes
+	// 'char' (Agentic Plus only). Each box is an even split of the word box across the
+	// word's characters.
+	Chars []FormFieldGroundingIDLineWordChar `json:"chars" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Bbox        respjson.Field
 		Span        respjson.Field
+		Chars       respjson.Field
 		ExtraFields map[string]respjson.Field
 		raw         string
 	} `json:"-"`
@@ -902,15 +936,39 @@ func (r *FormFieldGroundingIDLineWord) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
+// One grounded character: a `[start, end)` span in the source text and its bbox.
+type FormFieldGroundingIDLineWordChar struct {
+	// Character bounding box
+	Bbox BBox `json:"bbox" api:"required"`
+	// `[start, end)` UTF-8 byte span in the complete source property string
+	Span []any `json:"span" api:"required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Bbox        respjson.Field
+		Span        respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r FormFieldGroundingIDLineWordChar) RawJSON() string { return r.JSON.raw }
+func (r *FormFieldGroundingIDLineWordChar) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
 // Supported text with half-open UTF-8 byte spans into the complete property
 // string.
 type FormFieldGroundingLabel struct {
 	// Supported lines. Word requests include supported words; gaps are valid. Boxes
 	// use final page coordinates and optional local rotation r.
 	Lines []FormFieldGroundingLabelLine `json:"lines" api:"required"`
+	// Bounding box with coordinates and optional metadata.
+	Bbox BBox `json:"bbox" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Lines       respjson.Field
+		Bbox        respjson.Field
 		ExtraFields map[string]respjson.Field
 		raw         string
 	} `json:"-"`
@@ -952,10 +1010,15 @@ type FormFieldGroundingLabelLineWord struct {
 	Bbox BBox `json:"bbox" api:"required"`
 	// `[start, end)` UTF-8 byte span in the complete source property string
 	Span []any `json:"span" api:"required"`
+	// Per-character grounding within the word, present when `granular_bboxes` includes
+	// 'char' (Agentic Plus only). Each box is an even split of the word box across the
+	// word's characters.
+	Chars []FormFieldGroundingLabelLineWordChar `json:"chars" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Bbox        respjson.Field
 		Span        respjson.Field
+		Chars       respjson.Field
 		ExtraFields map[string]respjson.Field
 		raw         string
 	} `json:"-"`
@@ -967,15 +1030,39 @@ func (r *FormFieldGroundingLabelLineWord) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
+// One grounded character: a `[start, end)` span in the source text and its bbox.
+type FormFieldGroundingLabelLineWordChar struct {
+	// Character bounding box
+	Bbox BBox `json:"bbox" api:"required"`
+	// `[start, end)` UTF-8 byte span in the complete source property string
+	Span []any `json:"span" api:"required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Bbox        respjson.Field
+		Span        respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r FormFieldGroundingLabelLineWordChar) RawJSON() string { return r.JSON.raw }
+func (r *FormFieldGroundingLabelLineWordChar) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
 // Supported text with half-open UTF-8 byte spans into the complete property
 // string.
 type FormFieldGroundingValue struct {
 	// Supported lines. Word requests include supported words; gaps are valid. Boxes
 	// use final page coordinates and optional local rotation r.
 	Lines []FormFieldGroundingValueLine `json:"lines" api:"required"`
+	// Bounding box with coordinates and optional metadata.
+	Bbox BBox `json:"bbox" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Lines       respjson.Field
+		Bbox        respjson.Field
 		ExtraFields map[string]respjson.Field
 		raw         string
 	} `json:"-"`
@@ -1017,6 +1104,32 @@ type FormFieldGroundingValueLineWord struct {
 	Bbox BBox `json:"bbox" api:"required"`
 	// `[start, end)` UTF-8 byte span in the complete source property string
 	Span []any `json:"span" api:"required"`
+	// Per-character grounding within the word, present when `granular_bboxes` includes
+	// 'char' (Agentic Plus only). Each box is an even split of the word box across the
+	// word's characters.
+	Chars []FormFieldGroundingValueLineWordChar `json:"chars" api:"nullable"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Bbox        respjson.Field
+		Span        respjson.Field
+		Chars       respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r FormFieldGroundingValueLineWord) RawJSON() string { return r.JSON.raw }
+func (r *FormFieldGroundingValueLineWord) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// One grounded character: a `[start, end)` span in the source text and its bbox.
+type FormFieldGroundingValueLineWordChar struct {
+	// Character bounding box
+	Bbox BBox `json:"bbox" api:"required"`
+	// `[start, end)` UTF-8 byte span in the complete source property string
+	Span []any `json:"span" api:"required"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Bbox        respjson.Field
@@ -1027,8 +1140,8 @@ type FormFieldGroundingValueLineWord struct {
 }
 
 // Returns the unmodified JSON received from the API
-func (r FormFieldGroundingValueLineWord) RawJSON() string { return r.JSON.raw }
-func (r *FormFieldGroundingValueLineWord) UnmarshalJSON(data []byte) error {
+func (r FormFieldGroundingValueLineWordChar) RawJSON() string { return r.JSON.raw }
+func (r *FormFieldGroundingValueLineWordChar) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
@@ -1092,6 +1205,9 @@ type FormFieldValueItemUnion struct {
 	// This field is from variant [FormField].
 	IsEmpty bool   `json:"isEmpty"`
 	Label   string `json:"label"`
+	// This field is from variant [FormField].
+	LabelMarkdownSpan []any `json:"label_markdown_span"`
+	MarkdownSpan      []any `json:"markdown_span"`
 	// Any of "field", "section", "table", "text".
 	Type string `json:"type"`
 	// This field is a union of [FormFieldValueUnion], [string]
@@ -1107,20 +1223,22 @@ type FormFieldValueItemUnion struct {
 	// This field is from variant [FormTable].
 	HTML string `json:"html"`
 	JSON struct {
-		Field      respjson.Field
-		ID         respjson.Field
-		Bbox       respjson.Field
-		Grounding  respjson.Field
-		IsEmpty    respjson.Field
-		Label      respjson.Field
-		Type       respjson.Field
-		Value      respjson.Field
-		ValueItems respjson.Field
-		Items      respjson.Field
-		Rows       respjson.Field
-		Columns    respjson.Field
-		HTML       respjson.Field
-		raw        string
+		Field             respjson.Field
+		ID                respjson.Field
+		Bbox              respjson.Field
+		Grounding         respjson.Field
+		IsEmpty           respjson.Field
+		Label             respjson.Field
+		LabelMarkdownSpan respjson.Field
+		MarkdownSpan      respjson.Field
+		Type              respjson.Field
+		Value             respjson.Field
+		ValueItems        respjson.Field
+		Items             respjson.Field
+		Rows              respjson.Field
+		Columns           respjson.Field
+		HTML              respjson.Field
+		raw               string
 	} `json:"-"`
 }
 
@@ -1231,8 +1349,11 @@ type FormFieldValueItemUnionGroundingID struct {
 	// [[]FormSectionGroundingIDLine], [[]FormTableGroundingIDLine],
 	// [[]FormTextGroundingIDLine]
 	Lines FormFieldValueItemUnionGroundingIDLines `json:"lines"`
-	JSON  struct {
+	// This field is from variant [FormFieldGroundingID].
+	Bbox BBox `json:"bbox"`
+	JSON struct {
 		Lines respjson.Field
+		Bbox  respjson.Field
 		raw   string
 	} `json:"-"`
 }
@@ -1275,8 +1396,11 @@ type FormFieldValueItemUnionGroundingLabel struct {
 	// [[]FormSectionGroundingLabelLine], [[]FormTableGroundingLabelLine],
 	// [[]FormTextGroundingLabelLine]
 	Lines FormFieldValueItemUnionGroundingLabelLines `json:"lines"`
-	JSON  struct {
+	// This field is from variant [FormFieldGroundingLabel].
+	Bbox BBox `json:"bbox"`
+	JSON struct {
 		Lines respjson.Field
+		Bbox  respjson.Field
 		raw   string
 	} `json:"-"`
 }
@@ -1318,8 +1442,11 @@ type FormFieldValueItemUnionGroundingValue struct {
 	// This field is a union of [[]FormFieldGroundingValueLine],
 	// [[]FormTextGroundingValueLine]
 	Lines FormFieldValueItemUnionGroundingValueLines `json:"lines"`
-	JSON  struct {
+	// This field is from variant [FormFieldGroundingValue].
+	Bbox BBox `json:"bbox"`
+	JSON struct {
 		Lines respjson.Field
+		Bbox  respjson.Field
 		raw   string
 	} `json:"-"`
 }
@@ -1495,19 +1622,24 @@ type FormSection struct {
 	Grounding FormSectionGrounding `json:"grounding" api:"nullable"`
 	// Printed section heading, if any
 	Label string `json:"label" api:"nullable"`
+	// `[start, end)` UTF-8 byte offsets of the section heading in its page's
+	// `markdown` string, on some Agentic Plus jobs from version 2026-11-19. Absent on
+	// other jobs and when it has no place in the markdown
+	MarkdownSpan []any `json:"markdown_span" api:"nullable"`
 	// Form section node
 	//
 	// Any of "section".
 	Type FormSectionType `json:"type"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
-		Items       respjson.Field
-		ID          respjson.Field
-		Grounding   respjson.Field
-		Label       respjson.Field
-		Type        respjson.Field
-		ExtraFields map[string]respjson.Field
-		raw         string
+		Items        respjson.Field
+		ID           respjson.Field
+		Grounding    respjson.Field
+		Label        respjson.Field
+		MarkdownSpan respjson.Field
+		Type         respjson.Field
+		ExtraFields  map[string]respjson.Field
+		raw          string
 	} `json:"-"`
 }
 
@@ -1534,6 +1666,9 @@ type FormSectionItemUnion struct {
 	// This field is from variant [FormField].
 	IsEmpty bool   `json:"isEmpty"`
 	Label   string `json:"label"`
+	// This field is from variant [FormField].
+	LabelMarkdownSpan []any `json:"label_markdown_span"`
+	MarkdownSpan      []any `json:"markdown_span"`
 	// Any of "field", "section", "table", "text".
 	Type string `json:"type"`
 	// This field is a union of [FormFieldValueUnion], [string]
@@ -1549,20 +1684,22 @@ type FormSectionItemUnion struct {
 	// This field is from variant [FormTable].
 	HTML string `json:"html"`
 	JSON struct {
-		Field      respjson.Field
-		ID         respjson.Field
-		Bbox       respjson.Field
-		Grounding  respjson.Field
-		IsEmpty    respjson.Field
-		Label      respjson.Field
-		Type       respjson.Field
-		Value      respjson.Field
-		ValueItems respjson.Field
-		Items      respjson.Field
-		Rows       respjson.Field
-		Columns    respjson.Field
-		HTML       respjson.Field
-		raw        string
+		Field             respjson.Field
+		ID                respjson.Field
+		Bbox              respjson.Field
+		Grounding         respjson.Field
+		IsEmpty           respjson.Field
+		Label             respjson.Field
+		LabelMarkdownSpan respjson.Field
+		MarkdownSpan      respjson.Field
+		Type              respjson.Field
+		Value             respjson.Field
+		ValueItems        respjson.Field
+		Items             respjson.Field
+		Rows              respjson.Field
+		Columns           respjson.Field
+		HTML              respjson.Field
+		raw               string
 	} `json:"-"`
 }
 
@@ -1672,8 +1809,11 @@ type FormSectionItemUnionGroundingID struct {
 	// [[]FormSectionGroundingIDLine], [[]FormTableGroundingIDLine],
 	// [[]FormTextGroundingIDLine]
 	Lines FormSectionItemUnionGroundingIDLines `json:"lines"`
-	JSON  struct {
+	// This field is from variant [FormFieldGroundingID].
+	Bbox BBox `json:"bbox"`
+	JSON struct {
 		Lines respjson.Field
+		Bbox  respjson.Field
 		raw   string
 	} `json:"-"`
 }
@@ -1716,8 +1856,11 @@ type FormSectionItemUnionGroundingLabel struct {
 	// [[]FormSectionGroundingLabelLine], [[]FormTableGroundingLabelLine],
 	// [[]FormTextGroundingLabelLine]
 	Lines FormSectionItemUnionGroundingLabelLines `json:"lines"`
-	JSON  struct {
+	// This field is from variant [FormFieldGroundingLabel].
+	Bbox BBox `json:"bbox"`
+	JSON struct {
 		Lines respjson.Field
+		Bbox  respjson.Field
 		raw   string
 	} `json:"-"`
 }
@@ -1759,8 +1902,11 @@ type FormSectionItemUnionGroundingValue struct {
 	// This field is a union of [[]FormFieldGroundingValueLine],
 	// [[]FormTextGroundingValueLine]
 	Lines FormSectionItemUnionGroundingValueLines `json:"lines"`
-	JSON  struct {
+	// This field is from variant [FormFieldGroundingValue].
+	Bbox BBox `json:"bbox"`
+	JSON struct {
 		Lines respjson.Field
+		Bbox  respjson.Field
 		raw   string
 	} `json:"-"`
 }
@@ -1846,9 +1992,12 @@ type FormSectionGroundingID struct {
 	// Supported lines. Word requests include supported words; gaps are valid. Boxes
 	// use final page coordinates and optional local rotation r.
 	Lines []FormSectionGroundingIDLine `json:"lines" api:"required"`
+	// Bounding box with coordinates and optional metadata.
+	Bbox BBox `json:"bbox" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Lines       respjson.Field
+		Bbox        respjson.Field
 		ExtraFields map[string]respjson.Field
 		raw         string
 	} `json:"-"`
@@ -1890,10 +2039,15 @@ type FormSectionGroundingIDLineWord struct {
 	Bbox BBox `json:"bbox" api:"required"`
 	// `[start, end)` UTF-8 byte span in the complete source property string
 	Span []any `json:"span" api:"required"`
+	// Per-character grounding within the word, present when `granular_bboxes` includes
+	// 'char' (Agentic Plus only). Each box is an even split of the word box across the
+	// word's characters.
+	Chars []FormSectionGroundingIDLineWordChar `json:"chars" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Bbox        respjson.Field
 		Span        respjson.Field
+		Chars       respjson.Field
 		ExtraFields map[string]respjson.Field
 		raw         string
 	} `json:"-"`
@@ -1905,15 +2059,39 @@ func (r *FormSectionGroundingIDLineWord) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
+// One grounded character: a `[start, end)` span in the source text and its bbox.
+type FormSectionGroundingIDLineWordChar struct {
+	// Character bounding box
+	Bbox BBox `json:"bbox" api:"required"`
+	// `[start, end)` UTF-8 byte span in the complete source property string
+	Span []any `json:"span" api:"required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Bbox        respjson.Field
+		Span        respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r FormSectionGroundingIDLineWordChar) RawJSON() string { return r.JSON.raw }
+func (r *FormSectionGroundingIDLineWordChar) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
 // Supported text with half-open UTF-8 byte spans into the complete property
 // string.
 type FormSectionGroundingLabel struct {
 	// Supported lines. Word requests include supported words; gaps are valid. Boxes
 	// use final page coordinates and optional local rotation r.
 	Lines []FormSectionGroundingLabelLine `json:"lines" api:"required"`
+	// Bounding box with coordinates and optional metadata.
+	Bbox BBox `json:"bbox" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Lines       respjson.Field
+		Bbox        respjson.Field
 		ExtraFields map[string]respjson.Field
 		raw         string
 	} `json:"-"`
@@ -1955,6 +2133,32 @@ type FormSectionGroundingLabelLineWord struct {
 	Bbox BBox `json:"bbox" api:"required"`
 	// `[start, end)` UTF-8 byte span in the complete source property string
 	Span []any `json:"span" api:"required"`
+	// Per-character grounding within the word, present when `granular_bboxes` includes
+	// 'char' (Agentic Plus only). Each box is an even split of the word box across the
+	// word's characters.
+	Chars []FormSectionGroundingLabelLineWordChar `json:"chars" api:"nullable"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Bbox        respjson.Field
+		Span        respjson.Field
+		Chars       respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r FormSectionGroundingLabelLineWord) RawJSON() string { return r.JSON.raw }
+func (r *FormSectionGroundingLabelLineWord) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// One grounded character: a `[start, end)` span in the source text and its bbox.
+type FormSectionGroundingLabelLineWordChar struct {
+	// Character bounding box
+	Bbox BBox `json:"bbox" api:"required"`
+	// `[start, end)` UTF-8 byte span in the complete source property string
+	Span []any `json:"span" api:"required"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Bbox        respjson.Field
@@ -1965,8 +2169,8 @@ type FormSectionGroundingLabelLineWord struct {
 }
 
 // Returns the unmodified JSON received from the API
-func (r FormSectionGroundingLabelLineWord) RawJSON() string { return r.JSON.raw }
-func (r *FormSectionGroundingLabelLineWord) UnmarshalJSON(data []byte) error {
+func (r FormSectionGroundingLabelLineWordChar) RawJSON() string { return r.JSON.raw }
+func (r *FormSectionGroundingLabelLineWordChar) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
@@ -1995,22 +2199,27 @@ type FormTable struct {
 	HTML string `json:"html" api:"nullable"`
 	// Printed table caption, if any
 	Label string `json:"label" api:"nullable"`
+	// `[start, end)` UTF-8 byte offsets of the table caption in its page's `markdown`
+	// string, on some Agentic Plus jobs from version 2026-11-19. Absent on other jobs
+	// and when it has no place in the markdown
+	MarkdownSpan []any `json:"markdown_span" api:"nullable"`
 	// Form table node
 	//
 	// Any of "table".
 	Type FormTableType `json:"type"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
-		Rows        respjson.Field
-		ID          respjson.Field
-		Bbox        respjson.Field
-		Columns     respjson.Field
-		Grounding   respjson.Field
-		HTML        respjson.Field
-		Label       respjson.Field
-		Type        respjson.Field
-		ExtraFields map[string]respjson.Field
-		raw         string
+		Rows         respjson.Field
+		ID           respjson.Field
+		Bbox         respjson.Field
+		Columns      respjson.Field
+		Grounding    respjson.Field
+		HTML         respjson.Field
+		Label        respjson.Field
+		MarkdownSpan respjson.Field
+		Type         respjson.Field
+		ExtraFields  map[string]respjson.Field
+		raw          string
 	} `json:"-"`
 }
 
@@ -2092,9 +2301,12 @@ type FormTableGroundingID struct {
 	// Supported lines. Word requests include supported words; gaps are valid. Boxes
 	// use final page coordinates and optional local rotation r.
 	Lines []FormTableGroundingIDLine `json:"lines" api:"required"`
+	// Bounding box with coordinates and optional metadata.
+	Bbox BBox `json:"bbox" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Lines       respjson.Field
+		Bbox        respjson.Field
 		ExtraFields map[string]respjson.Field
 		raw         string
 	} `json:"-"`
@@ -2136,10 +2348,15 @@ type FormTableGroundingIDLineWord struct {
 	Bbox BBox `json:"bbox" api:"required"`
 	// `[start, end)` UTF-8 byte span in the complete source property string
 	Span []any `json:"span" api:"required"`
+	// Per-character grounding within the word, present when `granular_bboxes` includes
+	// 'char' (Agentic Plus only). Each box is an even split of the word box across the
+	// word's characters.
+	Chars []FormTableGroundingIDLineWordChar `json:"chars" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Bbox        respjson.Field
 		Span        respjson.Field
+		Chars       respjson.Field
 		ExtraFields map[string]respjson.Field
 		raw         string
 	} `json:"-"`
@@ -2151,15 +2368,39 @@ func (r *FormTableGroundingIDLineWord) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
+// One grounded character: a `[start, end)` span in the source text and its bbox.
+type FormTableGroundingIDLineWordChar struct {
+	// Character bounding box
+	Bbox BBox `json:"bbox" api:"required"`
+	// `[start, end)` UTF-8 byte span in the complete source property string
+	Span []any `json:"span" api:"required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Bbox        respjson.Field
+		Span        respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r FormTableGroundingIDLineWordChar) RawJSON() string { return r.JSON.raw }
+func (r *FormTableGroundingIDLineWordChar) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
 // Supported text with half-open UTF-8 byte spans into the complete property
 // string.
 type FormTableGroundingColumn struct {
 	// Supported lines. Word requests include supported words; gaps are valid. Boxes
 	// use final page coordinates and optional local rotation r.
 	Lines []FormTableGroundingColumnLine `json:"lines" api:"required"`
+	// Bounding box with coordinates and optional metadata.
+	Bbox BBox `json:"bbox" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Lines       respjson.Field
+		Bbox        respjson.Field
 		ExtraFields map[string]respjson.Field
 		raw         string
 	} `json:"-"`
@@ -2201,10 +2442,15 @@ type FormTableGroundingColumnLineWord struct {
 	Bbox BBox `json:"bbox" api:"required"`
 	// `[start, end)` UTF-8 byte span in the complete source property string
 	Span []any `json:"span" api:"required"`
+	// Per-character grounding within the word, present when `granular_bboxes` includes
+	// 'char' (Agentic Plus only). Each box is an even split of the word box across the
+	// word's characters.
+	Chars []FormTableGroundingColumnLineWordChar `json:"chars" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Bbox        respjson.Field
 		Span        respjson.Field
+		Chars       respjson.Field
 		ExtraFields map[string]respjson.Field
 		raw         string
 	} `json:"-"`
@@ -2216,15 +2462,39 @@ func (r *FormTableGroundingColumnLineWord) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
+// One grounded character: a `[start, end)` span in the source text and its bbox.
+type FormTableGroundingColumnLineWordChar struct {
+	// Character bounding box
+	Bbox BBox `json:"bbox" api:"required"`
+	// `[start, end)` UTF-8 byte span in the complete source property string
+	Span []any `json:"span" api:"required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Bbox        respjson.Field
+		Span        respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r FormTableGroundingColumnLineWordChar) RawJSON() string { return r.JSON.raw }
+func (r *FormTableGroundingColumnLineWordChar) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
 // Supported text with half-open UTF-8 byte spans into the complete property
 // string.
 type FormTableGroundingLabel struct {
 	// Supported lines. Word requests include supported words; gaps are valid. Boxes
 	// use final page coordinates and optional local rotation r.
 	Lines []FormTableGroundingLabelLine `json:"lines" api:"required"`
+	// Bounding box with coordinates and optional metadata.
+	Bbox BBox `json:"bbox" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Lines       respjson.Field
+		Bbox        respjson.Field
 		ExtraFields map[string]respjson.Field
 		raw         string
 	} `json:"-"`
@@ -2266,10 +2536,15 @@ type FormTableGroundingLabelLineWord struct {
 	Bbox BBox `json:"bbox" api:"required"`
 	// `[start, end)` UTF-8 byte span in the complete source property string
 	Span []any `json:"span" api:"required"`
+	// Per-character grounding within the word, present when `granular_bboxes` includes
+	// 'char' (Agentic Plus only). Each box is an even split of the word box across the
+	// word's characters.
+	Chars []FormTableGroundingLabelLineWordChar `json:"chars" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Bbox        respjson.Field
 		Span        respjson.Field
+		Chars       respjson.Field
 		ExtraFields map[string]respjson.Field
 		raw         string
 	} `json:"-"`
@@ -2281,15 +2556,39 @@ func (r *FormTableGroundingLabelLineWord) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
+// One grounded character: a `[start, end)` span in the source text and its bbox.
+type FormTableGroundingLabelLineWordChar struct {
+	// Character bounding box
+	Bbox BBox `json:"bbox" api:"required"`
+	// `[start, end)` UTF-8 byte span in the complete source property string
+	Span []any `json:"span" api:"required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Bbox        respjson.Field
+		Span        respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r FormTableGroundingLabelLineWordChar) RawJSON() string { return r.JSON.raw }
+func (r *FormTableGroundingLabelLineWordChar) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
 // Supported text with half-open UTF-8 byte spans into the complete property
 // string.
 type FormTableGroundingRow struct {
 	// Supported lines. Word requests include supported words; gaps are valid. Boxes
 	// use final page coordinates and optional local rotation r.
 	Lines []FormTableGroundingRowLine `json:"lines" api:"required"`
+	// Bounding box with coordinates and optional metadata.
+	Bbox BBox `json:"bbox" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Lines       respjson.Field
+		Bbox        respjson.Field
 		ExtraFields map[string]respjson.Field
 		raw         string
 	} `json:"-"`
@@ -2331,6 +2630,32 @@ type FormTableGroundingRowLineWord struct {
 	Bbox BBox `json:"bbox" api:"required"`
 	// `[start, end)` UTF-8 byte span in the complete source property string
 	Span []any `json:"span" api:"required"`
+	// Per-character grounding within the word, present when `granular_bboxes` includes
+	// 'char' (Agentic Plus only). Each box is an even split of the word box across the
+	// word's characters.
+	Chars []FormTableGroundingRowLineWordChar `json:"chars" api:"nullable"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Bbox        respjson.Field
+		Span        respjson.Field
+		Chars       respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r FormTableGroundingRowLineWord) RawJSON() string { return r.JSON.raw }
+func (r *FormTableGroundingRowLineWord) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// One grounded character: a `[start, end)` span in the source text and its bbox.
+type FormTableGroundingRowLineWordChar struct {
+	// Character bounding box
+	Bbox BBox `json:"bbox" api:"required"`
+	// `[start, end)` UTF-8 byte span in the complete source property string
+	Span []any `json:"span" api:"required"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Bbox        respjson.Field
@@ -2341,8 +2666,8 @@ type FormTableGroundingRowLineWord struct {
 }
 
 // Returns the unmodified JSON received from the API
-func (r FormTableGroundingRowLineWord) RawJSON() string { return r.JSON.raw }
-func (r *FormTableGroundingRowLineWord) UnmarshalJSON(data []byte) error {
+func (r FormTableGroundingRowLineWordChar) RawJSON() string { return r.JSON.raw }
+func (r *FormTableGroundingRowLineWordChar) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
@@ -2388,6 +2713,9 @@ type FormTableCellItemsItemUnion struct {
 	// This field is from variant [FormField].
 	IsEmpty bool   `json:"isEmpty"`
 	Label   string `json:"label"`
+	// This field is from variant [FormField].
+	LabelMarkdownSpan []any `json:"label_markdown_span"`
+	MarkdownSpan      []any `json:"markdown_span"`
 	// Any of "field", "section", "table", "text".
 	Type string `json:"type"`
 	// This field is a union of [FormFieldValueUnion], [string]
@@ -2403,20 +2731,22 @@ type FormTableCellItemsItemUnion struct {
 	// This field is from variant [FormTable].
 	HTML string `json:"html"`
 	JSON struct {
-		Field      respjson.Field
-		ID         respjson.Field
-		Bbox       respjson.Field
-		Grounding  respjson.Field
-		IsEmpty    respjson.Field
-		Label      respjson.Field
-		Type       respjson.Field
-		Value      respjson.Field
-		ValueItems respjson.Field
-		Items      respjson.Field
-		Rows       respjson.Field
-		Columns    respjson.Field
-		HTML       respjson.Field
-		raw        string
+		Field             respjson.Field
+		ID                respjson.Field
+		Bbox              respjson.Field
+		Grounding         respjson.Field
+		IsEmpty           respjson.Field
+		Label             respjson.Field
+		LabelMarkdownSpan respjson.Field
+		MarkdownSpan      respjson.Field
+		Type              respjson.Field
+		Value             respjson.Field
+		ValueItems        respjson.Field
+		Items             respjson.Field
+		Rows              respjson.Field
+		Columns           respjson.Field
+		HTML              respjson.Field
+		raw               string
 	} `json:"-"`
 }
 
@@ -2527,8 +2857,11 @@ type FormTableCellItemsItemUnionGroundingID struct {
 	// [[]FormSectionGroundingIDLine], [[]FormTableGroundingIDLine],
 	// [[]FormTextGroundingIDLine]
 	Lines FormTableCellItemsItemUnionGroundingIDLines `json:"lines"`
-	JSON  struct {
+	// This field is from variant [FormFieldGroundingID].
+	Bbox BBox `json:"bbox"`
+	JSON struct {
 		Lines respjson.Field
+		Bbox  respjson.Field
 		raw   string
 	} `json:"-"`
 }
@@ -2571,8 +2904,11 @@ type FormTableCellItemsItemUnionGroundingLabel struct {
 	// [[]FormSectionGroundingLabelLine], [[]FormTableGroundingLabelLine],
 	// [[]FormTextGroundingLabelLine]
 	Lines FormTableCellItemsItemUnionGroundingLabelLines `json:"lines"`
-	JSON  struct {
+	// This field is from variant [FormFieldGroundingLabel].
+	Bbox BBox `json:"bbox"`
+	JSON struct {
 		Lines respjson.Field
+		Bbox  respjson.Field
 		raw   string
 	} `json:"-"`
 }
@@ -2614,8 +2950,11 @@ type FormTableCellItemsItemUnionGroundingValue struct {
 	// This field is a union of [[]FormFieldGroundingValueLine],
 	// [[]FormTextGroundingValueLine]
 	Lines FormTableCellItemsItemUnionGroundingValueLines `json:"lines"`
-	JSON  struct {
+	// This field is from variant [FormFieldGroundingValue].
+	Bbox BBox `json:"bbox"`
+	JSON struct {
 		Lines respjson.Field
+		Bbox  respjson.Field
 		raw   string
 	} `json:"-"`
 }
@@ -2738,9 +3077,12 @@ type FormTextGroundingID struct {
 	// Supported lines. Word requests include supported words; gaps are valid. Boxes
 	// use final page coordinates and optional local rotation r.
 	Lines []FormTextGroundingIDLine `json:"lines" api:"required"`
+	// Bounding box with coordinates and optional metadata.
+	Bbox BBox `json:"bbox" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Lines       respjson.Field
+		Bbox        respjson.Field
 		ExtraFields map[string]respjson.Field
 		raw         string
 	} `json:"-"`
@@ -2782,10 +3124,15 @@ type FormTextGroundingIDLineWord struct {
 	Bbox BBox `json:"bbox" api:"required"`
 	// `[start, end)` UTF-8 byte span in the complete source property string
 	Span []any `json:"span" api:"required"`
+	// Per-character grounding within the word, present when `granular_bboxes` includes
+	// 'char' (Agentic Plus only). Each box is an even split of the word box across the
+	// word's characters.
+	Chars []FormTextGroundingIDLineWordChar `json:"chars" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Bbox        respjson.Field
 		Span        respjson.Field
+		Chars       respjson.Field
 		ExtraFields map[string]respjson.Field
 		raw         string
 	} `json:"-"`
@@ -2797,15 +3144,39 @@ func (r *FormTextGroundingIDLineWord) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
+// One grounded character: a `[start, end)` span in the source text and its bbox.
+type FormTextGroundingIDLineWordChar struct {
+	// Character bounding box
+	Bbox BBox `json:"bbox" api:"required"`
+	// `[start, end)` UTF-8 byte span in the complete source property string
+	Span []any `json:"span" api:"required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Bbox        respjson.Field
+		Span        respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r FormTextGroundingIDLineWordChar) RawJSON() string { return r.JSON.raw }
+func (r *FormTextGroundingIDLineWordChar) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
 // Supported text with half-open UTF-8 byte spans into the complete property
 // string.
 type FormTextGroundingLabel struct {
 	// Supported lines. Word requests include supported words; gaps are valid. Boxes
 	// use final page coordinates and optional local rotation r.
 	Lines []FormTextGroundingLabelLine `json:"lines" api:"required"`
+	// Bounding box with coordinates and optional metadata.
+	Bbox BBox `json:"bbox" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Lines       respjson.Field
+		Bbox        respjson.Field
 		ExtraFields map[string]respjson.Field
 		raw         string
 	} `json:"-"`
@@ -2847,10 +3218,15 @@ type FormTextGroundingLabelLineWord struct {
 	Bbox BBox `json:"bbox" api:"required"`
 	// `[start, end)` UTF-8 byte span in the complete source property string
 	Span []any `json:"span" api:"required"`
+	// Per-character grounding within the word, present when `granular_bboxes` includes
+	// 'char' (Agentic Plus only). Each box is an even split of the word box across the
+	// word's characters.
+	Chars []FormTextGroundingLabelLineWordChar `json:"chars" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Bbox        respjson.Field
 		Span        respjson.Field
+		Chars       respjson.Field
 		ExtraFields map[string]respjson.Field
 		raw         string
 	} `json:"-"`
@@ -2862,15 +3238,39 @@ func (r *FormTextGroundingLabelLineWord) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
+// One grounded character: a `[start, end)` span in the source text and its bbox.
+type FormTextGroundingLabelLineWordChar struct {
+	// Character bounding box
+	Bbox BBox `json:"bbox" api:"required"`
+	// `[start, end)` UTF-8 byte span in the complete source property string
+	Span []any `json:"span" api:"required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Bbox        respjson.Field
+		Span        respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r FormTextGroundingLabelLineWordChar) RawJSON() string { return r.JSON.raw }
+func (r *FormTextGroundingLabelLineWordChar) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
 // Supported text with half-open UTF-8 byte spans into the complete property
 // string.
 type FormTextGroundingValue struct {
 	// Supported lines. Word requests include supported words; gaps are valid. Boxes
 	// use final page coordinates and optional local rotation r.
 	Lines []FormTextGroundingValueLine `json:"lines" api:"required"`
+	// Bounding box with coordinates and optional metadata.
+	Bbox BBox `json:"bbox" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Lines       respjson.Field
+		Bbox        respjson.Field
 		ExtraFields map[string]respjson.Field
 		raw         string
 	} `json:"-"`
@@ -2912,6 +3312,32 @@ type FormTextGroundingValueLineWord struct {
 	Bbox BBox `json:"bbox" api:"required"`
 	// `[start, end)` UTF-8 byte span in the complete source property string
 	Span []any `json:"span" api:"required"`
+	// Per-character grounding within the word, present when `granular_bboxes` includes
+	// 'char' (Agentic Plus only). Each box is an even split of the word box across the
+	// word's characters.
+	Chars []FormTextGroundingValueLineWordChar `json:"chars" api:"nullable"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Bbox        respjson.Field
+		Span        respjson.Field
+		Chars       respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r FormTextGroundingValueLineWord) RawJSON() string { return r.JSON.raw }
+func (r *FormTextGroundingValueLineWord) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// One grounded character: a `[start, end)` span in the source text and its bbox.
+type FormTextGroundingValueLineWordChar struct {
+	// Character bounding box
+	Bbox BBox `json:"bbox" api:"required"`
+	// `[start, end)` UTF-8 byte span in the complete source property string
+	Span []any `json:"span" api:"required"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Bbox        respjson.Field
@@ -2922,8 +3348,8 @@ type FormTextGroundingValueLineWord struct {
 }
 
 // Returns the unmodified JSON received from the API
-func (r FormTextGroundingValueLineWord) RawJSON() string { return r.JSON.raw }
-func (r *FormTextGroundingValueLineWord) UnmarshalJSON(data []byte) error {
+func (r FormTextGroundingValueLineWordChar) RawJSON() string { return r.JSON.raw }
+func (r *FormTextGroundingValueLineWordChar) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
@@ -4946,40 +5372,42 @@ func (r *ParsingGetResponseTextPage) UnmarshalJSON(data []byte) error {
 type ParsingListVersionsResponse struct {
 	// Versions for the agentic tier
 	//
-	// Any of "2026-10-16", "2026-10-15", "2026-09-29", "2026-09-28", "2026-09-24",
-	// "2026-09-13", "2026-09-09", "2026-09-07", "2026-08-19", "2026-07-24",
-	// "2026-07-23", "2026-07-15", "2026-06-18", "2026-06-11", "2026-06-04",
-	// "2026-06-01", "2026-05-26", "2026-05-21", "2026-05-20", "2026-05-19",
-	// "2026-05-13", "2026-05-11", "2026-05-06", "2026-05-04", "2026-04-27",
-	// "2026-04-22", "2026-04-09", "2026-04-06", "2026-04-02", "2026-03-31",
-	// "2026-03-30", "2026-03-27", "2026-03-25", "2026-03-23", "2026-03-22",
-	// "2026-03-20", "2026-03-11", "2026-03-10", "2026-03-09", "2026-03-03",
-	// "2026-03-02", "2026-02-26", "2026-02-24", "2026-01-30", "2026-01-22",
-	// "2026-01-21", "2026-01-16", "2026-01-08", "2025-12-31", "2025-12-18",
-	// "2025-12-11".
+	// Any of "2026-11-09", "2026-11-05", "2026-10-30", "2026-10-16", "2026-10-15",
+	// "2026-09-29", "2026-09-28", "2026-09-24", "2026-09-13", "2026-09-09",
+	// "2026-09-07", "2026-08-19", "2026-07-24", "2026-07-23", "2026-07-15",
+	// "2026-06-18", "2026-06-11", "2026-06-04", "2026-06-01", "2026-05-26",
+	// "2026-05-21", "2026-05-20", "2026-05-19", "2026-05-13", "2026-05-11",
+	// "2026-05-06", "2026-05-04", "2026-04-27", "2026-04-22", "2026-04-09",
+	// "2026-04-06", "2026-04-02", "2026-03-31", "2026-03-30", "2026-03-27",
+	// "2026-03-25", "2026-03-23", "2026-03-22", "2026-03-20", "2026-03-11",
+	// "2026-03-10", "2026-03-09", "2026-03-03", "2026-03-02", "2026-02-26",
+	// "2026-02-24", "2026-01-30", "2026-01-22", "2026-01-21", "2026-01-16",
+	// "2026-01-08", "2025-12-31", "2025-12-18", "2025-12-11".
 	Agentic []string `json:"agentic" api:"required"`
 	// Versions for the agentic_plus tier
 	//
-	// Any of "2026-09-28", "2026-09-24", "2026-09-11", "2026-08-19", "2026-07-08",
-	// "2026-06-18", "2026-06-11", "2026-06-04", "2026-06-01", "2026-05-26",
-	// "2026-05-21", "2026-05-20", "2026-05-19", "2026-05-11", "2026-05-06",
-	// "2026-05-04", "2026-05-01", "2026-04-27", "2026-04-19", "2026-04-14",
-	// "2026-04-09", "2026-04-02", "2026-03-31", "2026-03-26", "2026-03-25",
-	// "2026-03-22", "2026-03-20", "2026-03-17", "2026-03-12", "2026-03-10",
-	// "2026-03-09", "2026-03-02", "2026-02-26", "2026-02-24", "2026-01-30",
-	// "2026-01-29", "2026-01-24", "2026-01-22", "2026-01-21", "2026-01-16",
-	// "2025-12-31", "2025-12-18", "2025-12-11".
+	// Any of "2026-11-19", "2026-11-18", "2026-11-17", "2026-11-16", "2026-11-11",
+	// "2026-11-10", "2026-11-07", "2026-11-02", "2026-10-28", "2026-10-26",
+	// "2026-10-20", "2026-09-28", "2026-09-24", "2026-09-11", "2026-08-19",
+	// "2026-07-08", "2026-06-18", "2026-06-11", "2026-06-04", "2026-06-01",
+	// "2026-05-26", "2026-05-21", "2026-05-20", "2026-05-19", "2026-05-11",
+	// "2026-05-06", "2026-05-04", "2026-05-01", "2026-04-27", "2026-04-19",
+	// "2026-04-14", "2026-04-09", "2026-04-02", "2026-03-31", "2026-03-26",
+	// "2026-03-25", "2026-03-22", "2026-03-20", "2026-03-17", "2026-03-12",
+	// "2026-03-10", "2026-03-09", "2026-03-02", "2026-02-26", "2026-02-24",
+	// "2026-01-30", "2026-01-29", "2026-01-24", "2026-01-22", "2026-01-21",
+	// "2026-01-16", "2025-12-31", "2025-12-18", "2025-12-11".
 	AgenticPlus []string `json:"agentic_plus" api:"required"`
 	// Versions for the cost_effective tier
 	//
-	// Any of "2026-09-28", "2026-08-19", "2026-08-11", "2026-08-08", "2026-07-23",
-	// "2026-06-26", "2026-06-18", "2026-06-17", "2026-06-11", "2026-06-08",
-	// "2026-06-05", "2026-05-28", "2026-04-09", "2026-03-31", "2026-03-27",
-	// "2026-03-25".
+	// Any of "2026-11-09", "2026-11-05", "2026-10-30", "2026-09-28", "2026-08-19",
+	// "2026-08-11", "2026-08-08", "2026-07-23", "2026-06-26", "2026-06-18",
+	// "2026-06-17", "2026-06-11", "2026-06-08", "2026-06-05", "2026-05-28",
+	// "2026-04-09", "2026-03-31", "2026-03-27", "2026-03-25".
 	CostEffective []string `json:"cost_effective" api:"required"`
 	// Versions for the fast tier
 	//
-	// Any of "2026-06-15", "2025-12-11".
+	// Any of "2026-11-12", "2026-06-15", "2025-12-11".
 	Fast []string `json:"fast" api:"required"`
 	// Version `latest` currently resolves to, per tier
 	Latest ParsingListVersionsResponseLatest `json:"latest" api:"required"`
@@ -5038,10 +5466,10 @@ type ParsingNewParams struct {
 	//
 	// Current `latest` by tier:
 	//
-	// - `fast`: `2026-06-15`
-	// - `cost_effective`: `2026-09-28`
-	// - `agentic`: `2026-10-16`
-	// - `agentic_plus`: `2026-09-28`
+	// - `fast`: `2026-11-12`
+	// - `cost_effective`: `2026-11-09`
+	// - `agentic`: `2026-11-09`
+	// - `agentic_plus`: `2026-11-19`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
 	Version        ParsingNewParamsVersion `json:"version,omitzero" api:"required"`
@@ -5095,8 +5523,8 @@ type ParsingNewParams struct {
 	ProcessingControl ParsingNewParamsProcessingControl `json:"processing_control,omitzero"`
 	// Document processing options including OCR, table extraction, and chart parsing
 	ProcessingOptions ParsingNewParamsProcessingOptions `json:"processing_options,omitzero"`
-	// Webhook endpoints for job status notifications. Multiple webhooks can be
-	// configured for different events or services
+	// Webhook endpoints for job notifications. Maximum 10 total, including
+	// webhook_configuration_ids.
 	WebhookConfigurations []ParsingNewParamsWebhookConfiguration `json:"webhook_configurations,omitzero"`
 	paramObj
 }
@@ -5134,19 +5562,19 @@ const (
 //
 // Current `latest` by tier:
 //
-// - `fast`: `2026-06-15`
-// - `cost_effective`: `2026-09-28`
-// - `agentic`: `2026-10-16`
-// - `agentic_plus`: `2026-09-28`
+// - `fast`: `2026-11-12`
+// - `cost_effective`: `2026-11-09`
+// - `agentic`: `2026-11-09`
+// - `agentic_plus`: `2026-11-19`
 //
 // Full list: `GET /api/v2/parse/versions`.
 type ParsingNewParamsVersion string
 
 const (
 	ParsingNewParamsVersionLatest     ParsingNewParamsVersion = "latest"
-	ParsingNewParamsVersion2026_10_16 ParsingNewParamsVersion = "2026-10-16"
-	ParsingNewParamsVersion2026_09_28 ParsingNewParamsVersion = "2026-09-28"
-	ParsingNewParamsVersion2026_06_15 ParsingNewParamsVersion = "2026-06-15"
+	ParsingNewParamsVersion2026_11_19 ParsingNewParamsVersion = "2026-11-19"
+	ParsingNewParamsVersion2026_11_12 ParsingNewParamsVersion = "2026-11-12"
+	ParsingNewParamsVersion2026_11_09 ParsingNewParamsVersion = "2026-11-09"
 )
 
 // Options for AI-powered parsing tiers (cost_effective, agentic, agentic_plus).
@@ -5344,15 +5772,16 @@ type ParsingNewParamsOutputOptions struct {
 	AdditionalOutputs []string `json:"additional_outputs,omitzero"`
 	// Bounding-box granularity levels to compute for the parse. 'word' computes one
 	// bounding box per detected word; 'line' computes one per text line; 'cell'
-	// computes one per table cell. Multiple levels can be requested. Empty list
-	// (default) disables granular bboxes — only item-level layout boxes are returned
-	// on the result. When set, the computed boxes are not inlined on the result items;
-	// they are written to a separate `grounded_items` sidecar (JSONL, one row per
-	// page) and exposed as `result_content_metadata.grounded_items` (a presigned
-	// download URL) on the parse result. Each row matches the `GroundedJsonItem`
-	// shape.
+	// computes one per table cell; 'char' adds one box per character inside each
+	// grounded word (`chars` on each word), available on the `agentic_plus` tier only.
+	// Multiple levels can be requested. Empty list (default) disables granular bboxes
+	// — only item-level layout boxes are returned on the result. When set, the
+	// computed boxes are not inlined on the result items; they are written to a
+	// separate `grounded_items` sidecar (JSONL, one row per page) and exposed as
+	// `result_content_metadata.grounded_items` (a presigned download URL) on the parse
+	// result. Each row matches the `GroundedJsonItem` shape.
 	//
-	// Any of "cell", "line", "word".
+	// Any of "cell", "char", "line", "word".
 	GranularBboxes []string `json:"granular_bboxes,omitzero"`
 	// Markdown formatting options including table styles and link annotations
 	Markdown ParsingNewParamsOutputOptionsMarkdown `json:"markdown,omitzero"`
@@ -5630,6 +6059,10 @@ func init() {
 type ParsingNewParamsProcessingOptionsAutoModeConfiguration struct {
 	// Parsing configuration to apply when trigger conditions are met
 	ParsingConf ParsingNewParamsProcessingOptionsAutoModeConfigurationParsingConf `json:"parsing_conf,omitzero" api:"required"`
+	// Match every page when the document has more than N pages
+	DocumentLongerThanNPages param.Opt[int64] `json:"document_longer_than_n_pages,omitzero"`
+	// Match every page when the document has fewer than N pages
+	DocumentShorterThanNPages param.Opt[int64] `json:"document_shorter_than_n_pages,omitzero"`
 	// Single glob pattern to match against filename
 	FilenameMatchGlob param.Opt[string] `json:"filename_match_glob,omitzero"`
 	// Regex pattern to match against filename
@@ -5661,6 +6094,11 @@ type ParsingNewParamsProcessingOptionsAutoModeConfiguration struct {
 	FullPageImageInPageThreshold ParsingNewParamsProcessingOptionsAutoModeConfigurationFullPageImageInPageThresholdUnion `json:"full_page_image_in_page_threshold,omitzero"`
 	// Confidence threshold for layout element detection
 	LayoutElementInPageConfidenceThreshold ParsingNewParamsProcessingOptionsAutoModeConfigurationLayoutElementInPageConfidenceThresholdUnion `json:"layout_element_in_page_confidence_threshold,omitzero"`
+	// Minimum page complexity that sends a page to the escalation tier. Lower levels
+	// escalate more pages: low escalates the most, high only the most complex pages.
+	//
+	// Any of "high", "low", "medium".
+	MinComplexity string `json:"min_complexity,omitzero"`
 	// Trigger if page has more than N charts
 	PageContainsAtLeastNCharts ParsingNewParamsProcessingOptionsAutoModeConfigurationPageContainsAtLeastNChartsUnion `json:"page_contains_at_least_n_charts,omitzero"`
 	// Trigger if page has more than N images
@@ -5712,6 +6150,12 @@ func (r *ParsingNewParamsProcessingOptionsAutoModeConfiguration) UnmarshalJSON(d
 	return apijson.UnmarshalRoot(data, r)
 }
 
+func init() {
+	apijson.RegisterFieldValidator[ParsingNewParamsProcessingOptionsAutoModeConfiguration](
+		"min_complexity", "high", "low", "medium",
+	)
+}
+
 // Parsing configuration to apply when trigger conditions are met
 type ParsingNewParamsProcessingOptionsAutoModeConfigurationParsingConf struct {
 	// Whether to use adaptive long table handling
@@ -5749,10 +6193,10 @@ type ParsingNewParamsProcessingOptionsAutoModeConfigurationParsingConf struct {
 	//
 	// Current `latest` by tier:
 	//
-	// - `fast`: `2026-06-15`
-	// - `cost_effective`: `2026-09-28`
-	// - `agentic`: `2026-10-16`
-	// - `agentic_plus`: `2026-09-28`
+	// - `fast`: `2026-11-12`
+	// - `cost_effective`: `2026-11-09`
+	// - `agentic`: `2026-11-09`
+	// - `agentic_plus`: `2026-11-19`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
 	Version string `json:"version,omitzero"`

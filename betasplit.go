@@ -209,7 +209,9 @@ type SplitSegmentResponse struct {
 	Category string `json:"category" api:"required"`
 	// Categorical confidence level. Valid values are: high, medium, low.
 	ConfidenceCategory string `json:"confidence_category" api:"required"`
-	// Page numbers in this segment, as numbered by the input document.
+	// Page numbers in this segment, as numbered by the input document. For PPTX,
+	// hidden slides are skipped unless the parse config or parse job sets
+	// `input_options.presentation.include_hidden_slides`.
 	Pages []int64 `json:"pages" api:"required"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
@@ -242,6 +244,8 @@ type BetaSplitNewResponse struct {
 	Status string `json:"status" api:"required"`
 	// User ID who created this job.
 	UserID string `json:"user_id" api:"required"`
+	// Split version used for this job.
+	Version string `json:"version" api:"required"`
 	// Split configuration ID used for this job.
 	ConfigurationID string `json:"configuration_id" api:"nullable"`
 	// Creation datetime
@@ -260,6 +264,7 @@ type BetaSplitNewResponse struct {
 		ProjectID       respjson.Field
 		Status          respjson.Field
 		UserID          respjson.Field
+		Version         respjson.Field
 		ConfigurationID respjson.Field
 		CreatedAt       respjson.Field
 		ErrorMessage    respjson.Field
@@ -291,6 +296,8 @@ type BetaSplitListResponse struct {
 	Status string `json:"status" api:"required"`
 	// User ID who created this job.
 	UserID string `json:"user_id" api:"required"`
+	// Split version used for this job.
+	Version string `json:"version" api:"required"`
 	// Split configuration ID used for this job.
 	ConfigurationID string `json:"configuration_id" api:"nullable"`
 	// Creation datetime
@@ -309,6 +316,7 @@ type BetaSplitListResponse struct {
 		ProjectID       respjson.Field
 		Status          respjson.Field
 		UserID          respjson.Field
+		Version         respjson.Field
 		ConfigurationID respjson.Field
 		CreatedAt       respjson.Field
 		ErrorMessage    respjson.Field
@@ -340,6 +348,8 @@ type BetaSplitGetResponse struct {
 	Status string `json:"status" api:"required"`
 	// User ID who created this job.
 	UserID string `json:"user_id" api:"required"`
+	// Split version used for this job.
+	Version string `json:"version" api:"required"`
 	// Split configuration ID used for this job.
 	ConfigurationID string `json:"configuration_id" api:"nullable"`
 	// Creation datetime
@@ -358,6 +368,7 @@ type BetaSplitGetResponse struct {
 		ProjectID       respjson.Field
 		Status          respjson.Field
 		UserID          respjson.Field
+		Version         respjson.Field
 		ConfigurationID respjson.Field
 		CreatedAt       respjson.Field
 		ErrorMessage    respjson.Field
@@ -406,7 +417,8 @@ func (r BetaSplitNewParams) URLQuery() (v url.Values, err error) {
 //
 // The property Categories is required.
 type BetaSplitNewParamsConfiguration struct {
-	// Categories to split documents into.
+	// Categories to split documents into. Names must be unique; 'uncategorized' is
+	// reserved unless allow_uncategorized is 'forbid'.
 	Categories []SplitCategoryParam `json:"categories,omitzero" api:"required"`
 	// Split version to run. Omit for the current release. Preview versions are
 	// selectable by name and never resolved automatically.
@@ -431,6 +443,12 @@ type BetaSplitNewParamsConfigurationSplittingStrategy struct {
 	// Minimum pages per segment. Shorter segments are merged into an adjacent segment;
 	// 1 disables merging.
 	MinPagesPerSplit param.Opt[int64] `json:"min_pages_per_split,omitzero"`
+	// Where a new segment starts: document at each new document, category wherever the
+	// category changes. Unset means document. category requires version 1.3.0 or
+	// later.
+	//
+	// Any of "category", "document".
+	SegmentBoundary string `json:"segment_boundary,omitzero"`
 	// Controls handling of pages that don't match any category. 'include': pages can
 	// be grouped as 'uncategorized' and included in results. 'forbid': all pages must
 	// be assigned to a defined category. 'omit': pages can be classified as
@@ -452,6 +470,9 @@ func (r *BetaSplitNewParamsConfigurationSplittingStrategy) UnmarshalJSON(data []
 func init() {
 	apijson.RegisterFieldValidator[BetaSplitNewParamsConfigurationSplittingStrategy](
 		"allow_uncategorized", "forbid", "include", "omit",
+	)
+	apijson.RegisterFieldValidator[BetaSplitNewParamsConfigurationSplittingStrategy](
+		"segment_boundary", "category", "document",
 	)
 }
 

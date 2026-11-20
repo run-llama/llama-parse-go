@@ -78,7 +78,7 @@ func TestBetaDirectoryFileListWithOptionalParams(t *testing.T) {
 			FileID:              llamacloud.String("file_id"),
 			IncludeDeleted:      llamacloud.Bool(true),
 			OrganizationID:      llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-			PageSize:            llamacloud.Int(0),
+			PageSize:            llamacloud.Int(1),
 			PageToken:           llamacloud.String("page_token"),
 			ProjectID:           llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 			UniqueID:            llamacloud.String("unique_id"),

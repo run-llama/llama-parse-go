@@ -93,6 +93,9 @@ func (r *BetaDirectoryFileService) ListAutoPaging(ctx context.Context, directory
 
 // Delete a directory file by `directory_file_id`; to resolve from `unique_id`,
 // list with a filter first.
+//
+// The uploaded file is deleted with it unless another directory or index still
+// uses it.
 func (r *BetaDirectoryFileService) Delete(ctx context.Context, directoryFileID string, params BetaDirectoryFileDeleteParams, opts ...option.RequestOption) (err error) {
 	opts = slices.Concat(r.options, opts)
 	opts = append([]option.RequestOption{option.WithHeader("Accept", "*/*")}, opts...)

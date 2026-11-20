@@ -148,11 +148,13 @@ func TestParsingNewWithOptionalParams(t *testing.T) {
 					Tier:                    "agentic",
 					Version:                 "latest",
 				},
-				FilenameMatchGlob:     llamacloud.String("*.txt"),
-				FilenameMatchGlobList: []string{"string"},
-				FilenameRegexp:        llamacloud.String("filename_regexp"),
-				FilenameRegexpMode:    llamacloud.String("filename_regexp_mode"),
-				FullPageImageInPage:   llamacloud.Bool(true),
+				DocumentLongerThanNPages:  llamacloud.Int(5),
+				DocumentShorterThanNPages: llamacloud.Int(5),
+				FilenameMatchGlob:         llamacloud.String("*.txt"),
+				FilenameMatchGlobList:     []string{"string"},
+				FilenameRegexp:            llamacloud.String("filename_regexp"),
+				FilenameRegexpMode:        llamacloud.String("filename_regexp_mode"),
+				FullPageImageInPage:       llamacloud.Bool(true),
 				FullPageImageInPageThreshold: llamacloud.ParsingNewParamsProcessingOptionsAutoModeConfigurationFullPageImageInPageThresholdUnion{
 					OfFloat: llamacloud.Float(0),
 				},
@@ -161,6 +163,7 @@ func TestParsingNewWithOptionalParams(t *testing.T) {
 				LayoutElementInPageConfidenceThreshold: llamacloud.ParsingNewParamsProcessingOptionsAutoModeConfigurationLayoutElementInPageConfidenceThresholdUnion{
 					OfFloat: llamacloud.Float(0),
 				},
+				MinComplexity: "high",
 				PageContainsAtLeastNCharts: llamacloud.ParsingNewParamsProcessingOptionsAutoModeConfigurationPageContainsAtLeastNChartsUnion{
 					OfInt: llamacloud.Int(0),
 				},

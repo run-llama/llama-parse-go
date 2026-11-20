@@ -177,6 +177,8 @@ type SplitNewResponse struct {
 	TransactionID string `json:"transaction_id" api:"nullable"`
 	// Update datetime
 	UpdatedAt time.Time `json:"updated_at" api:"nullable" format:"date-time"`
+	// Advisory findings about the categories this job uses; empty when none.
+	Warnings []SplitNewResponseWarning `json:"warnings"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		ID                respjson.Field
@@ -197,6 +199,7 @@ type SplitNewResponse struct {
 		TargetPages       respjson.Field
 		TransactionID     respjson.Field
 		UpdatedAt         respjson.Field
+		Warnings          respjson.Field
 		ExtraFields       map[string]respjson.Field
 		raw               string
 	} `json:"-"`
@@ -231,11 +234,18 @@ type SplitNewResponseSplittingStrategy struct {
 	// Minimum pages per segment. Shorter segments are merged into an adjacent segment;
 	// 1 disables merging.
 	MinPagesPerSplit int64 `json:"min_pages_per_split"`
+	// Where a new segment starts: document at each new document, category wherever the
+	// category changes. Unset means document. category requires version 1.3.0 or
+	// later.
+	//
+	// Any of "category", "document".
+	SegmentBoundary string `json:"segment_boundary" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		AllowUncategorized respjson.Field
 		CustomInstructions respjson.Field
 		MinPagesPerSplit   respjson.Field
+		SegmentBoundary    respjson.Field
 		ExtraFields        map[string]respjson.Field
 		raw                string
 	} `json:"-"`
@@ -244,6 +254,33 @@ type SplitNewResponseSplittingStrategy struct {
 // Returns the unmodified JSON received from the API
 func (r SplitNewResponseSplittingStrategy) RawJSON() string { return r.JSON.raw }
 func (r *SplitNewResponseSplittingStrategy) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Advisory finding about split categories; the job still runs.
+type SplitNewResponseWarning struct {
+	// Names of the categories the warning concerns.
+	CategoryNames []string `json:"category_names" api:"required"`
+	// Rule that produced the warning.
+	//
+	// Any of "catch_all_category", "missing_description",
+	// "near_duplicate_description", "near_duplicate_name".
+	Code string `json:"code" api:"required"`
+	// What is ambiguous and how to fix it.
+	Message string `json:"message" api:"required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		CategoryNames respjson.Field
+		Code          respjson.Field
+		Message       respjson.Field
+		ExtraFields   map[string]respjson.Field
+		raw           string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r SplitNewResponseWarning) RawJSON() string { return r.JSON.raw }
+func (r *SplitNewResponseWarning) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
@@ -288,6 +325,8 @@ type SplitListResponse struct {
 	TransactionID string `json:"transaction_id" api:"nullable"`
 	// Update datetime
 	UpdatedAt time.Time `json:"updated_at" api:"nullable" format:"date-time"`
+	// Advisory findings about the categories this job uses; empty when none.
+	Warnings []SplitListResponseWarning `json:"warnings"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		ID                respjson.Field
@@ -308,6 +347,7 @@ type SplitListResponse struct {
 		TargetPages       respjson.Field
 		TransactionID     respjson.Field
 		UpdatedAt         respjson.Field
+		Warnings          respjson.Field
 		ExtraFields       map[string]respjson.Field
 		raw               string
 	} `json:"-"`
@@ -342,11 +382,18 @@ type SplitListResponseSplittingStrategy struct {
 	// Minimum pages per segment. Shorter segments are merged into an adjacent segment;
 	// 1 disables merging.
 	MinPagesPerSplit int64 `json:"min_pages_per_split"`
+	// Where a new segment starts: document at each new document, category wherever the
+	// category changes. Unset means document. category requires version 1.3.0 or
+	// later.
+	//
+	// Any of "category", "document".
+	SegmentBoundary string `json:"segment_boundary" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		AllowUncategorized respjson.Field
 		CustomInstructions respjson.Field
 		MinPagesPerSplit   respjson.Field
+		SegmentBoundary    respjson.Field
 		ExtraFields        map[string]respjson.Field
 		raw                string
 	} `json:"-"`
@@ -355,6 +402,33 @@ type SplitListResponseSplittingStrategy struct {
 // Returns the unmodified JSON received from the API
 func (r SplitListResponseSplittingStrategy) RawJSON() string { return r.JSON.raw }
 func (r *SplitListResponseSplittingStrategy) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Advisory finding about split categories; the job still runs.
+type SplitListResponseWarning struct {
+	// Names of the categories the warning concerns.
+	CategoryNames []string `json:"category_names" api:"required"`
+	// Rule that produced the warning.
+	//
+	// Any of "catch_all_category", "missing_description",
+	// "near_duplicate_description", "near_duplicate_name".
+	Code string `json:"code" api:"required"`
+	// What is ambiguous and how to fix it.
+	Message string `json:"message" api:"required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		CategoryNames respjson.Field
+		Code          respjson.Field
+		Message       respjson.Field
+		ExtraFields   map[string]respjson.Field
+		raw           string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r SplitListResponseWarning) RawJSON() string { return r.JSON.raw }
+func (r *SplitListResponseWarning) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
@@ -401,6 +475,8 @@ type SplitCancelResponse struct {
 	TransactionID string `json:"transaction_id" api:"nullable"`
 	// Update datetime
 	UpdatedAt time.Time `json:"updated_at" api:"nullable" format:"date-time"`
+	// Advisory findings about the categories this job uses; empty when none.
+	Warnings []SplitCancelResponseWarning `json:"warnings"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		ID                respjson.Field
@@ -421,6 +497,7 @@ type SplitCancelResponse struct {
 		TargetPages       respjson.Field
 		TransactionID     respjson.Field
 		UpdatedAt         respjson.Field
+		Warnings          respjson.Field
 		ExtraFields       map[string]respjson.Field
 		raw               string
 	} `json:"-"`
@@ -455,11 +532,18 @@ type SplitCancelResponseSplittingStrategy struct {
 	// Minimum pages per segment. Shorter segments are merged into an adjacent segment;
 	// 1 disables merging.
 	MinPagesPerSplit int64 `json:"min_pages_per_split"`
+	// Where a new segment starts: document at each new document, category wherever the
+	// category changes. Unset means document. category requires version 1.3.0 or
+	// later.
+	//
+	// Any of "category", "document".
+	SegmentBoundary string `json:"segment_boundary" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		AllowUncategorized respjson.Field
 		CustomInstructions respjson.Field
 		MinPagesPerSplit   respjson.Field
+		SegmentBoundary    respjson.Field
 		ExtraFields        map[string]respjson.Field
 		raw                string
 	} `json:"-"`
@@ -468,6 +552,33 @@ type SplitCancelResponseSplittingStrategy struct {
 // Returns the unmodified JSON received from the API
 func (r SplitCancelResponseSplittingStrategy) RawJSON() string { return r.JSON.raw }
 func (r *SplitCancelResponseSplittingStrategy) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Advisory finding about split categories; the job still runs.
+type SplitCancelResponseWarning struct {
+	// Names of the categories the warning concerns.
+	CategoryNames []string `json:"category_names" api:"required"`
+	// Rule that produced the warning.
+	//
+	// Any of "catch_all_category", "missing_description",
+	// "near_duplicate_description", "near_duplicate_name".
+	Code string `json:"code" api:"required"`
+	// What is ambiguous and how to fix it.
+	Message string `json:"message" api:"required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		CategoryNames respjson.Field
+		Code          respjson.Field
+		Message       respjson.Field
+		ExtraFields   map[string]respjson.Field
+		raw           string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r SplitCancelResponseWarning) RawJSON() string { return r.JSON.raw }
+func (r *SplitCancelResponseWarning) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
@@ -512,6 +623,8 @@ type SplitGetResponse struct {
 	TransactionID string `json:"transaction_id" api:"nullable"`
 	// Update datetime
 	UpdatedAt time.Time `json:"updated_at" api:"nullable" format:"date-time"`
+	// Advisory findings about the categories this job uses; empty when none.
+	Warnings []SplitGetResponseWarning `json:"warnings"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		ID                respjson.Field
@@ -532,6 +645,7 @@ type SplitGetResponse struct {
 		TargetPages       respjson.Field
 		TransactionID     respjson.Field
 		UpdatedAt         respjson.Field
+		Warnings          respjson.Field
 		ExtraFields       map[string]respjson.Field
 		raw               string
 	} `json:"-"`
@@ -566,11 +680,18 @@ type SplitGetResponseSplittingStrategy struct {
 	// Minimum pages per segment. Shorter segments are merged into an adjacent segment;
 	// 1 disables merging.
 	MinPagesPerSplit int64 `json:"min_pages_per_split"`
+	// Where a new segment starts: document at each new document, category wherever the
+	// category changes. Unset means document. category requires version 1.3.0 or
+	// later.
+	//
+	// Any of "category", "document".
+	SegmentBoundary string `json:"segment_boundary" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		AllowUncategorized respjson.Field
 		CustomInstructions respjson.Field
 		MinPagesPerSplit   respjson.Field
+		SegmentBoundary    respjson.Field
 		ExtraFields        map[string]respjson.Field
 		raw                string
 	} `json:"-"`
@@ -579,6 +700,33 @@ type SplitGetResponseSplittingStrategy struct {
 // Returns the unmodified JSON received from the API
 func (r SplitGetResponseSplittingStrategy) RawJSON() string { return r.JSON.raw }
 func (r *SplitGetResponseSplittingStrategy) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Advisory finding about split categories; the job still runs.
+type SplitGetResponseWarning struct {
+	// Names of the categories the warning concerns.
+	CategoryNames []string `json:"category_names" api:"required"`
+	// Rule that produced the warning.
+	//
+	// Any of "catch_all_category", "missing_description",
+	// "near_duplicate_description", "near_duplicate_name".
+	Code string `json:"code" api:"required"`
+	// What is ambiguous and how to fix it.
+	Message string `json:"message" api:"required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		CategoryNames respjson.Field
+		Code          respjson.Field
+		Message       respjson.Field
+		ExtraFields   map[string]respjson.Field
+		raw           string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r SplitGetResponseWarning) RawJSON() string { return r.JSON.raw }
+func (r *SplitGetResponseWarning) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
@@ -621,7 +769,8 @@ func (r SplitNewParams) URLQuery() (v url.Values, err error) {
 //
 // The property Categories is required.
 type SplitNewParamsConfiguration struct {
-	// Categories to split documents into.
+	// Categories to split documents into. Names must be unique; 'uncategorized' is
+	// reserved unless allow_uncategorized is 'forbid'.
 	Categories []SplitCategoryParam `json:"categories,omitzero" api:"required"`
 	// Saved parse configuration ID to control how the document is parsed before
 	// splitting. Takes precedence over parse_tier. Configurations that restrict pages
@@ -667,6 +816,12 @@ type SplitNewParamsConfigurationSplittingStrategy struct {
 	// Minimum pages per segment. Shorter segments are merged into an adjacent segment;
 	// 1 disables merging.
 	MinPagesPerSplit param.Opt[int64] `json:"min_pages_per_split,omitzero"`
+	// Where a new segment starts: document at each new document, category wherever the
+	// category changes. Unset means document. category requires version 1.3.0 or
+	// later.
+	//
+	// Any of "category", "document".
+	SegmentBoundary string `json:"segment_boundary,omitzero"`
 	// Controls handling of pages that don't match any category. 'include': pages can
 	// be grouped as 'uncategorized' and included in results. 'forbid': all pages must
 	// be assigned to a defined category. 'omit': pages can be classified as
@@ -689,6 +844,9 @@ func init() {
 	apijson.RegisterFieldValidator[SplitNewParamsConfigurationSplittingStrategy](
 		"allow_uncategorized", "forbid", "include", "omit",
 	)
+	apijson.RegisterFieldValidator[SplitNewParamsConfigurationSplittingStrategy](
+		"segment_boundary", "category", "document",
+	)
 }
 
 // Configuration for a single outbound webhook endpoint.
@@ -709,13 +867,13 @@ type SplitNewParamsWebhookConfiguration struct {
 	// "batch.success", "classify.cancelled", "classify.error",
 	// "classify.partial_success", "classify.pending", "classify.running",
 	// "classify.success", "extract.cancelled", "extract.error",
-	// "extract.partial_success", "extract.pending", "extract.success",
-	// "parse.cancelled", "parse.error", "parse.partial_success", "parse.pending",
-	// "parse.running", "parse.success", "sheets.cancelled", "sheets.error",
-	// "sheets.partial_success", "sheets.pending", "sheets.success", "split.cancelled",
-	// "split.error", "split.pending", "split.processing", "split.success",
-	// "unmapped_event", "verify.cancelled", "verify.error", "verify.pending",
-	// "verify.running", "verify.success".
+	// "extract.partial_success", "extract.pending", "extract.running",
+	// "extract.success", "parse.cancelled", "parse.error", "parse.partial_success",
+	// "parse.pending", "parse.running", "parse.success", "sheets.cancelled",
+	// "sheets.error", "sheets.partial_success", "sheets.pending", "sheets.success",
+	// "split.cancelled", "split.error", "split.pending", "split.processing",
+	// "split.success", "unmapped_event", "verify.cancelled", "verify.error",
+	// "verify.pending", "verify.running", "verify.success".
 	WebhookEvents []string `json:"webhook_events,omitzero"`
 	// Custom HTTP headers sent with each webhook request (e.g. auth tokens)
 	WebhookHeaders map[string]string `json:"webhook_headers,omitzero"`

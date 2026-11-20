@@ -29,7 +29,7 @@ func TestBetaAttachmentListWithOptionalParams(t *testing.T) {
 	_, err := client.Beta.Attachments.List(context.TODO(), llamacloud.BetaAttachmentListParams{
 		SourceID:       "source_id",
 		OrganizationID: llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		PageSize:       llamacloud.Int(0),
+		PageSize:       llamacloud.Int(1),
 		PageToken:      llamacloud.String("page_token"),
 		ProjectID:      llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 	})

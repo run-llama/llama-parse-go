@@ -188,6 +188,7 @@ func TestPipelineNewWithOptionalParams(t *testing.T) {
 				VendorMultimodalModelName:                llamacloud.String("vendor_multimodal_model_name"),
 				Version:                                  llamacloud.String("version"),
 				WebhookConfigurations: []llamacloud.LlamaParseParametersWebhookConfiguration{{
+					ID:            llamacloud.String("cwh-8f3k2m9q1x7v4b6n0p5r2t8y1w3z6"),
 					WebhookEvents: []string{"parse.success", "parse.error"},
 					WebhookHeaders: map[string]string{
 						"Authorization": "Bearer sk-...",
@@ -439,6 +440,7 @@ func TestPipelineUpdateWithOptionalParams(t *testing.T) {
 				VendorMultimodalModelName:                llamacloud.String("vendor_multimodal_model_name"),
 				Version:                                  llamacloud.String("version"),
 				WebhookConfigurations: []llamacloud.LlamaParseParametersWebhookConfiguration{{
+					ID:            llamacloud.String("cwh-8f3k2m9q1x7v4b6n0p5r2t8y1w3z6"),
 					WebhookEvents: []string{"parse.success", "parse.error"},
 					WebhookHeaders: map[string]string{
 						"Authorization": "Bearer sk-...",
@@ -644,7 +646,7 @@ func TestPipelineListPaginatedWithOptionalParams(t *testing.T) {
 	_, err := client.Pipelines.ListPaginated(context.TODO(), llamacloud.PipelineListPaginatedParams{
 		Name:           llamacloud.String("name"),
 		OrganizationID: llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		PageSize:       llamacloud.Int(0),
+		PageSize:       llamacloud.Int(1),
 		PageToken:      llamacloud.String("page_token"),
 		PipelineType:   llamacloud.PipelineListPaginatedParamsPipelineTypeManaged,
 		ProjectID:      llamacloud.String("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
@@ -895,6 +897,7 @@ func TestPipelineUpsertWithOptionalParams(t *testing.T) {
 				VendorMultimodalModelName:                llamacloud.String("vendor_multimodal_model_name"),
 				Version:                                  llamacloud.String("version"),
 				WebhookConfigurations: []llamacloud.LlamaParseParametersWebhookConfiguration{{
+					ID:            llamacloud.String("cwh-8f3k2m9q1x7v4b6n0p5r2t8y1w3z6"),
 					WebhookEvents: []string{"parse.success", "parse.error"},
 					WebhookHeaders: map[string]string{
 						"Authorization": "Bearer sk-...",
