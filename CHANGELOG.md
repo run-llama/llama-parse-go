@@ -1,5 +1,34 @@
 # Changelog
 
+## [1.11.0](https://github.com/run-llama/llama-parse-go/compare/v1.10.0...v1.11.0) (2026-11-20)
+
+
+### Features
+
+* **extract:** expose Max effort in the public API ([#30756](https://github.com/run-llama/llama-parse-go/issues/30756)) ([7d483cc](https://github.com/run-llama/llama-parse-go/commit/7d483cc5e2ea605fcc0343066fb08a48c6766711))
+* **extract:** send a saved configuration's completed jobs to review by policy ([#34124](https://github.com/run-llama/llama-parse-go/issues/34124)) ([897045a](https://github.com/run-llama/llama-parse-go/commit/897045a2d1d2d4e273b96de20e464946b003f496))
+* **parse-eval:** keep ground truth in Evaluate-owned storage ([#33781](https://github.com/run-llama/llama-parse-go/issues/33781)) ([c7dfc87](https://github.com/run-llama/llama-parse-go/commit/c7dfc8731767a4a428e81c9195bfa2b3d82927a2))
+* **parse-eval:** let Parse delete ground-truth jobs like any other job ([#35004](https://github.com/run-llama/llama-parse-go/issues/35004)) ([f3b3a7c](https://github.com/run-llama/llama-parse-go/commit/f3b3a7c113052dab8c7f4a40598472529e0dc3b2))
+* **parse:** add document page count bounds ([#34227](https://github.com/run-llama/llama-parse-go/issues/34227)) ([16bf917](https://github.com/run-llama/llama-parse-go/commit/16bf91703ffb67b3588ed194ac1bdb2f63849011))
+* **parse:** Agentic and Cost Effective 2026-11-09 lead with OCRIA 1.5 ([#33718](https://github.com/run-llama/llama-parse-go/issues/33718)) ([fa2acc2](https://github.com/run-llama/llama-parse-go/commit/fa2acc26e9286bcaae455aee8efa0446e2ca12ce))
+* **parse:** optional `bbox` on form text grounding in the public API schema ([#35073](https://github.com/run-llama/llama-parse-go/issues/35073)) ([ff83dec](https://github.com/run-llama/llama-parse-go/commit/ff83dec17ddd87a07cb8d81b2e79d97c96fe152f))
+* **split:** advisory warnings for ambiguous category configs ([#34714](https://github.com/run-llama/llama-parse-go/issues/34714)) ([90bbcc8](https://github.com/run-llama/llama-parse-go/commit/90bbcc8387ec482f6a86d0fd63f2b21a8cda1428))
+* **split:** category segment boundary in 1.3.0 ([#35081](https://github.com/run-llama/llama-parse-go/issues/35081)) ([e2cc009](https://github.com/run-llama/llama-parse-go/commit/e2cc0094dd4740249491de9354f1eaeddc1a8a9d))
+* **webhooks:** keep a saved webhook's masked credentials by its id ([#32736](https://github.com/run-llama/llama-parse-go/issues/32736)) ([f6a264b](https://github.com/run-llama/llama-parse-go/commit/f6a264b9c6258612dbd86bece494a91ef1aba213))
+
+
+### Bug Fixes
+
+* **api:** reject a page_size below 1 on every list route's pagination query (PROD-10603) ([#30406](https://github.com/run-llama/llama-parse-go/issues/30406)) ([06d7fcc](https://github.com/run-llama/llama-parse-go/commit/06d7fcc509de428564b6c1887a47e60fcbd2edd8))
+* keep legacy pipelines with empty embedding configs listable ([#31282](https://github.com/run-llama/llama-parse-go/issues/31282)) ([0362ad2](https://github.com/run-llama/llama-parse-go/commit/0362ad276979747e2f9132b2e2bd70e7766da13b))
+* **split:** reject category names that make segment labels ambiguous (PROD-10501) ([#29963](https://github.com/run-llama/llama-parse-go/issues/29963)) ([2513fe7](https://github.com/run-llama/llama-parse-go/commit/2513fe7dade4f769e2440cbd1df271179626ccd9))
+
+
+### Documentation
+
+* **extract:** describe Max effort pricing by the processing each document needs ([#33403](https://github.com/run-llama/llama-parse-go/issues/33403)) ([39126df](https://github.com/run-llama/llama-parse-go/commit/39126dfa51a442266fe9de527d66fa5d6eb90ad1))
+* **split:** PPTX segment pages count visible slides only (PROD-10504) ([#29972](https://github.com/run-llama/llama-parse-go/issues/29972)) ([695cc61](https://github.com/run-llama/llama-parse-go/commit/695cc61fd2c90d65453feb22f67164ef46b51012))
+
 ## [1.10.0](https://github.com/run-llama/llama-parse-go/compare/v1.9.0...v1.10.0) (2026-10-21)
 
 
