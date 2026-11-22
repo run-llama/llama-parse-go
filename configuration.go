@@ -1335,8 +1335,8 @@ type ParseV2ParametersResp struct {
 	// Current `latest` by tier:
 	//
 	// - `fast`: `2026-11-12`
-	// - `cost_effective`: `2026-11-09`
-	// - `agentic`: `2026-11-09`
+	// - `cost_effective`: `2026-11-22`
+	// - `agentic`: `2026-11-22`
 	// - `agentic_plus`: `2026-11-19`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
@@ -1433,8 +1433,8 @@ const (
 // Current `latest` by tier:
 //
 // - `fast`: `2026-11-12`
-// - `cost_effective`: `2026-11-09`
-// - `agentic`: `2026-11-09`
+// - `cost_effective`: `2026-11-22`
+// - `agentic`: `2026-11-22`
 // - `agentic_plus`: `2026-11-19`
 //
 // Full list: `GET /api/v2/parse/versions`.
@@ -1442,9 +1442,9 @@ type ParseV2ParametersVersion string
 
 const (
 	ParseV2ParametersVersionLatest     ParseV2ParametersVersion = "latest"
+	ParseV2ParametersVersion2026_11_22 ParseV2ParametersVersion = "2026-11-22"
 	ParseV2ParametersVersion2026_11_19 ParseV2ParametersVersion = "2026-11-19"
 	ParseV2ParametersVersion2026_11_12 ParseV2ParametersVersion = "2026-11-12"
-	ParseV2ParametersVersion2026_11_09 ParseV2ParametersVersion = "2026-11-09"
 )
 
 // Options for AI-powered parsing tiers (cost_effective, agentic, agentic_plus).
@@ -2180,8 +2180,8 @@ type ParseV2ParametersProcessingOptionsAutoModeConfigurationParsingConfResp stru
 	// Current `latest` by tier:
 	//
 	// - `fast`: `2026-11-12`
-	// - `cost_effective`: `2026-11-09`
-	// - `agentic`: `2026-11-09`
+	// - `cost_effective`: `2026-11-22`
+	// - `agentic`: `2026-11-22`
 	// - `agentic_plus`: `2026-11-19`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
@@ -3287,8 +3287,8 @@ type ParseV2Parameters struct {
 	// Current `latest` by tier:
 	//
 	// - `fast`: `2026-11-12`
-	// - `cost_effective`: `2026-11-09`
-	// - `agentic`: `2026-11-09`
+	// - `cost_effective`: `2026-11-22`
+	// - `agentic`: `2026-11-22`
 	// - `agentic_plus`: `2026-11-19`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
@@ -3962,8 +3962,8 @@ type ParseV2ParametersProcessingOptionsAutoModeConfigurationParsingConf struct {
 	// Current `latest` by tier:
 	//
 	// - `fast`: `2026-11-12`
-	// - `cost_effective`: `2026-11-09`
-	// - `agentic`: `2026-11-09`
+	// - `cost_effective`: `2026-11-22`
+	// - `agentic`: `2026-11-22`
 	// - `agentic_plus`: `2026-11-19`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
