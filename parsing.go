@@ -168,6 +168,9 @@ type BBox struct {
 	Confidence float64 `json:"confidence" api:"nullable"`
 	// End index in the text
 	EndIndex int64 `json:"end_index" api:"nullable"`
+	// Filename of the saved layout image cut from this region; equals `filename` of an
+	// `images_content_metadata` entry.
+	ImageFilename string `json:"image_filename" api:"nullable"`
 	// Label for the bounding box
 	Label string `json:"label" api:"nullable"`
 	// Optional visual text rotation angle in degrees. Omitted when unrotated.
@@ -176,17 +179,18 @@ type BBox struct {
 	StartIndex int64 `json:"start_index" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
-		H           respjson.Field
-		W           respjson.Field
-		X           respjson.Field
-		Y           respjson.Field
-		Confidence  respjson.Field
-		EndIndex    respjson.Field
-		Label       respjson.Field
-		R           respjson.Field
-		StartIndex  respjson.Field
-		ExtraFields map[string]respjson.Field
-		raw         string
+		H             respjson.Field
+		W             respjson.Field
+		X             respjson.Field
+		Y             respjson.Field
+		Confidence    respjson.Field
+		EndIndex      respjson.Field
+		ImageFilename respjson.Field
+		Label         respjson.Field
+		R             respjson.Field
+		StartIndex    respjson.Field
+		ExtraFields   map[string]respjson.Field
+		raw           string
 	} `json:"-"`
 }
 
@@ -4519,12 +4523,19 @@ type ParsingGetResponseImagesContentMetadataImage struct {
 	Category string `json:"category" api:"nullable"`
 	// MIME type of the image
 	ContentType string `json:"content_type" api:"nullable"`
+	// Layout class of the region a layout image was cut from: 'chart', 'table',
+	// 'image' or 'seal'. Null for other images.
+	Label string `json:"label" api:"nullable"`
 	// Presigned URL to download the image
 	PresignedURL string `json:"presigned_url" api:"nullable"`
 	// Deprecated: always returns None. Will be removed in a future release.
 	//
 	// Deprecated: deprecated
 	SizeBytes int64 `json:"size_bytes" api:"nullable"`
+	// Figure classes of the region a layout image was cut from, e.g. ['line_chart'] or
+	// ['logo']; empty when the region has no figure classification. Null for other
+	// images.
+	Sublabels []string `json:"sublabels" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Filename     respjson.Field
@@ -4532,8 +4543,10 @@ type ParsingGetResponseImagesContentMetadataImage struct {
 		Bbox         respjson.Field
 		Category     respjson.Field
 		ContentType  respjson.Field
+		Label        respjson.Field
 		PresignedURL respjson.Field
 		SizeBytes    respjson.Field
+		Sublabels    respjson.Field
 		ExtraFields  map[string]respjson.Field
 		raw          string
 	} `json:"-"`
