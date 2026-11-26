@@ -5413,10 +5413,11 @@ type ParsingListVersionsResponse struct {
 	AgenticPlus []string `json:"agentic_plus" api:"required"`
 	// Versions for the cost_effective tier
 	//
-	// Any of "2026-11-22", "2026-11-09", "2026-11-05", "2026-10-30", "2026-09-28",
-	// "2026-08-19", "2026-08-11", "2026-08-08", "2026-07-23", "2026-06-26",
-	// "2026-06-18", "2026-06-17", "2026-06-11", "2026-06-08", "2026-06-05",
-	// "2026-05-28", "2026-04-09", "2026-03-31", "2026-03-27", "2026-03-25".
+	// Any of "2026-11-24", "2026-11-22", "2026-11-09", "2026-11-05", "2026-10-30",
+	// "2026-09-28", "2026-08-19", "2026-08-11", "2026-08-08", "2026-07-23",
+	// "2026-06-26", "2026-06-18", "2026-06-17", "2026-06-11", "2026-06-08",
+	// "2026-06-05", "2026-05-28", "2026-04-09", "2026-03-31", "2026-03-27",
+	// "2026-03-25".
 	CostEffective []string `json:"cost_effective" api:"required"`
 	// Versions for the fast tier
 	//
@@ -5480,7 +5481,7 @@ type ParsingNewParams struct {
 	// Current `latest` by tier:
 	//
 	// - `fast`: `2026-11-12`
-	// - `cost_effective`: `2026-11-22`
+	// - `cost_effective`: `2026-11-24`
 	// - `agentic`: `2026-11-22`
 	// - `agentic_plus`: `2026-11-19`
 	//
@@ -5576,7 +5577,7 @@ const (
 // Current `latest` by tier:
 //
 // - `fast`: `2026-11-12`
-// - `cost_effective`: `2026-11-22`
+// - `cost_effective`: `2026-11-24`
 // - `agentic`: `2026-11-22`
 // - `agentic_plus`: `2026-11-19`
 //
@@ -5585,6 +5586,7 @@ type ParsingNewParamsVersion string
 
 const (
 	ParsingNewParamsVersionLatest     ParsingNewParamsVersion = "latest"
+	ParsingNewParamsVersion2026_11_24 ParsingNewParamsVersion = "2026-11-24"
 	ParsingNewParamsVersion2026_11_22 ParsingNewParamsVersion = "2026-11-22"
 	ParsingNewParamsVersion2026_11_19 ParsingNewParamsVersion = "2026-11-19"
 	ParsingNewParamsVersion2026_11_12 ParsingNewParamsVersion = "2026-11-12"
@@ -6207,7 +6209,7 @@ type ParsingNewParamsProcessingOptionsAutoModeConfigurationParsingConf struct {
 	// Current `latest` by tier:
 	//
 	// - `fast`: `2026-11-12`
-	// - `cost_effective`: `2026-11-22`
+	// - `cost_effective`: `2026-11-24`
 	// - `agentic`: `2026-11-22`
 	// - `agentic_plus`: `2026-11-19`
 	//
