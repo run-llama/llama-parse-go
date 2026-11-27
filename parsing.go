@@ -168,6 +168,9 @@ type BBox struct {
 	Confidence float64 `json:"confidence" api:"nullable"`
 	// End index in the text
 	EndIndex int64 `json:"end_index" api:"nullable"`
+	// Filename of the saved layout image cut from this region; equals `filename` of an
+	// `images_content_metadata` entry.
+	ImageFilename string `json:"image_filename" api:"nullable"`
 	// Label for the bounding box
 	Label string `json:"label" api:"nullable"`
 	// Optional visual text rotation angle in degrees. Omitted when unrotated.
@@ -176,17 +179,18 @@ type BBox struct {
 	StartIndex int64 `json:"start_index" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
-		H           respjson.Field
-		W           respjson.Field
-		X           respjson.Field
-		Y           respjson.Field
-		Confidence  respjson.Field
-		EndIndex    respjson.Field
-		Label       respjson.Field
-		R           respjson.Field
-		StartIndex  respjson.Field
-		ExtraFields map[string]respjson.Field
-		raw         string
+		H             respjson.Field
+		W             respjson.Field
+		X             respjson.Field
+		Y             respjson.Field
+		Confidence    respjson.Field
+		EndIndex      respjson.Field
+		ImageFilename respjson.Field
+		Label         respjson.Field
+		R             respjson.Field
+		StartIndex    respjson.Field
+		ExtraFields   map[string]respjson.Field
+		raw           string
 	} `json:"-"`
 }
 
@@ -4519,12 +4523,19 @@ type ParsingGetResponseImagesContentMetadataImage struct {
 	Category string `json:"category" api:"nullable"`
 	// MIME type of the image
 	ContentType string `json:"content_type" api:"nullable"`
+	// Layout class of the region a layout image was cut from: 'chart', 'table',
+	// 'image' or 'seal'. Null for other images.
+	Label string `json:"label" api:"nullable"`
 	// Presigned URL to download the image
 	PresignedURL string `json:"presigned_url" api:"nullable"`
 	// Deprecated: always returns None. Will be removed in a future release.
 	//
 	// Deprecated: deprecated
 	SizeBytes int64 `json:"size_bytes" api:"nullable"`
+	// Figure classes of the region a layout image was cut from, e.g. ['line_chart'] or
+	// ['logo']; empty when the region has no figure classification. Null for other
+	// images.
+	Sublabels []string `json:"sublabels" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Filename     respjson.Field
@@ -4532,8 +4543,10 @@ type ParsingGetResponseImagesContentMetadataImage struct {
 		Bbox         respjson.Field
 		Category     respjson.Field
 		ContentType  respjson.Field
+		Label        respjson.Field
 		PresignedURL respjson.Field
 		SizeBytes    respjson.Field
+		Sublabels    respjson.Field
 		ExtraFields  map[string]respjson.Field
 		raw          string
 	} `json:"-"`
@@ -5372,38 +5385,40 @@ func (r *ParsingGetResponseTextPage) UnmarshalJSON(data []byte) error {
 type ParsingListVersionsResponse struct {
 	// Versions for the agentic tier
 	//
-	// Any of "2026-11-09", "2026-11-05", "2026-10-30", "2026-10-16", "2026-10-15",
-	// "2026-09-29", "2026-09-28", "2026-09-24", "2026-09-13", "2026-09-09",
-	// "2026-09-07", "2026-08-19", "2026-07-24", "2026-07-23", "2026-07-15",
-	// "2026-06-18", "2026-06-11", "2026-06-04", "2026-06-01", "2026-05-26",
-	// "2026-05-21", "2026-05-20", "2026-05-19", "2026-05-13", "2026-05-11",
-	// "2026-05-06", "2026-05-04", "2026-04-27", "2026-04-22", "2026-04-09",
-	// "2026-04-06", "2026-04-02", "2026-03-31", "2026-03-30", "2026-03-27",
-	// "2026-03-25", "2026-03-23", "2026-03-22", "2026-03-20", "2026-03-11",
-	// "2026-03-10", "2026-03-09", "2026-03-03", "2026-03-02", "2026-02-26",
-	// "2026-02-24", "2026-01-30", "2026-01-22", "2026-01-21", "2026-01-16",
-	// "2026-01-08", "2025-12-31", "2025-12-18", "2025-12-11".
+	// Any of "2026-11-22", "2026-11-09", "2026-11-05", "2026-10-30", "2026-10-16",
+	// "2026-10-15", "2026-09-29", "2026-09-28", "2026-09-24", "2026-09-13",
+	// "2026-09-09", "2026-09-07", "2026-08-19", "2026-07-24", "2026-07-23",
+	// "2026-07-15", "2026-06-18", "2026-06-11", "2026-06-04", "2026-06-01",
+	// "2026-05-26", "2026-05-21", "2026-05-20", "2026-05-19", "2026-05-13",
+	// "2026-05-11", "2026-05-06", "2026-05-04", "2026-04-27", "2026-04-22",
+	// "2026-04-09", "2026-04-06", "2026-04-02", "2026-03-31", "2026-03-30",
+	// "2026-03-27", "2026-03-25", "2026-03-23", "2026-03-22", "2026-03-20",
+	// "2026-03-11", "2026-03-10", "2026-03-09", "2026-03-03", "2026-03-02",
+	// "2026-02-26", "2026-02-24", "2026-01-30", "2026-01-22", "2026-01-21",
+	// "2026-01-16", "2026-01-08", "2025-12-31", "2025-12-18", "2025-12-11".
 	Agentic []string `json:"agentic" api:"required"`
 	// Versions for the agentic_plus tier
 	//
-	// Any of "2026-11-19", "2026-11-18", "2026-11-17", "2026-11-16", "2026-11-11",
-	// "2026-11-10", "2026-11-07", "2026-11-02", "2026-10-28", "2026-10-26",
-	// "2026-10-20", "2026-09-28", "2026-09-24", "2026-09-11", "2026-08-19",
-	// "2026-07-08", "2026-06-18", "2026-06-11", "2026-06-04", "2026-06-01",
-	// "2026-05-26", "2026-05-21", "2026-05-20", "2026-05-19", "2026-05-11",
-	// "2026-05-06", "2026-05-04", "2026-05-01", "2026-04-27", "2026-04-19",
-	// "2026-04-14", "2026-04-09", "2026-04-02", "2026-03-31", "2026-03-26",
-	// "2026-03-25", "2026-03-22", "2026-03-20", "2026-03-17", "2026-03-12",
-	// "2026-03-10", "2026-03-09", "2026-03-02", "2026-02-26", "2026-02-24",
-	// "2026-01-30", "2026-01-29", "2026-01-24", "2026-01-22", "2026-01-21",
-	// "2026-01-16", "2025-12-31", "2025-12-18", "2025-12-11".
+	// Any of "2026-11-27", "2026-11-26", "2026-11-19", "2026-11-18", "2026-11-17",
+	// "2026-11-16", "2026-11-11", "2026-11-10", "2026-11-07", "2026-11-02",
+	// "2026-10-28", "2026-10-26", "2026-10-20", "2026-09-28", "2026-09-24",
+	// "2026-09-11", "2026-08-19", "2026-07-08", "2026-06-18", "2026-06-11",
+	// "2026-06-04", "2026-06-01", "2026-05-26", "2026-05-21", "2026-05-20",
+	// "2026-05-19", "2026-05-11", "2026-05-06", "2026-05-04", "2026-05-01",
+	// "2026-04-27", "2026-04-19", "2026-04-14", "2026-04-09", "2026-04-02",
+	// "2026-03-31", "2026-03-26", "2026-03-25", "2026-03-22", "2026-03-20",
+	// "2026-03-17", "2026-03-12", "2026-03-10", "2026-03-09", "2026-03-02",
+	// "2026-02-26", "2026-02-24", "2026-01-30", "2026-01-29", "2026-01-24",
+	// "2026-01-22", "2026-01-21", "2026-01-16", "2025-12-31", "2025-12-18",
+	// "2025-12-11".
 	AgenticPlus []string `json:"agentic_plus" api:"required"`
 	// Versions for the cost_effective tier
 	//
-	// Any of "2026-11-09", "2026-11-05", "2026-10-30", "2026-09-28", "2026-08-19",
-	// "2026-08-11", "2026-08-08", "2026-07-23", "2026-06-26", "2026-06-18",
-	// "2026-06-17", "2026-06-11", "2026-06-08", "2026-06-05", "2026-05-28",
-	// "2026-04-09", "2026-03-31", "2026-03-27", "2026-03-25".
+	// Any of "2026-11-24", "2026-11-22", "2026-11-09", "2026-11-05", "2026-10-30",
+	// "2026-09-28", "2026-08-19", "2026-08-11", "2026-08-08", "2026-07-23",
+	// "2026-06-26", "2026-06-18", "2026-06-17", "2026-06-11", "2026-06-08",
+	// "2026-06-05", "2026-05-28", "2026-04-09", "2026-03-31", "2026-03-27",
+	// "2026-03-25".
 	CostEffective []string `json:"cost_effective" api:"required"`
 	// Versions for the fast tier
 	//
@@ -5467,9 +5482,9 @@ type ParsingNewParams struct {
 	// Current `latest` by tier:
 	//
 	// - `fast`: `2026-11-12`
-	// - `cost_effective`: `2026-11-09`
-	// - `agentic`: `2026-11-09`
-	// - `agentic_plus`: `2026-11-19`
+	// - `cost_effective`: `2026-11-24`
+	// - `agentic`: `2026-11-22`
+	// - `agentic_plus`: `2026-11-27`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
 	Version        ParsingNewParamsVersion `json:"version,omitzero" api:"required"`
@@ -5563,18 +5578,19 @@ const (
 // Current `latest` by tier:
 //
 // - `fast`: `2026-11-12`
-// - `cost_effective`: `2026-11-09`
-// - `agentic`: `2026-11-09`
-// - `agentic_plus`: `2026-11-19`
+// - `cost_effective`: `2026-11-24`
+// - `agentic`: `2026-11-22`
+// - `agentic_plus`: `2026-11-27`
 //
 // Full list: `GET /api/v2/parse/versions`.
 type ParsingNewParamsVersion string
 
 const (
 	ParsingNewParamsVersionLatest     ParsingNewParamsVersion = "latest"
-	ParsingNewParamsVersion2026_11_19 ParsingNewParamsVersion = "2026-11-19"
+	ParsingNewParamsVersion2026_11_27 ParsingNewParamsVersion = "2026-11-27"
+	ParsingNewParamsVersion2026_11_24 ParsingNewParamsVersion = "2026-11-24"
+	ParsingNewParamsVersion2026_11_22 ParsingNewParamsVersion = "2026-11-22"
 	ParsingNewParamsVersion2026_11_12 ParsingNewParamsVersion = "2026-11-12"
-	ParsingNewParamsVersion2026_11_09 ParsingNewParamsVersion = "2026-11-09"
 )
 
 // Options for AI-powered parsing tiers (cost_effective, agentic, agentic_plus).
@@ -6194,9 +6210,9 @@ type ParsingNewParamsProcessingOptionsAutoModeConfigurationParsingConf struct {
 	// Current `latest` by tier:
 	//
 	// - `fast`: `2026-11-12`
-	// - `cost_effective`: `2026-11-09`
-	// - `agentic`: `2026-11-09`
-	// - `agentic_plus`: `2026-11-19`
+	// - `cost_effective`: `2026-11-24`
+	// - `agentic`: `2026-11-22`
+	// - `agentic_plus`: `2026-11-27`
 	//
 	// Full list: `GET /api/v2/parse/versions`.
 	Version string `json:"version,omitzero"`
